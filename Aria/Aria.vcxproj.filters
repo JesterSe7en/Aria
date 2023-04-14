@@ -27,9 +27,15 @@
     <ClInclude Include="src\Aria\EntryPoint.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Aria\Log.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Aria\Application.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Aria\Log.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

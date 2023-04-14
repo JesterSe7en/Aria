@@ -11,12 +11,14 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Aria\Log.h" />
     <ClInclude Include="src\Aria.h" />
     <ClInclude Include="src\Aria\Application.h" />
     <ClInclude Include="src\Aria\Core.h" />
     <ClInclude Include="src\Aria\EntryPoint.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Aria\Log.cpp" />
     <ClCompile Include="src\Aria\Application.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -67,6 +69,7 @@
       <PreprocessorDefinitions>ARIA_PLATFORM_WINDOWS;ARIA_BUILD_DLL;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>$(SolutionDir)Aria\vendor\spdlog\include;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -86,6 +89,7 @@
       <PreprocessorDefinitions>ARIA_PLATFORM_WINDOWS;ARIA_BUILD_DLL;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>$(SolutionDir)Aria\vendor\spdlog\include;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
