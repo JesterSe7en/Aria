@@ -1,0 +1,3 @@
+[submodule "Aria/vendor/spdlog"]
+	path = Aria/vendor/spdlog
+	url = https://github.com/gabime/spdlog
