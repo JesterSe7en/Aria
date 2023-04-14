@@ -8,9 +8,6 @@ public:
 };
 
 
-int main() {
-	Sandbox* sandbox = new Sandbox();
-	sandbox->Run();
-	delete sandbox;
-	return 0;
+Aria::Application* Aria::CreateApplication() {
+	return new Sandbox();
 }
