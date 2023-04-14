@@ -8,7 +8,7 @@ namespace Aria {
 
 	void Log::Init() {
 		// see wiki https://github.com/gabime/spdlog/wiki/3.-Custom-formatting
-		spdlog::set_pattern("%^[%T] %n: %v%$");
+		spdlog::set_pattern("%^[%T] %n: [%l] - %v%$");
 
 		s_CoreLogger = spdlog::stdout_color_mt("ARIA");
 		s_CoreLogger->set_level(spdlog::level::trace);
