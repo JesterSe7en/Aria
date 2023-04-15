@@ -1,8 +1,8 @@
 #pragma once
+
+#include "ariapch.h"
 #include "Aria/Core.h"
 
-#include <string>
-#include <functional>
 
 namespace Aria {
 

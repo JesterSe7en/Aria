@@ -1,3 +1,4 @@
+#include "ariapch.h"
 #include "Application.h"
 
 #include "Aria/Events/ApplicationEvent.h"
