@@ -4,6 +4,9 @@
     <Filter Include="Aria">
       <UniqueIdentifier>{02A7827C-EEDD-830D-97CA-691083E0FF0E}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Aria\Events">
+      <UniqueIdentifier>{A61C1AAC-12D2-92A1-9BC6-8C78077B89A5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Aria.h" />
@@ -15,6 +18,18 @@
     </ClInclude>
     <ClInclude Include="src\Aria\EntryPoint.h">
       <Filter>Aria</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Aria\Events\ApplicationEvent.h">
+      <Filter>Aria\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Aria\Events\Event.h">
+      <Filter>Aria\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Aria\Events\KeyEvent.h">
+      <Filter>Aria\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Aria\Events\MouseEvent.h">
+      <Filter>Aria\Events</Filter>
     </ClInclude>
     <ClInclude Include="src\Aria\Log.h">
       <Filter>Aria</Filter>
