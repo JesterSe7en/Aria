@@ -26,6 +26,7 @@ project "Aria"
 
   includedirs
   {
+    "%{prj.name}/src",
     "%{prj.name}/vendor/spdlog/include"
   }
 
@@ -59,6 +60,7 @@ project "Aria"
 
   -- filter { "system:windows", "configurations:Release"}
   --   buildoptions "/MT"
+
 project "Sandbox"
   location "Sandbox"
   kind "ConsoleApp"
