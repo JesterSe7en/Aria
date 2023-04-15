@@ -18,6 +18,9 @@ project "Aria"
   targetdir ("bin/" .. outputdir .. "/%{prj.name}")
   objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
 
+  pchheader "ariapch.h"
+  pchsource "Aria/src/ariapch.cpp" -- needed for VS
+
   files 
   {
     "%{prj.name}/src/**.h",

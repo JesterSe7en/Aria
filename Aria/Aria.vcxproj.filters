@@ -34,6 +34,7 @@
     <ClInclude Include="src\Aria\Log.h">
       <Filter>Aria</Filter>
     </ClInclude>
+    <ClInclude Include="src\ariapch.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Aria\Application.cpp">
@@ -42,5 +43,6 @@
     <ClCompile Include="src\Aria\Log.cpp">
       <Filter>Aria</Filter>
     </ClCompile>
+    <ClCompile Include="src\ariapch.cpp" />
   </ItemGroup>
 </Project>
