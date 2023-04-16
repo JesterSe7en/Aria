@@ -3,11 +3,11 @@
 
 class Sandbox : public Aria::Application {
 public:
-	Sandbox() {};
-	~Sandbox() {};
+  Sandbox() {};
+  ~Sandbox() {};
 };
 
 
 Aria::Application* Aria::CreateApplication() {
-	return new Sandbox();
+  return new Sandbox();
 }

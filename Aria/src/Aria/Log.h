@@ -5,21 +5,22 @@
 #include "spdlog/fmt/ostr.h"
 
 namespace Aria {
-	class ARIA_API Log
-	{
-	public:
-		static void Init();
+class ARIA_API Log {
+ public:
+  static void Init();
 
-		inline static std::shared_ptr<spdlog::logger>& GetCoreLogger() { return s_CoreLogger; }
-		inline static std::shared_ptr<spdlog::logger>& GetClientLogger() { return s_ClientLogger; }
+  inline static std::shared_ptr<spdlog::logger>& GetCoreLogger() {
+    return s_CoreLogger;
+  }
+  inline static std::shared_ptr<spdlog::logger>& GetClientLogger() {
+    return s_ClientLogger;
+  }
 
-
-	private:
-		static std::shared_ptr<spdlog::logger> s_CoreLogger;
-		static std::shared_ptr<spdlog::logger> s_ClientLogger;
-
-	};
-}
+ private:
+  static std::shared_ptr<spdlog::logger> s_CoreLogger;
+  static std::shared_ptr<spdlog::logger> s_ClientLogger;
+};
+}  // namespace Aria
 
 // Core log macros
 #define ARIA_CORE_CRITICAL(...)	::Aria::Log::GetCoreLogger()->critical(__VA_ARGS__)

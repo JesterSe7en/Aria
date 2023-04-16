@@ -2,90 +2,89 @@
 
 #include "Event.h"
 
-
 namespace Aria {
 
-	class ARIA_API WindowClosedEvent : public Event {
-	public:
-		WindowClosedEvent() {}
+class ARIA_API WindowClosedEvent : public Event {
+ public:
+  WindowClosedEvent() {}
 
-		std::string ToString() const override {
-			std::stringstream ss;
-			ss << "WindowClosedEvent Triggered";
-			return ss.str();
-		}
+  std::string ToString() const override {
+    std::stringstream ss;
+    ss << "WindowClosedEvent Triggered";
+    return ss.str();
+  }
 
-		EVENT_CLASS_TYPE(WindowClosed)
-		EVENT_CLASS_CATEGORY(EventCategoryApplication)
-	};
+  EVENT_CLASS_TYPE(WindowClosed)
+  EVENT_CLASS_CATEGORY(EventCategoryApplication)
+};
 
-	class ARIA_API WindowResizeEvent : public Event {
-	public:
-		WindowResizeEvent(unsigned int width, unsigned int height)
-			: m_Width(width), m_Height(height) {}
+class ARIA_API WindowResizeEvent : public Event {
+ public:
+  WindowResizeEvent(unsigned int width, unsigned int height)
+      : m_Width(width), m_Height(height) {}
 
-		inline unsigned int GetWidth() const { return m_Width; }
-		inline unsigned int GetHeight() const { return m_Height; }
+  inline unsigned int GetWidth() const { return m_Width; }
+  inline unsigned int GetHeight() const { return m_Height; }
 
-		std::string ToString() const override {
-			std::stringstream ss;
-			ss << "WindowResizeEvent: " << m_Width << ", " << m_Height;
-			return ss.str();
-		}
+  std::string ToString() const override {
+    std::stringstream ss;
+    ss << "WindowResizeEvent: " << m_Width << ", " << m_Height;
+    return ss.str();
+  }
 
-		EVENT_CLASS_TYPE(WindowResize)
-		EVENT_CLASS_CATEGORY(EventCategoryApplication)
+  EVENT_CLASS_TYPE(WindowResize)
+  EVENT_CLASS_CATEGORY(EventCategoryApplication)
 
-	private:
-		unsigned int m_Width;
-		unsigned int m_Height;
-	};
+ private:
+  unsigned int m_Width;
+  unsigned int m_Height;
+};
 
-	class ARIA_API WindowFocusEvent : public Event {
-	public:
-		WindowFocusEvent() {}
+class ARIA_API WindowFocusEvent : public Event {
+ public:
+  WindowFocusEvent() {}
 
-		EVENT_CLASS_TYPE(WindowFocus)
-		EVENT_CLASS_CATEGORY(EventCategoryApplication)
-	};
+  EVENT_CLASS_TYPE(WindowFocus)
+  EVENT_CLASS_CATEGORY(EventCategoryApplication)
+};
 
-	class ARIA_API WindowLostFocusEvent : public Event {
-	public:
-		WindowLostFocusEvent() {}
+class ARIA_API WindowLostFocusEvent : public Event {
+ public:
+  WindowLostFocusEvent() {}
 
-		EVENT_CLASS_TYPE(WindowLostFocus)
-			EVENT_CLASS_CATEGORY(EventCategoryApplication)
-	};
+  EVENT_CLASS_TYPE(WindowLostFocus)
+  EVENT_CLASS_CATEGORY(EventCategoryApplication)
+};
 
-	class ARIA_API WindowMovedEvent : public Event {
-	public:
-		WindowMovedEvent() {}
+class ARIA_API WindowMovedEvent : public Event {
+ public:
+  WindowMovedEvent() {}
 
-		EVENT_CLASS_TYPE(WindowMoved)
-			EVENT_CLASS_CATEGORY(EventCategoryApplication)
-	};
+  EVENT_CLASS_TYPE(WindowMoved)
+  EVENT_CLASS_CATEGORY(EventCategoryApplication)
+};
 
-	class ARIA_API AppTickEvent : public Event {
-	public:
-		AppTickEvent() {}
+class ARIA_API AppTickEvent : public Event {
+ public:
+  AppTickEvent() {}
 
-		EVENT_CLASS_TYPE(AppTick)
-			EVENT_CLASS_CATEGORY(EventCategoryApplication)
-	};
+  EVENT_CLASS_TYPE(AppTick)
+  EVENT_CLASS_CATEGORY(EventCategoryApplication)
+};
 
-	class ARIA_API AppUpdateEvent : public Event {
-	public:
-		AppUpdateEvent() {}
+class ARIA_API AppUpdateEvent : public Event {
+ public:
+  AppUpdateEvent() {}
 
-		EVENT_CLASS_TYPE(AppUpdate)
-			EVENT_CLASS_CATEGORY(EventCategoryApplication)
-	};
+  EVENT_CLASS_TYPE(AppUpdate)
+  EVENT_CLASS_CATEGORY(EventCategoryApplication)
+};
 
-	class ARIA_API AppRenderEvent : public Event {
-	public:
-		AppRenderEvent() {}
+class ARIA_API AppRenderEvent : public Event {
+ public:
+  AppRenderEvent() {}
 
-		EVENT_CLASS_TYPE(AppRender)
-		EVENT_CLASS_CATEGORY(EventCategoryApplication)
-	};
-}
+  EVENT_CLASS_TYPE(AppRender)
+  EVENT_CLASS_CATEGORY(EventCategoryApplication)
+};
+}  // namespace Aria

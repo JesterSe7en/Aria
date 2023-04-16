@@ -1,13 +1,33 @@
 #pragma once
 
 #ifdef ARIA_PLATFORM_WINDOWS
-	#ifdef ARIA_BUILD_DLL
-		#define ARIA_API __declspec(dllexport)
-	#else
-		#define ARIA_API __declspec(dllimport)
-	#endif
+#ifdef ARIA_BUILD_DLL
+#define ARIA_API __declspec(dllexport)
 #else
-	#error Aria only supports Windows!
+#define ARIA_API __declspec(dllimport)
 #endif
+#else
+#error Aria only supports Windows!
+#endif  // ARIA_PLATFORM_WINDOWS
+
+#ifdef ARIA_ENABLE_ASSERTS
+#define ARIA_ASSERT(x, ...)                             \
+  {                                                     \
+    if (!(x)) {                                         \
+      ARIA_ERROR("Assertion Failed: {0}", __VA_ARGS__); \
+      __debugbreak();                                   \
+    }                                                   \
+  }
+#define ARIA_CORE_ASSERT(x, ...)                             \
+  {                                                          \
+    if (!(x)) {                                              \
+      ARIA_CORE_ERROR("Assertion Failed: {0}", __VA_ARGS__); \
+      __debugbreak();                                        \
+    }                                                        \
+  }
+#else
+#define ARIA_ASSERT(x, ...)
+#define ARIA_CORE_ASSERT(x, ...)
+#endif  // ARIA_ENABLE_ASSERTS
 
 #define BIT(x) (1 << x)

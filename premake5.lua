@@ -10,6 +10,12 @@ workspace "Aria"
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.archtecture}"
 
+-- Include directories relative to root folder (soln dir)
+IncludeDir = {}
+IncludeDir["GLFW"] = "Aria/vendor/GLFW/include"
+
+include "Aria/vendor/GLFW"
+
 project "Aria"
   location "Aria"
   kind "SharedLib"
@@ -30,7 +36,14 @@ project "Aria"
   includedirs
   {
     "%{prj.name}/src",
-    "%{prj.name}/vendor/spdlog/include"
+    "%{prj.name}/vendor/spdlog/include",
+    "%{IncludeDir.GLFW}",
+  }
+
+  links
+  {
+    "GLFW",
+    "opengl32.lib",
   }
 
   filter "system:windows"
