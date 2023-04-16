@@ -3,7 +3,7 @@
 #include "Event.h"
 
 namespace Aria {
-	class KeyEvent : public Event {
+	class ARIA_API KeyEvent : public Event {
 	public:
 		inline int GetKeyCode() const { return m_KeyCode; }
 
@@ -16,7 +16,7 @@ namespace Aria {
 		 int m_KeyCode;
 	};
 
-	class KeyPressedEvent : public KeyEvent {
+	class ARIA_API KeyPressedEvent : public KeyEvent {
 	public:
 		KeyPressedEvent(int keycode, int repeatCount)
 			: KeyEvent(keycode), m_RepeatCount(repeatCount) {}
@@ -35,7 +35,7 @@ namespace Aria {
 		unsigned int m_RepeatCount;
 	};
 
-	class KeyReleasedEvent : public KeyEvent {
+	class ARIA_API KeyReleasedEvent : public KeyEvent {
 	public:
 		KeyReleasedEvent(int keycode)
 			: KeyEvent(keycode) {}

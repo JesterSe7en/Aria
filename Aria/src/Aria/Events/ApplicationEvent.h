@@ -5,11 +5,21 @@
 
 namespace Aria {
 
-	class WindowClosedEvent : public Event {
+	class ARIA_API WindowClosedEvent : public Event {
+	public:
+		WindowClosedEvent() {}
 
+		std::string ToString() const override {
+			std::stringstream ss;
+			ss << "WindowClosedEvent Triggered";
+			return ss.str();
+		}
+
+		EVENT_CLASS_TYPE(WindowClosed)
+		EVENT_CLASS_CATEGORY(EventCategoryApplication)
 	};
 
-	class WindowResizeEvent : public Event {
+	class ARIA_API WindowResizeEvent : public Event {
 	public:
 		WindowResizeEvent(unsigned int width, unsigned int height)
 			: m_Width(width), m_Height(height) {}
@@ -31,7 +41,7 @@ namespace Aria {
 		unsigned int m_Height;
 	};
 
-	class WindowFocusEvent : public Event {
+	class ARIA_API WindowFocusEvent : public Event {
 	public:
 		WindowFocusEvent() {}
 
@@ -39,23 +49,23 @@ namespace Aria {
 		EVENT_CLASS_CATEGORY(EventCategoryApplication)
 	};
 
-	class WindowLostFocusEvent : public Event {
+	class ARIA_API WindowLostFocusEvent : public Event {
 	public:
 		WindowLostFocusEvent() {}
 
 		EVENT_CLASS_TYPE(WindowLostFocus)
-		EVENT_CLASS_CATEGORY(EventCategoryApplication)
+			EVENT_CLASS_CATEGORY(EventCategoryApplication)
 	};
 
-	class WindowMovedEvent : public Event {
+	class ARIA_API WindowMovedEvent : public Event {
 	public:
 		WindowMovedEvent() {}
 
 		EVENT_CLASS_TYPE(WindowMoved)
-		EVENT_CLASS_CATEGORY(EventCategoryApplication)
+			EVENT_CLASS_CATEGORY(EventCategoryApplication)
 	};
 
-	class AppTickEvent : public Event {
+	class ARIA_API AppTickEvent : public Event {
 	public:
 		AppTickEvent() {}
 
@@ -63,15 +73,15 @@ namespace Aria {
 			EVENT_CLASS_CATEGORY(EventCategoryApplication)
 	};
 
-	class AppUpdateEvent : public Event {
+	class ARIA_API AppUpdateEvent : public Event {
 	public:
 		AppUpdateEvent() {}
 
 		EVENT_CLASS_TYPE(AppUpdate)
-		EVENT_CLASS_CATEGORY(EventCategoryApplication)
+			EVENT_CLASS_CATEGORY(EventCategoryApplication)
 	};
 
-	class AppRenderEvent : public Event {
+	class ARIA_API AppRenderEvent : public Event {
 	public:
 		AppRenderEvent() {}
 

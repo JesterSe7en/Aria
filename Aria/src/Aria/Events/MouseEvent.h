@@ -4,7 +4,7 @@
 
 namespace Aria {
 
-	class MouseMovedEvent : public Event {
+	class ARIA_API MouseMovedEvent : public Event {
 	public: 
 		MouseMovedEvent(float x, float y)
 			: m_MouseX(x), m_MouseY(y) {}
@@ -26,7 +26,7 @@ namespace Aria {
 		float m_MouseX, m_MouseY;
 	};
 
-	class MouseScrolledEvent : public Event {
+	class ARIA_API MouseScrolledEvent : public Event {
 	public:
 		MouseScrolledEvent(float xOffset, float yOffset)
 			: m_XOffset(xOffset), m_YOffset(yOffset) {}
@@ -47,7 +47,7 @@ namespace Aria {
 		float m_XOffset, m_YOffset;
 	};
 
-	class MouseButtonEvent : public Event {
+	class ARIA_API MouseButtonEvent : public Event {
 	public:
 		inline int GetMouseButton() const { return m_Button; }
 
@@ -59,7 +59,7 @@ namespace Aria {
 		int m_Button;
 	};
 
-	class MouseButtonPressedEvent : public MouseButtonEvent {
+	class ARIA_API MouseButtonPressedEvent : public MouseButtonEvent {
 	public:
 		MouseButtonPressedEvent(int button)
 			: MouseButtonEvent(button) {}
@@ -73,7 +73,7 @@ namespace Aria {
 		EVENT_CLASS_TYPE(MouseButtonPressed)
 	};
 
-	class MouseButtonReleasedEvent : public MouseButtonEvent {
+	class ARIA_API MouseButtonReleasedEvent : public MouseButtonEvent {
 	public:
 		MouseButtonReleasedEvent(int button)
 			: MouseButtonEvent(button) {}
