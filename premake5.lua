@@ -64,14 +64,17 @@ project "Aria"
   
   filter "configurations:Debug"
     defines "ARIA_DEBUG"
+    buildoptions "/MDd"
     symbols "On"
   
   filter "configurations:Release"
     defines "ARIA_RELEASE"
+    buildoptions "/MD"
     optimize "On"
 
   filter "configurations:Dist"
     defines "ARIA_DIST"
+    buildoptions "/MD"
     optimize "On"
 
   -- filter { "system:windows", "configurations:Release"}
@@ -114,12 +117,15 @@ project "Sandbox"
 
   filter "configurations:Debug"
     defines "ARIA_DEBUG"
+    buildoptions "/MDd"
     symbols "On"
 
   filter "configurations:Release"
     defines "ARIA_RELEASE"
+    buildoptions "/MD"
     optimize "On"
 
   filter "configurations:Dist"
     defines "ARIA_DIST"
+    buildoptions "/MD"
     optimize "On"
