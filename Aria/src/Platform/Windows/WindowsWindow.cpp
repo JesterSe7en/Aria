@@ -9,6 +9,9 @@
 
 #include "WindowsWindow.h"
 
+#include <glad/gl.h>
+#include <GLFW/glfw3.h>
+
 namespace Aria {
 
 static bool s_GLFWInitialized = false;
@@ -56,6 +59,13 @@ void WindowsWindow::Init(const WindowProps& props) {
   m_Window = glfwCreateWindow((int)props.Width, (int)props.Height,
                               props.Title.c_str(), nullptr, nullptr);
   glfwMakeContextCurrent(m_Window);
+
+  // Load Glad
+  int version = gladLoadGL(glfwGetProcAddress);
+  ARIA_CORE_ASSERT(version, "Failed to initialize Glad");
+  ARIA_CORE_INFO("Loaded Glad {0}.{1}", GLAD_VERSION_MAJOR(version),
+                 GLAD_VERSION_MINOR(version));
+
   glfwSetWindowUserPointer(m_Window, &m_Data);
   SetVSync(true);
 

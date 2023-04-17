@@ -4,10 +4,12 @@ class ExampleLayer : public Aria::Layer {
  public:
   ExampleLayer() : Layer("ExampleLayer") {}
 
-  void OnUpdate() override { ARIA_INFO("ExampleLayer: Inside OnUpdate"); }
+  void OnUpdate() override { 
+    //ARIA_INFO("ExampleLayer: Inside OnUpdate"); 
+  }
 
   void OnEvent(Aria::Event& event) override {
-    ARIA_TRACE("ExampleLayer: {0}", event);
+    //ARIA_TRACE("ExampleLayer: {0}", event);
   }
 };
 
@@ -15,11 +17,13 @@ class ExampleOverlay : public Aria::Layer {
  public:
   ExampleOverlay() : Layer("ExampleOverlay") {}
 
-  void OnUpdate() override { ARIA_INFO("ExampleOverlay: Inside OnUpdate"); }
+  void OnUpdate() override { 
+    //ARIA_INFO("ExampleOverlay: Inside OnUpdate"); 
+  }
 
   void OnEvent(Aria::Event& event) override {
     event.Handled = true;
-    ARIA_TRACE("ExampleOverlay: {0}", event);
+    //ARIA_TRACE("ExampleOverlay: {0}", event);
   }
 };
 
