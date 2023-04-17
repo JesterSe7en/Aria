@@ -19,6 +19,8 @@ class ARIA_API Application {
 
   void PushLayer(Layer* layer);
   void PushOverlay(Layer* overlay);
+  void PopLayer(Layer* layer);
+  void PopOverlay(Layer* overlay);
 
   inline Window& GetWindow() { return *m_Window; }
 

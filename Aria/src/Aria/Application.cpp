@@ -64,6 +64,16 @@ void Application::PushOverlay(Layer* overlay) {
   overlay->OnAttach();
 }
 
+void Application::PopLayer(Layer* layer) {
+  m_LayerStack.PopLayer(layer);
+  layer->OnDetach();
+}
+
+void Application::PopOverlay(Layer* overlay) {
+  m_LayerStack.PopLayer(overlay);
+  overlay->OnDetach();
+}
+
 //TODO: add remove/disable layer (needs to call OnDetatch as well)
 
 bool Application::OnWindowClose(WindowCloseEvent& e) {
