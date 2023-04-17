@@ -48,11 +48,18 @@ void Application::OnEvent(Event& e) {
     }
   }
 }
-void Application::PushLayer(Layer* layer) { m_LayerStack.PushLayer(layer); }
+void Application::PushLayer(Layer* layer) { 
+  m_LayerStack.PushLayer(layer);
+  layer->OnAttach();
+}
 
 void Application::PushOverlay(Layer* overlay) {
   m_LayerStack.PushOverlay(overlay);
+  overlay->OnAttach();
 }
+
+//TODO: add remove/disable layer (needs to call OnDetatch as well)
+
 bool Application::OnWindowClose(WindowCloseEvent& e) {
   m_Running = false;
   return true;
