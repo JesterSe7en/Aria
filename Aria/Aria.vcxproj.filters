@@ -37,6 +37,12 @@
     <ClInclude Include="src\Aria\Events\MouseEvent.h">
       <Filter>Aria\Events</Filter>
     </ClInclude>
+    <ClInclude Include="src\Aria\Layer.h">
+      <Filter>Aria</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Aria\LayerStack.h">
+      <Filter>Aria</Filter>
+    </ClInclude>
     <ClInclude Include="src\Aria\Log.h">
       <Filter>Aria</Filter>
     </ClInclude>
@@ -50,6 +56,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Aria\Application.cpp">
+      <Filter>Aria</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Aria\Layer.cpp">
+      <Filter>Aria</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Aria\LayerStack.cpp">
       <Filter>Aria</Filter>
     </ClCompile>
     <ClCompile Include="src\Aria\Log.cpp">
