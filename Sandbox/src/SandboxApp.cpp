@@ -29,9 +29,10 @@ class ExampleOverlay : public Aria::Layer {
 
 class Sandbox : public Aria::Application {
  public:
-  Sandbox() { 
-    PushLayer(new ExampleLayer());
-    PushOverlay(new ExampleOverlay());
+  Sandbox() {
+    PushOverlay(new Aria::ImGuiLayer());
+    //PushLayer(new ExampleLayer());
+    //PushOverlay(new ExampleOverlay());
   };
   ~Sandbox(){};
 };
