@@ -13,8 +13,10 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.archtecture}"
 -- Include directories relative to root folder (soln dir)
 IncludeDir = {}
 IncludeDir["GLFW"] = "Aria/vendor/GLFW/include"
+IncludeDir["Glad"] = "Aria/vendor/Glad/include"
 
 include "Aria/vendor/GLFW"
+include "Aria/vendor/Glad"
 
 project "Aria"
   location "Aria"
@@ -38,11 +40,13 @@ project "Aria"
     "%{prj.name}/src",
     "%{prj.name}/vendor/spdlog/include",
     "%{IncludeDir.GLFW}",
+    "%{IncludeDir.Glad}"
   }
 
   links
   {
     "GLFW",
+    "Glad",
     "opengl32.lib",
   }
 
