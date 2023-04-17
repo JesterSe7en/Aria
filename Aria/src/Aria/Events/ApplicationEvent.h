@@ -4,13 +4,13 @@
 
 namespace Aria {
 
-class ARIA_API WindowClosedEvent : public Event {
+class ARIA_API WindowCloseEvent : public Event {
  public:
-  WindowClosedEvent() {}
+  WindowCloseEvent() {}
 
   std::string ToString() const override {
     std::stringstream ss;
-    ss << "WindowClosedEvent Triggered";
+    ss << "WindowCloseEvent Triggered";
     return ss.str();
   }
 
