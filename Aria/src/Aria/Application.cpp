@@ -11,7 +11,12 @@ namespace Aria {
 
 #define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)
 
+Application* Application::s_Instance = nullptr;
+
 Application::Application() {
+  ARIA_CORE_ASSERT(!s_Instance, "Application already exists.");
+  s_Instance = this;
+
   m_Window = std::unique_ptr<Window>(Window::Create());
   m_Window->SetEventCallback(BIND_EVENT_FN(OnEvent));
 }
@@ -43,7 +48,8 @@ void Application::OnEvent(Event& e) {
   for (auto it = m_LayerStack.end(); it != m_LayerStack.begin();) {
     (*--it)->OnEvent(e);
     if (e.Handled) {
-      // stop at the first ("highest z value") layer (or overlay) that responded to the event firing
+      // stop at the first ("highest z value") layer (or overlay) that responded
+      // to the event firing
       break;
     }
   }
