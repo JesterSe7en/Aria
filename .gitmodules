@@ -4,3 +4,6 @@
 [submodule "Aria/vendor/GLFW"]
 	path = Aria/vendor/GLFW
 	url = https://github.com/JesterSe7en/glfw
+[submodule "Aria/vendor/imgui"]
+	path = Aria/vendor/imgui
+	url = https://github.com/JesterSe7en/imgui
