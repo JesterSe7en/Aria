@@ -155,6 +155,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Aria\ImGui\ImGuiLayer.h" />
     <ClInclude Include="src\Aria.h" />
     <ClInclude Include="src\Aria\Application.h" />
     <ClInclude Include="src\Aria\Core.h" />
@@ -171,6 +172,7 @@
     <ClInclude Include="src\ariapch.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Aria\ImGui\ImGuiLayer.cpp" />
     <ClCompile Include="src\Aria\Application.cpp" />
     <ClCompile Include="src\Aria\Layer.cpp" />
     <ClCompile Include="src\Aria\LayerStack.cpp" />

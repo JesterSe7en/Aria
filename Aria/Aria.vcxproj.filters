@@ -53,6 +53,7 @@
       <Filter>Platform\Windows</Filter>
     </ClInclude>
     <ClInclude Include="src\ariapch.h" />
+    <ClInclude Include="src\Aria\ImGui\ImGuiLayer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Aria\Application.cpp">
@@ -71,5 +72,6 @@
       <Filter>Platform\Windows</Filter>
     </ClCompile>
     <ClCompile Include="src\ariapch.cpp" />
+    <ClCompile Include="src\Aria\ImGui\ImGuiLayer.cpp" />
   </ItemGroup>
 </Project>
