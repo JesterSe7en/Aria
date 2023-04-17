@@ -29,9 +29,9 @@ void ImGuiLayer::OnAttach() {
   (void)io; // to suppress compiler warnings
   io.ConfigFlags |=
       ImGuiConfigFlags_NavEnableKeyboard;  // Enable Keyboard Controls
-
   io.DisplaySize = ImVec2((float)app.GetWindow().GetWidth(),
                           (float)app.GetWindow().GetHeight());
+  
   ImGui::StyleColorsDark();
 
   GLFWwindow* window =
