@@ -56,6 +56,7 @@
     <ClInclude Include="src\Aria\ImGui\ImGuiLayer.h" />
     <ClInclude Include="src\Aria\Input.h" />
     <ClInclude Include="src\Platform\Windows\WindowsInput.h" />
+    <ClInclude Include="src\Aria\KeyCodes.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Aria\Application.cpp">

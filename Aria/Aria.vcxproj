@@ -165,6 +165,7 @@
     <ClInclude Include="src\Aria\Events\KeyEvent.h" />
     <ClInclude Include="src\Aria\Events\MouseEvent.h" />
     <ClInclude Include="src\Aria\Input.h" />
+    <ClInclude Include="src\Aria\KeyCodes.h" />
     <ClInclude Include="src\Aria\Layer.h" />
     <ClInclude Include="src\Aria\LayerStack.h" />
     <ClInclude Include="src\Aria\Log.h" />
