@@ -5,6 +5,7 @@
 
 #include "Aria/Events/ApplicationEvent.h"
 #include "Aria/Events/KeyEvent.h"
+#include "Aria/Input.h"
 #include "Aria/Log.h"
 
 namespace Aria {
@@ -31,6 +32,11 @@ void Application::Run() {
     for (Layer* layer : m_LayerStack) {
       layer->OnUpdate();
     }
+
+    // this differs from the event mouse position
+    // this one gives absolute position of the mouse outside of glfwWindow
+    auto [x, y] = Input::GetMousePosition();
+    ARIA_CORE_TRACE("{0}, {1}", x, y);
 
     m_Window->OnUpdate();
   }

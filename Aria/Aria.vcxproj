@@ -164,12 +164,14 @@
     <ClInclude Include="src\Aria\Events\Event.h" />
     <ClInclude Include="src\Aria\Events\KeyEvent.h" />
     <ClInclude Include="src\Aria\Events\MouseEvent.h" />
+    <ClInclude Include="src\Aria\Input.h" />
     <ClInclude Include="src\Aria\Layer.h" />
     <ClInclude Include="src\Aria\LayerStack.h" />
     <ClInclude Include="src\Aria\Log.h" />
     <ClInclude Include="src\Aria\Window.h" />
     <ClInclude Include="src\Platform\Windows\WindowsWindow.h" />
     <ClInclude Include="src\ariapch.h" />
+    <ClInclude Include="src\Platform\Windows\WindowsInput.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Aria\ImGui\ImGuiLayer.cpp" />
@@ -181,6 +183,7 @@
     <ClCompile Include="src\ariapch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="src\Platform\Windows\WindowsInput.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="vendor\GLFW\GLFW.vcxproj">

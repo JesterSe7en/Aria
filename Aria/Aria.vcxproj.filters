@@ -54,6 +54,8 @@
     </ClInclude>
     <ClInclude Include="src\ariapch.h" />
     <ClInclude Include="src\Aria\ImGui\ImGuiLayer.h" />
+    <ClInclude Include="src\Aria\Input.h" />
+    <ClInclude Include="src\Platform\Windows\WindowsInput.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Aria\Application.cpp">
@@ -73,5 +75,6 @@
     </ClCompile>
     <ClCompile Include="src\ariapch.cpp" />
     <ClCompile Include="src\Aria\ImGui\ImGuiLayer.cpp" />
+    <ClCompile Include="src\Platform\Windows\WindowsInput.cpp" />
   </ItemGroup>
 </Project>
