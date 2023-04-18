@@ -70,7 +70,7 @@ void ImGuiLayer::OnUpdate() {
 
   ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
-        // Update and Render additional Platform Windows
+  // Update and Render additional Platform Windows
   // (Platform functions may change the current OpenGL context, so we
   // save/restore it to make it easier to paste this code elsewhere.
 
