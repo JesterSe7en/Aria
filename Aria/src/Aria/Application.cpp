@@ -36,7 +36,7 @@ void Application::Run() {
     // this differs from the event mouse position
     // this one gives absolute position of the mouse outside of glfwWindow
     auto [x, y] = Input::GetMousePosition();
-    ARIA_CORE_TRACE("{0}, {1}", x, y);
+    //ARIA_CORE_TRACE("{0}, {1}", x, y);
 
     m_Window->OnUpdate();
   }
@@ -46,8 +46,6 @@ void Application::OnEvent(Event& e) {
 
   dispatcher.Dispatch<WindowCloseEvent>(
       BIND_EVENT_FN(Application::OnWindowClose));
-
-  ARIA_CORE_TRACE("{0}", e);
 
   // Go through the Layer Stack (backwards) and fire off events
 

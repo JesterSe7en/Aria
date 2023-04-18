@@ -18,6 +18,9 @@ class ExampleOverlay : public Aria::Layer {
   ExampleOverlay() : Layer("ExampleOverlay") {}
 
   void OnUpdate() override { 
+    if (Aria::Input::IsKeyPressed(ARIA_KEY_A)) {
+      ARIA_TRACE("A key is pressed!");
+    }
     //ARIA_INFO("ExampleOverlay: Inside OnUpdate"); 
   }
 
@@ -32,7 +35,7 @@ class Sandbox : public Aria::Application {
   Sandbox() {
     PushOverlay(new Aria::ImGuiLayer());
     //PushLayer(new ExampleLayer());
-    //PushOverlay(new ExampleOverlay());
+    PushOverlay(new ExampleOverlay());
   };
   ~Sandbox(){};
 };
