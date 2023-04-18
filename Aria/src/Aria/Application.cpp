@@ -74,8 +74,6 @@ void Application::PopOverlay(Layer* overlay) {
   overlay->OnDetach();
 }
 
-//TODO: add remove/disable layer (needs to call OnDetatch as well)
-
 bool Application::OnWindowClose(WindowCloseEvent& e) {
   m_Running = false;
   return true;

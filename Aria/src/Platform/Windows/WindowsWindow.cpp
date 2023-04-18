@@ -48,7 +48,6 @@ void WindowsWindow::Init(const WindowProps& props) {
   ARIA_CORE_INFO("Creating window {0} ({1}, {2})", props.Title, props.Width,
                  props.Height);
 
-  // TODO: call glfwterminate on system shutdown
   if (!s_GLFWInitialized) {
     int success = glfwInit();
     ARIA_ASSERT(success, "Failed to initialize GLFW")
@@ -176,6 +175,9 @@ void WindowsWindow::Init(const WindowProps& props) {
 #pragma endregion
 }
 
-void WindowsWindow::Shutdown() { glfwDestroyWindow(m_Window); }
+void WindowsWindow::Shutdown() { 
+  glfwTerminate();
+  glfwDestroyWindow(m_Window); 
+}
 
 }  // namespace Aria
