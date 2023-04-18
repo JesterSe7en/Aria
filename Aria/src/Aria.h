@@ -7,6 +7,7 @@
 #include "Aria/Layer.h"
 #include "Aria/ImGui/ImGuiLayer.h"
 #include "Aria/Log.h"
+#include "Aria/Input.h"
 
 // -------- Entry Point --------
 #include "Aria/EntryPoint.h"
