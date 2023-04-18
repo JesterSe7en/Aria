@@ -1,0 +1,3 @@
+Eigen is a general purpose math library supposedly better for performance
+DirectXMath is designed specifically to work with DirectX
+GLM is based on OpenGL implementation but is not limited to OpenGL
