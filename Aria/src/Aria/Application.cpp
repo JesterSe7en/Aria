@@ -8,6 +8,8 @@
 #include "Aria/Input.h"
 #include "Aria/Log.h"
 
+
+
 namespace Aria {
 
 #define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)

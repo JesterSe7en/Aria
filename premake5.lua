@@ -15,6 +15,7 @@ IncludeDir = {}
 IncludeDir["GLFW"] = "Aria/vendor/GLFW/include"
 IncludeDir["Glad"] = "Aria/vendor/Glad/include"
 IncludeDir["imgui"] = "Aria/vendor/imgui"
+IncludeDir["glm"] = "Aria/vendor/glm"
 
 include "Aria/vendor/GLFW"
 include "Aria/vendor/Glad"
@@ -35,6 +36,8 @@ project "Aria"
   {
     "%{prj.name}/src/**.h",
     "%{prj.name}/src/**.cpp",
+    "%{prj.name}/vendor/glm/glm/**.hpp",
+    "%{prj.name}/vendor/glm/glm/**.inl"
   }
 
   includedirs
@@ -43,7 +46,8 @@ project "Aria"
     "%{prj.name}/vendor/spdlog/include",
     "%{IncludeDir.GLFW}",
     "%{IncludeDir.Glad}",
-    "%{IncludeDir.imgui}"
+    "%{IncludeDir.imgui}",
+    "%{IncludeDir.glm}"
   }
 
   links
@@ -105,7 +109,8 @@ project "Sandbox"
   includedirs
   {
     "Aria/vendor/spdlog/include",
-    "Aria/src"
+    "Aria/src",
+    "%{IncludeDir.glm}"
   }
 
   links
