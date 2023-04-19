@@ -1,12 +1,7 @@
 workspace "Aria"
-  architecture "x64"
+architecture "x64"
 
-  configurations
-  {
-    "Debug",
-    "Release",
-    "Dist"
-  }
+configurations {"Debug", "Release", "Dist"}
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.archtecture}"
 
@@ -22,123 +17,86 @@ include "Aria/vendor/Glad"
 include "Aria/vendor/imgui"
 
 project "Aria"
-  location "Aria"
-  kind "SharedLib"
-  language "C++"
+location "Aria"
+kind "StaticLib"
+language "C++"
+cppdialect "C++17"
+staticruntime "on"
 
-  targetdir ("bin/" .. outputdir .. "/%{prj.name}")
-  objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+targetdir("bin/" .. outputdir .. "/%{prj.name}")
+objdir("bin-int/" .. outputdir .. "/%{prj.name}")
 
-  pchheader "ariapch.h"
-  pchsource "Aria/src/ariapch.cpp" -- needed for VS
+pchheader "ariapch.h"
+pchsource "Aria/src/ariapch.cpp" -- needed for VS
 
-  files 
-  {
-    "%{prj.name}/src/**.h",
-    "%{prj.name}/src/**.cpp",
-    "%{prj.name}/vendor/glm/glm/**.hpp",
-    "%{prj.name}/vendor/glm/glm/**.inl"
-  }
+files {
+    "%{prj.name}/src/**.h", "%{prj.name}/src/**.cpp",
+    "%{prj.name}/vendor/glm/glm/**.hpp", "%{prj.name}/vendor/glm/glm/**.inl"
+}
 
-  includedirs
-  {
-    "%{prj.name}/src",
-    "%{prj.name}/vendor/spdlog/include",
-    "%{IncludeDir.GLFW}",
-    "%{IncludeDir.Glad}",
-    "%{IncludeDir.imgui}",
+includedirs {
+    "%{prj.name}/src", "%{prj.name}/vendor/spdlog/include",
+    "%{IncludeDir.GLFW}", "%{IncludeDir.Glad}", "%{IncludeDir.imgui}",
     "%{IncludeDir.glm}"
-  }
+}
 
-  links
-  {
-    "GLFW",
-    "Glad",
-    "imgui",
-    "opengl32.lib",
-  }
+links {"GLFW", "Glad", "imgui", "opengl32.lib"}
 
-  filter "system:windows"
-    cppdialect "C++20"
-    staticruntime "On"
-    systemversion "latest"
+filter "system:windows"
+systemversion "latest"
 
-    defines 
-    {
-      "ARIA_PLATFORM_WINDOWS",
-      "ARIA_BUILD_DLL",
-    }
+defines {"ARIA_PLATFORM_WINDOWS", "ARIA_BUILD_DLL"}
 
-    postbuildcommands
-    {
-      ("{COPY} %{cfg.buildtarget.relpath} ../bin/" .. outputdir .. "/Sandbox")
-    }
-  
-  filter "configurations:Debug"
-    defines "ARIA_DEBUG"
-    buildoptions "/MDd"
-    symbols "On"
-  
-  filter "configurations:Release"
-    defines "ARIA_RELEASE"
-    buildoptions "/MD"
-    optimize "On"
+filter "configurations:Debug"
+defines "ARIA_DEBUG"
+runtime "Debug"
+symbols "On"
 
-  filter "configurations:Dist"
-    defines "ARIA_DIST"
-    buildoptions "/MD"
-    optimize "On"
+filter "configurations:Release"
+defines "ARIA_RELEASE"
+runtime "Release"
+optimize "On"
 
-  -- filter { "system:windows", "configurations:Release"}
-  --   buildoptions "/MT"
+filter "configurations:Dist"
+defines "ARIA_DIST"
+runtime "Release"
+optimize "On"
+
+-- filter { "system:windows", "configurations:Release"}
+--   buildoptions "/MT"
 
 project "Sandbox"
-  location "Sandbox"
-  kind "ConsoleApp"
-  language "C++"
+location "Sandbox"
+kind "ConsoleApp"
+language "C++"
+cppdialect "C++17"
+staticruntime "On"
 
-  targetdir ("bin/" .. outputdir .. "/%{prj.name}")
-  objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+targetdir("bin/" .. outputdir .. "/%{prj.name}")
+objdir("bin-int/" .. outputdir .. "/%{prj.name}")
 
-  files 
-  {
-    "%{prj.name}/src/**.h",
-    "%{prj.name}/src/**.cpp",
-  }
+files {"%{prj.name}/src/**.h", "%{prj.name}/src/**.cpp"}
 
-  includedirs
-  {
-    "Aria/vendor/spdlog/include",
-    "Aria/src",
-    "%{IncludeDir.glm}"
-  }
+includedirs {"Aria/vendor/spdlog/include", "Aria/src", "%{IncludeDir.glm}"}
 
-  links
-  {
-    "Aria"
-  }
+links {"Aria"}
 
-  filter "system:windows"
-    cppdialect "C++20"
-    staticruntime "On"
-    systemversion "latest"
+filter "system:windows"
+systemversion "latest"
 
-    defines 
-    {
-      "ARIA_PLATFORM_WINDOWS",
-    }
+defines {"ARIA_PLATFORM_WINDOWS"}
 
-  filter "configurations:Debug"
-    defines "ARIA_DEBUG"
-    buildoptions "/MDd"
-    symbols "On"
+filter "configurations:Debug"
+defines "ARIA_DEBUG"
+runtime "Debug"
+symbols "On"
 
-  filter "configurations:Release"
-    defines "ARIA_RELEASE"
-    buildoptions "/MD"
-    optimize "On"
+filter "configurations:Release"
+defines "ARIA_RELEASE"
+runtime "Release"
+optimize "On"
 
-  filter "configurations:Dist"
-    defines "ARIA_DIST"
-    buildoptions "/MD"
-    optimize "On"
+filter "configurations:Dist"
+defines "ARIA_DIST"
+runtime "Release"
+optimize "On"

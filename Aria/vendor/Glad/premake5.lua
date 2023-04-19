@@ -1,22 +1,14 @@
 project "Glad"
 kind "StaticLib"
 language "C"
-staticruntime "off"
+staticruntime "on"
 
 targetdir("bin/" .. outputdir .. "/%{prj.name}")
 objdir("bin-int/" .. outputdir .. "/%{prj.name}")
 
-files
-{
-	"include/glad/gl.h",
-	"include/KHR/khrplatform.h",
-	"src/gl.c",
-}
+files {"include/glad/gl.h", "include/KHR/khrplatform.h", "src/gl.c"}
 
-includedirs
-{
-	"include"
-}
+includedirs {"include"}
 
 filter "system:windows"
 systemversion "latest"
