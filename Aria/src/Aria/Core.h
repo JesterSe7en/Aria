@@ -1,10 +1,14 @@
 #pragma once
 
 #ifdef ARIA_PLATFORM_WINDOWS
+#if ARIA_DYNAMIC_LINK
 #ifdef ARIA_BUILD_DLL
 #define ARIA_API __declspec(dllexport)
 #else
 #define ARIA_API __declspec(dllimport)
+#endif
+#else
+#define ARIA_API
 #endif
 #else
 #error Aria only supports Windows!
