@@ -6,12 +6,12 @@
 #include <GLFW/glfw3.h>
 
 namespace Aria {
-OpenGLContext::OpenGLContext(GLFWwindow* window_handle) {
-  ARIA_CORE_ASSERT(window_handle, "Window handle is null")
+OpenGLContext::OpenGLContext(GLFWwindow* windowHandle) {
+  ARIA_CORE_ASSERT(windowHandle, "Window handle is null")
 }
 
 void OpenGLContext::Init() {
-  glfwMakeContextCurrent(window_handle_);
+  glfwMakeContextCurrent(m_WindowHandle);
 
   // Load Glad
   int version = gladLoadGL(glfwGetProcAddress);
@@ -20,5 +20,5 @@ void OpenGLContext::Init() {
                  GLAD_VERSION_MINOR(version));
 }
 
-void OpenGLContext::SwapBuffers() { glfwSwapBuffers(window_handle_); }
+void OpenGLContext::SwapBuffers() { glfwSwapBuffers(m_WindowHandle); }
 }  // namespace Aria
