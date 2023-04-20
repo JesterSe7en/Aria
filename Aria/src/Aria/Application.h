@@ -35,6 +35,7 @@ class ARIA_API Application {
 
  private:
   static Application* s_Instance;
+  unsigned int vertex_array_, vertex_buffer_, index_buffer_;
 };
 
 // To be defined in CLIENT
