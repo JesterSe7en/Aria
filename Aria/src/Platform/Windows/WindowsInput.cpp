@@ -41,7 +41,7 @@ std::pair<float, float> WindowsInput::GetMousePositionImpl() {
       Application::Get().GetWindow().GetNativeWindow());
 
   glfwGetCursorPos(window, &xpos, &ypos);
-  return std::pair<float, float>(xpos, ypos);
+  return std::pair<float, float>(static_cast<float>(xpos), static_cast<float>(ypos));
 }
 
 }  // namespace Aria
