@@ -6,7 +6,8 @@
 #include <GLFW/glfw3.h>
 
 namespace Aria {
-OpenGLContext::OpenGLContext(GLFWwindow* windowHandle) {
+OpenGLContext::OpenGLContext(GLFWwindow* windowHandle)
+    : m_WindowHandle(windowHandle) {
   ARIA_CORE_ASSERT(windowHandle, "Window handle is null")
 }
 
