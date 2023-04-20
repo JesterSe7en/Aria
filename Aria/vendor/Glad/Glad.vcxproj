@@ -54,20 +54,20 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>bin\Debug-windows-\Glad\</OutDir>
-    <IntDir>bin-int\Debug-windows-\Glad\</IntDir>
+    <OutDir>bin\Debug-windows\Glad\</OutDir>
+    <IntDir>bin-int\Debug-windows\Glad\</IntDir>
     <TargetName>Glad</TargetName>
     <TargetExt>.lib</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>bin\Release-windows-\Glad\</OutDir>
-    <IntDir>bin-int\Release-windows-\Glad\</IntDir>
+    <OutDir>bin\Release-windows\Glad\</OutDir>
+    <IntDir>bin-int\Release-windows\Glad\</IntDir>
     <TargetName>Glad</TargetName>
     <TargetExt>.lib</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Dist|x64'">
-    <OutDir>bin\Dist-windows-\Glad\</OutDir>
-    <IntDir>bin-int\Dist-windows-\Glad\</IntDir>
+    <OutDir>bin\Dist-windows\Glad\</OutDir>
+    <IntDir>bin-int\Dist-windows\Glad\</IntDir>
     <TargetName>Glad</TargetName>
     <TargetExt>.lib</TargetExt>
   </PropertyGroup>
@@ -78,7 +78,7 @@
       <AdditionalIncludeDirectories>include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
-      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
     </ClCompile>
     <Link>
@@ -96,7 +96,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <MinimalRebuild>false</MinimalRebuild>
       <StringPooling>true</StringPooling>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
     </ClCompile>
     <Link>
@@ -111,7 +111,7 @@
       <WarningLevel>Level3</WarningLevel>
       <AdditionalIncludeDirectories>include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Disabled</Optimization>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
     </ClCompile>
     <Link>

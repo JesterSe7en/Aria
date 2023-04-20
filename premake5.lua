@@ -4,7 +4,7 @@ startproject("Sandbox")
 
 configurations({ "Debug", "Release", "Dist" })
 
-outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.archtecture}"
+outputdir = "%{cfg.buildcfg}-%{cfg.system}"
 
 -- Include directories relative to root folder (soln dir)
 IncludeDir = {}
