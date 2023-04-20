@@ -6,10 +6,10 @@
 #include "Aria/Events/ApplicationEvent.h"
 #include "Aria/Events/KeyEvent.h"
 #include "Aria/Events/MouseEvent.h"
+#include "Platform/OpenGL/OpenGLContext.h"
 
 #include "WindowsWindow.h"
 
-#include <glad/gl.h>
 #include <GLFW/glfw3.h>
 
 namespace Aria {
@@ -30,7 +30,7 @@ WindowsWindow::~WindowsWindow() {}
 
 void WindowsWindow::OnUpdate() {
   glfwPollEvents();
-  glfwSwapBuffers(m_Window);
+  m_Context->SwapBuffers();
 }
 
 void WindowsWindow::SetVSync(bool enabled) {
@@ -45,6 +45,8 @@ void WindowsWindow::Init(const WindowProps& props) {
   m_Data.Width = props.Width;
   m_Data.Height = props.Height;
 
+  
+
   ARIA_CORE_INFO("Creating window {0} ({1}, {2})", props.Title, props.Width,
                  props.Height);
 
@@ -57,13 +59,10 @@ void WindowsWindow::Init(const WindowProps& props) {
 
   m_Window = glfwCreateWindow((int)props.Width, (int)props.Height,
                               props.Title.c_str(), nullptr, nullptr);
-  glfwMakeContextCurrent(m_Window);
 
-  // Load Glad
-  int version = gladLoadGL(glfwGetProcAddress);
-  ARIA_CORE_ASSERT(version, "Failed to initialize Glad");
-  ARIA_CORE_INFO("Loaded Glad {0}.{1}", GLAD_VERSION_MAJOR(version),
-                 GLAD_VERSION_MINOR(version));
+  m_Context = new OpenGLContext(m_Window);
+  m_Context->Init();
+ 
 
   glfwSetWindowUserPointer(m_Window, &m_Data);
   SetVSync(true);

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Aria/Window.h"
+#include "Aria/Renderer/GraphicsContext.h"
 
 struct GLFWwindow;
 
@@ -32,6 +33,7 @@ class WindowsWindow : public Window {
 
  private:
   GLFWwindow* m_Window;
+  GraphicsContext* m_Context;
 
   struct WindowData {
     std::string Title;
