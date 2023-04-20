@@ -1,10 +1,10 @@
 workspace("Aria")
-architecture("x64")
+architecture("x86_64")
 startproject("Sandbox")
 
 configurations({ "Debug", "Release", "Dist" })
 
-outputdir = "%{cfg.buildcfg}-%{cfg.system}"
+outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 -- Include directories relative to root folder (soln dir)
 IncludeDir = {}
