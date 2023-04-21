@@ -51,6 +51,9 @@ Application::Application() {
   unsigned int indicies[3] = {0, 1, 2};
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indicies), indicies,
                GL_STATIC_COPY);
+
+  // Why doesn't this accept relative path?
+  shader_.reset(new Shader("C:/Users/alyxc/Workspace/Aria/Aria/res/shaders/basic.shader"));
 }
 
 Application::~Application() {}

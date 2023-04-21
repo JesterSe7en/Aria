@@ -7,6 +7,8 @@
 #include "Layer.h"
 #include "LayerStack.h"
 
+#include "Aria/Renderer/Shader.h"
+
 namespace Aria {
 
 class ARIA_API Application {
@@ -36,8 +38,10 @@ class ARIA_API Application {
  private:
   static Application* s_Instance;
   unsigned int vertex_array_, vertex_buffer_, index_buffer_;
+
+  std::unique_ptr<Shader> shader_;
 };
 
 // To be defined in CLIENT
 Application* CreateApplication();
-}
+}  // namespace Aria
