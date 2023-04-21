@@ -60,8 +60,12 @@ Application::~Application() {}
 
 void Application::Run() {
   while (m_Running) {
-    glClearColor(0.1, 0, 0.1, 1);
+    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
+
+    shader_->Bind();
+    glBindVertexArray(vertex_array_);
+    glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
 
     for (Layer* layer : m_LayerStack) {
       layer->OnUpdate();
@@ -72,8 +76,6 @@ void Application::Run() {
     auto [x, y] = Input::GetMousePosition();
     //ARIA_CORE_TRACE("{0}, {1}", x, y);
 
-    glBindVertexArray(vertex_array_);
-    glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
 
     m_Window->OnUpdate();
   }
