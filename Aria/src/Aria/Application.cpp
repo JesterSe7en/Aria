@@ -9,6 +9,8 @@
 #include "Aria/Input.h"
 #include "Aria/Log.h"
 
+#include "Aria/Renderer/Buffer.h"
+
 #ifdef WIN32
 #include <Windows.h>
 extern "C" {
@@ -33,14 +35,11 @@ Application::Application() {
   glGenVertexArrays(1, &vertex_array_);
   glBindVertexArray(vertex_array_);
 
-  glGenBuffers(1, &vertex_buffer_);
-  glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer_);
-
   float vertices[3 * 3] = {
       -0.5f, -0.5f, 0.0f, 0.5f, -0.5f, 0.0f, 0.0f, 0.5f, 0.0f,
   };
 
-  glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+  vertex_buffer_.reset(VertexBuffer::Create(vertices, sizeof(vertices))); 
 
   glEnableVertexAttribArray(0);
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);

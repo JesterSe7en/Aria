@@ -1,20 +1,31 @@
 #pragma once
 
-#include "Aria/Renderer/VertexBuffer.h"
-#include "Aria/Renderer/IndexBuffer.h"
 #include <cstdint>
 
+#include "Aria/Renderer/Buffer.h"
+
 namespace Aria {
-  class OpenGLBuffer : public VertexBuffer {
+class OpenGLVertexBuffer : public VertexBuffer {
  public:
-    virtual ~OpenGLBuffer() {}
+  OpenGLVertexBuffer(float* verticies, uint32_t size);
+  virtual ~OpenGLVertexBuffer();
 
-    void Bind() const override;
-    void Unbind() const override;
+  void Bind() const override;
+  void Unbind() const override;
 
-    static VertexBuffer* Create(float* buffer, uint32_t size);
+ private:
+  uint32_t renderer_id_;
+};
 
-   private:
-    uint32_t renderer_id_;
-  };
-}
+class OpenGLIndexBuffer : public IndexBuffer {
+ public:
+  OpenGLIndexBuffer(float* verticies, uint32_t size);
+  virtual ~OpenGLIndexBuffer();
+
+  void Bind() const override;
+  void Unbind() const override;
+
+ private:
+  uint32_t renderer_id_;
+};
+}  // namespace Aria

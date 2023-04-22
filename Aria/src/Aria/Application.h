@@ -37,9 +37,10 @@ class ARIA_API Application {
 
  private:
   static Application* s_Instance;
-  unsigned int vertex_array_, vertex_buffer_, index_buffer_;
+  unsigned int vertex_array_, index_buffer_;
 
   std::unique_ptr<Shader> shader_;
+  std::unique_ptr<VertexBuffer> vertex_buffer_;
 };
 
 // To be defined in CLIENT
