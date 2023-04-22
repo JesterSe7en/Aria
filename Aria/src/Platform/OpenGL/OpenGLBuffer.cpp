@@ -8,6 +8,8 @@ namespace Aria {
 // --------------- Vertex Buffer ---------------
 
 OpenGLVertexBuffer::OpenGLVertexBuffer(float* verticies, uint32_t size) {
+  // glCreateBuffers only available in 4.5
+  // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glCreateBuffers.xhtml
   glCreateBuffers(1, &renderer_id_);
   glBindBuffer(GL_ARRAY_BUFFER, renderer_id_);
   glBufferData(GL_ARRAY_BUFFER, size, verticies, GL_STATIC_DRAW);
@@ -25,7 +27,7 @@ void OpenGLVertexBuffer::Unbind() const { glBindBuffer(GL_ARRAY_BUFFER, 0); }
 
 OpenGLIndexBuffer::OpenGLIndexBuffer(uint32_t* indices, uint32_t count)
     : count_(count) {
-  glGenBuffers(1, &renderer_id_);
+  glCreateBuffers(1, &renderer_id_);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, renderer_id_);
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(uint32_t), indices,
                GL_STATIC_DRAW);
