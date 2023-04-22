@@ -5,6 +5,7 @@
 #include "Aria/Renderer/Buffer.h"
 
 namespace Aria {
+
 class OpenGLVertexBuffer : public VertexBuffer {
  public:
   OpenGLVertexBuffer(float* verticies, uint32_t size);
@@ -19,13 +20,16 @@ class OpenGLVertexBuffer : public VertexBuffer {
 
 class OpenGLIndexBuffer : public IndexBuffer {
  public:
-  OpenGLIndexBuffer(float* verticies, uint32_t size);
+  OpenGLIndexBuffer(uint32_t* indices, uint32_t count);
   virtual ~OpenGLIndexBuffer();
 
   void Bind() const override;
   void Unbind() const override;
 
+  virtual uint32_t GetCount() const { return count_; }
+
  private:
   uint32_t renderer_id_;
+  uint32_t count_;
 };
 }  // namespace Aria

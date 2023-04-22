@@ -45,8 +45,6 @@ void WindowsWindow::Init(const WindowProps& props) {
   m_Data.Width = props.Width;
   m_Data.Height = props.Height;
 
-  
-
   ARIA_CORE_INFO("Creating window {0} ({1}, {2})", props.Title, props.Width,
                  props.Height);
 
@@ -57,12 +55,18 @@ void WindowsWindow::Init(const WindowProps& props) {
     s_GLFWInitialized = true;
   }
 
+  // If not specified, will load latest from graphics driver
+  //glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+  //glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+  //glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
   m_Window = glfwCreateWindow((int)props.Width, (int)props.Height,
                               props.Title.c_str(), nullptr, nullptr);
 
   m_Context = new OpenGLContext(m_Window);
   m_Context->Init();
  
+
 
   glfwSetWindowUserPointer(m_Window, &m_Data);
   SetVSync(true);

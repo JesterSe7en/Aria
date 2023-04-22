@@ -38,18 +38,14 @@ Application::Application() {
   float vertices[3 * 3] = {
       -0.5f, -0.5f, 0.0f, 0.5f, -0.5f, 0.0f, 0.0f, 0.5f, 0.0f,
   };
+  uint32_t indicies[3] = {0, 1, 2};
 
   vertex_buffer_.reset(VertexBuffer::Create(vertices, sizeof(vertices))); 
 
   glEnableVertexAttribArray(0);
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
 
-  glGenBuffers(1, &index_buffer_);
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buffer_);
-
-  unsigned int indicies[3] = {0, 1, 2};
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indicies), indicies,
-               GL_STATIC_COPY);
+  index_buffer_.reset(IndexBuffer::Create(indicies, sizeof(indicies) / sizeof(uint32_t)));
 
   // Why doesn't this accept relative path?
   shader_.reset(new Shader("C:/Users/alyxc/Workspace/Aria/Aria/res/shaders/basic.shader"));
@@ -64,7 +60,8 @@ void Application::Run() {
 
     shader_->Bind();
     glBindVertexArray(vertex_array_);
-    glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
+    glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT,
+                   nullptr);
 
     for (Layer* layer : m_LayerStack) {
       layer->OnUpdate();

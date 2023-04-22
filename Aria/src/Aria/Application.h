@@ -6,7 +6,7 @@
 #include "Window.h"
 #include "Layer.h"
 #include "LayerStack.h"
-
+#include "Renderer/Buffer.h"
 #include "Aria/Renderer/Shader.h"
 
 namespace Aria {
@@ -37,10 +37,11 @@ class ARIA_API Application {
 
  private:
   static Application* s_Instance;
-  unsigned int vertex_array_, index_buffer_;
+  unsigned int vertex_array_;
 
   std::unique_ptr<Shader> shader_;
   std::unique_ptr<VertexBuffer> vertex_buffer_;
+  std::unique_ptr<IndexBuffer> index_buffer_;
 };
 
 // To be defined in CLIENT
