@@ -15,6 +15,7 @@ class OpenGLVertexBuffer : public VertexBuffer {
   void Unbind() const override;
 
  private:
+  BufferLayout buffer_layout_;
   uint32_t renderer_id_;
 };
 
