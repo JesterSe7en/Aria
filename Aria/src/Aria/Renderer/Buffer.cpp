@@ -15,6 +15,7 @@ VertexBuffer* VertexBuffer::create(float* verticies, uint32_t size) {
     case RendererAPI::API::None:
       ARIA_CORE_ASSERT(false,
                        "No renderer API selected for vertex buffer generation")
+      return nullptr;
     case RendererAPI::API::OpenGL:
       return new OpenGLVertexBuffer(verticies, size);
       break;
@@ -23,8 +24,10 @@ VertexBuffer* VertexBuffer::create(float* verticies, uint32_t size) {
       ARIA_CORE_ASSERT(
           false,
           "API selected for vertex buffer generation is not implemented", );
+      return nullptr;
     default:
       ARIA_CORE_ASSERT("Unknown API");
+      return nullptr;
   }
 }
 
@@ -36,6 +39,7 @@ IndexBuffer* IndexBuffer::create(uint32_t* indices, uint32_t count) {
     case RendererAPI::API::None:
       ARIA_CORE_ASSERT(false,
                        "No renderer API selected for index buffer generation")
+      return nullptr;
     case RendererAPI::API::OpenGL:
       return new OpenGLIndexBuffer(indices, count);
       break;
@@ -43,8 +47,10 @@ IndexBuffer* IndexBuffer::create(uint32_t* indices, uint32_t count) {
     case RendererAPI::API::Vulkan:
       ARIA_CORE_ASSERT(
           false, "API selected for index buffer generation is not implemented");
+      return nullptr;
     default:
       ARIA_CORE_ASSERT("Unknown API");
+      return nullptr;
   }
 }
 
@@ -68,10 +74,17 @@ void BufferLayout::calculate_offset_and_stride() {
 
 BufferElement::BufferElement(ShaderPrimitiveType type, std::string& name,
                              bool normalized = false)
-    : mType(type),
-      mName(name),
-      mNormalized(normalized),
-      mSize(get_shader_type_size(type)) {}
+    : mName(name),
+      mType(type),
+      mOffset(0),
+      mSize(get_shader_type_size(type)),
+      mNormalized(normalized) {}
+
+  std::string mName;
+ShaderPrimitiveType mType;
+size_t mOffset;
+uint32_t mSize;
+bool mNormalized;
 
 /// <summary>
 /// Returns the number of elements per primitive type e.g. Float3 returns 3 as
@@ -106,7 +119,7 @@ uint32_t BufferElement::get_element_count() const {
       return 1;
     default:
       ARIA_CORE_ASSERT(false, "Unknown shader primitive type");
-      break;
+      return 0;
   }
 }
 }  // namespace ARIA

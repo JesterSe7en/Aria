@@ -74,11 +74,11 @@ class BufferElement {
 
 class BufferLayout {
  public:
-  BufferLayout() {}
+  BufferLayout() = default;
   BufferLayout(std::initializer_list<BufferElement> elements);
 
-  inline std::vector<BufferElement> GetElements() { return mElements; }
-  inline int get_stride() { return mStride; }
+  std::vector<BufferElement> get_elements() { return mElements; }
+  const int get_stride() const { return mStride; }
 
   // iterators
   inline std::vector<BufferElement>::iterator begin() {

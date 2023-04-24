@@ -8,10 +8,13 @@ namespace ARIA {
 
 class OpenGLVertexBuffer : public VertexBuffer {
  public:
+  OpenGLVertexBuffer() = default;
   OpenGLVertexBuffer(float* verticies, uint32_t size);
-  virtual ~OpenGLVertexBuffer();
+  ~OpenGLVertexBuffer();
 
-  virtual const BufferLayout& get_layout() const override { return mBufferLayout; }
+  virtual const BufferLayout& get_layout() const override {
+    return mBufferLayout;
+  }
   virtual void set_layout(const BufferLayout& layout) override {
     mBufferLayout = layout;
   }
@@ -27,7 +30,7 @@ class OpenGLVertexBuffer : public VertexBuffer {
 class OpenGLIndexBuffer : public IndexBuffer {
  public:
   OpenGLIndexBuffer(uint32_t* indices, uint32_t count);
-  virtual ~OpenGLIndexBuffer();
+  ~OpenGLIndexBuffer();
 
   void bind() const override;
   void unbind() const override;

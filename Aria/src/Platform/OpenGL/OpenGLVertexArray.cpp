@@ -40,7 +40,7 @@ OpenGLVertexArray::~OpenGLVertexArray() {
 void OpenGLVertexArray::bind() const { glBindVertexArray(mRendererID); }
 void OpenGLVertexArray::unbind() const { glBindVertexArray(0); }
 void OpenGLVertexArray::add_vertex_buffer(const VertexBuffer& vertex_buffer) {
-  ARIA_CORE_ASSERT(vertex_buffer.get_layout().GetElements().size(),
+  ARIA_CORE_ASSERT(vertex_buffer.get_layout().get_elements().size(),
                    "Vertex buffer has no layout defined");
 
   bind();
@@ -53,12 +53,10 @@ void OpenGLVertexArray::add_vertex_buffer(const VertexBuffer& vertex_buffer) {
       case ShaderPrimitiveType::Float2:
       case ShaderPrimitiveType::Float3:
       case ShaderPrimitiveType::Float4:
-        auto& layout = vertex_buffer.get_layout();
         glEnableVertexAttribArray(mVertexBufferIndex);
         glVertexAttribPointer(mVertexBufferIndex, element.get_element_count(),
                               ShaderPrimitiveToOpenGLPrimative(element.mType),
-                              element.mNormalized,
-                              vertex_buffer.get_layout().get_stride(),
+                              element.mNormalized, layout.get_stride(),
                               (const void*)element.mOffset);
         mVertexBufferIndex++;
         break;
@@ -71,7 +69,7 @@ void OpenGLVertexArray::add_vertex_buffer(const VertexBuffer& vertex_buffer) {
         glEnableVertexAttribArray(mVertexBufferIndex);
         glVertexAttribIPointer(mVertexBufferIndex, element.get_element_count(),
                                ShaderPrimitiveToOpenGLPrimative(element.mType),
-                               vertex_buffer.get_layout().get_stride(),
+                               layout.get_stride(),
                                (const void*)element.mOffset);
         break;
 
@@ -87,12 +85,12 @@ void OpenGLVertexArray::add_vertex_buffer(const VertexBuffer& vertex_buffer) {
     }
   }
 
-  mVertexBuffers.push_back(vertex_buffer);
+  mVertexBuffers.push_back(&vertex_buffer);
 }
 void OpenGLVertexArray::set_index_buffer(const IndexBuffer& index_buffer) {
   bind();
   index_buffer.bind();
-  mIndexBuffer = index_buffer;
+  *mIndexBuffer = index_buffer;
 }
 
 };  // namespace ARIA

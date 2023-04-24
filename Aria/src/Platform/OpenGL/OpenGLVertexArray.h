@@ -12,13 +12,13 @@ class OpenGLVertexArray : public VertexArray {
   void bind() const override;
   void unbind() const override;
 
-  void add_vertex_buffer(const VertexBuffer& vertex_buffer);
-  void set_index_buffer(const IndexBuffer& index_buffer);
+  virtual void add_vertex_buffer(const VertexBuffer& vertex_buffer) override;
+  virtual void set_index_buffer(const IndexBuffer& index_buffer) override;
 
  private:
   uint32_t mRendererID;
   uint32_t mVertexBufferIndex;
-  std::vector<VertexBuffer> mVertexBuffers;
-  IndexBuffer& mIndexBuffer;
+  std::vector<const VertexBuffer*> mVertexBuffers;
+  IndexBuffer* mIndexBuffer;
 };
 }  // namespace ARIA
