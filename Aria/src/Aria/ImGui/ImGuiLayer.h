@@ -2,20 +2,20 @@
 
 #include "Aria/Layer.h"
 
-namespace Aria {
+namespace ARIA {
 class ARIA_API ImGuiLayer : public Layer {
  public:
   ImGuiLayer();
   ~ImGuiLayer();
 
-  void OnAttach() override;
-  void OnDetach() override;
+  void on_attach() override;
+  void on_detach() override;
 
-  void OnUpdate() override;
-  void OnEvent(Event& event) override;
+  void on_update() override;
+  void on_event(Event& event) override;
 
  private:
   const char* GLSL_VERSION = "#version 430 core";
-  float m_Time = 0.0f;
+  float mTime = 0.0f;
 };
-}  // namespace Aria
+}  // namespace ARIA

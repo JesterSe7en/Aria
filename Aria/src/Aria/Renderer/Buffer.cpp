@@ -5,12 +5,12 @@
 
 #include "Platform/OpenGL/OpenGLBuffer.h"
 
-namespace Aria {
+namespace ARIA {
 
 // -------------------------- Vertex Buffer  --------------------------
 
-VertexBuffer* VertexBuffer::Create(float* verticies, uint32_t size) {
-  RendererAPI::API api = RendererAPI::GetAPI();
+VertexBuffer* VertexBuffer::create(float* verticies, uint32_t size) {
+  RendererAPI::API api = RendererAPI::get_api();
   switch (api) {
     case RendererAPI::API::None:
       ARIA_CORE_ASSERT(false,
@@ -30,8 +30,8 @@ VertexBuffer* VertexBuffer::Create(float* verticies, uint32_t size) {
 
 // -------------------------- Index Buffer --------------------------
 
-IndexBuffer* IndexBuffer::Create(uint32_t* indices, uint32_t count) {
-  RendererAPI::API api = RendererAPI::GetAPI();
+IndexBuffer* IndexBuffer::create(uint32_t* indices, uint32_t count) {
+  RendererAPI::API api = RendererAPI::get_api();
   switch (api) {
     case RendererAPI::API::None:
       ARIA_CORE_ASSERT(false,
@@ -51,57 +51,62 @@ IndexBuffer* IndexBuffer::Create(uint32_t* indices, uint32_t count) {
 // -------------------------- Buffer Layout  --------------------------
 
 BufferLayout::BufferLayout(std::initializer_list<BufferElement> elements)
-    : elements_(elements), stride_(0) {
-  CalculateOffsetAndStride();
+    : mElements(elements), mStride(0) {
+  calculate_offset_and_stride();
 }
 
-void BufferLayout::CalculateOffsetAndStride() {
+void BufferLayout::calculate_offset_and_stride() {
   size_t offset = 0;
-  for (BufferElement& element : elements_) {
-    element.offset_ = offset;
-    offset += element.size_;
-    stride_ += element.size_;
+  for (BufferElement& element : mElements) {
+    element.mOffset = offset;
+    offset += element.mSize;
+    mStride += element.mSize;
   }
 }
 
 // -------------------------- Buffer Elements  --------------------------
 
-BufferElement::BufferElement(ShaderPrimativeTypes type, std::string& name,
+BufferElement::BufferElement(ShaderPrimitiveType type, std::string& name,
                              bool normalized = false)
-    : type_(type),
-      name_(name),
-      normalized_(normalized),
-      size_(ShaderPrimativeTypeSize(type)) {}
+    : mType(type),
+      mName(name),
+      mNormalized(normalized),
+      mSize(get_shader_type_size(type)) {}
 
-uint32_t BufferElement::GetElementCount() const {
-  switch (type_) {
-    case Aria::ShaderPrimativeTypes::Float:
-      break;
-    case Aria::ShaderPrimativeTypes::Float2:
-      break;
-    case Aria::ShaderPrimativeTypes::Float3:
-      break;
-    case Aria::ShaderPrimativeTypes::Float4:
-      break;
-    case Aria::ShaderPrimativeTypes::Mat2:
-      break;
-    case Aria::ShaderPrimativeTypes::Mat3:
-      break;
-    case Aria::ShaderPrimativeTypes::Mat4:
-      break;
-    case Aria::ShaderPrimativeTypes::Int:
-      break;
-    case Aria::ShaderPrimativeTypes::Int2:
-      break;
-    case Aria::ShaderPrimativeTypes::Int3:
-      break;
-    case Aria::ShaderPrimativeTypes::Int4:
-      break;
-    case Aria::ShaderPrimativeTypes::Bool:
-      break;
+/// <summary>
+/// Returns the number of elements per primitive type e.g. Float3 returns 3 as
+/// there are 3 floats(elements) that comprises a Float3 type.
+/// </summary>
+/// <returns>uint32_t - number of elements</returns>
+uint32_t BufferElement::get_element_count() const {
+  switch (mType) {
+    case ARIA::ShaderPrimitiveType::Float:
+      return 1;
+    case ARIA::ShaderPrimitiveType::Float2:
+      return 2;
+    case ARIA::ShaderPrimitiveType::Float3:
+      return 3;
+    case ARIA::ShaderPrimitiveType::Float4:
+      return 4;
+    case ARIA::ShaderPrimitiveType::Mat2:
+      return 2;
+    case ARIA::ShaderPrimitiveType::Mat3:
+      return 3;
+    case ARIA::ShaderPrimitiveType::Mat4:
+      return 4;
+    case ARIA::ShaderPrimitiveType::Int:
+      return 1;
+    case ARIA::ShaderPrimitiveType::Int2:
+      return 2;
+    case ARIA::ShaderPrimitiveType::Int3:
+      return 3;
+    case ARIA::ShaderPrimitiveType::Int4:
+      return 4;
+    case ARIA::ShaderPrimitiveType::Bool:
+      return 1;
     default:
-      ARIA_CORE_ASSERT(false, "Unknown shader primative type");
+      ARIA_CORE_ASSERT(false, "Unknown shader primitive type");
       break;
   }
 }
-}  // namespace Aria
+}  // namespace ARIA

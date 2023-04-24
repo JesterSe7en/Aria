@@ -3,26 +3,26 @@
 #include "Aria/Core.h"
 #include "Layer.h"
 
-namespace Aria {
+namespace ARIA {
 class ARIA_API LayerStack {
  public:
   LayerStack();
   ~LayerStack();
 
-  void PushLayer(Layer* layer);
-  void PushOverlay(Layer* overlay);
-  void PopLayer(Layer* layer);
-  void PopOverlay(Layer* overlay);
+  void push_layer(Layer* layer);
+  void push_overlay(Layer* overlay);
+  void pop_layer(Layer* layer);
+  void pop_overlay(Layer* overlay);
 
-  std::vector<Layer*>::iterator begin() { return m_Layers.begin(); }
-  std::vector<Layer*>::iterator end() { return m_Layers.end(); }
+  std::vector<Layer*>::iterator begin() { return mLayers.begin(); }
+  std::vector<Layer*>::iterator end() { return mLayers.end(); }
 
   // Render - forwards (0 to size - 1)
   // Events - backwards (size -1 to 0)
 
  private:
-  std::vector<Layer*> m_Layers;
-  std::vector<Layer*>::iterator m_LayerInsert;
+  std::vector<Layer*> mLayers;
+  std::vector<Layer*>::iterator mLayerInsert;
   ;
 };
-}  // namespace Aria
+}  // namespace ARIA

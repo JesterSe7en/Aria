@@ -10,19 +10,19 @@
 
 #include "Aria/Application.h"
 
-namespace Aria {
+namespace ARIA {
 
 ImGuiLayer::ImGuiLayer() : Layer("ImGuiLayer") {}
 
 ImGuiLayer::~ImGuiLayer() {}
 
-void ImGuiLayer::OnAttach() {
+void ImGuiLayer::on_attach() {
   // Load ImGui
   bool success = IMGUI_CHECKVERSION();
   ARIA_CORE_ASSERT(success, "Failed to initialize Dear ImGui");
   ARIA_CORE_INFO("Loaded Dear ImGui {0}", IMGUI_VERSION);
 
-  Application& app = Application::Get();
+  Application& app = Application::get();
 
   ImGui::CreateContext();
   ImGuiIO& io = ImGui::GetIO();
@@ -40,26 +40,26 @@ void ImGuiLayer::OnAttach() {
     style.Colors[ImGuiCol_WindowBg].w = 1.0f;
   }
 
-  io.DisplaySize = ImVec2((float)app.GetWindow().GetWidth(),
-                          (float)app.GetWindow().GetHeight());
+  io.DisplaySize = ImVec2((float)app.get_window().get_width(),
+                          (float)app.get_window().get_height());
   
   ImGui::StyleColorsDark();
 
   GLFWwindow* window =
-      static_cast<GLFWwindow*>(app.GetWindow().GetNativeWindow());
+      static_cast<GLFWwindow*>(app.get_window().get_native_window());
 
   // Setup Platform/Renderer bindings
   ImGui_ImplGlfw_InitForOpenGL(window, true);
   ImGui_ImplOpenGL3_Init(GLSL_VERSION);
 }
 
-void ImGuiLayer::OnDetach() {
+void ImGuiLayer::on_detach() {
   ImGui_ImplOpenGL3_Shutdown();
   ImGui_ImplGlfw_Shutdown();
   ImGui::DestroyContext();
 }
 
-void ImGuiLayer::OnUpdate() {
+void ImGuiLayer::on_update() {
   ImGui_ImplOpenGL3_NewFrame();
   ImGui_ImplGlfw_NewFrame();
   ImGui::NewFrame();
@@ -82,5 +82,5 @@ void ImGuiLayer::OnUpdate() {
   }
 }
 
-void ImGuiLayer::OnEvent(Event& event) {}
-}  // namespace Aria
+void ImGuiLayer::on_event(Event& event) {}
+}  // namespace ARIA

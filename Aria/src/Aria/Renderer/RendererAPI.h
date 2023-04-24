@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Aria {
+namespace ARIA {
 
 
 class RendererAPI {
@@ -14,9 +14,9 @@ class RendererAPI {
   };
 
  public:
-  static API GetAPI() { return api; }
+  static API get_api() { return api; }
 
  private:
   static API api;
 };
-}  // namespace Aria
+}  // namespace ARIA

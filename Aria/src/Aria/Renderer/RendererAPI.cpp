@@ -1,6 +1,6 @@
 #include "ariapch.h"
 #include "RendererAPI.h"
 
-namespace Aria {
+namespace ARIA {
   RendererAPI::API RendererAPI::api = RendererAPI::API::OpenGL;
-}  // namespace Aria
+}  // namespace ARIA

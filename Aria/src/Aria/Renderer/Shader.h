@@ -2,7 +2,7 @@
 
 #include <string>
 
-namespace Aria {
+namespace ARIA {
 
   struct ShaderProgramSrc {
   std::string vertex_source;
@@ -15,17 +15,17 @@ class Shader {
   Shader(const std::string& file_path);
   ~Shader();
 
-  void Bind() const;
-  void Unbind() const;
+  void bind() const;
+  void unbind() const;
 
   // TODO: pull from openGL sln the uniform cache system
 
  private:
-  ShaderProgramSrc ParseShader(const std::string& file_path);
-  uint32_t CompileShader(unsigned int type, const std::string& source);
-  uint32_t CreateShader(const std::string& vertex_shader,
+  ShaderProgramSrc parse_shader(const std::string& file_path);
+  uint32_t compile_shader(unsigned int type, const std::string& source);
+  uint32_t create_shader(const std::string& vertex_shader,
                         const std::string& fragment_shader);
-  const char* GetShaderType(const int shader_type) const;
-  uint32_t renderer_id_;
+  const char* get_shader_type(const int shader_type) const;
+  uint32_t mRendererID;
 };
-}  // namespace Aria
+}  // namespace ARIA

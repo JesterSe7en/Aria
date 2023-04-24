@@ -2,7 +2,7 @@
 
 #include "Event.h"
 
-namespace Aria {
+namespace ARIA {
 
 class ARIA_API WindowCloseEvent : public Event {
  public:
@@ -21,14 +21,14 @@ class ARIA_API WindowCloseEvent : public Event {
 class ARIA_API WindowResizeEvent : public Event {
  public:
   WindowResizeEvent(unsigned int width, unsigned int height)
-      : m_Width(width), m_Height(height) {}
+      : mWidth(width), mHeight(height) {}
 
-  inline unsigned int GetWidth() const { return m_Width; }
-  inline unsigned int GetHeight() const { return m_Height; }
+  inline unsigned int get_width() const { return mWidth; }
+  inline unsigned int get_height() const { return mHeight; }
 
   std::string ToString() const override {
     std::stringstream ss;
-    ss << "WindowResizeEvent: " << m_Width << ", " << m_Height;
+    ss << "WindowResizeEvent: " << mWidth << ", " << mHeight;
     return ss.str();
   }
 
@@ -36,8 +36,8 @@ class ARIA_API WindowResizeEvent : public Event {
   EVENT_CLASS_CATEGORY(EventCategoryApplication)
 
  private:
-  unsigned int m_Width;
-  unsigned int m_Height;
+  unsigned int mWidth;
+  unsigned int mHeight;
 };
 
 class ARIA_API WindowFocusEvent : public Event {
@@ -87,4 +87,4 @@ class ARIA_API AppRenderEvent : public Event {
   EVENT_CLASS_TYPE(AppRender)
   EVENT_CLASS_CATEGORY(EventCategoryApplication)
 };
-}  // namespace Aria
+}  // namespace ARIA

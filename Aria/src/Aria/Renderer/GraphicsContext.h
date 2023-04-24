@@ -1,9 +1,9 @@
 #pragma once
 
-namespace Aria {
+namespace ARIA {
   class GraphicsContext {
   public:
-    virtual void Init() = 0;
-    virtual void SwapBuffers() = 0;
+    virtual void init() = 0;
+    virtual void swap_buffers() = 0;
   };
 }

@@ -2,40 +2,36 @@
 
 #include "Aria/Core.h"
 
-namespace Aria {
+namespace ARIA {
 
 class ARIA_API Input {
  public:
-  inline static bool IsKeyPressed(int keycode) {
-    return s_Instance->IsKeyPressedImpl(keycode);
+  inline static bool is_key_pressed(int keycode) {
+    return sInstance->is_key_pressed_impl(keycode);
   }
 
-  inline static bool IsMouseButtonPressed(int button) {
-    return s_Instance->IsMouseButtonPressedImpl(button);
+  inline static bool is_mouse_button_pressed(int button) {
+    return sInstance->is_mouse_button_pressed_impl(button);
   }
 
-  inline static float GetMouseX() {
-    return s_Instance->GetMouseXImpl();
-  }
+  inline static float get_mouse_x() { return sInstance->get_mouse_x_impl(); }
 
-  inline static float GetMouseY() {
-    return s_Instance->GetMouseYImpl();
-  }
+  inline static float get_mouse_y() { return sInstance->get_mouse_y_impl(); }
 
-  inline static std::pair<float, float> GetMousePosition() {
-    return s_Instance->GetMousePositionImpl();
+  inline static std::pair<float, float> get_mouse_position() {
+    return sInstance->get_mouse_position_impl();
   }
 
   // These will be implemented per platform (Windows, MacOS, etc.)
  protected:
-  virtual bool IsKeyPressedImpl(int keycode) = 0;
-  virtual bool IsMouseButtonPressedImpl(int button) = 0;
-  virtual float GetMouseXImpl() = 0;
-  virtual float GetMouseYImpl() = 0;
-  virtual std::pair<float, float> GetMousePositionImpl() = 0;
+  virtual bool is_key_pressed_impl(int keycode) = 0;
+  virtual bool is_mouse_button_pressed_impl(int button) = 0;
+  virtual float get_mouse_x_impl() = 0;
+  virtual float get_mouse_y_impl() = 0;
+  virtual std::pair<float, float> get_mouse_position_impl() = 0;
 
  private:
-  static Input* s_Instance;
+  static Input* sInstance;
 };
 
-}
+}  // namespace ARIA

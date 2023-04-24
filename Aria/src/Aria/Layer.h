@@ -3,21 +3,21 @@
 #include "Aria/Core.h"
 #include "Aria/Events/Event.h"
 
-namespace Aria {
+namespace ARIA {
 class ARIA_API Layer {
  public:
   Layer(const std::string& name = "Layer");
   virtual ~Layer();
 
   // TODO: Enable/disable layers
-  virtual void OnAttach() {}
-  virtual void OnDetach() {}
-  virtual void OnUpdate() {}
-  virtual void OnEvent(Event& event) {}
+  virtual void on_attach() {}
+  virtual void on_detach() {}
+  virtual void on_update() {}
+  virtual void on_event(Event& event) {}
 
-  inline const std::string& GetName() const { return m_DebugName; }
+  inline const std::string& get_name() const { return mDebugName; }
 
  protected:
-  std::string m_DebugName;
+  std::string mDebugName;
 };
-}  // namespace Aria
+}  // namespace ARIA

@@ -1,39 +1,40 @@
 #include "ariapch.h"
 #include "LayerStack.h"
 
-namespace Aria {
+namespace ARIA {
 
-  // Overlays are placed at the back of the vector
-  // Layers are place in the layer insert
+// Overlays are placed at the back of the vector
+// Layers are place in the layer insert
 
-LayerStack::LayerStack() { m_LayerInsert = m_Layers.begin(); }
+LayerStack::LayerStack() { mLayerInsert = mLayers.begin(); }
 
 LayerStack::~LayerStack() {
-  for (Layer* layer : m_Layers) {
+  for (Layer* layer : mLayers) {
     delete layer;
   }
 }
 
-void LayerStack::PushLayer(Layer* layer) {
-  m_LayerInsert = m_Layers.emplace(m_LayerInsert, layer);
+void LayerStack::push_layer(Layer* layer) {
+  mLayerInsert = mLayers.emplace(mLayerInsert, layer);
 }
 
-void LayerStack::PushOverlay(Layer* overlay) { m_Layers.emplace_back(overlay); }
+void LayerStack::push_overlay(Layer* overlay) { mLayers.emplace_back(overlay); }
 
-// In a sense you are "popping" but this isn't a real stack structure, realistically you are removing a layer
+// In a sense you are "popping" but this isn't a real stack structure,
+// realistically you are removing a layer
 
-void LayerStack::PopLayer(Layer* layer) {
-  auto it = std::find(m_Layers.begin(), m_Layers.end(), layer);
-  if (it != m_Layers.end()) {
-    m_Layers.erase(it);
-    m_LayerInsert--;
+void LayerStack::pop_layer(Layer* layer) {
+  auto it = std::find(mLayers.begin(), mLayers.end(), layer);
+  if (it != mLayers.end()) {
+    mLayers.erase(it);
+    mLayerInsert--;
   }
 }
 
-void LayerStack::PopOverlay(Layer* overlay) {
-  auto it = std::find(m_Layers.begin(), m_Layers.end(), overlay);
-  if (it != m_Layers.end()) {
-    m_Layers.erase(it);
+void LayerStack::pop_overlay(Layer* overlay) {
+  auto it = std::find(mLayers.begin(), mLayers.end(), overlay);
+  if (it != mLayers.end()) {
+    mLayers.erase(it);
   }
 }
-}  // namespace Aria
+}  // namespace ARIA

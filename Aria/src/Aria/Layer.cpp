@@ -1,10 +1,10 @@
 #include "ariapch.h"
 #include "Layer.h"
 
-namespace Aria {
+namespace ARIA {
 
-Layer::Layer(const std::string& name) : m_DebugName(name) {}
+Layer::Layer(const std::string& name) : mDebugName(name) {}
 
 Layer::~Layer() {}
 
-}  // namespace Aria
+}  // namespace ARIA

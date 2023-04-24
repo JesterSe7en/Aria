@@ -5,14 +5,14 @@
 #include <filesystem>
 #include <glad/gl.h>
 
-namespace Aria {
+namespace ARIA {
 
 Shader::Shader(const std::string &vertex_src, const std::string &fragment_src)
-    : renderer_id_(0) {
+    : mRendererID(0) {
   // Pulled from Khrono's documentation
   // --------------- Vertex Shader ---------------
 
-  // Create an empty vertex shader handle
+  // create an empty vertex shader handle
   unsigned int vertex_shader = glCreateShader(GL_VERTEX_SHADER);
 
   // Send the vertex shader source code to GL
@@ -30,22 +30,22 @@ Shader::Shader(const std::string &vertex_src, const std::string &fragment_src)
     glGetShaderiv(vertex_shader, GL_INFO_LOG_LENGTH, &max_length);
 
     // The max_length includes the NULL character
-    std::vector<char> infoLog(max_length);
-    glGetShaderInfoLog(vertex_shader, max_length, &max_length, &infoLog[0]);
+    std::vector<char> info_log(max_length);
+    glGetShaderInfoLog(vertex_shader, max_length, &max_length, &info_log[0]);
 
     // We don't need the shader anymore.
     glDeleteShader(vertex_shader);
 
-    // Use the infoLog as you see fit.
+    // Use the info_log as you see fit.
     ARIA_CORE_ERROR("Vertex shader compile error: {0} - Source: {1}",
-                    infoLog.data(), vertex_src);
+                    info_log.data(), vertex_src);
     ARIA_CORE_ASSERT(false);
     return;
   }
 
   // --------------- Fragment Shader ---------------
 
-  // Create an empty fragment shader handle
+  // create an empty fragment shader handle
   unsigned int fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
 
   // Send the fragment shader source code to GL
@@ -62,17 +62,17 @@ Shader::Shader(const std::string &vertex_src, const std::string &fragment_src)
     glGetShaderiv(fragment_shader, GL_INFO_LOG_LENGTH, &max_length);
 
     // The max_length includes the NULL character
-    std::vector<char> infoLog(max_length);
-    glGetShaderInfoLog(fragment_shader, max_length, &max_length, &infoLog[0]);
+    std::vector<char> info_log(max_length);
+    glGetShaderInfoLog(fragment_shader, max_length, &max_length, &info_log[0]);
 
     // We don't need the shader anymore.
     glDeleteShader(fragment_shader);
     // Either of them. Don't leak shaders.
     glDeleteShader(vertex_shader);
 
-    // Use the infoLog as you see fit.
+    // Use the info_log as you see fit.
     ARIA_CORE_ERROR("Fragment shader compile error: {0} - Source: {1}",
-                    infoLog.data(), fragment_src);
+                    info_log.data(), fragment_src);
     ARIA_CORE_ASSERT(false);
     return;
   }
@@ -81,34 +81,34 @@ Shader::Shader(const std::string &vertex_src, const std::string &fragment_src)
 
   // Vertex and fragment shaders are successfully compiled.
   // Now time to link them together into a program.
-  // Get a program object.
-  renderer_id_ = glCreateProgram();
+  // get a program object.
+  mRendererID = glCreateProgram();
 
   // Attach our shaders to our program
-  glAttachShader(renderer_id_, vertex_shader);
-  glAttachShader(renderer_id_, fragment_shader);
+  glAttachShader(mRendererID, vertex_shader);
+  glAttachShader(mRendererID, fragment_shader);
 
   // Link our program
-  glLinkProgram(renderer_id_);
+  glLinkProgram(mRendererID);
 
   // Note the different functions here: glGetProgram* instead of glGetShader*.
   int is_linked = 0;
-  glGetProgramiv(renderer_id_, GL_LINK_STATUS, (int *)&is_linked);
+  glGetProgramiv(mRendererID, GL_LINK_STATUS, (int *)&is_linked);
   if (is_linked == GL_FALSE) {
     int max_length = 0;
-    glGetProgramiv(renderer_id_, GL_INFO_LOG_LENGTH, &max_length);
+    glGetProgramiv(mRendererID, GL_INFO_LOG_LENGTH, &max_length);
 
     // The max_length includes the NULL character
     std::vector<char> infoLog(max_length);
-    glGetProgramInfoLog(renderer_id_, max_length, &max_length, &infoLog[0]);
+    glGetProgramInfoLog(mRendererID, max_length, &max_length, &infoLog[0]);
 
     // We don't need the program anymore.
-    glDeleteProgram(renderer_id_);
+    glDeleteProgram(mRendererID);
     // Don't leak shaders either.
     glDeleteShader(vertex_shader);
     glDeleteShader(fragment_shader);
 
-    // Use the infoLog as you see fit.
+    // Use the info_log as you see fit.
     ARIA_CORE_ERROR("Shader linking error: {0}", infoLog.data());
     ARIA_CORE_ASSERT(false);
     // In this simple program, we'll just leave
@@ -116,28 +116,28 @@ Shader::Shader(const std::string &vertex_src, const std::string &fragment_src)
   }
 
   // Always detach shaders after a successful link.
-  glDetachShader(renderer_id_, vertex_shader);
-  glDetachShader(renderer_id_, fragment_shader);
+  glDetachShader(mRendererID, vertex_shader);
+  glDetachShader(mRendererID, fragment_shader);
 }
 
-Shader::Shader(const std::string &file_path) : renderer_id_(0) {
+Shader::Shader(const std::string &file_path) : mRendererID(0) {
 
   if (!std::filesystem::exists(file_path)) {
     ARIA_CORE_WARN("Cannot find shader file: {0}", file_path);
   };
 
-  ShaderProgramSrc src = ParseShader(file_path);
-  renderer_id_ = CreateShader(src.vertex_source, src.fragment_source);
+  ShaderProgramSrc src = parse_shader(file_path);
+  mRendererID = create_shader(src.vertex_source, src.fragment_source);
 }
 
-Shader::~Shader() { glDeleteProgram(renderer_id_); }
+Shader::~Shader() { glDeleteProgram(mRendererID); }
 
-void Shader::Bind() const { glUseProgram(renderer_id_); }
+void Shader::bind() const { glUseProgram(mRendererID); }
 
-void Shader::Unbind() const { glUseProgram(0); }
+void Shader::unbind() const { glUseProgram(0); }
 
 // TODO: only supports vertex and frag shaders
-ShaderProgramSrc Shader::ParseShader(const std::string &file_path) {
+ShaderProgramSrc Shader::parse_shader(const std::string &file_path) {
   // we need to parse and find our special syntax e.g. (#shader vertex)
 
   std::ifstream stream(file_path);
@@ -163,8 +163,8 @@ ShaderProgramSrc Shader::ParseShader(const std::string &file_path) {
   return {ss[0].str(), ss[1].str()};
 }
 
-uint32_t Shader::CompileShader(unsigned int type, const std::string &source) {
-  // Create an empty vertex shader handle
+uint32_t Shader::compile_shader(unsigned int type, const std::string &source) {
+  // create an empty vertex shader handle
   int shader_type;
   unsigned int id = glCreateShader(type);
   glGetShaderiv(id, GL_SHADER_TYPE, &shader_type);
@@ -191,7 +191,7 @@ uint32_t Shader::CompileShader(unsigned int type, const std::string &source) {
     // We don't need the shader anymore.
     glDeleteShader(id);
 
-    // Use the infoLog as you see fit.
+    // Use the info_log as you see fit.
     ARIA_CORE_ERROR("Shader compile error: {0} - Type: {1} - Source: {2}",
                     infoLog.data(), type, src);
     ARIA_CORE_ASSERT(false);
@@ -201,11 +201,11 @@ uint32_t Shader::CompileShader(unsigned int type, const std::string &source) {
 }
 
 // TODO: accept other kinds of shaders, prob pass a vector
-uint32_t Shader::CreateShader(const std::string &vertex_shader,
+uint32_t Shader::create_shader(const std::string &vertex_shader,
                               const std::string &fragment_shader) {
   uint32_t id = glCreateProgram();
-  uint32_t vs = CompileShader(GL_VERTEX_SHADER, vertex_shader);
-  uint32_t fs = CompileShader(GL_FRAGMENT_SHADER, fragment_shader);
+  uint32_t vs = compile_shader(GL_VERTEX_SHADER, vertex_shader);
+  uint32_t fs = compile_shader(GL_FRAGMENT_SHADER, fragment_shader);
 
   // Attach our shaders to our program
   glAttachShader(id, vs);
@@ -231,7 +231,7 @@ uint32_t Shader::CreateShader(const std::string &vertex_shader,
     glDeleteShader(vs);
     glDeleteShader(fs);
 
-    // Use the infoLog as you see fit.
+    // Use the info_log as you see fit.
     ARIA_CORE_ERROR("Shader linking error: {0}", infoLog.data());
     ARIA_CORE_ASSERT(false);
     // In this simple program, we'll just leave
@@ -245,7 +245,7 @@ uint32_t Shader::CreateShader(const std::string &vertex_shader,
   return id;
 }
 
-const char *Shader::GetShaderType(const int shader_type) const {
+const char *Shader::get_shader_type(const int shader_type) const {
   const char *type;
   switch (shader_type) {
     case GL_VERTEX_SHADER:
@@ -273,4 +273,4 @@ const char *Shader::GetShaderType(const int shader_type) const {
   return type;
 }
 
-}  // namespace Aria
+}  // namespace ARIA

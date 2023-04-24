@@ -3,59 +3,96 @@
 #include "OpenGLVertexArray.h"
 #include <glad/gl.h>
 
-namespace Aria {
+namespace ARIA {
 
-// ------------------------- Vertex Array -------------------------
-
-OpenGLVertexArray::OpenGLVertexArray() : renderer_id_(0) {
-  glCreateVertexArrays(1, &renderer_id_);
-}
-OpenGLVertexArray::~OpenGLVertexArray() {
-  glDeleteVertexArrays(1, &renderer_id_);
-}
-void OpenGLVertexArray::Bind() const { glBindVertexArray(renderer_id_); }
-void OpenGLVertexArray::Unbind() const { glBindVertexArray(0); }
-void OpenGLVertexArray::AddVertexBuffer(const VertexBuffer& vertex_buffer) {}
-void OpenGLVertexArray::SetIndexBuffer(const IndexBuffer& index_buffer) {}
-
-// ------------------------- Vertex Buffer Layout  -------------------------
-
-OpenGLVertexBufferLayout::OpenGLVertexBufferLayout() : stride_(0) {}
-
-uint32_t OpenGLVertexBufferLayout::GetSizeOfType(uint32_t type) {
+static GLenum ShaderPrimitiveToOpenGLPrimative(ShaderPrimitiveType type) {
   switch (type) {
-    case GL_FLOAT:
-    case GL_UNSIGNED_INT:
-      return 4;
-    case GL_UNSIGNED_BYTE:
-      return 1;
+    case ARIA::ShaderPrimitiveType::Float:
+    case ARIA::ShaderPrimitiveType::Float2:
+    case ARIA::ShaderPrimitiveType::Float3:
+    case ARIA::ShaderPrimitiveType::Float4:
+    case ARIA::ShaderPrimitiveType::Mat2:
+    case ARIA::ShaderPrimitiveType::Mat3:
+    case ARIA::ShaderPrimitiveType::Mat4:
+      return GL_FLOAT;
+
+    case ARIA::ShaderPrimitiveType::Int:
+    case ARIA::ShaderPrimitiveType::Int2:
+    case ARIA::ShaderPrimitiveType::Int3:
+    case ARIA::ShaderPrimitiveType::Int4:
+      return GL_INT;
+
+    case ARIA::ShaderPrimitiveType::Bool:
+      return GL_BOOL;
+
     default:
-      ARIA_CORE_ASSERT(false);
-      return 0;
+      ARIA_CORE_ASSERT(false, "Unknown shader primitive type");
+      break;
   }
 }
 
-template <typename T>
-void OpenGLVertexBufferLayout::Push(uint32_t count) {
-    static_assert(std::is_integral<T>), "Type must be an integral type");
+OpenGLVertexArray::OpenGLVertexArray() : mRendererID(0) {
+  glCreateVertexArrays(1, &mRendererID);
+}
+OpenGLVertexArray::~OpenGLVertexArray() {
+  glDeleteVertexArrays(1, &mRendererID);
+}
+void OpenGLVertexArray::bind() const { glBindVertexArray(mRendererID); }
+void OpenGLVertexArray::unbind() const { glBindVertexArray(0); }
+void OpenGLVertexArray::add_vertex_buffer(const VertexBuffer& vertex_buffer) {
+  ARIA_CORE_ASSERT(vertex_buffer.get_layout().GetElements().size(),
+                   "Vertex buffer has no layout defined");
+
+  bind();
+  vertex_buffer.bind();
+
+  const auto& layout = vertex_buffer.get_layout();
+  for (const auto& element : layout) {
+    switch (element.mType) {
+      case ShaderPrimitiveType::Float:
+      case ShaderPrimitiveType::Float2:
+      case ShaderPrimitiveType::Float3:
+      case ShaderPrimitiveType::Float4:
+        auto& layout = vertex_buffer.get_layout();
+        glEnableVertexAttribArray(mVertexBufferIndex);
+        glVertexAttribPointer(mVertexBufferIndex, element.get_element_count(),
+                              ShaderPrimitiveToOpenGLPrimative(element.mType),
+                              element.mNormalized,
+                              vertex_buffer.get_layout().get_stride(),
+                              (const void*)element.mOffset);
+        mVertexBufferIndex++;
+        break;
+
+      case ShaderPrimitiveType::Int:
+      case ShaderPrimitiveType::Int2:
+      case ShaderPrimitiveType::Int3:
+      case ShaderPrimitiveType::Int4:
+      case ShaderPrimitiveType::Bool:
+        glEnableVertexAttribArray(mVertexBufferIndex);
+        glVertexAttribIPointer(mVertexBufferIndex, element.get_element_count(),
+                               ShaderPrimitiveToOpenGLPrimative(element.mType),
+                               vertex_buffer.get_layout().get_stride(),
+                               (const void*)element.mOffset);
+        break;
+
+      case ShaderPrimitiveType::Mat2:
+      case ShaderPrimitiveType::Mat3:
+      case ShaderPrimitiveType::Mat4:
+        ARIA_CORE_ASSERT(false, "TODO: implement for matrix");
+        break;
+
+      default:
+        ARIA_CORE_ASSERT(false, "Unknown shader primitive type");
+        break;
+    }
+  }
+
+  mVertexBuffers.push_back(vertex_buffer);
+}
+void OpenGLVertexArray::set_index_buffer(const IndexBuffer& index_buffer) {
+  bind();
+  index_buffer.bind();
+  mIndexBuffer = index_buffer;
 }
 
-template <>
-void OpenGLVertexBufferLayout::Push<float>(uint32_t count) {
-    elements_.push_back({GL_FLOAT, count, GL_FALSE});
-    stride_ += GetSizeOfType(GL_FLOAT) * count;
-}
-
-template <>
-void OpenGLVertexBufferLayout::Push<uint32_t>(uint32_t count) {
-    elements_.push_back({GL_UNSIGNED_INT, count, GL_FALSE});
-    stride_ += GetSizeOfType(GL_UNSIGNED_INT) * count;
-}
-
-template <>
-void OpenGLVertexBufferLayout::Push<uint8_t>(uint32_t count) {
-    elements_.push_back({GL_UNSIGNED_BYTE, count, GL_FALSE});
-    stride_ += GetSizeOfType(GL_UNSIGNED_BYTE) * count;
-}
-
-};  // namespace Aria
+};  // namespace ARIA

@@ -2,29 +2,29 @@
 
 #include "Event.h"
 
-namespace Aria {
+namespace ARIA {
 class ARIA_API KeyEvent : public Event {
  public:
-  inline int GetKeyCode() const { return m_KeyCode; }
+  inline int get_key_code() const { return mKeyCode; }
 
   EVENT_CLASS_CATEGORY(EventCatagoryKeyboard | EventCatagoryInput)
 
  protected:
-  KeyEvent(int keycode) : m_KeyCode(keycode) {}
+  KeyEvent(int keycode) : mKeyCode(keycode) {}
 
-  int m_KeyCode;
+  int mKeyCode;
 };
 
 class ARIA_API KeyPressedEvent : public KeyEvent {
  public:
   KeyPressedEvent(int keycode, int repeatCount)
-      : KeyEvent(keycode), m_RepeatCount(repeatCount) {}
+      : KeyEvent(keycode), mRepeatCount(repeatCount) {}
 
-  inline int GetRepeatCount() { return m_RepeatCount; }
+  inline int get_repeat_count() { return mRepeatCount; }
 
   inline std::string ToString() const override {
     std::stringstream ss;
-    ss << "KeyPressedEvent: " << m_KeyCode << " (" << m_RepeatCount
+    ss << "KeyPressedEvent: " << mKeyCode << " (" << mRepeatCount
        << " repeats)";
     return ss.str();
   }
@@ -32,7 +32,7 @@ class ARIA_API KeyPressedEvent : public KeyEvent {
   EVENT_CLASS_TYPE(KeyPressed)
 
  private:
-  unsigned int m_RepeatCount;
+  unsigned int mRepeatCount;
 };
 
 class ARIA_API KeyReleasedEvent : public KeyEvent {
@@ -41,10 +41,10 @@ class ARIA_API KeyReleasedEvent : public KeyEvent {
 
   inline std::string ToString() const override {
     std::stringstream ss;
-    ss << "KeyReleasedEvent: " << m_KeyCode;
+    ss << "KeyReleasedEvent: " << mKeyCode;
     return ss.str();
   }
 
   EVENT_CLASS_TYPE(KeyReleased)
 };
-}  // namespace Aria
+}  // namespace ARIA

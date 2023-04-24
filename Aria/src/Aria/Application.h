@@ -7,43 +7,44 @@
 #include "Layer.h"
 #include "LayerStack.h"
 #include "Renderer/Buffer.h"
-#include "Aria/Renderer/Shader.h"
+#include "Renderer/Shader.h"
+#include "Renderer/VertexArray.h"
 
-namespace Aria {
+namespace ARIA {
 
 class ARIA_API Application {
  public:
   Application();
   virtual ~Application();
 
-  void Run();
-  void OnEvent(Event& e);
+  void run();
+  void on_event(Event& e);
 
-  void PushLayer(Layer* layer);
-  void PushOverlay(Layer* overlay);
-  void PopLayer(Layer* layer);
-  void PopOverlay(Layer* overlay);
+  void push_layer(Layer* layer);
+  void push_overlay(Layer* overlay);
+  void pop_layer(Layer* layer);
+  void pop_overlay(Layer* overlay);
 
-  inline Window& GetWindow() { return *m_Window; }
+  inline Window& get_window() { return *mWindow; }
 
-  inline static Application& Get() { return *s_Instance; }
-
- private:
-  bool OnWindowClose(WindowCloseEvent& e);
-
-  std::unique_ptr<Window> m_Window;
-  bool m_Running = true;
-  LayerStack m_LayerStack;
+  inline static Application& get() { return *sInstance; }
 
  private:
-  static Application* s_Instance;
-  unsigned int vertex_array_;
+  bool on_window_close(WindowCloseEvent& e);
 
-  std::unique_ptr<Shader> shader_;
-  std::unique_ptr<VertexBuffer> vertex_buffer_;
-  std::unique_ptr<IndexBuffer> index_buffer_;
+  std::unique_ptr<Window> mWindow;
+  bool mRunning = true;
+  LayerStack mLayer_Stack;
+
+ private:
+  static Application* sInstance;
+
+  std::unique_ptr<Shader> mShader;
+  std::unique_ptr<VertexBuffer> mVertex_Buffer;
+  std::unique_ptr<IndexBuffer> mIndex_Buffer;
+  std::unique_ptr<VertexArray> mVertex_Array;
 };
 
 // To be defined in CLIENT
-Application* CreateApplication();
-}  // namespace Aria
+Application* create_application();
+}  // namespace ARIA

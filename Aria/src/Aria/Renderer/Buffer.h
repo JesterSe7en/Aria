@@ -2,73 +2,74 @@
 
 #include <Aria/Log.h>
 
-namespace Aria {
+namespace ARIA {
 
-  enum class ShaderPrimativeTypes {
-    None = 0,
-    Float, Float2, Float3, Float4,
-    Mat2, Mat3, Mat4,
-    Int, Int2, Int3, Int4,
-    Bool
-  };
-
-  /// <summary>
-  /// Returns the number of bytes a shader primative type has
-  /// </summary>
-  /// <param name="type">ShaderPrimativeTypes type</param>
-  /// <returns>uint32_t - number of bytes</returns>
-  static uint32_t ShaderPrimativeTypeSize(ShaderPrimativeTypes type) {
-    switch (type) {
-      case Aria::ShaderPrimativeTypes::Int:
-      case Aria::ShaderPrimativeTypes::Float:
-        return 4;
-      case Aria::ShaderPrimativeTypes::Int2:
-      case Aria::ShaderPrimativeTypes::Float2:
-        return 4 * 2;
-      case Aria::ShaderPrimativeTypes::Int3:
-      case Aria::ShaderPrimativeTypes::Float3:
-        return 4 * 3;
-      case Aria::ShaderPrimativeTypes::Int4:
-      case Aria::ShaderPrimativeTypes::Float4:
-        return 4 * 4;
-      case Aria::ShaderPrimativeTypes::Mat2:
-        return 4 * 2 * 2;
-      case Aria::ShaderPrimativeTypes::Mat3:
-        return 4 * 3 * 3;
-      case Aria::ShaderPrimativeTypes::Mat4:
-        return 4 * 4 * 4;
-        break;
-      case Aria::ShaderPrimativeTypes::Bool:
-        return 1;
-      default:
-        ARIA_CORE_ASSERT(false, "Unknown shader primative type");
-        return 0;
-    }
-  }
-
-class VertexBuffer {
- public:
-  virtual ~VertexBuffer(){};
-
-  virtual void SetLayout(const BufferLayout& layout) = 0;
-  virtual BufferLayout& GetLayout() const = 0;
-
-  virtual void Bind() const = 0;
-  virtual void Unbind() const = 0;
-
-  static VertexBuffer* Create(float* verticies, uint32_t size);
+enum class ShaderPrimitiveType {
+  None = 0,
+  Float,
+  Float2,
+  Float3,
+  Float4,
+  Mat2,
+  Mat3,
+  Mat4,
+  Int,
+  Int2,
+  Int3,
+  Int4,
+  Bool
 };
 
-class IndexBuffer {
+/// <summary>
+/// Returns the number of bytes a shader primitive type has
+/// </summary>
+/// <param name="type">ShaderPrimitiveType type</param>
+/// <returns>uint32_t - number of bytes</returns>
+static uint32_t get_shader_type_size(ShaderPrimitiveType type) {
+  switch (type) {
+    case ARIA::ShaderPrimitiveType::Int:
+    case ARIA::ShaderPrimitiveType::Float:
+      return 4;
+    case ARIA::ShaderPrimitiveType::Int2:
+    case ARIA::ShaderPrimitiveType::Float2:
+      return 4 * 2;
+    case ARIA::ShaderPrimitiveType::Int3:
+    case ARIA::ShaderPrimitiveType::Float3:
+      return 4 * 3;
+    case ARIA::ShaderPrimitiveType::Int4:
+    case ARIA::ShaderPrimitiveType::Float4:
+      return 4 * 4;
+    case ARIA::ShaderPrimitiveType::Mat2:
+      return 4 * 2 * 2;
+    case ARIA::ShaderPrimitiveType::Mat3:
+      return 4 * 3 * 3;
+    case ARIA::ShaderPrimitiveType::Mat4:
+      return 4 * 4 * 4;
+      break;
+    case ARIA::ShaderPrimitiveType::Bool:
+      return 1;
+    default:
+      ARIA_CORE_ASSERT(false, "Unknown shader primitive type");
+      return 0;
+  }
+}
+
+
+class BufferElement {
  public:
-  virtual ~IndexBuffer(){};
+  std::string mName;
+  ShaderPrimitiveType mType;
+  size_t mOffset;
+  uint32_t mSize;
+  bool mNormalized;
 
-  virtual void Bind() const = 0;
-  virtual void Unbind() const = 0;
+  BufferElement() = default;
 
-  virtual uint32_t GetCount() const = 0;
+  // offset and stride is calculated after it is added to the buffer layout
+  BufferElement(ShaderPrimitiveType type, std::string& name,
+                bool normalized);
 
-  static IndexBuffer* Create(uint32_t* indices, uint32_t count);
+  uint32_t get_element_count() const;
 };
 
 class BufferLayout {
@@ -76,27 +77,53 @@ class BufferLayout {
   BufferLayout() {}
   BufferLayout(std::initializer_list<BufferElement> elements);
 
-  inline uint32_t GetStride() { return stride_; }
+  inline std::vector<BufferElement> GetElements() { return mElements; }
+  inline int get_stride() { return mStride; }
+
+  // iterators
+  inline std::vector<BufferElement>::iterator begin() {
+    return mElements.begin();
+  }
+  inline std::vector<BufferElement>::iterator end() { return mElements.end(); }
+  inline std::vector<BufferElement>::const_iterator begin() const {
+    return mElements.begin();
+  }
+  inline std::vector<BufferElement>::const_iterator end() const {
+    return mElements.end();
+  }
+
  private:
-  uint32_t stride_;
-  std::vector<BufferElement> elements_;
-  void CalculateOffsetAndStride();
+  int mStride;
+  std::vector<BufferElement> mElements;
+  void calculate_offset_and_stride();
 };
 
-class BufferElement {
+
+class VertexBuffer {
  public:
-  std::string name_;
-  ShaderPrimativeTypes type_;
-  size_t offset_;
-  uint32_t size_;
-  bool normalized_;
+  virtual ~VertexBuffer() = default;
 
-  BufferElement() = default;
+  virtual const BufferLayout& get_layout() const = 0;
+  virtual void set_layout(const BufferLayout& layout) = 0;
 
-  BufferElement(ShaderPrimativeTypes type, std::string& name,
-                bool normalized = false);
+  virtual void bind() const = 0;
+  virtual void unbind() const = 0;
 
-  uint32_t GetElementCount() const;
+  static VertexBuffer* create(float* vertices, uint32_t size);
 };
 
-}  // namespace Aria
+class IndexBuffer {
+ public:
+  virtual ~IndexBuffer() = default;
+
+  virtual void bind() const = 0;
+  virtual void unbind() const = 0;
+
+  virtual uint32_t get_count() const = 0;
+
+  static IndexBuffer* create(uint32_t* indices, uint32_t count);
+};
+
+
+
+}  // namespace ARIA

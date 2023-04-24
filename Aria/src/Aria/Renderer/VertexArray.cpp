@@ -5,10 +5,10 @@
 #include "Aria/Renderer/VertexArray.h"
 #include "Platform/OpenGL/OpenGLVertexArray.h"
 
-namespace Aria {
+namespace ARIA {
 
-VertexArray* VertexArray::Create() {
-  RendererAPI::API api = RendererAPI::GetAPI();
+VertexArray* VertexArray::create() {
+  RendererAPI::API api = RendererAPI::get_api();
   switch (api) {
     case RendererAPI::API::None:
       ARIA_CORE_ASSERT(false,
@@ -25,4 +25,4 @@ VertexArray* VertexArray::Create() {
       ARIA_CORE_ASSERT("Unknown API");
   }
 }
-}  // namespace Aria
+}  // namespace ARIA

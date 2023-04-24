@@ -1,6 +1,6 @@
 #pragma once
 
-// For use by Aria applications
+// For use by ARIA applications
 
 #include <stdio.h>
 #include "Aria/Application.h"

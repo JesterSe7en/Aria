@@ -2,14 +2,14 @@
 
 #include "Aria/Input.h"
 
-namespace Aria {
+namespace ARIA {
 
 class WindowsInput : public Input {
  protected:
-  virtual bool IsKeyPressedImpl(int keycode) override;
-  virtual bool IsMouseButtonPressedImpl(int button) override;
-  virtual float GetMouseXImpl() override;
-  virtual float GetMouseYImpl() override;
-  virtual std::pair<float, float> GetMousePositionImpl() override;
+  virtual bool is_key_pressed_impl(int keycode) override;
+  virtual bool is_mouse_button_pressed_impl(int button) override;
+  virtual float get_mouse_x_impl() override;
+  virtual float get_mouse_y_impl() override;
+  virtual std::pair<float, float> get_mouse_position_impl() override;
 };
-}  // namespace Aria
+}  // namespace ARIA

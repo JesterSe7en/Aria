@@ -1,43 +1,43 @@
 #include <Aria.h>
 
-class ExampleLayer : public Aria::Layer {
+class ExampleLayer : public ARIA::Layer {
  public:
   ExampleLayer() : Layer("ExampleLayer") {}
 
-  void OnUpdate() override { 
-    //ARIA_INFO("ExampleLayer: Inside OnUpdate"); 
+  void on_update() override { 
+    //ARIA_INFO("ExampleLayer: Inside on_update"); 
   }
 
-  void OnEvent(Aria::Event& event) override {
+  void on_event(ARIA::Event& event) override {
     //ARIA_TRACE("ExampleLayer: {0}", event);
   }
 };
 
-class ExampleOverlay : public Aria::Layer {
+class ExampleOverlay : public ARIA::Layer {
  public:
   ExampleOverlay() : Layer("ExampleOverlay") {}
 
-  void OnUpdate() override { 
-    if (Aria::Input::IsKeyPressed(ARIA_KEY_A)) {
+  void on_update() override { 
+    if (ARIA::Input::is_key_pressed(ARIA_KEY_A)) {
       ARIA_TRACE("A key is pressed!");
     }
-    //ARIA_INFO("ExampleOverlay: Inside OnUpdate"); 
+    //ARIA_INFO("ExampleOverlay: Inside on_update"); 
   }
 
-  void OnEvent(Aria::Event& event) override {
+  void on_event(ARIA::Event& event) override {
     event.Handled = true;
     //ARIA_TRACE("ExampleOverlay: {0}", event);
   }
 };
 
-class Sandbox : public Aria::Application {
+class Sandbox : public ARIA::Application {
  public:
   Sandbox() {
-    PushOverlay(new Aria::ImGuiLayer());
-    //PushLayer(new ExampleLayer());
-    PushOverlay(new ExampleOverlay());
+    push_overlay(new ARIA::ImGuiLayer());
+    //push_layer(new ExampleLayer());
+    push_overlay(new ExampleOverlay());
   };
   ~Sandbox(){};
 };
 
-Aria::Application* Aria::CreateApplication() { return new Sandbox(); }
+ARIA::Application* ARIA::create_application() { return new Sandbox(); }

@@ -4,15 +4,15 @@
 
 struct GLFWwindow;
 
-namespace Aria {
+namespace ARIA {
 class OpenGLContext : public GraphicsContext {
  public:
   OpenGLContext(GLFWwindow* window_handle);
 
-  void Init() override;
-  void SwapBuffers() override;
+  void init() override;
+  void swap_buffers() override;
 
  private:
-  GLFWwindow* m_WindowHandle;
+  GLFWwindow* mWindowHandle;
 };
-}  // namespace Aria
+}  // namespace ARIA

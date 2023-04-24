@@ -2,17 +2,17 @@
 
 #include "Aria/Renderer/Buffer.h"
 
-namespace Aria {
+namespace ARIA {
 class VertexArray {
  public:
   ~VertexArray() {}
 
-  virtual void Bind() const = 0;
-  virtual void Unbind() const = 0;
+  virtual void bind() const = 0;
+  virtual void unbind() const = 0;
 
-  virtual void AddVertexBuffer(const VertexBuffer& vertex_buffer) = 0;
-  virtual void SetIndexBuffer(const IndexBuffer& index_buffer) = 0;
+  virtual void add_vertex_buffer(const VertexBuffer& vertex_buffer) = 0;
+  virtual void set_index_buffer(const IndexBuffer& index_buffer) = 0;
 
-  static VertexArray* Create();
+  static VertexArray* create();
 };
-}  // namespace Aria
+}  // namespace ARIA

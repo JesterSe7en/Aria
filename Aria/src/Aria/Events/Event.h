@@ -3,7 +3,7 @@
 #include "Aria/Core.h"
 #include "ariapch.h"
 
-namespace Aria {
+namespace ARIA {
 
 // Events are blocking
 
@@ -36,21 +36,21 @@ enum EventCatagory {
 };
 
 #define EVENT_CLASS_TYPE(type)                                                \
-  static EventType GetStaticType() { return EventType::##type; }              \
-  virtual EventType GetEventType() const override { return GetStaticType(); } \
-  virtual const char* GetName() const override { return #type; }
+  static EventType get_static_type() { return EventType::##type; }              \
+  virtual EventType get_event_type() const override { return GetStaticType(); } \
+  virtual const char* get_name() const override { return #type; }
 #define EVENT_CLASS_CATEGORY(category) \
-  virtual int GetCategoryFlags() const override { return category; }
+  virtual int get_category_flags() const override { return category; }
 
 class ARIA_API Event {
  public:
-  virtual EventType GetEventType() const = 0;
-  virtual const char* GetName() const = 0;
-  virtual int GetCategoryFlags() const = 0;
-  virtual std::string ToString() const { return GetName(); }
+  virtual EventType get_event_type() const = 0;
+  virtual const char* get_name() const = 0;
+  virtual int get_category_flags() const = 0;
+  virtual std::string ToString() const { return get_name(); }
 
-  inline bool IsInCategory(EventCatagory category) {
-    return GetCategoryFlags() & category;
+  inline bool is_in_category(EventCatagory category) {
+    return get_category_flags() & category;
   }
   bool Handled = false;
 };
@@ -60,22 +60,22 @@ class EventDispatcher {
   using EventFn = std::is_function<bool(T&)>;
 
  public:
-  EventDispatcher(Event& event) : m_Event(event) {}
+  EventDispatcher(Event& event) : mEvent(event) {}
 
   template <typename T, typename F>
-  bool Dispatch(const F& func) {
-    if (m_Event.GetEventType() == T::GetStaticType()) {
-      m_Event.Handled |= func(static_cast<T&>(m_Event));
+  bool dispatch(const F& func) {
+    if (mEvent.get_event_type() == T::get_static_type()) {
+      mEvent.Handled |= func(static_cast<T&>(mEvent));
       return true;
     }
     return false;
   }
 
  private:
-  Event& m_Event;
+  Event& mEvent;
 };
 
 inline std::ostream& operator<<(std::ostream& os, const Event& e) {
   return os << e.ToString();
 }
-}  // namespace Aria
+}  // namespace ARIA

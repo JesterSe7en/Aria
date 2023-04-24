@@ -4,19 +4,24 @@
 
 #include "Aria/Renderer/Buffer.h"
 
-namespace Aria {
+namespace ARIA {
 
 class OpenGLVertexBuffer : public VertexBuffer {
  public:
   OpenGLVertexBuffer(float* verticies, uint32_t size);
   virtual ~OpenGLVertexBuffer();
 
-  void Bind() const override;
-  void Unbind() const override;
+  virtual const BufferLayout& get_layout() const override { return mBufferLayout; }
+  virtual void set_layout(const BufferLayout& layout) override {
+    mBufferLayout = layout;
+  }
+
+  void bind() const override;
+  void unbind() const override;
 
  private:
-  BufferLayout buffer_layout_;
-  uint32_t renderer_id_;
+  BufferLayout mBufferLayout;
+  uint32_t mRendererID;
 };
 
 class OpenGLIndexBuffer : public IndexBuffer {
@@ -24,13 +29,13 @@ class OpenGLIndexBuffer : public IndexBuffer {
   OpenGLIndexBuffer(uint32_t* indices, uint32_t count);
   virtual ~OpenGLIndexBuffer();
 
-  void Bind() const override;
-  void Unbind() const override;
+  void bind() const override;
+  void unbind() const override;
 
-  virtual uint32_t GetCount() const { return count_; }
+  virtual uint32_t get_count() const { return mCount; }
 
  private:
-  uint32_t renderer_id_;
-  uint32_t count_;
+  uint32_t mRendererID;
+  uint32_t mCount;
 };
-}  // namespace Aria
+}  // namespace ARIA

@@ -5,14 +5,14 @@
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>
 
-namespace Aria {
-OpenGLContext::OpenGLContext(GLFWwindow* windowHandle)
-    : m_WindowHandle(windowHandle) {
-  ARIA_CORE_ASSERT(windowHandle, "Window handle is null")
+namespace ARIA {
+OpenGLContext::OpenGLContext(GLFWwindow* window_handle)
+    : mWindowHandle(window_handle) {
+  ARIA_CORE_ASSERT(window_handle, "Window handle is null")
 }
 
-void OpenGLContext::Init() {
-  glfwMakeContextCurrent(m_WindowHandle);
+void OpenGLContext::init() {
+  glfwMakeContextCurrent(mWindowHandle);
 
   // Load Glad
   int version = gladLoadGL(glfwGetProcAddress);
@@ -32,5 +32,5 @@ void OpenGLContext::Init() {
   ARIA_CORE_INFO("  Version: {0}", (const char*)glGetString(GL_VERSION));
 }
 
-void OpenGLContext::SwapBuffers() { glfwSwapBuffers(m_WindowHandle); }
-}  // namespace Aria
+void OpenGLContext::swap_buffers() { glfwSwapBuffers(mWindowHandle); }
+}  // namespace ARIA
