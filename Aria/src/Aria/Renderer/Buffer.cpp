@@ -72,7 +72,7 @@ void BufferLayout::calculate_offset_and_stride() {
 
 // -------------------------- Buffer Elements  --------------------------
 
-BufferElement::BufferElement(ShaderPrimitiveType type, std::string& name,
+BufferElement::BufferElement(ShaderPrimitiveType type, const std::string& name,
                              bool normalized = false)
     : mName(name),
       mType(type),

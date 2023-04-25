@@ -44,7 +44,14 @@ Application::Application() {
   };
   uint32_t indicies[3] = {0, 1, 2};
 
-  mVertex_Buffer.reset(VertexBuffer::create(vertices, sizeof(vertices))); 
+
+  auto buffer = VertexBuffer::create(vertices, sizeof(vertices));
+  BufferElement pos(ShaderPrimitiveType::Float, "position", false);
+  const BufferLayout layout({pos});
+  buffer->set_layout(layout);
+  mVertex_Buffer.reset(buffer); 
+
+  
    
   //glEnableVertexAttribArray(0);
   //glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
