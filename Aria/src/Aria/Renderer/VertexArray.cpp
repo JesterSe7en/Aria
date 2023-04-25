@@ -23,6 +23,7 @@ VertexArray* VertexArray::create() {
           "API selected for vertex array generation is not implemented", );
     default:
       ARIA_CORE_ASSERT("Unknown API");
+      return nullptr;
   }
 }
 }  // namespace ARIA
