@@ -27,7 +27,7 @@ static GLenum ShaderPrimitiveToOpenGLPrimative(ShaderPrimitiveType type) {
 
     default:
       ARIA_CORE_ASSERT(false, "Unknown shader primitive type");
-      break;
+      return 0;
   }
 }
 
