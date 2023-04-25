@@ -46,7 +46,7 @@ Application::Application() {
 
 
   auto buffer = VertexBuffer::create(vertices, sizeof(vertices));
-  BufferElement pos(ShaderPrimitiveType::Float, "position", false);
+  BufferElement pos(ShaderPrimitiveType::Float3, "position", false);
   const BufferLayout layout({pos});
   buffer->set_layout(layout);
   mVertex_Buffer.reset(buffer); 

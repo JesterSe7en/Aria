@@ -31,7 +31,8 @@ static GLenum ShaderPrimitiveToOpenGLPrimative(ShaderPrimitiveType type) {
   }
 }
 
-OpenGLVertexArray::OpenGLVertexArray() : mRendererID(0) {
+OpenGLVertexArray::OpenGLVertexArray()
+    : mRendererID(0), mVertexBufferIndex(0), mIndexBuffer(nullptr) {
   glCreateVertexArrays(1, &mRendererID);
 }
 OpenGLVertexArray::~OpenGLVertexArray() {
