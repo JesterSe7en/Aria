@@ -67,7 +67,7 @@ class BufferElement {
 
   // offset and stride is calculated after it is added to the buffer layout
   BufferElement(ShaderPrimitiveType type, const std::string& name,
-                bool normalized);
+                bool normalized = false);
 
   uint32_t get_element_count() const;
 };

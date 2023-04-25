@@ -36,14 +36,20 @@ Application::Application() {
   mVertex_Array.reset(VertexArray::create());
   mVertex_Array->bind();
 
-  float vertices[3 * 3] = {
-      -0.5f, -0.5f, 0.0f, 0.5f, -0.5f, 0.0f, 0.0f, 0.5f, 0.0f,
+  float vertices[3 * 7] = {
+      -0.5f, -0.5f, 0.0f, 0.8f, 0.2f, 0.8f, 1.0f,
+      0.5f, -0.5f, 0.0f, 0.2f, 0.3f, 0.8f, 1.0f,
+      0.0f, 0.5f, 0.0f, 0.8f, 0.8f, 0.2f, 1.0f,
   };
   uint32_t indicies[3] = {0, 1, 2};
 
   auto vertex_buffer = VertexBuffer::create(vertices, sizeof(vertices));
-  BufferElement pos(ShaderPrimitiveType::Float3, "position", false);
-  const BufferLayout layout({pos});
+  
+  BufferLayout layout = {
+    {ShaderPrimitiveType::Float3, "position" },
+    {ShaderPrimitiveType::Float4, "color" }
+  };
+
   vertex_buffer->set_layout(layout);
 
   mVertex_Buffer.reset(vertex_buffer);
