@@ -33,9 +33,6 @@ Application::Application() {
   mWindow = std::unique_ptr<Window>(Window::create());
   mWindow->set_event_callback(BIND_EVENT_FN(on_event));
 
-  //glGenVertexArrays(1, &mVertex_Array);
-  //glBindVertexArray(mVertex_Array);
-
   mVertex_Array.reset(VertexArray::create());
   mVertex_Array->bind();
 
@@ -44,17 +41,12 @@ Application::Application() {
   };
   uint32_t indicies[3] = {0, 1, 2};
 
-
-  auto buffer = VertexBuffer::create(vertices, sizeof(vertices));
+  auto vertex_buffer = VertexBuffer::create(vertices, sizeof(vertices));
   BufferElement pos(ShaderPrimitiveType::Float3, "position", false);
   const BufferLayout layout({pos});
-  buffer->set_layout(layout);
-  mVertex_Buffer.reset(buffer); 
+  vertex_buffer->set_layout(layout);
 
-  
-   
-  //glEnableVertexAttribArray(0);
-  //glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
+  mVertex_Buffer.reset(vertex_buffer);
 
   mIndex_Buffer.reset(IndexBuffer::create(indicies, sizeof(indicies) / sizeof(uint32_t)));
 
