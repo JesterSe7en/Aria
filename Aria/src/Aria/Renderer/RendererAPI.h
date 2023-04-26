@@ -3,7 +3,7 @@
 namespace ARIA {
 
 
-class Renderer {
+class RendererAPI {
  public:
   enum class API {
     // DirectX and Vulkan would be added later
