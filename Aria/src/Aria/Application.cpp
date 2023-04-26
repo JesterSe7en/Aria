@@ -33,30 +33,54 @@ Application::Application() {
   mWindow = std::unique_ptr<Window>(Window::create());
   mWindow->set_event_callback(BIND_EVENT_FN(on_event));
 
-  mVertexArray.reset(VertexArray::create());
-  mVertexArray->bind();
+  // --------------- Rendering TRIANGLE ---------------
+  mTriangleVA.reset(VertexArray::create());
 
   // vertex buffer
-  float vertices[3 * 7] = {
+  float triangleVertices[3 * 7] = {
       -0.5f, -0.5f, 0.0f, 0.8f, 0.2f, 0.8f, 1.0f,
       0.5f, -0.5f, 0.0f, 0.2f, 0.3f, 0.8f, 1.0f,
       0.0f, 0.5f, 0.0f, 0.8f, 0.8f, 0.2f, 1.0f,
   };
-  mVertexBuffer.reset(VertexBuffer::create(vertices, sizeof(vertices)));
+  mTriangleVB.reset(VertexBuffer::create(triangleVertices, sizeof(triangleVertices)));
   BufferLayout layout = {
-    {ShaderPrimitiveType::Float3, "position" },
-    {ShaderPrimitiveType::Float4, "color" }
+    {ShaderPrimitiveType::Float3, "a_Position" },
+    {ShaderPrimitiveType::Float4, "a_Color" }
   };
-  mVertexBuffer->set_layout(layout);
-  mVertexArray->add_vertex_buffer(mVertexBuffer);
+  mTriangleVB->set_layout(layout);
+  mTriangleVA->add_vertex_buffer(mTriangleVB);
 
   //index buffer
-  uint32_t indicies[3] = { 0, 1, 2 };
-  mIndexBuffer.reset(IndexBuffer::create(indicies, sizeof(indicies) / sizeof(uint32_t)));
-  mVertexArray->set_index_buffer(mIndexBuffer);
+  uint32_t triangleIndicies[3] = { 0, 1, 2 };
+  mTriangleIB.reset(IndexBuffer::create(triangleIndicies, sizeof(triangleIndicies) / sizeof(uint32_t)));
+  mTriangleVA->set_index_buffer(mTriangleIB);
 
-  // Why doesn't this accept relative path?
-  mShader.reset(new Shader("C:/Users/alyxc/Workspace/Aria/Aria/res/shaders/basic.shader"));
+    // Why doesn't this accept relative path?
+  mTriangleShader.reset(new Shader(
+      "C:/Users/alyxc/Workspace/Aria/Aria/res/shaders/basicTriangle.shader"));
+
+  // --------------- Rendering SQUARE ---------------
+  mSquareVA.reset(VertexArray::create());
+
+  float squareVertices[3 * 4] = {
+    -0.5f, -0.5f, 0.0f,
+    0.5f, -0.5f, 0.0f,
+    0.5f, 0.5f, 0.0f,
+    -0.5f, 0.5f, 0.0f
+  };
+
+  mSquareVB.reset(VertexBuffer::create(squareVertices, sizeof(squareVertices)));
+
+  mSquareVB->set_layout({{ShaderPrimitiveType::Float3, "a_Position"}});
+  mSquareVA->add_vertex_buffer(mSquareVB);
+
+  uint32_t squareIndices[6] = {0, 1, 2, 2, 3, 0};
+
+  mSquareIB.reset(IndexBuffer::create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t)));
+  mSquareVA->set_index_buffer(mSquareIB);
+
+  mSquareShader.reset(new Shader(
+      "C:/Users/alyxc/Workspace/Aria/Aria/res/shaders/basicSquare.shader"));
 }
 
 Application::~Application() {}
@@ -66,9 +90,16 @@ void Application::run() {
     glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    mShader->bind();
-    mVertexArray->bind();
-    glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT,
+    mSquareShader->bind();
+    mSquareVA->bind();
+    glDrawElements(GL_TRIANGLES, mSquareVA->get_index_buffer()->get_count(),
+                   GL_UNSIGNED_INT,
+                   nullptr);
+
+    mTriangleShader->bind();
+    mTriangleVA->bind();
+    glDrawElements(GL_TRIANGLES, mTriangleVA->get_index_buffer()->get_count(),
+                   GL_UNSIGNED_INT,
                    nullptr);
 
     for (Layer* layer : mLayerStack) {
