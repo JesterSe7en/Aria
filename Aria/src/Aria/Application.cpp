@@ -36,6 +36,7 @@ Application::Application() {
   // --------------- Rendering TRIANGLE ---------------
   mTriangleVA.reset(VertexArray::create());
 
+  // vertex buffer
   float triangleVertices[3 * 7] = {
       -0.5f, -0.5f, 0.0f, 0.8f, 0.2f, 0.8f, 1.0f,
       0.5f, -0.5f, 0.0f, 0.2f, 0.3f, 0.8f, 1.0f,
@@ -62,10 +63,10 @@ Application::Application() {
   mSquareVA.reset(VertexArray::create());
 
   float squareVertices[3 * 4] = {
-    -0.75f, -0.75f, 0.0f,
-    0.75f, -0.75f, 0.0f,
-    0.75f, 0.75f, 0.0f,
-    -0.75f, 0.75f, 0.0f
+    -0.5f, -0.5f, 0.0f,
+    0.5f, -0.5f, 0.0f,
+    0.5f, 0.5f, 0.0f,
+    -0.5f, 0.5f, 0.0f
   };
 
   mSquareVB.reset(VertexBuffer::create(squareVertices, sizeof(squareVertices)));
