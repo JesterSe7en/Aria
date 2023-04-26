@@ -63,10 +63,10 @@ Application::Application() {
   mSquareVA.reset(VertexArray::create());
 
   float squareVertices[3 * 4] = {
-    -0.5f, -0.5f, 0.0f,
-    0.5f, -0.5f, 0.0f,
-    0.5f, 0.5f, 0.0f,
-    -0.5f, 0.5f, 0.0f
+    -0.75f, -0.75f, 0.0f,
+    0.75f, -0.75f, 0.0f,
+    0.75f, 0.75f, 0.0f,
+    -0.75f, 0.75f, 0.0f
   };
 
   mSquareVB.reset(VertexBuffer::create(squareVertices, sizeof(squareVertices)));
