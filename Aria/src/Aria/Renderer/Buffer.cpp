@@ -1,6 +1,6 @@
 #include "ariapch.h"
 #include "Buffer.h"
-#include "RendererAPI.h"
+#include "Renderer.h"
 #include "Aria/Log.h"
 
 #include "Platform/OpenGL/OpenGLBuffer.h"
@@ -10,17 +10,17 @@ namespace ARIA {
 // -------------------------- Vertex Buffer  --------------------------
 
 VertexBuffer* VertexBuffer::create(float* verticies, uint32_t size) {
-  RendererAPI::API api = RendererAPI::get_api();
+  Renderer::API api = Renderer::get_api();
   switch (api) {
-    case RendererAPI::API::None:
+    case Renderer::API::None:
       ARIA_CORE_ASSERT(false,
                        "No renderer API selected for vertex buffer generation")
       return nullptr;
-    case RendererAPI::API::OpenGL:
+    case Renderer::API::OpenGL:
       return new OpenGLVertexBuffer(verticies, size);
       break;
-    case RendererAPI::API::DirectX:
-    case RendererAPI::API::Vulkan:
+    case Renderer::API::DirectX:
+    case Renderer::API::Vulkan:
       ARIA_CORE_ASSERT(
           false,
           "API selected for vertex buffer generation is not implemented", );
@@ -34,17 +34,17 @@ VertexBuffer* VertexBuffer::create(float* verticies, uint32_t size) {
 // -------------------------- Index Buffer --------------------------
 
 IndexBuffer* IndexBuffer::create(uint32_t* indices, uint32_t count) {
-  RendererAPI::API api = RendererAPI::get_api();
+  Renderer::API api = Renderer::get_api();
   switch (api) {
-    case RendererAPI::API::None:
+    case Renderer::API::None:
       ARIA_CORE_ASSERT(false,
                        "No renderer API selected for index buffer generation")
       return nullptr;
-    case RendererAPI::API::OpenGL:
+    case Renderer::API::OpenGL:
       return new OpenGLIndexBuffer(indices, count);
       break;
-    case RendererAPI::API::DirectX:
-    case RendererAPI::API::Vulkan:
+    case Renderer::API::DirectX:
+    case Renderer::API::Vulkan:
       ARIA_CORE_ASSERT(
           false, "API selected for index buffer generation is not implemented");
       return nullptr;

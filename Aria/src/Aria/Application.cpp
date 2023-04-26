@@ -89,6 +89,22 @@ void Application::run() {
     glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
+    //RenderCommand::SetClearColor()
+    //RenderCommand::Clear()
+    //
+    //Renderer::BeginScene();
+
+    //shader->bind();
+    //Renderer::submit(vertexarray);
+
+    //shader->bind();
+    //Renderer::submit(vertexarray);
+
+
+    //Renderer::EndScene();
+
+
+
     mSquareShader->bind();
     mSquareVA->bind();
     glDrawElements(GL_TRIANGLES, mSquareVA->get_index_buffer()->get_count(),

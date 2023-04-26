@@ -1,6 +1,6 @@
 #include "ariapch.h"
 #include "VertexArray.h"
-#include "RendererAPI.h"
+#include "Renderer.h"
 #include "Aria/Log.h"
 #include "Aria/Renderer/VertexArray.h"
 #include "Platform/OpenGL/OpenGLVertexArray.h"
@@ -8,16 +8,16 @@
 namespace ARIA {
 
 VertexArray* VertexArray::create() {
-  RendererAPI::API api = RendererAPI::get_api();
+  Renderer::API api = Renderer::get_api();
   switch (api) {
-    case RendererAPI::API::None:
+    case Renderer::API::None:
       ARIA_CORE_ASSERT(false,
                        "No renderer API selected for vertex array generation")
-    case RendererAPI::API::OpenGL:
+    case Renderer::API::OpenGL:
       return new OpenGLVertexArray();
       break;
-    case RendererAPI::API::DirectX:
-    case RendererAPI::API::Vulkan:
+    case Renderer::API::DirectX:
+    case Renderer::API::Vulkan:
       ARIA_CORE_ASSERT(
           false,
           "API selected for vertex array generation is not implemented", );
