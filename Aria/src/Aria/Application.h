@@ -34,15 +34,15 @@ class ARIA_API Application {
 
   std::unique_ptr<Window> mWindow;
   bool mRunning = true;
-  LayerStack mLayer_Stack;
+  LayerStack mLayerStack;
 
  private:
   static Application* sInstance;
 
   std::shared_ptr<Shader> mShader;
-  std::shared_ptr<VertexBuffer> mVertex_Buffer;
-  std::shared_ptr<IndexBuffer> mIndex_Buffer;
-  std::shared_ptr<VertexArray> mVertex_Array;
+  std::shared_ptr<VertexBuffer> mVertexBuffer;
+  std::shared_ptr<IndexBuffer> mIndexBuffer;
+  std::shared_ptr<VertexArray> mVertexArray;
 };
 
 // To be defined in CLIENT

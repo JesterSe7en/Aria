@@ -33,8 +33,8 @@ Application::Application() {
   mWindow = std::unique_ptr<Window>(Window::create());
   mWindow->set_event_callback(BIND_EVENT_FN(on_event));
 
-  mVertex_Array.reset(VertexArray::create());
-  mVertex_Array->bind();
+  mVertexArray.reset(VertexArray::create());
+  mVertexArray->bind();
 
   // vertex buffer
   float vertices[3 * 7] = {
@@ -42,18 +42,18 @@ Application::Application() {
       0.5f, -0.5f, 0.0f, 0.2f, 0.3f, 0.8f, 1.0f,
       0.0f, 0.5f, 0.0f, 0.8f, 0.8f, 0.2f, 1.0f,
   };
-  mVertex_Buffer.reset(VertexBuffer::create(vertices, sizeof(vertices)));
+  mVertexBuffer.reset(VertexBuffer::create(vertices, sizeof(vertices)));
   BufferLayout layout = {
     {ShaderPrimitiveType::Float3, "position" },
     {ShaderPrimitiveType::Float4, "color" }
   };
-  mVertex_Buffer->set_layout(layout);
-  mVertex_Array->add_vertex_buffer(mVertex_Buffer);
+  mVertexBuffer->set_layout(layout);
+  mVertexArray->add_vertex_buffer(mVertexBuffer);
 
   //index buffer
   uint32_t indicies[3] = { 0, 1, 2 };
-  mIndex_Buffer.reset(IndexBuffer::create(indicies, sizeof(indicies) / sizeof(uint32_t)));
-  mVertex_Array->set_index_buffer(mIndex_Buffer);
+  mIndexBuffer.reset(IndexBuffer::create(indicies, sizeof(indicies) / sizeof(uint32_t)));
+  mVertexArray->set_index_buffer(mIndexBuffer);
 
   // Why doesn't this accept relative path?
   mShader.reset(new Shader("C:/Users/alyxc/Workspace/Aria/Aria/res/shaders/basic.shader"));
@@ -67,11 +67,11 @@ void Application::run() {
     glClear(GL_COLOR_BUFFER_BIT);
 
     mShader->bind();
-    mVertex_Array->bind();
+    mVertexArray->bind();
     glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT,
                    nullptr);
 
-    for (Layer* layer : mLayer_Stack) {
+    for (Layer* layer : mLayerStack) {
       layer->on_update();
     }
 
@@ -86,7 +86,7 @@ void Application::on_event(Event& e) {
 
   // Go through the Layer Stack (backwards) and fire off events
 
-  for (auto it = mLayer_Stack.end(); it != mLayer_Stack.begin();) {
+  for (auto it = mLayerStack.end(); it != mLayerStack.begin();) {
     (*--it)->on_event(e);
     if (e.Handled) {
       // stop at the first ("highest z value") layer (or overlay) that responded
@@ -96,22 +96,22 @@ void Application::on_event(Event& e) {
   }
 }
 void Application::push_layer(Layer* layer) { 
-  mLayer_Stack.push_layer(layer);
+  mLayerStack.push_layer(layer);
   layer->on_attach();
 }
 
 void Application::push_overlay(Layer* overlay) {
-  mLayer_Stack.push_overlay(overlay);
+  mLayerStack.push_overlay(overlay);
   overlay->on_attach();
 }
 
 void Application::pop_layer(Layer* layer) {
-  mLayer_Stack.pop_layer(layer);
+  mLayerStack.pop_layer(layer);
   layer->on_detach();
 }
 
 void Application::pop_overlay(Layer* overlay) {
-  mLayer_Stack.pop_layer(overlay);
+  mLayerStack.pop_layer(overlay);
   overlay->on_detach();
 }
 
