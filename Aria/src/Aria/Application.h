@@ -39,10 +39,10 @@ class ARIA_API Application {
  private:
   static Application* sInstance;
 
-  std::unique_ptr<Shader> mShader;
-  std::unique_ptr<VertexBuffer> mVertex_Buffer;
-  std::unique_ptr<IndexBuffer> mIndex_Buffer;
-  std::unique_ptr<VertexArray> mVertex_Array;
+  std::shared_ptr<Shader> mShader;
+  std::shared_ptr<VertexBuffer> mVertex_Buffer;
+  std::shared_ptr<IndexBuffer> mIndex_Buffer;
+  std::shared_ptr<VertexArray> mVertex_Array;
 };
 
 // To be defined in CLIENT

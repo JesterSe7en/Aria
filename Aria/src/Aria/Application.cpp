@@ -36,28 +36,24 @@ Application::Application() {
   mVertex_Array.reset(VertexArray::create());
   mVertex_Array->bind();
 
+  // vertex buffer
   float vertices[3 * 7] = {
       -0.5f, -0.5f, 0.0f, 0.8f, 0.2f, 0.8f, 1.0f,
       0.5f, -0.5f, 0.0f, 0.2f, 0.3f, 0.8f, 1.0f,
       0.0f, 0.5f, 0.0f, 0.8f, 0.8f, 0.2f, 1.0f,
   };
-  uint32_t indicies[3] = {0, 1, 2};
-
-  auto vertex_buffer = VertexBuffer::create(vertices, sizeof(vertices));
-  
+  mVertex_Buffer.reset(VertexBuffer::create(vertices, sizeof(vertices)));
   BufferLayout layout = {
     {ShaderPrimitiveType::Float3, "position" },
     {ShaderPrimitiveType::Float4, "color" }
   };
+  mVertex_Buffer->set_layout(layout);
+  mVertex_Array->add_vertex_buffer(mVertex_Buffer);
 
-  vertex_buffer->set_layout(layout);
-
-  mVertex_Buffer.reset(vertex_buffer);
-
+  //index buffer
+  uint32_t indicies[3] = { 0, 1, 2 };
   mIndex_Buffer.reset(IndexBuffer::create(indicies, sizeof(indicies) / sizeof(uint32_t)));
-
-  mVertex_Array->add_vertex_buffer(*mVertex_Buffer);
-  mVertex_Array->set_index_buffer(*mIndex_Buffer);
+  mVertex_Array->set_index_buffer(mIndex_Buffer);
 
   // Why doesn't this accept relative path?
   mShader.reset(new Shader("C:/Users/alyxc/Workspace/Aria/Aria/res/shaders/basic.shader"));
@@ -78,12 +74,6 @@ void Application::run() {
     for (Layer* layer : mLayer_Stack) {
       layer->on_update();
     }
-
-    // this differs from the event mouse position
-    // this one gives absolute position of the mouse outside of glfwWindow
-    auto [x, y] = Input::get_mouse_position();
-    //ARIA_CORE_TRACE("{0}, {1}", x, y);
-
 
     mWindow->on_update();
   }
