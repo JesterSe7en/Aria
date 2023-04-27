@@ -1,7 +1,6 @@
 #include "ariapch.h"
 #include "Application.h"
 
-#include <glad/gl.h>
 #include <GLFW/glfw3.h>
 
 #include "Aria/Events/ApplicationEvent.h"
