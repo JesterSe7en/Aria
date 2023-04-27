@@ -1,22 +1,17 @@
 #pragma once
 
+#include "RendererAPI.h"
+
 namespace ARIA {
-
-
 class Renderer {
  public:
-  enum class API {
-    // DirectX and Vulkan would be added later
-    None = 0,
-    OpenGL = 1,
-    DirectX = 2,
-    Vulkan = 3,
-  };
+  static void BeginScene();
+  static void EndScene();
+  static void Submit(const std::shared_ptr<VertexArray>& vertex_array);
 
- public:
-  static API get_api() { return api; }
+  inline static RendererAPI::API get_api() { return sRendererAPI; }
 
  private:
-  static API api;
+  static RendererAPI::API sRendererAPI;
 };
 }  // namespace ARIA

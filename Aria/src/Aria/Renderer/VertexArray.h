@@ -1,13 +1,11 @@
 #pragma once
 
 #include "Aria/Renderer/Buffer.h"
-#include <vector>
-#include <memory>
 
 namespace ARIA {
 class VertexArray {
  public:
-  ~VertexArray() {}
+  ~VertexArray() = default;
 
   virtual void bind() const = 0;
   virtual void unbind() const = 0;
