@@ -12,6 +12,8 @@
 #include "Aria/Renderer/Buffer.h"
 #include "Aria/Renderer/VertexArray.h"
 
+#include "Aria/Renderer/Renderer.h"
+
 #ifdef WIN32
 #include <Windows.h>
 extern "C" {
@@ -87,20 +89,22 @@ Application::~Application() {}
 
 void Application::run() {
   while (mRunning) {
-    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
+
+    RenderCommand::set_clear_color(glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
+    RenderCommand::clear();
+
 
     mSquareShader->bind();
     mSquareVA->bind();
-    glDrawElements(GL_TRIANGLES, mSquareVA->get_index_buffer()->get_count(),
-                   GL_UNSIGNED_INT,
-                   nullptr);
+
+    RenderCommand::draw_indexed(mSquareVA);
+
 
     mTriangleShader->bind();
     mTriangleVA->bind();
-    glDrawElements(GL_TRIANGLES, mTriangleVA->get_index_buffer()->get_count(),
-                   GL_UNSIGNED_INT,
-                   nullptr);
+
+    RenderCommand::draw_indexed(mTriangleVA);
+    
 
     for (Layer* layer : mLayerStack) {
       layer->on_update();
