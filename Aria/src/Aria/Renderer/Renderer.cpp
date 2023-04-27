@@ -3,6 +3,7 @@
 #include "RenderCommand.h"
 
 namespace ARIA {
+
 void Renderer::BeginScene() {}
 void Renderer::EndScene() {}
 

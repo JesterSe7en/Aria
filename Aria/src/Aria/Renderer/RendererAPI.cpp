@@ -1,7 +1,7 @@
+#include "ariapch.h"
 #include "RendererAPI.h"
 
-#include "ariapch.h"
-
 namespace ARIA {
-RendererAPI::API RendererAPI::sAPI = RendererAPI::get_api();
-}
+RendererAPI::API RendererAPI::sAPI = RendererAPI::API::OpenGL;
+RendererAPI::API RendererAPI::create() { return API(); }
+}  // namespace ARIA

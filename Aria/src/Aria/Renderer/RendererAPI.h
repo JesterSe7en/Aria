@@ -5,7 +5,8 @@
 
 namespace ARIA {
 class RendererAPI {
- public:
+ 
+public:
   enum class API {
     // DirectX and Vulkan would be added later
     None = 0,
@@ -19,9 +20,10 @@ class RendererAPI {
   virtual void set_clear_color(const glm::vec4 color) = 0;
   virtual void draw_indexed(const std::shared_ptr<VertexArray>& array) = 0;
 
-  inline static API get_api() { return sAPI; }
+  static API get_api() { return sAPI; }
+  static API create();
 
  private:
   static API sAPI;
 };
-}  // namespace Aria
+}  // namespace ARIA
