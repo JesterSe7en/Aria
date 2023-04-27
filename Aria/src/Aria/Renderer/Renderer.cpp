@@ -4,10 +4,10 @@
 
 namespace ARIA {
 
-void Renderer::BeginScene() {}
-void Renderer::EndScene() {}
+void Renderer::begin_scene() {}
+void Renderer::end_scene() {}
 
-void Renderer::Submit(const std::shared_ptr<VertexArray>& vertex_array) {
-  RenderCommand::DrawIndexed(vertex_array);
+void Renderer::submit(const std::shared_ptr<VertexArray>& vertex_array) {
+  RenderCommand::draw_indexed(vertex_array);
 }
 }  // namespace ARIA
