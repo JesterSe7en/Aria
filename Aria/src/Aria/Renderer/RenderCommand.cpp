@@ -5,4 +5,6 @@
 
 namespace ARIA {
 
+  RendererAPI* RenderCommand::sRendererAPI = new OpenGLRendererAPI;
+
 }
