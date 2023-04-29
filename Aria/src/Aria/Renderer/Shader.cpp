@@ -121,7 +121,6 @@ Shader::Shader(const std::string &vertex_src, const std::string &fragment_src)
 }
 
 Shader::Shader(const std::string &file_path) : mRendererID(0) {
-
   if (!std::filesystem::exists(file_path)) {
     ARIA_CORE_WARN("Cannot find shader file: {0}", file_path);
   };

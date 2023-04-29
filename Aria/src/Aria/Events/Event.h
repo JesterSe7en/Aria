@@ -36,7 +36,7 @@ enum EventCatagory {
 };
 
 #define EVENT_CLASS_TYPE(type)                                     \
-  static EventType get_static_type() { return EventType::##type; } \
+  static EventType get_static_type() { return EventType::type; } \
   virtual EventType get_event_type() const override {              \
     return get_static_type();                                      \
   }                                                                \
