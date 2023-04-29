@@ -57,4 +57,3 @@ compile_commands.json
 build/
 out/
 CMakeSettings.json
-CMake/
