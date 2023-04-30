@@ -661,26 +661,21 @@ else()
             -fno-omit-frame-pointer            
         >
         $<$<CONFIG:Dist>:
-            -03;
+            -O2;
             -DNDEBUG;
-            -flto;
-            -march=native;
-            -mtune=native;
-            -fomit-frame-pointer;
-            -fPIC;
             -fstack-protector-strong;
-            -Wl,-z,relro,-z,now;
-        >
+            -pie;
+            -fvisibility=hidden;
+            -fdata-sections;
+            -ffunction-sections;
+       >
         $<$<CONFIG:Release>:
-            -02;
+            -O2;
+            -g;
             -DNDEBUG;
-            -flto;
-            -march=native;
-            -mtune=native;
-            -fomit-frame-pointer;
-            -funroll-loops;
-            -finline-functions;
-            -funsafe-math-optimizations;
+            -fvisibility=hidden;
+            -fdata-sections;
+            -ffunction-sections;
         >
         -std=c++17;
         ${DEFAULT_CXX_EXCEPTION_HANDLING}
