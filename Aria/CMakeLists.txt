@@ -44,6 +44,8 @@ source_group("src\\Aria\\ImGui" FILES ${src__Aria__ImGui})
 set(src__Aria__Renderer
     "src/Aria/Renderer/Buffer.cpp"
     "src/Aria/Renderer/Buffer.h"
+    "src/Aria/Renderer/Camera.cpp"
+    "src/Aria/Renderer/Camera.h"
     "src/Aria/Renderer/GraphicsContext.h"
     "src/Aria/Renderer/RenderCommand.cpp"
     "src/Aria/Renderer/RenderCommand.h"

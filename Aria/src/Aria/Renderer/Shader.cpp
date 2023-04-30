@@ -1,6 +1,6 @@
-#include "ariapch.h"
 #include "Shader.h"
 #include "Aria/Log.h"
+#include "ariapch.h"
 
 #include <filesystem>
 #include <glad/gl.h>
@@ -135,6 +135,14 @@ void Shader::bind() const { glUseProgram(mRendererID); }
 
 void Shader::unbind() const { glUseProgram(0); }
 
+void Shader::set_uniform_1i(const std::string &name, int value) {}
+
+void Shader::set_uniform_4f(const std::string &name, float v0, float v1,
+                            float v2, float v3) {}
+
+void Shader::set_uniform_mat4f(const std::string &name,
+                               const glm::mat4 &matrix) {}
+
 // TODO: only supports vertex and frag shaders
 ShaderProgramSrc Shader::parse_shader(const std::string &file_path) {
   // we need to parse and find our special syntax e.g. (#shader vertex)
@@ -167,7 +175,6 @@ uint32_t Shader::compile_shader(unsigned int type, const std::string &source) {
   int shader_type;
   unsigned int id = glCreateShader(type);
   glGetShaderiv(id, GL_SHADER_TYPE, &shader_type);
-  
 
   // Send the vertex shader source code to GL
   // Note that std::string's .c_str is NULL character terminated.
@@ -201,7 +208,7 @@ uint32_t Shader::compile_shader(unsigned int type, const std::string &source) {
 
 // TODO: accept other kinds of shaders, prob pass a vector
 uint32_t Shader::create_shader(const std::string &vertex_shader,
-                              const std::string &fragment_shader) {
+                               const std::string &fragment_shader) {
   uint32_t id = glCreateProgram();
   uint32_t vs = compile_shader(GL_VERTEX_SHADER, vertex_shader);
   uint32_t fs = compile_shader(GL_FRAGMENT_SHADER, fragment_shader);
@@ -247,29 +254,29 @@ uint32_t Shader::create_shader(const std::string &vertex_shader,
 const char *Shader::get_shader_type(const int shader_type) const {
   const char *type;
   switch (shader_type) {
-    case GL_VERTEX_SHADER:
-      type = "Vertex Shader";
-      break;
-    case GL_FRAGMENT_SHADER:
-      type = "Fragment Shader";
-      break;
-    case GL_GEOMETRY_SHADER:
-      type = "Geometry Shader";
-      break;
-    case GL_TESS_CONTROL_SHADER:
-      type = "Tessellation Control Shader";
-      break;
-    case GL_TESS_EVALUATION_SHADER:
-      type = "Tessellation Evaluation Shader";
-      break;
-    case GL_COMPUTE_SHADER:
-      type = "Compute Shader";
-      break;
-    default:
-      type = "Unknown Type Shader";
-      break;
+  case GL_VERTEX_SHADER:
+    type = "Vertex Shader";
+    break;
+  case GL_FRAGMENT_SHADER:
+    type = "Fragment Shader";
+    break;
+  case GL_GEOMETRY_SHADER:
+    type = "Geometry Shader";
+    break;
+  case GL_TESS_CONTROL_SHADER:
+    type = "Tessellation Control Shader";
+    break;
+  case GL_TESS_EVALUATION_SHADER:
+    type = "Tessellation Evaluation Shader";
+    break;
+  case GL_COMPUTE_SHADER:
+    type = "Compute Shader";
+    break;
+  default:
+    type = "Unknown Type Shader";
+    break;
   }
   return type;
 }
 
-}  // namespace ARIA
+} // namespace ARIA

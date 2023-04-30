@@ -1,5 +1,5 @@
-#include "ariapch.h"
 #include "Application.h"
+#include "ariapch.h"
 
 #include <GLFW/glfw3.h>
 
@@ -13,21 +13,23 @@
 
 #include "Aria/Renderer/Renderer.h"
 
+#include "Aria/Renderer/Camera.h"
+
 #ifdef WIN32
 #include <Windows.h>
 extern "C" {
 __declspec(dllexport) DWORD NvOptimusEnablement = 0x00000001;
 __declspec(dllexport) int AmdPowerXpressRequestHighPerformance = 1;
 }
-#endif  // def WIN32
+#endif // def WIN32
 
 namespace ARIA {
 
 #define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)
 
-Application* Application::sInstance = nullptr;
+Application *Application::sInstance = nullptr;
 
-Application::Application() {
+Application::Application() : mOrthoCamera(-1.0f, 1.0f, -1.0f, 1.0f) {
   ARIA_CORE_ASSERT(!sInstance, "Application already exists.");
   sInstance = this;
 
@@ -39,36 +41,31 @@ Application::Application() {
 
   // vertex buffer
   float triangleVertices[3 * 7] = {
-      -0.5f, -0.5f, 0.0f, 0.8f, 0.2f, 0.8f, 1.0f,
-      0.5f, -0.5f, 0.0f, 0.2f, 0.3f, 0.8f, 1.0f,
-      0.0f, 0.5f, 0.0f, 0.8f, 0.8f, 0.2f, 1.0f,
+      -0.5f, -0.5f, 0.0f, 0.8f, 0.2f, 0.8f, 1.0f, 0.5f, -0.5f, 0.0f, 0.2f,
+      0.3f,  0.8f,  1.0f, 0.0f, 0.5f, 0.0f, 0.8f, 0.8f, 0.2f,  1.0f,
   };
-  mTriangleVB.reset(VertexBuffer::create(triangleVertices, sizeof(triangleVertices)));
-  BufferLayout layout = {
-    {ShaderPrimitiveType::Float3, "a_Position" },
-    {ShaderPrimitiveType::Float4, "a_Color" }
-  };
+  mTriangleVB.reset(
+      VertexBuffer::create(triangleVertices, sizeof(triangleVertices)));
+  BufferLayout layout = {{ShaderPrimitiveType::Float3, "a_Position"},
+                         {ShaderPrimitiveType::Float4, "a_Color"}};
   mTriangleVB->set_layout(layout);
   mTriangleVA->add_vertex_buffer(mTriangleVB);
 
-  //index buffer
-  uint32_t triangleIndicies[3] = { 0, 1, 2 };
-  mTriangleIB.reset(IndexBuffer::create(triangleIndicies, sizeof(triangleIndicies) / sizeof(uint32_t)));
+  // index buffer
+  uint32_t triangleIndicies[3] = {0, 1, 2};
+  mTriangleIB.reset(IndexBuffer::create(
+      triangleIndicies, sizeof(triangleIndicies) / sizeof(uint32_t)));
   mTriangleVA->set_index_buffer(mTriangleIB);
 
-    // Why doesn't this accept relative path?
+  // Why doesn't this accept relative path?
   mTriangleShader.reset(new Shader(
       "C:/Users/alyxc/Workspace/Aria/Aria/res/shaders/basicTriangle.shader"));
 
   // --------------- Rendering SQUARE ---------------
   mSquareVA.reset(VertexArray::create());
 
-  float squareVertices[3 * 4] = {
-    -0.75f, -0.75f, 0.0f,
-    0.75f, -0.75f, 0.0f,
-    0.75f, 0.75f, 0.0f,
-    -0.75f, 0.75f, 0.0f
-  };
+  float squareVertices[3 * 4] = {-0.75f, -0.75f, 0.0f, 0.75f,  -0.75f, 0.0f,
+                                 0.75f,  0.75f,  0.0f, -0.75f, 0.75f,  0.0f};
 
   mSquareVB.reset(VertexBuffer::create(squareVertices, sizeof(squareVertices)));
 
@@ -77,7 +74,8 @@ Application::Application() {
 
   uint32_t squareIndices[6] = {0, 1, 2, 2, 3, 0};
 
-  mSquareIB.reset(IndexBuffer::create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t)));
+  mSquareIB.reset(IndexBuffer::create(squareIndices, sizeof(squareIndices) /
+                                                         sizeof(uint32_t)));
   mSquareVA->set_index_buffer(mSquareIB);
 
   mSquareShader.reset(new Shader(
@@ -92,27 +90,24 @@ void Application::run() {
     RenderCommand::set_clear_color(glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
     RenderCommand::clear();
 
-
     mSquareShader->bind();
     mSquareVA->bind();
 
     RenderCommand::draw_indexed(mSquareVA);
 
-
     mTriangleShader->bind();
     mTriangleVA->bind();
 
     RenderCommand::draw_indexed(mTriangleVA);
-    
 
-    for (Layer* layer : mLayerStack) {
+    for (Layer *layer : mLayerStack) {
       layer->on_update();
     }
 
     mWindow->on_update();
   }
 }
-void Application::on_event(Event& e) {
+void Application::on_event(Event &e) {
   EventDispatcher dispatcher(e);
 
   dispatcher.dispatch<WindowCloseEvent>(
@@ -129,28 +124,28 @@ void Application::on_event(Event& e) {
     }
   }
 }
-void Application::push_layer(Layer* layer) { 
+void Application::push_layer(Layer *layer) {
   mLayerStack.push_layer(layer);
   layer->on_attach();
 }
 
-void Application::push_overlay(Layer* overlay) {
+void Application::push_overlay(Layer *overlay) {
   mLayerStack.push_overlay(overlay);
   overlay->on_attach();
 }
 
-void Application::pop_layer(Layer* layer) {
+void Application::pop_layer(Layer *layer) {
   mLayerStack.pop_layer(layer);
   layer->on_detach();
 }
 
-void Application::pop_overlay(Layer* overlay) {
+void Application::pop_overlay(Layer *overlay) {
   mLayerStack.pop_layer(overlay);
   overlay->on_detach();
 }
 
-bool Application::on_window_close(WindowCloseEvent& e) {
+bool Application::on_window_close(WindowCloseEvent &e) {
   mRunning = false;
   return true;
 }
-}  // namespace ARIA
+} // namespace ARIA
