@@ -135,13 +135,20 @@ void Shader::bind() const { glUseProgram(mRendererID); }
 
 void Shader::unbind() const { glUseProgram(0); }
 
-void Shader::set_uniform_1i(const std::string &name, int value) {}
+void Shader::set_uniform_1i(const std::string &name, int value) {
+  glad_glUniform1i(get_uniform_location(name), value);
+}
 
 void Shader::set_uniform_4f(const std::string &name, float v0, float v1,
-                            float v2, float v3) {}
+                            float v2, float v3) {
+  glad_glUniform4f(get_uniform_location(name), v0, v1, v2, v3);
+}
 
 void Shader::set_uniform_mat4f(const std::string &name,
-                               const glm::mat4 &matrix) {}
+                               const glm::mat4 &matrix) {
+  glad_glUniformMatrix4fv(get_uniform_location(name), 1, GL_FALSE,
+                          &matrix[0][0]);
+}
 
 // TODO: only supports vertex and frag shaders
 ShaderProgramSrc Shader::parse_shader(const std::string &file_path) {
@@ -277,6 +284,18 @@ const char *Shader::get_shader_type(const int shader_type) const {
     break;
   }
   return type;
+}
+
+int Shader::get_uniform_location(const std::string &name) {
+  if (mUniformLocationCache.find(name) != mUniformLocationCache.end())
+    return mUniformLocationCache[name];
+
+  int location = glad_glGetUniformLocation(mRendererID, name.c_str());
+  if (location == -1)
+    ARIA_CORE_WARN("Warning: Uniform '{0}' does not exist", name);
+
+  mUniformLocationCache[name] = location;
+  return location;
 }
 
 } // namespace ARIA

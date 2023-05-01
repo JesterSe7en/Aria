@@ -29,6 +29,7 @@ namespace ARIA {
 
 Application *Application::sInstance = nullptr;
 
+// ortho params are actually what is given to us to use by defualt from OpenGL
 Application::Application() : mOrthoCamera(-1.0f, 1.0f, -1.0f, 1.0f) {
   ARIA_CORE_ASSERT(!sInstance, "Application already exists.");
   sInstance = this;
@@ -91,11 +92,15 @@ void Application::run() {
     RenderCommand::clear();
 
     mSquareShader->bind();
+    mSquareShader->set_uniform_mat4f("u_ViewProjection",
+                                     mOrthoCamera.get_vp_matrix());
     mSquareVA->bind();
 
     RenderCommand::draw_indexed(mSquareVA);
 
     mTriangleShader->bind();
+    mTriangleShader->set_uniform_mat4f("u_ViewProjection",
+                                       mOrthoCamera.get_vp_matrix());
     mTriangleVA->bind();
 
     RenderCommand::draw_indexed(mTriangleVA);

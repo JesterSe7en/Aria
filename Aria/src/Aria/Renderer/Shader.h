@@ -33,6 +33,9 @@ private:
   uint32_t create_shader(const std::string &vertex_shader,
                          const std::string &fragment_shader);
   const char *get_shader_type(const int shader_type) const;
+  int get_uniform_location(const std::string &name);
+
+private:
   uint32_t mRendererID;
 
   std::unordered_map<std::string, int> mUniformLocationCache;
