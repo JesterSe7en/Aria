@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Aria/Renderer/Camera.h"
+#include "Renderer/Camera.h"
 #include "Core.h"
 #include "Events/ApplicationEvent.h"
 #include "Events/Event.h"
@@ -14,7 +14,7 @@
 namespace ARIA {
 
 class ARIA_API Application {
-public:
+ public:
   Application();
   virtual ~Application();
 
@@ -30,14 +30,14 @@ public:
 
   inline static Application &get() { return *sInstance; }
 
-private:
+ private:
   bool on_window_close(WindowCloseEvent &e);
 
   std::unique_ptr<Window> mWindow;
   bool mRunning = true;
   LayerStack mLayerStack;
 
-private:
+ private:
   static Application *sInstance;
 
   std::shared_ptr<Shader> mTriangleShader;
@@ -55,4 +55,4 @@ private:
 
 // To be defined in CLIENT
 Application *create_application();
-} // namespace ARIA
+}  // namespace ARIA

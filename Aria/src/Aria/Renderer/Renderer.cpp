@@ -1,13 +1,19 @@
 #include "ariapch.h"
 #include "Renderer.h"
 #include "RenderCommand.h"
+#include "Shader.h"
 
 namespace ARIA {
 
-void Renderer::begin_scene() {}
+Renderer::SceneData* Renderer::sSceneData = new Renderer::SceneData;
+
+void Renderer::begin_scene(const OrthographicCamera& camera) { sSceneData->mVPMatrix = camera.get_vp_matrix(); }
 void Renderer::end_scene() {}
 
-void Renderer::submit(const std::shared_ptr<VertexArray>& vertex_array) {
+void Renderer::submit(const std::shared_ptr<Shader>& shader, const std::shared_ptr<VertexArray>& vertex_array) {
+  shader->bind();
+  shader->set_uniform_mat4f("u_ViewProjection", sSceneData->mVPMatrix);
+  vertex_array->bind();
   RenderCommand::draw_indexed(vertex_array);
 }
 }  // namespace ARIA

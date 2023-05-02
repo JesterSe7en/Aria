@@ -6,7 +6,7 @@
 namespace ARIA {
 
 class OrthographicCamera {
-public:
+ public:
   OrthographicCamera(float left, float right, float bottom, float top);
   ~OrthographicCamera() = default;
 
@@ -20,31 +20,31 @@ public:
   const glm::mat4 &get_projection_matrix() const { return mProjectionMatrix; }
   const glm::mat4 &get_vp_matrix() const { return mVPMatrix; }
 
-private:
+ private:
   void recalculate_view_matrix();
 
-private:
+ private:
   glm::mat4 mViewMatrix;
   glm::mat4 mProjectionMatrix;
-  glm::mat4 mVPMatrix; // for caching purposes - view projection matrix
+  glm::mat4 mVPMatrix;  // for caching purposes - view projection matrix
 
-  glm::vec3 mPosition;
+  glm::vec3 mPosition = {0.0f, 0.0f, 0.0f};
 
   float mRotation = 0.0f;
 };
 
 class PerspectiveCamera {
-public:
+ public:
   PerspectiveCamera(float top, float right, float bottom, float left);
   ~PerspectiveCamera() = default;
 
-private:
+ private:
   glm::mat4 mViewMatrix;
   glm::mat4 mProjectionMatrix;
-  glm::mat4 mVPMatrix; // for caching purposes
+  glm::mat4 mVPMatrix;  // for caching purposes
 
   glm::vec3 mPosition;
 
   // need a quaternion here to track rotation
 };
-} // namespace ARIA
+}  // namespace ARIA

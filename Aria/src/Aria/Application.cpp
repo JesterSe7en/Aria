@@ -1,5 +1,5 @@
-#include "Application.h"
 #include "ariapch.h"
+#include "Application.h"
 
 #include <GLFW/glfw3.h>
 
@@ -27,7 +27,7 @@ namespace ARIA {
 Application *Application::sInstance = nullptr;
 
 // ortho params are actually what is given to us to use by defualt from OpenGL
-Application::Application() : mOrthoCamera(-1.0f, 1.0f, -1.0f, 1.0f) {
+Application::Application() : mOrthoCamera(-1.6f, 1.6f, -0.9f, 0.9f) {
   ARIA_CORE_ASSERT(!sInstance, "Application already exists.");
   sInstance = this;
 
@@ -42,28 +42,23 @@ Application::Application() : mOrthoCamera(-1.0f, 1.0f, -1.0f, 1.0f) {
       -0.5f, -0.5f, 0.0f, 0.8f, 0.2f, 0.8f, 1.0f, 0.5f, -0.5f, 0.0f, 0.2f,
       0.3f,  0.8f,  1.0f, 0.0f, 0.5f, 0.0f, 0.8f, 0.8f, 0.2f,  1.0f,
   };
-  mTriangleVB.reset(
-      VertexBuffer::create(triangleVertices, sizeof(triangleVertices)));
-  BufferLayout layout = {{ShaderPrimitiveType::Float3, "a_Position"},
-                         {ShaderPrimitiveType::Float4, "a_Color"}};
+  mTriangleVB.reset(VertexBuffer::create(triangleVertices, sizeof(triangleVertices)));
+  BufferLayout layout = {{ShaderPrimitiveType::Float3, "a_Position"}, {ShaderPrimitiveType::Float4, "a_Color"}};
   mTriangleVB->set_layout(layout);
   mTriangleVA->add_vertex_buffer(mTriangleVB);
 
   // index buffer
   uint32_t triangleIndicies[3] = {0, 1, 2};
-  mTriangleIB.reset(IndexBuffer::create(
-      triangleIndicies, sizeof(triangleIndicies) / sizeof(uint32_t)));
+  mTriangleIB.reset(IndexBuffer::create(triangleIndicies, sizeof(triangleIndicies) / sizeof(uint32_t)));
   mTriangleVA->set_index_buffer(mTriangleIB);
 
   // Why doesn't this accept relative path?
-  mTriangleShader.reset(new Shader(
-      "C:/Users/alyxc/Workspace/Aria/Aria/res/shaders/basicTriangle.shader"));
+  mTriangleShader.reset(new Shader("C:/Users/alyxc/Workspace/Aria/Aria/res/shaders/basicTriangle.shader"));
 
   // --------------- Rendering SQUARE ---------------
   mSquareVA.reset(VertexArray::create());
 
-  float squareVertices[3 * 4] = {-0.75f, -0.75f, 0.0f, 0.75f,  -0.75f, 0.0f,
-                                 0.75f,  0.75f,  0.0f, -0.75f, 0.75f,  0.0f};
+  float squareVertices[3 * 4] = {-0.75f, -0.75f, 0.0f, 0.75f, -0.75f, 0.0f, 0.75f, 0.75f, 0.0f, -0.75f, 0.75f, 0.0f};
 
   mSquareVB.reset(VertexBuffer::create(squareVertices, sizeof(squareVertices)));
 
@@ -72,12 +67,10 @@ Application::Application() : mOrthoCamera(-1.0f, 1.0f, -1.0f, 1.0f) {
 
   uint32_t squareIndices[6] = {0, 1, 2, 2, 3, 0};
 
-  mSquareIB.reset(IndexBuffer::create(
-      squareIndices, sizeof(squareIndices) / sizeof(uint32_t)));
+  mSquareIB.reset(IndexBuffer::create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t)));
   mSquareVA->set_index_buffer(mSquareIB);
 
-  mSquareShader.reset(new Shader(
-      "C:/Users/alyxc/Workspace/Aria/Aria/res/shaders/basicSquare.shader"));
+  mSquareShader.reset(new Shader("C:/Users/alyxc/Workspace/Aria/Aria/res/shaders/basicSquare.shader"));
 }
 
 Application::~Application() {}
@@ -87,19 +80,14 @@ void Application::run() {
     RenderCommand::set_clear_color(glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
     RenderCommand::clear();
 
-    mSquareShader->bind();
-    mSquareShader->set_uniform_mat4f("u_ViewProjection",
-                                     mOrthoCamera.get_vp_matrix());
-    mSquareVA->bind();
+    mOrthoCamera.set_position({0.5f, 0.5f, 0.0f});
+    mOrthoCamera.set_rotation(45.0f);
+    Renderer::begin_scene(mOrthoCamera);
 
-    RenderCommand::draw_indexed(mSquareVA);
+    Renderer::submit(mSquareShader, mSquareVA);
+    Renderer::submit(mTriangleShader, mTriangleVA);
 
-    mTriangleShader->bind();
-    mTriangleShader->set_uniform_mat4f("u_ViewProjection",
-                                       mOrthoCamera.get_vp_matrix());
-    mTriangleVA->bind();
-
-    RenderCommand::draw_indexed(mTriangleVA);
+    Renderer::end_scene();
 
     for (Layer *layer : mLayerStack) {
       layer->on_update();
@@ -111,8 +99,7 @@ void Application::run() {
 void Application::on_event(Event &e) {
   EventDispatcher dispatcher(e);
 
-  dispatcher.dispatch<WindowCloseEvent>(
-      BIND_EVENT_FN(Application::on_window_close));
+  dispatcher.dispatch<WindowCloseEvent>(BIND_EVENT_FN(Application::on_window_close));
 
   // Go through the Layer Stack (backwards) and fire off events
 
