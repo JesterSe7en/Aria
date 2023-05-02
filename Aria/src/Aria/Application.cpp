@@ -7,12 +7,9 @@
 #include "Aria/Events/KeyEvent.h"
 #include "Aria/Input.h"
 #include "Aria/Log.h"
-
 #include "Aria/Renderer/Buffer.h"
 #include "Aria/Renderer/VertexArray.h"
-
 #include "Aria/Renderer/Renderer.h"
-
 #include "Aria/Renderer/Camera.h"
 
 #ifdef WIN32
@@ -21,7 +18,7 @@ extern "C" {
 __declspec(dllexport) DWORD NvOptimusEnablement = 0x00000001;
 __declspec(dllexport) int AmdPowerXpressRequestHighPerformance = 1;
 }
-#endif // def WIN32
+#endif  // def WIN32
 
 namespace ARIA {
 
@@ -75,8 +72,8 @@ Application::Application() : mOrthoCamera(-1.0f, 1.0f, -1.0f, 1.0f) {
 
   uint32_t squareIndices[6] = {0, 1, 2, 2, 3, 0};
 
-  mSquareIB.reset(IndexBuffer::create(squareIndices, sizeof(squareIndices) /
-                                                         sizeof(uint32_t)));
+  mSquareIB.reset(IndexBuffer::create(
+      squareIndices, sizeof(squareIndices) / sizeof(uint32_t)));
   mSquareVA->set_index_buffer(mSquareIB);
 
   mSquareShader.reset(new Shader(
@@ -87,7 +84,6 @@ Application::~Application() {}
 
 void Application::run() {
   while (mRunning) {
-
     RenderCommand::set_clear_color(glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
     RenderCommand::clear();
 
@@ -153,4 +149,4 @@ bool Application::on_window_close(WindowCloseEvent &e) {
   mRunning = false;
   return true;
 }
-} // namespace ARIA
+}  // namespace ARIA
