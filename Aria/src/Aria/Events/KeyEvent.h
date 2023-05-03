@@ -3,6 +3,7 @@
 #include "Event.h"
 
 namespace ARIA {
+
 class ARIA_API KeyEvent : public Event {
  public:
   inline int get_key_code() const { return mKeyCode; }
@@ -10,22 +11,20 @@ class ARIA_API KeyEvent : public Event {
   EVENT_CLASS_CATEGORY(EventCatagoryKeyboard | EventCatagoryInput)
 
  protected:
-  KeyEvent(int keycode) : mKeyCode(keycode) {}
+  KeyEvent(const int keycode) : mKeyCode(keycode) {}
 
   int mKeyCode;
 };
 
 class ARIA_API KeyPressedEvent : public KeyEvent {
  public:
-  KeyPressedEvent(int keycode, int repeatCount)
-      : KeyEvent(keycode), mRepeatCount(repeatCount) {}
+  KeyPressedEvent(int keycode, int repeatCount) : KeyEvent(keycode), mRepeatCount(repeatCount) {}
 
   inline int get_repeat_count() { return mRepeatCount; }
 
   inline std::string ToString() const override {
     std::stringstream ss;
-    ss << "KeyPressedEvent: " << mKeyCode << " (" << mRepeatCount
-       << " repeats)";
+    ss << "KeyPressedEvent: " << mKeyCode << " (" << mRepeatCount << " repeats)";
     return ss.str();
   }
 

@@ -2,8 +2,10 @@
 
 #include "Renderer/Camera.h"
 #include "Core.h"
-#include "Events/ApplicationEvent.h"
 #include "Events/Event.h"
+#include "Events/ApplicationEvent.h"
+#include "Events/KeyEvent.h"
+#include "Events/MouseEvent.h"
 #include "Layer.h"
 #include "LayerStack.h"
 #include "Renderer/Buffer.h"
