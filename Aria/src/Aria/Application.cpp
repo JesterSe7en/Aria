@@ -77,17 +77,7 @@ Application::~Application() {}
 
 void Application::run() {
   while (mRunning) {
-    RenderCommand::set_clear_color(glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
-    RenderCommand::clear();
 
-    mOrthoCamera.set_position({0.5f, 0.5f, 0.0f});
-    mOrthoCamera.set_rotation(45.0f);
-    Renderer::begin_scene(mOrthoCamera);
-
-    Renderer::submit(mSquareShader, mSquareVA);
-    Renderer::submit(mTriangleShader, mTriangleVA);
-
-    Renderer::end_scene();
 
     for (Layer *layer : mLayerStack) {
       layer->on_update();
