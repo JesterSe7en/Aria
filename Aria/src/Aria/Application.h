@@ -41,18 +41,6 @@ class ARIA_API Application {
 
  private:
   static Application *sInstance;
-
-  std::shared_ptr<Shader> mTriangleShader;
-  std::shared_ptr<VertexBuffer> mTriangleVB;
-  std::shared_ptr<IndexBuffer> mTriangleIB;
-  std::shared_ptr<VertexArray> mTriangleVA;
-
-  std::shared_ptr<VertexArray> mSquareVA;
-  std::shared_ptr<VertexBuffer> mSquareVB;
-  std::shared_ptr<IndexBuffer> mSquareIB;
-  std::shared_ptr<Shader> mSquareShader;
-
-  OrthographicCamera mOrthoCamera;
 };
 
 // To be defined in CLIENT

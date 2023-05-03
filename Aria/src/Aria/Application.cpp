@@ -27,58 +27,18 @@ namespace ARIA {
 Application *Application::sInstance = nullptr;
 
 // ortho params are actually what is given to us to use by defualt from OpenGL
-Application::Application() : mOrthoCamera(-1.6f, 1.6f, -0.9f, 0.9f) {
+Application::Application() {
   ARIA_CORE_ASSERT(!sInstance, "Application already exists.");
   sInstance = this;
 
   mWindow = std::unique_ptr<Window>(Window::create());
   mWindow->set_event_callback(BIND_EVENT_FN(on_event));
-
-  // --------------- Rendering TRIANGLE ---------------
-  mTriangleVA.reset(VertexArray::create());
-
-  // vertex buffer
-  float triangleVertices[3 * 7] = {
-      -0.5f, -0.5f, 0.0f, 0.8f, 0.2f, 0.8f, 1.0f, 0.5f, -0.5f, 0.0f, 0.2f,
-      0.3f,  0.8f,  1.0f, 0.0f, 0.5f, 0.0f, 0.8f, 0.8f, 0.2f,  1.0f,
-  };
-  mTriangleVB.reset(VertexBuffer::create(triangleVertices, sizeof(triangleVertices)));
-  BufferLayout layout = {{ShaderPrimitiveType::Float3, "a_Position"}, {ShaderPrimitiveType::Float4, "a_Color"}};
-  mTriangleVB->set_layout(layout);
-  mTriangleVA->add_vertex_buffer(mTriangleVB);
-
-  // index buffer
-  uint32_t triangleIndicies[3] = {0, 1, 2};
-  mTriangleIB.reset(IndexBuffer::create(triangleIndicies, sizeof(triangleIndicies) / sizeof(uint32_t)));
-  mTriangleVA->set_index_buffer(mTriangleIB);
-
-  // Why doesn't this accept relative path?
-  mTriangleShader.reset(new Shader("C:/Users/alyxc/Workspace/Aria/Aria/res/shaders/basicTriangle.shader"));
-
-  // --------------- Rendering SQUARE ---------------
-  mSquareVA.reset(VertexArray::create());
-
-  float squareVertices[3 * 4] = {-0.75f, -0.75f, 0.0f, 0.75f, -0.75f, 0.0f, 0.75f, 0.75f, 0.0f, -0.75f, 0.75f, 0.0f};
-
-  mSquareVB.reset(VertexBuffer::create(squareVertices, sizeof(squareVertices)));
-
-  mSquareVB->set_layout({{ShaderPrimitiveType::Float3, "a_Position"}});
-  mSquareVA->add_vertex_buffer(mSquareVB);
-
-  uint32_t squareIndices[6] = {0, 1, 2, 2, 3, 0};
-
-  mSquareIB.reset(IndexBuffer::create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t)));
-  mSquareVA->set_index_buffer(mSquareIB);
-
-  mSquareShader.reset(new Shader("C:/Users/alyxc/Workspace/Aria/Aria/res/shaders/basicSquare.shader"));
 }
 
 Application::~Application() {}
 
 void Application::run() {
   while (mRunning) {
-
-
     for (Layer *layer : mLayerStack) {
       layer->on_update();
     }
