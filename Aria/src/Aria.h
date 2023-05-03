@@ -8,6 +8,7 @@
 #include "Aria/Layer.h"
 #include "Aria/ImGui/ImGuiLayer.h"
 #include "Aria/Log.h"
+#include "Aria/Core/Timestep.h"
 
 // -------- Input --------
 #include "Aria/Input.h"

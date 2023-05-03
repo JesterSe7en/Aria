@@ -11,7 +11,7 @@ class ARIA_API ImGuiLayer : public Layer {
   void on_attach() override;
   void on_detach() override;
 
-  void on_update() override;
+  void on_update(Timestep delta_time) override;
   void on_event(Event& event) override;
 
  private:

@@ -27,6 +27,12 @@ set(src__Aria
 )
 source_group("src\\Aria" FILES ${src__Aria})
 
+set(src__Aria__Core
+"src/Aria/Core/Timestep.h"
+)
+
+source_group("src\\Aria\\Core" FILES ${src__Aria__Core})
+
 set(src__Aria__Events
     "src/Aria/Events/ApplicationEvent.h"
     "src/Aria/Events/Event.h"

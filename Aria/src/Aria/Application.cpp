@@ -11,6 +11,7 @@
 #include "Aria/Renderer/VertexArray.h"
 #include "Aria/Renderer/Renderer.h"
 #include "Aria/Renderer/Camera.h"
+#include "Aria/Core/Timestep.h"
 
 #ifdef WIN32
 #include <Windows.h>
@@ -30,6 +31,7 @@ Application::Application() {
   sInstance = this;
 
   mWindow = std::unique_ptr<Window>(Window::create());
+  mWindow->set_vsync(false);
   mWindow->set_event_callback(ARIA_BIND_EVENT_FN(Application::on_event));
 }
 
@@ -37,8 +39,13 @@ Application::~Application() {}
 
 void Application::run() {
   while (mRunning) {
+    float time = (float)glfwGetTime();  // Platform::GetTime() should be used.  Somehow grab the time passed from the
+                                        // OS. Windows as QueryPerformaceTimer()
+    Timestep timestep = time - mLastFrameTime;
+    mLastFrameTime = time;
+
     for (Layer *layer : mLayerStack) {
-      layer->on_update();
+      layer->on_update(timestep);
     }
 
     mWindow->on_update();

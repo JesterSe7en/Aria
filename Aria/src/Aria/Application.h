@@ -39,6 +39,9 @@ class ARIA_API Application {
   bool mRunning = true;
   LayerStack mLayerStack;
 
+  Timestep mTimestep;
+  float mLastFrameTime = 0.0f;
+
  private:
   static Application *sInstance;
 };

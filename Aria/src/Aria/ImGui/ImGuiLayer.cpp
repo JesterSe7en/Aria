@@ -7,7 +7,6 @@
 #include <backends/imgui_impl_glfw.h>
 #include <backends/imgui_impl_opengl3.h>
 
-
 #include "Aria/Application.h"
 
 namespace ARIA {
@@ -26,12 +25,11 @@ void ImGuiLayer::on_attach() {
 
   ImGui::CreateContext();
   ImGuiIO& io = ImGui::GetIO();
-  (void)io; // to suppress compiler warnings
-  io.ConfigFlags |=
-      ImGuiConfigFlags_NavEnableKeyboard;  // Enable Keyboard Controls
-  io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;  // Enable Docking
-  io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;  // Enable Multi-Viewport
-                                                       
+  (void)io;                                              // to suppress compiler warnings
+  io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;  // Enable Keyboard Controls
+  io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;      // Enable Docking
+  io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;    // Enable Multi-Viewport
+
   // When viewports are enabled we tweak WindowRounding/WindowBg so platform
   // windows can look identical to regular ones.
   ImGuiStyle& style = ImGui::GetStyle();
@@ -40,13 +38,11 @@ void ImGuiLayer::on_attach() {
     style.Colors[ImGuiCol_WindowBg].w = 1.0f;
   }
 
-  io.DisplaySize = ImVec2((float)app.get_window().get_width(),
-                          (float)app.get_window().get_height());
-  
+  io.DisplaySize = ImVec2((float)app.get_window().get_width(), (float)app.get_window().get_height());
+
   ImGui::StyleColorsDark();
 
-  GLFWwindow* window =
-      static_cast<GLFWwindow*>(app.get_window().get_native_window());
+  GLFWwindow* window = static_cast<GLFWwindow*>(app.get_window().get_native_window());
 
   // Setup Platform/Renderer bindings
   ImGui_ImplGlfw_InitForOpenGL(window, true);
@@ -59,7 +55,7 @@ void ImGuiLayer::on_detach() {
   ImGui::DestroyContext();
 }
 
-void ImGuiLayer::on_update() {
+void ImGuiLayer::on_update(Timestep delta_time) {
   ImGui_ImplOpenGL3_NewFrame();
   ImGui_ImplGlfw_NewFrame();
   ImGui::NewFrame();

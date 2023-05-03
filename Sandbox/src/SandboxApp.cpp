@@ -45,7 +45,8 @@ class ExampleLayer : public ARIA::Layer {
     mOrthoCamera.set_position({0.0f, 0.0f, 0.0f});
   }
 
-  void on_update() override {
+  void on_update(ARIA::Timestep delta_time) override {
+    // delta_time with the float operator is returning time in SECONDS
     ARIA::RenderCommand::set_clear_color(glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
     ARIA::RenderCommand::clear();
 
@@ -53,15 +54,15 @@ class ExampleLayer : public ARIA::Layer {
     auto rotation = mOrthoCamera.get_rotation();
 
     if (ARIA::Input::is_key_pressed(ARIA_KEY_W)) {
-      position.y -= camera_move_speed;
+      position.y -= camera_move_speed * delta_time;
     } else if (ARIA::Input::is_key_pressed(ARIA_KEY_S)) {
-      position.y += camera_move_speed;
+      position.y += camera_move_speed * delta_time;
     }
 
     if (ARIA::Input::is_key_pressed(ARIA_KEY_A)) {
-      position.x += camera_move_speed;
+      position.x += camera_move_speed * delta_time;
     } else if (ARIA::Input::is_key_pressed(ARIA_KEY_D)) {
-      position.x -= camera_move_speed;
+      position.x -= camera_move_speed * delta_time;
     }
 
     if (ARIA::Input::is_key_pressed(ARIA_KEY_R)) {
@@ -71,11 +72,11 @@ class ExampleLayer : public ARIA::Layer {
     }
 
     if (ARIA::Input::is_key_pressed(ARIA_KEY_LEFT)) {
-      rotation += camera_rotate_speed;
+      rotation += camera_rotate_speed * delta_time;
     }
 
     if (ARIA::Input::is_key_pressed(ARIA_KEY_RIGHT)) {
-      rotation -= camera_rotate_speed;
+      rotation -= camera_rotate_speed * delta_time;
     }
 
     mOrthoCamera.set_position(position);
@@ -132,8 +133,8 @@ class ExampleLayer : public ARIA::Layer {
   std::shared_ptr<ARIA::IndexBuffer> mSquareIB;
   std::shared_ptr<ARIA::Shader> mSquareShader;
 
-  const float camera_move_speed = 0.1f;
-  const float camera_rotate_speed = 2.0f;
+  const float camera_move_speed = 5.0f;
+  const float camera_rotate_speed = 90.0f;
 };
 
 class Sandbox : public ARIA::Application {

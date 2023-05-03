@@ -2,6 +2,7 @@
 
 #include "Aria/Core.h"
 #include "Aria/Events/Event.h"
+#include "Aria/Core/Timestep.h"
 
 namespace ARIA {
 class ARIA_API Layer {
@@ -12,7 +13,7 @@ class ARIA_API Layer {
   // TODO: Enable/disable layers
   virtual void on_attach() {}
   virtual void on_detach() {}
-  virtual void on_update() {}
+  virtual void on_update(Timestep delta_time) {}
   virtual void on_event(Event& event) {}
 
   inline const std::string& get_name() const { return mDebugName; }
