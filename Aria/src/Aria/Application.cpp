@@ -22,8 +22,6 @@ __declspec(dllexport) int AmdPowerXpressRequestHighPerformance = 1;
 
 namespace ARIA {
 
-#define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)
-
 Application *Application::sInstance = nullptr;
 
 // ortho params are actually what is given to us to use by defualt from OpenGL
@@ -32,7 +30,7 @@ Application::Application() {
   sInstance = this;
 
   mWindow = std::unique_ptr<Window>(Window::create());
-  mWindow->set_event_callback(BIND_EVENT_FN(on_event));
+  mWindow->set_event_callback(ARIA_BIND_EVENT_FN(Application::on_event));
 }
 
 Application::~Application() {}
@@ -49,7 +47,7 @@ void Application::run() {
 void Application::on_event(Event &e) {
   EventDispatcher dispatcher(e);
 
-  dispatcher.dispatch<WindowCloseEvent>(BIND_EVENT_FN(Application::on_window_close));
+  dispatcher.dispatch<WindowCloseEvent>(ARIA_BIND_EVENT_FN(Application::on_window_close));
 
   // Go through the Layer Stack (backwards) and fire off events
 
