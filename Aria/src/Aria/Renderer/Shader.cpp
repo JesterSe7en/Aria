@@ -1,6 +1,6 @@
+#include "ariapch.h"
 #include "Shader.h"
 #include "Aria/Log.h"
-#include "ariapch.h"
 
 #include <filesystem>
 #include <glad/gl.h>
