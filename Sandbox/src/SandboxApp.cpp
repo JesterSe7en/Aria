@@ -73,7 +73,7 @@ class ExampleLayer : public ARIA::Layer {
       mPosition.x -= 0.1f;
     }
 
-    ARIA_TRACE("current position = {0}, {1}, {2}", mPosition.x, mPosition.y, mPosition.z);
+    // ARIA_TRACE("current position = {0}, {1}, {2}", mPosition.x, mPosition.y, mPosition.z);
   }
 
   void on_event(ARIA::Event& event) override {
