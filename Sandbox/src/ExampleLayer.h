@@ -1,17 +1,12 @@
 #pragma once
-
 #include <Aria.h>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-#include "imgui.h"
-#include "Platform/OpenGL/OpenGLShader.h"
 
 class ExampleLayer : public ARIA::Layer {
  public:
   ExampleLayer();
 
   void on_update(ARIA::Timestep delta_time) override;
-  void on_event(ARIA::Event& event) override ;
+  void on_event(ARIA::Event& event) override;
 
   void on_imgui_render() override;
 

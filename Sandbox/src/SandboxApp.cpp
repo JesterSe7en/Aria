@@ -1,4 +1,6 @@
 #include <Aria.h>
+#include <Aria/EntryPoint.h>
+
 #include "ExampleLayer.h"
 
 class Sandbox : public ARIA::Application {
