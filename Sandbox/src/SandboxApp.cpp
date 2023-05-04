@@ -41,7 +41,7 @@ class ExampleLayer : public ARIA::Layer {
     mSquareIB.reset(ARIA::IndexBuffer::create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t)));
     mSquareVA->set_index_buffer(mSquareIB);
 
-    mSquareShader.reset(new ARIA::Shader("C:/Users/alyxc/Workspace/Aria/Aria/res/shaders/basicSquare.shader"));
+    mFlatColorShader.reset(new ARIA::Shader("C:/Users/alyxc/Workspace/Aria/Aria/res/shaders/flatColor.shader"));
 
     mOrthoCamera.set_position({0.0f, 0.0f, 0.0f});
   }
@@ -103,10 +103,21 @@ class ExampleLayer : public ARIA::Layer {
 
     // renders tiles (not ideally how to do this, just example)
     glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm ::vec3(0.1f));
-    for (int i = 0; i < 5; i++) {
-      glm::vec3 pos(i * 0.11f, 0.0f, 0.0f);
-      glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos) * scale;
-      ARIA::Renderer::submit(mSquareShader, mSquareVA, transform);
+
+    glm::vec4 red_color(0.906, 0.38f, 0.38f, 1.0f);
+    glm::vec4 blue_color(0.427f, 0.663f, 0.894f, 1.0f);
+
+    for (int y = 0; y < 20; y++) {
+      for (int x = 0; x < 20; x++) {
+        glm::vec3 pos(x * 0.11f, y * 0.11f, 0.0f);
+        glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos) * scale;
+        if (x % 2) {
+          mFlatColorShader->set_uniform_4f("u_Color", red_color.r, red_color.g, red_color.b, red_color.a);
+        } else {
+          mFlatColorShader->set_uniform_4f("u_Color", blue_color.r, blue_color.g, blue_color.b, blue_color.a);
+        }
+        ARIA::Renderer::submit(mFlatColorShader, mSquareVA, transform);
+      }
     }
 
     ARIA::Renderer::submit(mTriangleShader, mTriangleVA);
@@ -155,7 +166,7 @@ class ExampleLayer : public ARIA::Layer {
   std::shared_ptr<ARIA::VertexArray> mSquareVA;
   std::shared_ptr<ARIA::VertexBuffer> mSquareVB;
   std::shared_ptr<ARIA::IndexBuffer> mSquareIB;
-  std::shared_ptr<ARIA::Shader> mSquareShader;
+  std::shared_ptr<ARIA::Shader> mFlatColorShader;
 
   const float camera_move_speed = 5.0f;
   const float camera_rotate_speed = 90.0f;
