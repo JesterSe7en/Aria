@@ -29,7 +29,7 @@ class ExampleLayer : public ARIA::Layer {
     // --------------- Rendering SQUARE ---------------
     mSquareVA.reset(ARIA::VertexArray::create());
 
-    float squareVertices[3 * 4] = {-0.75f, -0.75f, 0.0f, 0.75f, -0.75f, 0.0f, 0.75f, 0.75f, 0.0f, -0.75f, 0.75f, 0.0f};
+    float squareVertices[3 * 4] = {-0.5f, -0.5f, 0.0f, 0.5f, -0.5f, 0.0f, 0.5f, 0.5f, 0.0f, -0.5f, 0.5f, 0.0f};
 
     mSquareVB.reset(ARIA::VertexBuffer::create(squareVertices, sizeof(squareVertices)));
 
@@ -101,9 +101,14 @@ class ExampleLayer : public ARIA::Layer {
 
     ARIA::Renderer::begin_scene(mOrthoCamera);
 
-    glm::mat4 transform = glm::translate(glm::mat4(1.0f), mSquarePosition);
+    // renders tiles (not ideally how to do this, just example)
+    glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm ::vec3(0.1f));
+    for (int i = 0; i < 5; i++) {
+      glm::vec3 pos(i * 0.11f, 0.0f, 0.0f);
+      glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos) * scale;
+      ARIA::Renderer::submit(mSquareShader, mSquareVA, transform);
+    }
 
-    ARIA::Renderer::submit(mSquareShader, mSquareVA, transform);
     ARIA::Renderer::submit(mTriangleShader, mTriangleVA);
 
     ARIA::Renderer::end_scene();
