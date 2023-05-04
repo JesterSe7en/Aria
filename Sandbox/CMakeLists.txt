@@ -4,6 +4,8 @@ set(PROJECT_NAME Sandbox)
 # Source groups
 ################################################################################
 set(Sources
+    "src/ExampleLayer.cpp"
+    "src/ExampleLayer.h"
     "src/SandboxApp.cpp"
 )
 source_group("Sources" FILES ${Sources})

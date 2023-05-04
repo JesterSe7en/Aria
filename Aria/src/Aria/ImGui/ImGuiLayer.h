@@ -10,9 +10,10 @@ class ARIA_API ImGuiLayer : public Layer {
 
   void on_attach() override;
   void on_detach() override;
-
-  void on_update(Timestep delta_time) override;
   void on_event(Event& event) override;
+
+  void begin();
+  void end();
 
  private:
   const char* GLSL_VERSION = "#version 430 core";

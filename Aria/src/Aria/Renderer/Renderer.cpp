@@ -1,6 +1,7 @@
 #include "ariapch.h"
 #include "Renderer.h"
 #include "RenderCommand.h"
+#include "Platform/OpenGL/OpenGLShader.h"
 #include "Shader.h"
 
 namespace ARIA {
@@ -12,9 +13,9 @@ void Renderer::end_scene() {}
 
 void Renderer::submit(const std::shared_ptr<Shader>& shader, const std::shared_ptr<VertexArray>& vertex_array,
                       const glm::mat4 transform) {
-  shader->bind();
-  shader->set_uniform_mat4f("u_ViewProjection", sSceneData->mVPMatrix);
-  shader->set_uniform_mat4f("u_Transform", transform);
+  std::dynamic_pointer_cast<OpenGLShader>(shader)->bind();
+  std::dynamic_pointer_cast<OpenGLShader>(shader)->set_uniform_mat4f("u_ViewProjection", sSceneData->mVPMatrix);
+  std::dynamic_pointer_cast<OpenGLShader>(shader)->set_uniform_mat4f("u_Transform", transform);
   vertex_array->bind();
   RenderCommand::draw_indexed(vertex_array);
 }

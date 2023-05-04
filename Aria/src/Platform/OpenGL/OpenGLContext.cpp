@@ -6,8 +6,7 @@
 #include <GLFW/glfw3.h>
 
 namespace ARIA {
-OpenGLContext::OpenGLContext(GLFWwindow* window_handle)
-    : mWindowHandle(window_handle) {
+OpenGLContext::OpenGLContext(GLFWwindow* window_handle) : mWindowHandle(window_handle) {
   ARIA_CORE_ASSERT(window_handle, "Window handle is null")
 }
 
@@ -17,8 +16,7 @@ void OpenGLContext::init() {
   // Load Glad
   int version = gladLoadGL(glfwGetProcAddress);
   ARIA_CORE_ASSERT(version, "Failed to initialize Glad");
-  ARIA_CORE_INFO("Loaded Glad {0}.{1}", GLAD_VERSION_MAJOR(version),
-                 GLAD_VERSION_MINOR(version));
+  ARIA_CORE_INFO("Loaded Glad {0}.{1}", GLAD_VERSION_MAJOR(version), GLAD_VERSION_MINOR(version));
 
   ARIA_CORE_INFO("OpenGL Info:");
   // from spdlog

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Renderer/Camera.h"
+#include "Aria/ImGui/ImGuiLayer.h"
 #include "Core.h"
 #include "Events/Event.h"
 #include "Events/ApplicationEvent.h"
@@ -44,6 +45,7 @@ class ARIA_API Application {
 
  private:
   static Application *sInstance;
+  ImGuiLayer *mImGuiLayer;
 };
 
 // To be defined in CLIENT

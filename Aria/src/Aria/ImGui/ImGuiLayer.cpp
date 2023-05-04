@@ -55,12 +55,16 @@ void ImGuiLayer::on_detach() {
   ImGui::DestroyContext();
 }
 
-void ImGuiLayer::on_update(Timestep delta_time) {
+void ImGuiLayer::on_event(Event& event) {}
+
+void ImGuiLayer::begin() {
   ImGui_ImplOpenGL3_NewFrame();
   ImGui_ImplGlfw_NewFrame();
   ImGui::NewFrame();
+}
 
-  static bool show = true;
+void ImGuiLayer::end() {
+    static bool show = true;
   ImGui::ShowDemoWindow(&show);
   ImGui::Render();
 
@@ -77,6 +81,4 @@ void ImGuiLayer::on_update(Timestep delta_time) {
     glfwMakeContextCurrent(backup_current_context);
   }
 }
-
-void ImGuiLayer::on_event(Event& event) {}
 }  // namespace ARIA

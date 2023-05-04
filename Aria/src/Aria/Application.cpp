@@ -30,6 +30,9 @@ Application::Application() {
   ARIA_CORE_ASSERT(!sInstance, "Application already exists.");
   sInstance = this;
 
+  mImGuiLayer = new ImGuiLayer();
+  push_overlay(mImGuiLayer);
+
   mWindow = std::unique_ptr<Window>(Window::create());
   mWindow->set_vsync(false);
   mWindow->set_event_callback(ARIA_BIND_EVENT_FN(Application::on_event));
@@ -47,6 +50,12 @@ void Application::run() {
     for (Layer *layer : mLayerStack) {
       layer->on_update(timestep);
     }
+
+    mImGuiLayer->begin();
+    for (Layer *layer : mLayerStack) {
+      layer->on_imgui_render();
+    }
+    mImGuiLayer->end();
 
     mWindow->on_update();
   }

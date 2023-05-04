@@ -73,6 +73,8 @@ set(src__Platform__OpenGL
     "src/Platform/OpenGL/OpenGLContext.h"
     "src/Platform/OpenGL/OpenGLRendererAPI.cpp"
     "src/Platform/OpenGL/OpenGLRendererAPI.h"
+    "src/Platform/OpenGL/OpenGLShader.cpp"
+    "src/Platform/OpenGL/OpenGLShader.h"
     "src/Platform/OpenGL/OpenGLVertexArray.cpp"
     "src/Platform/OpenGL/OpenGLVertexArray.h"
 )
