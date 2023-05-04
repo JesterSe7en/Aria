@@ -1,8 +1,9 @@
 #include <Aria.h>
+#include <glm/gtc/matrix_transform.hpp>
 
 class ExampleLayer : public ARIA::Layer {
  public:
-  ExampleLayer() : Layer("Example Layer") {
+  ExampleLayer() : Layer("Example Layer"), mSquarePosition(0.0f) {
     // --------------- Rendering TRIANGLE ---------------
     mTriangleVA.reset(ARIA::VertexArray::create());
 
@@ -46,10 +47,6 @@ class ExampleLayer : public ARIA::Layer {
   }
 
   void on_update(ARIA::Timestep delta_time) override {
-    // delta_time with the float operator is returning time in SECONDS
-    ARIA::RenderCommand::set_clear_color(glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
-    ARIA::RenderCommand::clear();
-
     auto position = mOrthoCamera.get_position();
     auto rotation = mOrthoCamera.get_rotation();
 
@@ -71,6 +68,22 @@ class ExampleLayer : public ARIA::Layer {
       return;
     }
 
+    // ---------------------------------------------
+
+    if (ARIA::Input::is_key_pressed(ARIA_KEY_J)) {
+      mSquarePosition.x -= square_move_speed * delta_time;
+    } else if (ARIA::Input::is_key_pressed(ARIA_KEY_L)) {
+      mSquarePosition.x += square_move_speed * delta_time;
+    }
+
+    if (ARIA::Input::is_key_pressed(ARIA_KEY_I)) {
+      mSquarePosition.y += square_move_speed * delta_time;
+    } else if (ARIA::Input::is_key_pressed(ARIA_KEY_K)) {
+      mSquarePosition.y -= square_move_speed * delta_time;
+    }
+
+    // ----------------------------------------------
+
     if (ARIA::Input::is_key_pressed(ARIA_KEY_LEFT)) {
       rotation += camera_rotate_speed * delta_time;
     }
@@ -82,9 +95,15 @@ class ExampleLayer : public ARIA::Layer {
     mOrthoCamera.set_position(position);
     mOrthoCamera.set_rotation(rotation);
 
+    // delta_time with the float operator is returning time in SECONDS
+    ARIA::RenderCommand::set_clear_color(glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
+    ARIA::RenderCommand::clear();
+
     ARIA::Renderer::begin_scene(mOrthoCamera);
 
-    ARIA::Renderer::submit(mSquareShader, mSquareVA);
+    glm::mat4 transform = glm::translate(glm::mat4(1.0f), mSquarePosition);
+
+    ARIA::Renderer::submit(mSquareShader, mSquareVA, transform);
     ARIA::Renderer::submit(mTriangleShader, mTriangleVA);
 
     ARIA::Renderer::end_scene();
@@ -135,6 +154,10 @@ class ExampleLayer : public ARIA::Layer {
 
   const float camera_move_speed = 5.0f;
   const float camera_rotate_speed = 90.0f;
+
+  const float square_move_speed = 1.0f;
+
+  glm::vec3 mSquarePosition;
 };
 
 class Sandbox : public ARIA::Application {
