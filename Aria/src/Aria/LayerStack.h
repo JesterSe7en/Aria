@@ -23,6 +23,5 @@ class ARIA_API LayerStack {
  private:
   std::vector<Layer*> mLayers;
   std::vector<Layer*>::iterator mLayerInsert;
-  ;
 };
 }  // namespace ARIA

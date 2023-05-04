@@ -25,7 +25,7 @@ class WindowsWindow : public Window {
   void set_vsync(bool enabled) override;
   bool is_vsync() const override;
 
-  virtual void* get_native_window() const { return mWindow; }
+  virtual void* get_native_window() const override { return mWindow; }
 
  private:
   virtual void init(const WindowProps& props);

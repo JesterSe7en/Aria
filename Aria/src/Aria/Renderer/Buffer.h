@@ -54,7 +54,6 @@ static uint32_t get_shader_type_size(ShaderPrimitiveType type) {
   }
 }
 
-
 class BufferElement {
  public:
   std::string mName;
@@ -66,8 +65,7 @@ class BufferElement {
   BufferElement() = default;
 
   // offset and stride is calculated after it is added to the buffer layout
-  BufferElement(ShaderPrimitiveType type, const std::string& name,
-                bool normalized = false);
+  BufferElement(ShaderPrimitiveType type, const std::string& name, bool normalized = false);
 
   uint32_t get_element_count() const;
 };
@@ -78,26 +76,19 @@ class BufferLayout {
   BufferLayout(std::initializer_list<BufferElement> elements);
 
   std::vector<BufferElement> get_elements() { return mElements; }
-  const int get_stride() const { return mStride; }
+  int get_stride() const { return mStride; }
 
   // iterators
-  inline std::vector<BufferElement>::iterator begin() {
-    return mElements.begin();
-  }
+  inline std::vector<BufferElement>::iterator begin() { return mElements.begin(); }
   inline std::vector<BufferElement>::iterator end() { return mElements.end(); }
-  inline std::vector<BufferElement>::const_iterator begin() const {
-    return mElements.begin();
-  }
-  inline std::vector<BufferElement>::const_iterator end() const {
-    return mElements.end();
-  }
+  inline std::vector<BufferElement>::const_iterator begin() const { return mElements.begin(); }
+  inline std::vector<BufferElement>::const_iterator end() const { return mElements.end(); }
 
  private:
   int mStride;
   std::vector<BufferElement> mElements;
   void calculate_offset_and_stride();
 };
-
 
 class VertexBuffer {
  public:
@@ -123,7 +114,5 @@ class IndexBuffer {
 
   static IndexBuffer* create(uint32_t* indices, uint32_t count);
 };
-
-
 
 }  // namespace ARIA

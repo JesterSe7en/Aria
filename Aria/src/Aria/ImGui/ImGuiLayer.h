@@ -16,6 +16,5 @@ class ARIA_API ImGuiLayer : public Layer {
 
  private:
   const char* GLSL_VERSION = "#version 430 core";
-  float mTime = 0.0f;
 };
 }  // namespace ARIA
