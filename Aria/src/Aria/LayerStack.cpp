@@ -6,8 +6,6 @@ namespace ARIA {
 // Overlays are placed at the back of the vector
 // Layers are place in the layer insert
 
-LayerStack::LayerStack() { mLayerInsert = mLayers.begin(); }
-
 LayerStack::~LayerStack() {
   for (Layer* layer : mLayers) {
     delete layer;
@@ -15,7 +13,8 @@ LayerStack::~LayerStack() {
 }
 
 void LayerStack::push_layer(Layer* layer) {
-  mLayerInsert = mLayers.emplace(mLayerInsert, layer);
+  mLayers.emplace(mLayers.begin() + mLayerInsertIndex, layer);
+  mLayerInsertIndex++;
 }
 
 void LayerStack::push_overlay(Layer* overlay) { mLayers.emplace_back(overlay); }
@@ -27,7 +26,7 @@ void LayerStack::pop_layer(Layer* layer) {
   auto it = std::find(mLayers.begin(), mLayers.end(), layer);
   if (it != mLayers.end()) {
     mLayers.erase(it);
-    mLayerInsert--;
+    mLayerInsertIndex--;
   }
 }
 

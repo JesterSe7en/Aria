@@ -6,7 +6,7 @@
 namespace ARIA {
 class ARIA_API LayerStack {
  public:
-  LayerStack();
+  LayerStack() = default;
   ~LayerStack();
 
   void push_layer(Layer* layer);
@@ -22,6 +22,6 @@ class ARIA_API LayerStack {
 
  private:
   std::vector<Layer*> mLayers;
-  std::vector<Layer*>::iterator mLayerInsert;
+  unsigned int mLayerInsertIndex = 0;
 };
 }  // namespace ARIA
