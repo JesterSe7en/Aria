@@ -5,12 +5,12 @@
 
 namespace ARIA {
 
-VertexArray* VertexArray::create() {
+Ref<VertexArray> VertexArray::create() {
   switch (RendererAPI::get_api()) {
     case RendererAPI::API::None:
       ARIA_CORE_ASSERT(false, "No renderer API selected for vertex array generation")
     case RendererAPI::API::OpenGL:
-      return new OpenGLVertexArray();
+      return std::make_shared<OpenGLVertexArray>();
       break;
     case RendererAPI::API::DirectX:
     case RendererAPI::API::Vulkan:
