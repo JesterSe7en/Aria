@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 #ifdef ARIA_PLATFORM_WINDOWS
 #if ARIA_DYNAMIC_LINK
 #ifdef ARIA_BUILD_DLL
@@ -37,3 +39,16 @@
 #define BIT(x) (1 << x)
 
 #define ARIA_BIND_EVENT_FN(fn) std::bind(&fn, this, std::placeholders::_1)
+
+namespace ARIA {
+template <typename T>
+using Scope = std::unique_ptr<T>;
+
+// To extend it further
+// template <typename T>
+// class Scope {
+// };
+
+template <typename T>
+using Ref = std::shared_ptr<T>;
+}  // namespace ARIA

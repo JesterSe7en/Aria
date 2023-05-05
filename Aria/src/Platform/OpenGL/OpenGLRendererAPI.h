@@ -9,6 +9,6 @@ class OpenGLRendererAPI : public RendererAPI {
   virtual void clear() override;
   virtual void set_clear_color(const glm::vec4 color) override;
   virtual void draw_indexed(
-      const std::shared_ptr<VertexArray>& vertex_array) override;
+      const Ref<VertexArray>& vertex_array) override;
 };
 }  // namespace ARIA

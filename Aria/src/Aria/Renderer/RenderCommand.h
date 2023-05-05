@@ -9,7 +9,7 @@ class RenderCommand {
   }
   inline static void clear() { sRendererAPI->clear(); }
   inline static void draw_indexed(
-      const std::shared_ptr<VertexArray>& vertex_array) {
+      const Ref<VertexArray>& vertex_array) {
     sRendererAPI->draw_indexed(vertex_array);
   }
 

@@ -11,7 +11,7 @@ Renderer::SceneData* Renderer::sSceneData = new Renderer::SceneData;
 void Renderer::begin_scene(const OrthographicCamera& camera) { sSceneData->mVPMatrix = camera.get_vp_matrix(); }
 void Renderer::end_scene() {}
 
-void Renderer::submit(const std::shared_ptr<Shader>& shader, const std::shared_ptr<VertexArray>& vertex_array,
+void Renderer::submit(const Ref<Shader>& shader, const Ref<VertexArray>& vertex_array,
                       const glm::mat4 transform) {
   std::dynamic_pointer_cast<OpenGLShader>(shader)->bind();
   std::dynamic_pointer_cast<OpenGLShader>(shader)->set_uniform_mat4f("u_ViewProjection", sSceneData->mVPMatrix);

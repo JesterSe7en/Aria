@@ -12,16 +12,16 @@ class OpenGLVertexArray : public VertexArray {
   void bind() const override;
   void unbind() const override;
 
-  virtual void add_vertex_buffer(const std::shared_ptr<VertexBuffer>& vertex_buffer) override;
-  virtual void set_index_buffer(const std::shared_ptr<IndexBuffer>& index_buffer) override;
+  virtual void add_vertex_buffer(const Ref<VertexBuffer>& vertex_buffer) override;
+  virtual void set_index_buffer(const Ref<IndexBuffer>& index_buffer) override;
 
-  virtual const std::vector<std::shared_ptr<VertexBuffer>>& get_vertex_buffers() const override { return mVertexBuffers; }
-  virtual const std::shared_ptr<IndexBuffer>& get_index_buffer() const override { return mIndexBuffer; }
+  virtual const std::vector<Ref<VertexBuffer>>& get_vertex_buffers() const override { return mVertexBuffers; }
+  virtual const Ref<IndexBuffer>& get_index_buffer() const override { return mIndexBuffer; }
 
  private:
   uint32_t mRendererID;
   uint32_t mVertexBufferIndex;
-  std::vector<std::shared_ptr<VertexBuffer>> mVertexBuffers;
-  std::shared_ptr<IndexBuffer> mIndexBuffer;
+  std::vector<Ref<VertexBuffer>> mVertexBuffers;
+  Ref<IndexBuffer> mIndexBuffer;
 };
 }  // namespace ARIA
