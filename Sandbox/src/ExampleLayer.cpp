@@ -31,11 +31,13 @@ ExampleLayer::ExampleLayer() : Layer("Example Layer"), mSquarePosition(0.0f) {
   // --------------- Rendering SQUARE ---------------
   mSquareVA.reset(ARIA::VertexArray::create());
 
-  float squareVertices[3 * 4] = {-0.5f, -0.5f, 0.0f, 0.5f, -0.5f, 0.0f, 0.5f, 0.5f, 0.0f, -0.5f, 0.5f, 0.0f};
+  float squareVertices[5 * 4] = {-0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 0.5f,  -0.5f, 0.0f, 1.0f, 0.0f,
+                                 0.5f,  0.5f,  0.0f, 1.0f, 1.0f, -0.5f, 0.5f,  0.0f, 0.0f, 1.0f};
 
   mSquareVB.reset(ARIA::VertexBuffer::create(squareVertices, sizeof(squareVertices)));
 
-  mSquareVB->set_layout({{ARIA::ShaderPrimitiveType::Float3, "a_Position"}});
+  mSquareVB->set_layout(
+      {{ARIA::ShaderPrimitiveType::Float3, "a_Position"}, {ARIA::ShaderPrimitiveType::Float2, "a_TextCoord"}});
   mSquareVA->add_vertex_buffer(mSquareVB);
 
   uint32_t squareIndices[6] = {0, 1, 2, 2, 3, 0};
