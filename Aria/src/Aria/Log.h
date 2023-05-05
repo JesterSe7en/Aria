@@ -9,16 +9,16 @@ class ARIA_API Log {
  public:
   static void init();
 
-  inline static Ref<spdlog::logger>& get_core_logger() {
+  inline static std::shared_ptr<spdlog::logger>& get_core_logger() {
     return sCoreLogger;
   }
-  inline static Ref<spdlog::logger>& get_client_logger() {
+  inline static std::shared_ptr<spdlog::logger>& get_client_logger() {
     return sClientLogger;
   }
 
  private:
-  static Ref<spdlog::logger> sCoreLogger;
-  static Ref<spdlog::logger> sClientLogger;
+  static std::shared_ptr<spdlog::logger> sCoreLogger;
+  static std::shared_ptr<spdlog::logger> sClientLogger;
 };
 }  // namespace ARIA
 
