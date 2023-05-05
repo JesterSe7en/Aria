@@ -59,6 +59,8 @@ set(src__Aria__Renderer
     "src/Aria/Renderer/Renderer.h"
     "src/Aria/Renderer/RendererAPI.cpp"
     "src/Aria/Renderer/RendererAPI.h"
+    "src/Aria/Renderer/Texture.cpp"
+    "src/Aria/Renderer/Texture.h"
     "src/Aria/Renderer/Shader.cpp"
     "src/Aria/Renderer/Shader.h"
     "src/Aria/Renderer/VertexArray.cpp"
