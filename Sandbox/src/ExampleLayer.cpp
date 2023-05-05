@@ -109,20 +109,19 @@ void ExampleLayer::on_update(ARIA::Timestep delta_time) {
   glm::vec4 red_color(0.906, 0.38f, 0.38f, 1.0f);
   glm::vec4 blue_color(0.427f, 0.663f, 0.894f, 1.0f);
 
-  std::dynamic_pointer_cast<ARIA::OpenGLShader>(mFlatColorShader)
-      ->set_uniform_4f("u_Color", mSquareColor.r, mSquareColor.g, mSquareColor.b, mSquareColor.a);
-
   for (int y = 0; y < 20; y++) {
     for (int x = 0; x < 20; x++) {
       glm::vec3 pos(x * 0.11f, y * 0.11f, 0.0f);
       glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos) * scale;
-      if (x % 2) {
-        std::dynamic_pointer_cast<ARIA::OpenGLShader>(mFlatColorShader)
-            ->set_uniform_4f("u_Color", red_color.r, red_color.g, red_color.b, red_color.a);
-      } else {
-        std::dynamic_pointer_cast<ARIA::OpenGLShader>(mFlatColorShader)
-            ->set_uniform_4f("u_Color", blue_color.r, blue_color.g, blue_color.b, blue_color.a);
-      }
+      std::dynamic_pointer_cast<ARIA::OpenGLShader>(mFlatColorShader)
+          ->set_uniform_4f("u_Color", mSquareColor.r, mSquareColor.g, mSquareColor.b, mSquareColor.a);
+      // if (x % 2) {
+      //   std::dynamic_pointer_cast<ARIA::OpenGLShader>(mFlatColorShader)
+      //       ->set_uniform_4f("u_Color", red_color.r, red_color.g, red_color.b, red_color.a);
+      // } else {
+      //   std::dynamic_pointer_cast<ARIA::OpenGLShader>(mFlatColorShader)
+      //       ->set_uniform_4f("u_Color", blue_color.r, blue_color.g, blue_color.b, blue_color.a);
+      // }
       ARIA::Renderer::submit(mFlatColorShader, mSquareVA, transform);
     }
   }
