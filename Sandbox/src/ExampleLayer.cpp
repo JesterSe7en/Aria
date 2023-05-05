@@ -6,27 +6,27 @@
 #include <glm/gtc/type_ptr.hpp>
 
 ExampleLayer::ExampleLayer() : Layer("Example Layer"), mSquarePosition(0.0f) {
-  // --------------- Rendering TRIANGLE ---------------
-  mTriangleVA.reset(ARIA::VertexArray::create());
+  // // --------------- Rendering TRIANGLE ---------------
+  // mTriangleVA.reset(ARIA::VertexArray::create());
 
-  // vertex buffer
-  float triangleVertices[3 * 7] = {
-      -0.5f, -0.5f, 0.0f, 0.8f, 0.2f, 0.8f, 1.0f, 0.5f, -0.5f, 0.0f, 0.2f,
-      0.3f,  0.8f,  1.0f, 0.0f, 0.5f, 0.0f, 0.8f, 0.8f, 0.2f,  1.0f,
-  };
-  mTriangleVB.reset(ARIA::VertexBuffer::create(triangleVertices, sizeof(triangleVertices)));
-  ARIA::BufferLayout layout = {{ARIA::ShaderPrimitiveType::Float3, "a_Position"},
-                               {ARIA::ShaderPrimitiveType::Float4, "a_Color"}};
-  mTriangleVB->set_layout(layout);
-  mTriangleVA->add_vertex_buffer(mTriangleVB);
+  // // vertex buffer
+  // float triangleVertices[3 * 7] = {
+  //     -0.5f, -0.5f, 0.0f, 0.8f, 0.2f, 0.8f, 1.0f, 0.5f, -0.5f, 0.0f, 0.2f,
+  //     0.3f,  0.8f,  1.0f, 0.0f, 0.5f, 0.0f, 0.8f, 0.8f, 0.2f,  1.0f,
+  // };
+  // mTriangleVB.reset(ARIA::VertexBuffer::create(triangleVertices, sizeof(triangleVertices)));
+  // ARIA::BufferLayout layout = {{ARIA::ShaderPrimitiveType::Float3, "a_Position"},
+  //                              {ARIA::ShaderPrimitiveType::Float4, "a_Color"}};
+  // mTriangleVB->set_layout(layout);
+  // mTriangleVA->add_vertex_buffer(mTriangleVB);
 
-  // index buffer
-  uint32_t triangleIndicies[3] = {0, 1, 2};
-  mTriangleIB.reset(ARIA::IndexBuffer::create(triangleIndicies, sizeof(triangleIndicies) / sizeof(uint32_t)));
-  mTriangleVA->set_index_buffer(mTriangleIB);
+  // // index buffer
+  // uint32_t triangleIndicies[3] = {0, 1, 2};
+  // mTriangleIB.reset(ARIA::IndexBuffer::create(triangleIndicies, sizeof(triangleIndicies) / sizeof(uint32_t)));
+  // mTriangleVA->set_index_buffer(mTriangleIB);
 
-  // Why doesn't this accept relative path?
-  mTriangleShader.reset(ARIA::Shader::Create("C:/Users/alyxc/Workspace/Aria/Aria/res/shaders/basicTriangle.shader"));
+  // // Why doesn't this accept relative path?
+  // mTriangleShader.reset(ARIA::Shader::Create("C:/Users/alyxc/Workspace/Aria/Aria/res/shaders/basicTriangle.shader"));
 
   // --------------- Rendering SQUARE ---------------
   mSquareVA.reset(ARIA::VertexArray::create());
@@ -49,6 +49,7 @@ ExampleLayer::ExampleLayer() : Layer("Example Layer"), mSquarePosition(0.0f) {
 }
 
 void ExampleLayer::on_update(ARIA::Timestep delta_time) {
+#pragma region Camera Control
   auto position = mOrthoCamera.get_position();
   auto rotation = mOrthoCamera.get_rotation();
 
@@ -97,6 +98,8 @@ void ExampleLayer::on_update(ARIA::Timestep delta_time) {
   mOrthoCamera.set_position(position);
   mOrthoCamera.set_rotation(rotation);
 
+#pragma endregion
+
   // delta_time with the float operator is returning time in SECONDS
   ARIA::RenderCommand::set_clear_color(glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
   ARIA::RenderCommand::clear();
@@ -113,18 +116,17 @@ void ExampleLayer::on_update(ARIA::Timestep delta_time) {
       glm::vec3 pos(x * 0.11f, y * 0.11f, 0.0f);
       glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos) * scale;
 
-      if (x % 2) {
-        std::dynamic_pointer_cast<ARIA::OpenGLShader>(mFlatColorShader)
-            ->set_uniform_4f("u_Color", red_color.r, red_color.g, red_color.b, red_color.a);
-      } else {
-        std::dynamic_pointer_cast<ARIA::OpenGLShader>(mFlatColorShader)
-            ->set_uniform_4f("u_Color", mSquareColor.r, mSquareColor.g, mSquareColor.b, mSquareColor.a);
-      }
+      std::dynamic_pointer_cast<ARIA::OpenGLShader>(mFlatColorShader)
+          ->set_uniform_4f("u_Color", mSquareColor.r, mSquareColor.g, mSquareColor.b, mSquareColor.a);
+
       ARIA::Renderer::submit(mFlatColorShader, mSquareVA, transform);
     }
   }
 
-  ARIA::Renderer::submit(mTriangleShader, mTriangleVA);
+  // Render a square 1.5x time the size
+  ARIA::Renderer::submit(mFlatColorShader, mSquareVA, glm::scale(glm::mat4(1.0f), glm ::vec3(1.5f)));
+
+  // ARIA::Renderer::submit(mTriangleShader, mTriangleVA);
 
   ARIA::Renderer::end_scene();
 }
