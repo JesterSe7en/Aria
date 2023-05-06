@@ -9,12 +9,8 @@ class ARIA_API Log {
  public:
   static void init();
 
-  inline static std::shared_ptr<spdlog::logger>& get_core_logger() {
-    return sCoreLogger;
-  }
-  inline static std::shared_ptr<spdlog::logger>& get_client_logger() {
-    return sClientLogger;
-  }
+  inline static std::shared_ptr<spdlog::logger>& get_core_logger() { return sCoreLogger; }
+  inline static std::shared_ptr<spdlog::logger>& get_client_logger() { return sClientLogger; }
 
  private:
   static std::shared_ptr<spdlog::logger> sCoreLogger;
@@ -23,16 +19,14 @@ class ARIA_API Log {
 }  // namespace ARIA
 
 // Core log macros
-#define ARIA_CORE_CRITICAL(...) \
-  ::ARIA::Log::get_core_logger()->critical(__VA_ARGS__)
+#define ARIA_CORE_CRITICAL(...) ::ARIA::Log::get_core_logger()->critical(__VA_ARGS__)
 #define ARIA_CORE_ERROR(...) ::ARIA::Log::get_core_logger()->error(__VA_ARGS__)
 #define ARIA_CORE_WARN(...) ::ARIA::Log::get_core_logger()->warn(__VA_ARGS__)
 #define ARIA_CORE_INFO(...) ::ARIA::Log::get_core_logger()->info(__VA_ARGS__)
 #define ARIA_CORE_TRACE(...) ::ARIA::Log::get_core_logger()->trace(__VA_ARGS__)
 
 // Client log macros
-#define ARIA_CRITICAL(...) \
-  ::ARIA::Log::get_client_logger()->critical(__VA_ARGS__)
+#define ARIA_CRITICAL(...) ::ARIA::Log::get_client_logger()->critical(__VA_ARGS__)
 #define ARIA_ERROR(...) ::ARIA::Log::get_client_logger()->error(__VA_ARGS__)
 #define ARIA_WARN(...) ::ARIA::Log::get_client_logger()->warn(__VA_ARGS__)
 #define ARIA_INFO(...) ::ARIA::Log::get_client_logger()->info(__VA_ARGS__)

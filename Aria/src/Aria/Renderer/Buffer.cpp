@@ -6,7 +6,6 @@
 #include "Buffer.h"
 #include "RendererAPI.h"
 
-
 namespace ARIA {
 
 // -------------------------- Vertex Buffer  --------------------------
@@ -15,17 +14,14 @@ VertexBuffer* VertexBuffer::create(float* verticies, uint32_t size) {
   RendererAPI::API api = RendererAPI::get_api();
   switch (api) {
     case RendererAPI::API::None:
-      ARIA_CORE_ASSERT(false,
-                       "No renderer API selected for vertex buffer generation")
+      ARIA_CORE_ASSERT(false, "No renderer API selected for vertex buffer generation")
       return nullptr;
     case RendererAPI::API::OpenGL:
       return new OpenGLVertexBuffer(verticies, size);
       break;
     case RendererAPI::API::DirectX:
     case RendererAPI::API::Vulkan:
-      ARIA_CORE_ASSERT(
-          false,
-          "API selected for vertex buffer generation is not implemented", );
+      ARIA_CORE_ASSERT(false, "API selected for vertex buffer generation is not implemented");
       return nullptr;
     default:
       ARIA_CORE_ASSERT("Unknown API");
@@ -39,16 +35,14 @@ IndexBuffer* IndexBuffer::create(uint32_t* indices, uint32_t count) {
   RendererAPI::API api = RendererAPI::get_api();
   switch (api) {
     case RendererAPI::API::None:
-      ARIA_CORE_ASSERT(false,
-                       "No renderer API selected for index buffer generation")
+      ARIA_CORE_ASSERT(false, "No renderer API selected for index buffer generation")
       return nullptr;
     case RendererAPI::API::OpenGL:
       return new OpenGLIndexBuffer(indices, count);
       break;
     case RendererAPI::API::DirectX:
     case RendererAPI::API::Vulkan:
-      ARIA_CORE_ASSERT(
-          false, "API selected for index buffer generation is not implemented");
+      ARIA_CORE_ASSERT(false, "API selected for index buffer generation is not implemented");
       return nullptr;
     default:
       ARIA_CORE_ASSERT("Unknown API");
@@ -58,8 +52,7 @@ IndexBuffer* IndexBuffer::create(uint32_t* indices, uint32_t count) {
 
 // -------------------------- Buffer Layout  --------------------------
 
-BufferLayout::BufferLayout(std::initializer_list<BufferElement> elements)
-    : mElements(elements), mStride(0) {
+BufferLayout::BufferLayout(std::initializer_list<BufferElement> elements) : mElements(elements), mStride(0) {
   calculate_offset_and_stride();
 }
 
@@ -74,13 +67,8 @@ void BufferLayout::calculate_offset_and_stride() {
 
 // -------------------------- Buffer Elements  --------------------------
 
-BufferElement::BufferElement(ShaderPrimitiveType type, const std::string& name,
-  bool normalized)
-  : mName(name),
-  mType(type),
-  mOffset(0),
-  mSize(get_shader_type_size(type)),
-  mNormalized(normalized) {}
+BufferElement::BufferElement(ShaderPrimitiveType type, const std::string& name, bool normalized)
+    : mName(name), mType(type), mOffset(0), mSize(get_shader_type_size(type)), mNormalized(normalized) {}
 
 std::string mName;
 ShaderPrimitiveType mType;
