@@ -10,6 +10,10 @@ namespace ARIA {
 
 Renderer::SceneData* Renderer::sSceneData = new Renderer::SceneData;
 
+void Renderer::init() {
+  RenderCommand::init();
+}
+
 void Renderer::begin_scene(const OrthographicCamera& camera) { sSceneData->mVPMatrix = camera.get_vp_matrix(); }
 void Renderer::end_scene() {}
 

@@ -6,9 +6,9 @@
 
 namespace ARIA {
 class OpenGLRendererAPI : public RendererAPI {
-  virtual void clear() override;
-  virtual void set_clear_color(const glm::vec4 color) override;
-  virtual void draw_indexed(
-      const Ref<VertexArray>& vertex_array) override;
+  void init() override;
+  void clear() override;
+  void set_clear_color(const glm::vec4 color) override;
+  void draw_indexed(const Ref<VertexArray>& vertex_array) override;
 };
 }  // namespace ARIA

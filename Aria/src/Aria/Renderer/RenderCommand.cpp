@@ -4,9 +4,8 @@
 
 #include "RenderCommand.h"
 
-
 namespace ARIA {
 
-  RendererAPI* RenderCommand::sRendererAPI = new OpenGLRendererAPI;
+RendererAPI* RenderCommand::sRendererAPI = new OpenGLRendererAPI;
 
 }

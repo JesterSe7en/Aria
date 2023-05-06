@@ -33,6 +33,8 @@ Application::Application() {
   mWindow->set_vsync(false);
   mWindow->set_event_callback(ARIA_BIND_EVENT_FN(Application::on_event));
 
+  Renderer::init();
+
   mImGuiLayer = new ImGuiLayer();
   push_overlay(mImGuiLayer);
 }
