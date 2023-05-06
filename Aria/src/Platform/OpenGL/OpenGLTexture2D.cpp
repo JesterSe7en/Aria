@@ -16,12 +16,27 @@ OpenGLTexture2D::OpenGLTexture2D(const std::string& path) : mWidth(0), mHeight(0
   int width, height, bpp;
   stbi_uc* data = stbi_load(path.c_str(), &width, &height, &bpp, 0);
   ARIA_CORE_ASSERT(data, "Unable to load texture from {0}", path);
-  // ARIA_CORE_ASSERT(data == nullptr, "Unable to load texture from {0}", path);
   mWidth = width;
   mHeight = height;
 
+  GLenum opengl_format = 0, data_format = 0;
+  switch (bpp) {
+    case 3:
+      opengl_format = GL_RGB8;
+      data_format = GL_RGB;
+      break;
+    case 4:
+      opengl_format = GL_RGBA8;
+      data_format = GL_RGBA;
+      break;
+    default:
+      ARIA_CORE_ASSERT(false, "Unsupported texture format");
+      break;
+  }
+
   glad_glCreateTextures(GL_TEXTURE_2D, 1, &mRendererID);
-  glad_glTextureStorage2D(mRendererID, 1, GL_RGB8, mWidth, mHeight);
+  // This is how opengl will store the color data - note the internalformat parameter
+  glad_glTextureStorage2D(mRendererID, 1, opengl_format, mWidth, mHeight);
 
   // filtering should be exposed to the API
   glad_glTextureParameteri(mRendererID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -31,7 +46,8 @@ OpenGLTexture2D::OpenGLTexture2D(const std::string& path) : mWidth(0), mHeight(0
   glad_glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
   // GL_RGB can be compared against the channels given from the stbi_load() func
-  glad_glTextureSubImage2D(mRendererID, 0, 0, 0, mWidth, mHeight, bpp == 3 ? GL_RGB : GL_RGBA, GL_UNSIGNED_BYTE, data);
+  // GL_RGB/RGBA is the format of the actual data
+  glad_glTextureSubImage2D(mRendererID, 0, 0, 0, mWidth, mHeight, data_format, GL_UNSIGNED_BYTE, data);
 
   if (data) {
     stbi_image_free(data);

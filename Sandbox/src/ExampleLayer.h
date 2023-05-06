@@ -24,7 +24,7 @@ class ExampleLayer : public ARIA::Layer {
 
   ARIA::Ref<ARIA::Shader> mTextureShader;
 
-  ARIA::Ref<ARIA::Texture2D> mTexture2D;
+  ARIA::Ref<ARIA::Texture2D> mTexture2D, mCatTexture2D;
 
   const float camera_move_speed = 5.0f;
   const float camera_rotate_speed = 90.0f;

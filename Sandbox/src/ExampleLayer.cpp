@@ -50,8 +50,10 @@ ExampleLayer::ExampleLayer() : Layer("Example Layer"), mSquarePosition(0.0f) {
 
   mTexture2D =
       ARIA::Texture2D::create("C:/Users/alyxc/Workspace/Aria/Sandbox/assets/texture/missing_texture_checkboard.png");
+  mCatTexture2D = ARIA::Texture2D::create("C:/Users/alyxc/Workspace/Aria/Sandbox/assets/texture/cat_transparent.png");
 
   std::dynamic_pointer_cast<ARIA::OpenGLShader>(mTextureShader)->bind();
+  // this indicates what texture slot to load in
   std::dynamic_pointer_cast<ARIA::OpenGLShader>(mTextureShader)->set_uniform_1i("u_Texture", 0);
 
   mOrthoCamera.set_position({0.0f, 0.0f, 0.0f});
@@ -135,6 +137,9 @@ void ExampleLayer::on_update(ARIA::Timestep delta_time) {
   // Render a square 1.5x time the size
   // ARIA::Renderer::submit(mFlatColorShader, mSquareVA, glm::scale(glm::mat4(1.0f), glm ::vec3(1.5f)));
   mTexture2D->bind();
+  ARIA::Renderer::submit(mTextureShader, mSquareVA, glm::scale(glm::mat4(1.0f), glm ::vec3(1.5f)));
+
+  mCatTexture2D->bind();
   ARIA::Renderer::submit(mTextureShader, mSquareVA, glm::scale(glm::mat4(1.0f), glm ::vec3(1.5f)));
 
   // ARIA::Renderer::submit(mTriangleShader, mTriangleVA);
