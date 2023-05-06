@@ -671,6 +671,47 @@ if(MSVC)
         >
         /SUBSYSTEM:WINDOWS
     )
+elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+    target_compile_options(${PROJECT_NAME} PRIVATE
+        $<$<CONFIG:Debug>:
+            -O0;
+            -g;
+            -Wall;
+            -Wextra;
+            -pedantic;
+            -fno-inline-functions;
+            -fno-omit-frame-pointer            
+        >
+        $<$<CONFIG:Dist>:
+            -O2;
+            -DNDEBUG;
+            -fstack-protector-strong;
+            -pie;
+            -fvisibility=hidden;
+            -fdata-sections;
+            -ffunction-sections;
+       >
+        $<$<CONFIG:Release>:
+            -O2;
+            -g;
+            -DNDEBUG;
+            -fvisibility=hidden;
+            -fdata-sections;
+            -ffunction-sections;
+        >
+        -std=c++17;
+        ${DEFAULT_CXX_EXCEPTION_HANDLING}
+    )
+    target_link_options(${PROJECT_NAME} PRIVATE
+        $<$<CONFIG:Dist>:
+            /OPT:REF;
+            /OPT:ICF
+        >
+        $<$<CONFIG:Release>:
+            /OPT:REF;
+            /OPT:ICF
+        >
+    )
 endif()
 
 ################################################################################
