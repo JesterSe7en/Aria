@@ -3,14 +3,19 @@ set(PROJECT_NAME Sandbox)
 ################################################################################
 # Source groups
 ################################################################################
+set(Headers
+    "src/ExampleLayer.h"
+)
+source_group("Headers" FILES ${Headers})
+
 set(Sources
     "src/ExampleLayer.cpp"
-    "src/ExampleLayer.h"
     "src/SandboxApp.cpp"
 )
 source_group("Sources" FILES ${Sources})
 
 set(ALL_FILES
+    ${Headers}
     ${Sources}
 )
 
@@ -65,6 +70,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES MSVC_RUNTIME_LIBRARY ${MSVC_RUN
 target_include_directories(${PROJECT_NAME} PUBLIC
     "${CMAKE_CURRENT_SOURCE_DIR}/../Aria/vendor/spdlog/include;"
     "${CMAKE_CURRENT_SOURCE_DIR}/../Aria/src;"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../Aria/vendor/imgui;"
     "${CMAKE_CURRENT_SOURCE_DIR}/../Aria/vendor/glm"
 )
 
