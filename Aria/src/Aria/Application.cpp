@@ -6,7 +6,6 @@
 #include "Aria/Events/ApplicationEvent.h"
 #include "Aria/Events/KeyEvent.h"
 #include "Aria/Input.h"
-#include "Aria/Log.h"
 #include "Aria/Renderer/Buffer.h"
 #include "Aria/Renderer/VertexArray.h"
 #include "Aria/Renderer/Renderer.h"

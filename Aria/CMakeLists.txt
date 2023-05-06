@@ -77,6 +77,8 @@ set(src__Platform__OpenGL
     "src/Platform/OpenGL/OpenGLRendererAPI.h"
     "src/Platform/OpenGL/OpenGLShader.cpp"
     "src/Platform/OpenGL/OpenGLShader.h"
+    "src/Platform/OpenGL/OpenGLTexture2D.cpp"
+    "src/Platform/OpenGL/OpenGLTexture2D.h"
     "src/Platform/OpenGL/OpenGLVertexArray.cpp"
     "src/Platform/OpenGL/OpenGLVertexArray.h"
 )
@@ -526,6 +528,12 @@ set(vendor__glm__glm__gtx
 )
 source_group("vendor\\glm\\glm\\gtx" FILES ${vendor__glm__glm__gtx})
 
+set(vendor__std_image, 
+    "vendor/stb_image/stb_image.cpp"
+    "vendor/stb_image/stb_image.h"
+)
+source_group("vendor\\stb_image\\" FILES ${vendor__std_image})
+
 set(ALL_FILES
     ${src}
     ${src__Aria}
@@ -539,6 +547,7 @@ set(ALL_FILES
     ${vendor__glm__glm__ext}
     ${vendor__glm__glm__gtc}
     ${vendor__glm__glm__gtx}
+    ${vendor__std_image}
 )
 
 ################################################################################
@@ -600,6 +609,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
     "${CMAKE_CURRENT_SOURCE_DIR}/vendor/Glad/include;"
     "${CMAKE_CURRENT_SOURCE_DIR}/vendor/imgui;"
     "${CMAKE_CURRENT_SOURCE_DIR}/vendor/glm"
+    "${CMAKE_CURRENT_SOURCE_DIR}/vendor/stb_image"
 )
 
 ################################################################################
@@ -608,7 +618,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 target_compile_definitions(${PROJECT_NAME} PRIVATE
     "$<$<CONFIG:Debug>:"
         "ARIA_DEBUG"
-        "ARIA_ENABLE_ASSERTS;"
+        # "ARIA_ENABLE_ASSERTS;"
     ">"
     "$<$<CONFIG:Dist>:"
         "ARIA_DIST"

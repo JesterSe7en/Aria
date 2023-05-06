@@ -21,3 +21,4 @@
 #include "Aria/Renderer/Camera.h"
 #include "Aria/Renderer/Shader.h"
 #include "Aria/Renderer/VertexArray.h"
+#include "Aria/Renderer/Texture.h"

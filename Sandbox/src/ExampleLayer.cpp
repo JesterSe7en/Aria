@@ -37,7 +37,7 @@ ExampleLayer::ExampleLayer() : Layer("Example Layer"), mSquarePosition(0.0f) {
   mSquareVB.reset(ARIA::VertexBuffer::create(squareVertices, sizeof(squareVertices)));
 
   mSquareVB->set_layout(
-      {{ARIA::ShaderPrimitiveType::Float3, "a_Position"}, {ARIA::ShaderPrimitiveType::Float2, "a_TextCoord"}});
+      {{ARIA::ShaderPrimitiveType::Float3, "a_Position"}, {ARIA::ShaderPrimitiveType::Float2, "a_TexCoord"}});
   mSquareVA->add_vertex_buffer(mSquareVB);
 
   uint32_t squareIndices[6] = {0, 1, 2, 2, 3, 0};
@@ -46,6 +46,12 @@ ExampleLayer::ExampleLayer() : Layer("Example Layer"), mSquarePosition(0.0f) {
   mSquareVA->set_index_buffer(mSquareIB);
 
   mFlatColorShader.reset(ARIA::Shader::Create("C:/Users/alyxc/Workspace/Aria/Aria/res/shaders/flatColor.shader"));
+  mTextureShader.reset(ARIA::Shader::Create("C:/Users/alyxc/Workspace/Aria/Aria/res/shaders/texture.shader"));
+
+  mTexture2D =
+      ARIA::Texture2D::create("C:/Users/alyxc/Workspace/Sandbox/assets/texture/missing_texture_checkboard.png");
+  std::dynamic_pointer_cast<ARIA::OpenGLShader>(mTextureShader)->bind();
+  std::dynamic_pointer_cast<ARIA::OpenGLShader>(mTextureShader)->set_uniform_1i("u_Texture", 0);
 
   mOrthoCamera.set_position({0.0f, 0.0f, 0.0f});
 }
@@ -126,7 +132,9 @@ void ExampleLayer::on_update(ARIA::Timestep delta_time) {
   }
 
   // Render a square 1.5x time the size
-  ARIA::Renderer::submit(mFlatColorShader, mSquareVA, glm::scale(glm::mat4(1.0f), glm ::vec3(1.5f)));
+  // ARIA::Renderer::submit(mFlatColorShader, mSquareVA, glm::scale(glm::mat4(1.0f), glm ::vec3(1.5f)));
+  mTexture2D->bind();
+  ARIA::Renderer::submit(mTextureShader, mSquareVA, glm::scale(glm::mat4(1.0f), glm ::vec3(1.5f)));
 
   // ARIA::Renderer::submit(mTriangleShader, mTriangleVA);
 

@@ -22,6 +22,10 @@ class ExampleLayer : public ARIA::Layer {
   ARIA::Ref<ARIA::IndexBuffer> mSquareIB;
   ARIA::Ref<ARIA::Shader> mFlatColorShader;
 
+  ARIA::Ref<ARIA::Shader> mTextureShader;
+
+  ARIA::Ref<ARIA::Texture2D> mTexture2D;
+
   const float camera_move_speed = 5.0f;
   const float camera_rotate_speed = 90.0f;
   const float square_move_speed = 1.0f;
