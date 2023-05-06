@@ -23,8 +23,9 @@ OpenGLTexture2D::OpenGLTexture2D(const std::string& path) : mWidth(0), mHeight(0
   glad_glCreateTextures(GL_TEXTURE_2D, 1, &mRendererID);
   glad_glTextureStorage2D(mRendererID, 1, GL_RGB8, mWidth, mHeight);
 
+  // filtering should be exposed to the API
   glad_glTextureParameteri(mRendererID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glad_glTextureParameteri(mRendererID, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glad_glTextureParameteri(mRendererID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
   glad_glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
   glad_glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
