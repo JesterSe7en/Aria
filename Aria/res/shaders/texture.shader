@@ -15,17 +15,17 @@ void main() {
   v_position = a_Position;
   v_texCoord = a_TexCoord;
   gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);
-};
+}
 
 #shader fragment
 #version 330 core
 
 layout(location = 0) out vec4 color;
 
-uniform sampler2D u_Texture;
-
 in vec2 v_texCoord;
+
+uniform sampler2D u_Texture;
 
 void main() { 
   color = texture(u_Texture, v_texCoord);
-};
+}

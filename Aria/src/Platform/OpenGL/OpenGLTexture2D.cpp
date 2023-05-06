@@ -2,6 +2,7 @@
 #include "OpenGLTexture2D.h"
 
 #include "stb_image.h"
+
 #include <glad/gl.h>
 
 namespace ARIA {
@@ -12,9 +13,9 @@ OpenGLTexture2D::OpenGLTexture2D(const std::string& path) : mWidth(0), mHeight(0
   stbi_set_flip_vertically_on_load(1);
 
   // 4 channels = rgba
-  int width, height, channels;
-  stbi_uc* data = stbi_load(path.c_str(), &width, &height, &channels, 0);
-  ARIA_ASSERT(data == nullptr, "Unable to load texture from {0}", path);
+  int width, height, bpp;
+  stbi_uc* data = stbi_load(path.c_str(), &width, &height, &bpp, 0);
+  ARIA_CORE_ASSERT(data, "Unable to load texture from {0}", path);
   // ARIA_CORE_ASSERT(data == nullptr, "Unable to load texture from {0}", path);
   mWidth = width;
   mHeight = height;
@@ -25,8 +26,11 @@ OpenGLTexture2D::OpenGLTexture2D(const std::string& path) : mWidth(0), mHeight(0
   glad_glTextureParameteri(mRendererID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glad_glTextureParameteri(mRendererID, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
+  glad_glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+  glad_glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
   // GL_RGB can be compared against the channels given from the stbi_load() func
-  glad_glTexSubImage2D(mRendererID, 0, 0, 0, mWidth, mHeight, GL_RGB, GL_UNSIGNED_BYTE, data);
+  glad_glTextureSubImage2D(mRendererID, 0, 0, 0, mWidth, mHeight, bpp == 3 ? GL_RGB : GL_RGBA, GL_UNSIGNED_BYTE, data);
 
   if (data) {
     stbi_image_free(data);
@@ -55,7 +59,7 @@ OpenGLTexture2D::OpenGLTexture2D(const std::string& path) : mWidth(0), mHeight(0
 OpenGLTexture2D::~OpenGLTexture2D() { glad_glDeleteTextures(1, &mRendererID); }
 
 void OpenGLTexture2D::bind(uint32_t slot) const {
-  glad_glBindTextureUnit(GL_TEXTURE0 + slot, mRendererID);
+  glad_glBindTextureUnit(slot, mRendererID);
   // from opengl project
   // glad_glActiveTexture(GL_TEXTURE0 + slot);
   // glad_glBindTexture(GL_TEXTURE_2D, mRendererID);

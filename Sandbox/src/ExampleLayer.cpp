@@ -49,7 +49,8 @@ ExampleLayer::ExampleLayer() : Layer("Example Layer"), mSquarePosition(0.0f) {
   mTextureShader.reset(ARIA::Shader::Create("C:/Users/alyxc/Workspace/Aria/Aria/res/shaders/texture.shader"));
 
   mTexture2D =
-      ARIA::Texture2D::create("C:/Users/alyxc/Workspace/Sandbox/assets/texture/missing_texture_checkboard.png");
+      ARIA::Texture2D::create("C:/Users/alyxc/Workspace/Aria/Sandbox/assets/texture/missing_texture_checkboard.png");
+
   std::dynamic_pointer_cast<ARIA::OpenGLShader>(mTextureShader)->bind();
   std::dynamic_pointer_cast<ARIA::OpenGLShader>(mTextureShader)->set_uniform_1i("u_Texture", 0);
 
