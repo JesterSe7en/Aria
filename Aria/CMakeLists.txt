@@ -608,6 +608,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 target_compile_definitions(${PROJECT_NAME} PRIVATE
     "$<$<CONFIG:Debug>:"
         "ARIA_DEBUG"
+        "ARIA_ENABLE_ASSERTS;"
     ">"
     "$<$<CONFIG:Dist>:"
         "ARIA_DIST"
