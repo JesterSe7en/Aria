@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Aria/Core.h"
+#include "Base.h"
+#include "Timestep.h"
 #include "Aria/Events/Event.h"
-#include "Aria/Core/Timestep.h"
 
 namespace ARIA {
 class ARIA_API Layer {

@@ -1,9 +1,11 @@
 #include "ariapch.h"
+
+#include "Aria/Core/Log.h"
+#include "Platform/OpenGL/OpenGLBuffer.h"
+
 #include "Buffer.h"
 #include "RendererAPI.h"
-#include "Aria/Log.h"
 
-#include "Platform/OpenGL/OpenGLBuffer.h"
 
 namespace ARIA {
 

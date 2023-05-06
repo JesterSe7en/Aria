@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Aria/Input.h"
+#include "Aria/Core/Input.h"
 
 namespace ARIA {
 

@@ -1,17 +1,17 @@
 #pragma once
 
-#include "Renderer/Camera.h"
-#include "Aria/ImGui/ImGuiLayer.h"
-#include "Core.h"
-#include "Events/Event.h"
-#include "Events/ApplicationEvent.h"
-#include "Events/KeyEvent.h"
-#include "Events/MouseEvent.h"
+#include "Base.h"
 #include "Layer.h"
 #include "LayerStack.h"
-#include "Renderer/Buffer.h"
-#include "Renderer/Shader.h"
-#include "Renderer/VertexArray.h"
+#include "Aria/ImGui/ImGuiLayer.h"
+#include "Aria/Events/Event.h"
+#include "Aria/Events/ApplicationEvent.h"
+#include "Aria/Events/KeyEvent.h"
+#include "Aria/Events/MouseEvent.h"
+#include "Aria/Renderer/Camera.h"
+#include "Aria/Renderer/Buffer.h"
+#include "Aria/Renderer/Shader.h"
+#include "Aria/Renderer/VertexArray.h"
 #include "Window.h"
 
 namespace ARIA {

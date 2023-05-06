@@ -3,16 +3,16 @@
 // For use by ARIA applications
 
 #include <stdio.h>
-#include "Aria/Core.h"
-#include "Aria/Application.h"
-#include "Aria/Layer.h"
+#include "Aria/Core/Base.h"
+#include "Aria/Core/Application.h"
+#include "Aria/Core/Layer.h"
 #include "Aria/ImGui/ImGuiLayer.h"
-#include "Aria/Log.h"
+#include "Aria/Core/Log.h"
 #include "Aria/Core/Timestep.h"
 
 // -------- Input --------
-#include "Aria/Input.h"
-#include "Aria/KeyCodes.h"
+#include "Aria/Core/Input.h"
+#include "Aria/Core/KeyCodes.h"
 
 // -------- Renderer --------
 #include "Aria/Renderer/Renderer.h"

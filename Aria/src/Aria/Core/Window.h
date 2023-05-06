@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Aria/Core.h"
-#include "Aria/Events/Event.h"
 #include "ariapch.h"
+#include "Base.h"
+#include "Aria/Events/Event.h"
 
 namespace ARIA {
 

@@ -1,7 +1,7 @@
 #include "ariapch.h"
 
-#include "Aria/Core.h"
-#include "Aria/Log.h"
+#include "Aria/Core/Base.h"
+#include "Aria/Core/Log.h"
 
 #include "Aria/Events/ApplicationEvent.h"
 #include "Aria/Events/KeyEvent.h"

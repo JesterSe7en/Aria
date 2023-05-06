@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Aria/Core.h"
+#include "Aria/Core/Base.h"
 #include "ariapch.h"
 
 namespace ARIA {

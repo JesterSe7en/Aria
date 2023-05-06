@@ -1,7 +1,9 @@
 #include "ariapch.h"
+
+#include "Platform/OpenGL/OpenGLVertexArray.h"
+
 #include "VertexArray.h"
 #include "RendererAPI.h"
-#include "Platform/OpenGL/OpenGLVertexArray.h"
 
 namespace ARIA {
 

@@ -1,7 +1,9 @@
 #include "ariapch.h"
+
+#include "Platform/OpenGL/OpenGLShader.h"
+
 #include "Renderer.h"
 #include "RenderCommand.h"
-#include "Platform/OpenGL/OpenGLShader.h"
 #include "Shader.h"
 
 namespace ARIA {

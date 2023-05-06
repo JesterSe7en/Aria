@@ -1,9 +1,10 @@
 #include "ariapch.h"
-#include "Camera.h"
-#include "glm/ext/matrix_transform.hpp"
-#include "glm/fwd.hpp"
-#include "glm/matrix.hpp"
 
+#include "Camera.h"
+
+#include <glm/matrix.hpp>
+#include <glm/fwd.hpp>
+#include <glm/ext/matrix_transform.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
 namespace ARIA {

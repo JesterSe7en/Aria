@@ -1,6 +1,7 @@
 #pragma once
 
 #include <glm/glm.hpp>
+
 #include "Aria/Renderer/VertexArray.h"
 
 namespace ARIA {

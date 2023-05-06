@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Aria/Window.h"
+#include "Aria/Core/Window.h"
 #include "Aria/Renderer/GraphicsContext.h"
 
 struct GLFWwindow;

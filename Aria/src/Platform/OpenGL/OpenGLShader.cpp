@@ -1,6 +1,6 @@
 #include "ariapch.h"
 #include "OpenGLShader.h"
-#include "Aria/Log.h"
+#include "Aria/Core/Log.h"
 
 #include <glad/gl.h>
 #include <filesystem>

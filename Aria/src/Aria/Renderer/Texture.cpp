@@ -1,8 +1,10 @@
 #include "ariapch.h"
+
+#include "Platform/OpenGL/OpenGLTexture2D.h"
+
 #include "Texture.h"
 #include "RendererAPI.h"
 
-#include "Platform/OpenGL/OpenGLTexture2D.h"
 
 namespace ARIA {
 // OpenGL requires textures to be loaded from bottom left to top right

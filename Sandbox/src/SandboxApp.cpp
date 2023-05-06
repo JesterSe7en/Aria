@@ -1,5 +1,5 @@
 #include <Aria.h>
-#include <Aria/EntryPoint.h>
+#include <Aria/Core/EntryPoint.h>
 
 #include "ExampleLayer.h"
 

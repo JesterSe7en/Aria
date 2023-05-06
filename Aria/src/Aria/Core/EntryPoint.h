@@ -1,5 +1,9 @@
 #pragma once
 
+#include "Base.h"
+#include "Application.h"
+#include "Log.h"
+
 #ifdef ARIA_PLATFORM_WINDOWS
 
 extern ARIA::Application* ARIA::create_application();

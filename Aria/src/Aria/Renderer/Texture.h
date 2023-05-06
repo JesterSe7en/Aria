@@ -1,6 +1,7 @@
 #pragma once
-#include "Aria/Core.h"
 #include <string>
+
+#include "Aria/Core/Base.h"
 
 namespace ARIA {
 class Texture {
