@@ -38,12 +38,12 @@ OpenGLVertexArray::~OpenGLVertexArray() { glDeleteVertexArrays(1, &mRendererID);
 void OpenGLVertexArray::bind() const { glBindVertexArray(mRendererID); }
 void OpenGLVertexArray::unbind() const { glBindVertexArray(0); }
 void OpenGLVertexArray::add_vertex_buffer(const Ref<VertexBuffer>& vertex_buffer) {
-  ARIA_CORE_ASSERT(vertex_buffer.get_layout().get_elements().size(), "Vertex buffer has no layout defined");
+  auto layout = vertex_buffer->get_layout();
+  ARIA_CORE_ASSERT(layout.get_elements().size(), "Vertex buffer has no layout defined");
 
   glBindVertexArray(mRendererID);
   vertex_buffer->bind();
 
-  const auto& layout = vertex_buffer->get_layout();
   for (const auto& element : layout) {
     switch (element.mType) {
       case ShaderPrimitiveType::Float:
