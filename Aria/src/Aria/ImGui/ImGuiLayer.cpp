@@ -13,13 +13,11 @@ namespace ARIA {
 
 ImGuiLayer::ImGuiLayer() : Layer("ImGuiLayer") {}
 
-ImGuiLayer::~ImGuiLayer() {}
-
 void ImGuiLayer::on_attach() {
   // Load ImGui
   bool success = IMGUI_CHECKVERSION();
-  ARIA_CORE_ASSERT(success, "Failed to initialize Dear ImGui");
-  ARIA_CORE_INFO("Loaded Dear ImGui {0}", IMGUI_VERSION);
+  ARIA_CORE_ASSERT(success, "Failed to initialize Dear ImGui")
+  ARIA_CORE_INFO("Loaded Dear ImGui {0}", IMGUI_VERSION)
 
   Application& app = Application::get();
 
@@ -57,14 +55,14 @@ void ImGuiLayer::on_detach() {
 
 void ImGuiLayer::on_event(Event& event) {}
 
-void ImGuiLayer::begin() {
+void ImGuiLayer::begin() const {
   ImGui_ImplOpenGL3_NewFrame();
   ImGui_ImplGlfw_NewFrame();
   ImGui::NewFrame();
 }
 
-void ImGuiLayer::end() {
-    static bool show = true;
+void ImGuiLayer::end() const {
+  static bool show = true;
   ImGui::ShowDemoWindow(&show);
   ImGui::Render();
 

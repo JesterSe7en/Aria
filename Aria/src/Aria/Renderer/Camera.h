@@ -24,7 +24,7 @@ class OrthographicCamera {
   void recalculate_view_matrix();
 
  private:
-  glm::mat4 mViewMatrix;
+  glm::mat4 mViewMatrix = glm::mat4(1.0f);
   glm::mat4 mProjectionMatrix;
   glm::mat4 mVPMatrix;  // for caching purposes - view projection matrix
 

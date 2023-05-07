@@ -26,7 +26,7 @@ Application *Application::sInstance = nullptr;
 
 // ortho params are actually what is given to us to use by defualt from OpenGL
 Application::Application() {
-  ARIA_CORE_ASSERT(!sInstance, "Application already exists.");
+  ARIA_CORE_ASSERT(!sInstance, "Application already exists.")
   sInstance = this;
 
   mWindow = std::unique_ptr<Window>(Window::create());
@@ -38,8 +38,6 @@ Application::Application() {
   mImGuiLayer = new ImGuiLayer();
   push_overlay(mImGuiLayer);
 }
-
-Application::~Application() {}
 
 void Application::run() {
   while (mRunning) {

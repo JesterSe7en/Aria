@@ -8,7 +8,7 @@ namespace ARIA {
 class ARIA_API Layer {
  public:
   Layer(const std::string& name = "Layer");
-  virtual ~Layer();
+  virtual ~Layer() = default;
 
   // TODO: Enable/disable layers
   virtual void on_attach() {}

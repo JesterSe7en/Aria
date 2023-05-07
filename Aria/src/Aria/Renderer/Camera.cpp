@@ -10,7 +10,7 @@
 namespace ARIA {
 
 OrthographicCamera::OrthographicCamera(float left, float right, float bottom, float top)
-    : mViewMatrix(1.0f), mProjectionMatrix(glm::ortho(left, right, bottom, top)) {
+    : mProjectionMatrix(glm::ortho(left, right, bottom, top)) {
   mVPMatrix = mProjectionMatrix * mViewMatrix;
 }
 

@@ -7,8 +7,8 @@ class Timestep {
 
   operator float() const { return mTime; }
 
-  float get_seconds() { return mTime; };
-  float get_milliseconds() { return mTime * 1000.0f; }
+  float get_seconds() const { return mTime; };
+  float get_milliseconds() const { return mTime * 1000.0f; }
 
  private:
   float mTime = 0.0f;

@@ -19,7 +19,7 @@ namespace ARIA {
 class ARIA_API Application {
  public:
   Application();
-  virtual ~Application();
+  virtual ~Application() = default;
 
   void run();
   void on_event(Event &e);
