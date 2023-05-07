@@ -8,12 +8,14 @@ namespace ARIA {
 
 class OpenGLShader : public Shader {
  public:
-  OpenGLShader(const std::string &vertex_src, const std::string &fragment_src);
+  OpenGLShader(const std::string &name, const std::string &vertex_src, const std::string &fragment_src);
   explicit OpenGLShader(const std::string &file_path);
   ~OpenGLShader() override;
 
   void bind() const override;
   void unbind() const override;
+
+  const std::string get_name() const override { return mName; }
 
   void set_uniform_1i(const std::string &name, int value);
   void set_uniform_1f(const std::string &name, float v0);
@@ -38,5 +40,6 @@ class OpenGLShader : public Shader {
  private:
   uint32_t mRendererID = 0;
   std::unordered_map<std::string, int> mUniformLocationCache;
+  std::string mName;
 };
 }  // namespace ARIA

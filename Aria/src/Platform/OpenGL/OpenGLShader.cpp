@@ -10,7 +10,8 @@
 #include <string_view>
 
 namespace ARIA {
-OpenGLShader::OpenGLShader(const std::string &vertex_src, const std::string &fragment_src) {
+OpenGLShader::OpenGLShader(const std::string &name, const std::string &vertex_src, const std::string &fragment_src)
+    : mName(name) {
   // Pulled from Khrono's documentation
   // --------------- Vertex Shader ---------------
 
@@ -120,6 +121,7 @@ OpenGLShader::OpenGLShader(const std::string &vertex_src, const std::string &fra
   glad_glDetachShader(mRendererID, fragment_shader);
 }
 
+// maybe convert the paramts to std::filepath
 OpenGLShader::OpenGLShader(const std::string &file_path) {
   if (!std::filesystem::exists(file_path)) {
     ARIA_CORE_WARN("Cannot find shader file: {0}", file_path)
@@ -127,6 +129,9 @@ OpenGLShader::OpenGLShader(const std::string &file_path) {
   }
   auto shaders = parse_shader_file(file_path);
   mRendererID = create_shaders(shaders);
+
+  // Gets file name without file extention
+  mName = std::filesystem::path(file_path).filename().stem().string();
 }
 
 OpenGLShader::~OpenGLShader() { glad_glDeleteProgram(mRendererID); }

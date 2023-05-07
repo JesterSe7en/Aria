@@ -16,9 +16,8 @@ namespace ARIA {
 
 static bool s_GLFWInitialized = false;
 
-static void GLFWErrorCallback(int error_code, const char* description) {
-  ARIA_CORE_ERROR("GLFW Error ({0}) - {1}", error_code, description);
-}
+static void GLFWErrorCallback(int error_code, const char* description){
+    ARIA_CORE_ERROR("GLFW Error ({0}) - {1}", error_code, description)}
 
 Window* Window::create(const WindowProps& props) {
   return new WindowsWindow(props);
@@ -45,8 +44,7 @@ void WindowsWindow::init(const WindowProps& props) {
   mData.mWidth = props.mWidth;
   mData.mHeight = props.mHeight;
 
-  ARIA_CORE_INFO("Creating window {0} ({1}, {2})", props.mTitle, props.mWidth,
-                 props.mHeight);
+  ARIA_CORE_INFO("Creating window {0} ({1}, {2})", props.mTitle, props.mWidth, props.mHeight)
 
   if (!s_GLFWInitialized) {
     int success = glfwInit();
@@ -60,39 +58,35 @@ void WindowsWindow::init(const WindowProps& props) {
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-  mWindow = glfwCreateWindow((int)props.mWidth, (int)props.mHeight,
-                              props.mTitle.c_str(), nullptr, nullptr);
+  mWindow = glfwCreateWindow((int)props.mWidth, (int)props.mHeight, props.mTitle.c_str(), nullptr, nullptr);
 
   mContext = new OpenGLContext(mWindow);
   mContext->init();
- 
-
 
   glfwSetWindowUserPointer(mWindow, &mData);
   set_vsync(true);
 
 #pragma region GLFW Callbacks
 
-  glfwSetWindowSizeCallback(
-      mWindow, [](GLFWwindow* window, int width, int height) {
-        WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+  glfwSetWindowSizeCallback(mWindow, [](GLFWwindow* window, int width, int height) {
+    WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
-        data.mWidth = width;
-        data.mHeight = height;
+    data.mWidth = width;
+    data.mHeight = height;
 
-        WindowResizeEvent event(width, height);
-        data.mEventCallback(event);
-      });
+    WindowResizeEvent event(width, height);
+    data.mEventCallback(event);
+  });
 
   glfwSetWindowCloseCallback(mWindow, [](GLFWwindow* window) {
-    WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+    WindowData const& data = *(WindowData*)glfwGetWindowUserPointer(window);
     WindowCloseEvent event;
 
     data.mEventCallback(event);
   });
 
   glfwSetWindowFocusCallback(mWindow, [](GLFWwindow* window, int focused) {
-    WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+    WindowData const& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
     switch (focused) {
       case GLFW_TRUE: {
@@ -111,9 +105,8 @@ void WindowsWindow::init(const WindowProps& props) {
     }
   });
 
-  glfwSetKeyCallback(mWindow, [](GLFWwindow* window, int key, int scancode,
-                                  int action, int mods) {
-    WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+  glfwSetKeyCallback(mWindow, [](GLFWwindow* window, int key, int scancode, int action, int mods) {
+    WindowData const& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
     switch (action) {
       case GLFW_PRESS: {
@@ -138,49 +131,46 @@ void WindowsWindow::init(const WindowProps& props) {
     }
   });
 
-  glfwSetMouseButtonCallback(
-      mWindow, [](GLFWwindow* window, int button, int action, int mods) {
-        WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+  glfwSetMouseButtonCallback(mWindow, [](GLFWwindow* window, int button, int action, int mods) {
+    WindowData const& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
-        switch (action) {
-          case GLFW_PRESS: {
-            MouseButtonPressedEvent event(button);
-            data.mEventCallback(event);
-            break;
-          }
-          case GLFW_RELEASE: {
-            MouseButtonReleasedEvent event(button);
-            data.mEventCallback(event);
-            break;
-          }
-          default:
-            ARIA_CORE_WARN("Unhanded action - {0}", action);
-            break;
-        }
-      });
-
-  glfwSetScrollCallback(
-      mWindow, [](GLFWwindow* window, double xoffset, double yoffset) {
-        WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-
-        MouseScrolledEvent event((float)xoffset, (float)yoffset);
+    switch (action) {
+      case GLFW_PRESS: {
+        MouseButtonPressedEvent event(button);
         data.mEventCallback(event);
-      });
-
-  glfwSetCursorPosCallback(
-      mWindow, [](GLFWwindow* window, double xpos, double ypos) {
-        WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-        MouseMovedEvent event((float)xpos, (float)ypos);
-
+        break;
+      }
+      case GLFW_RELEASE: {
+        MouseButtonReleasedEvent event(button);
         data.mEventCallback(event);
-      });
+        break;
+      }
+      default:
+        ARIA_CORE_WARN("Unhanded action - {0}", action);
+        break;
+    }
+  });
+
+  glfwSetScrollCallback(mWindow, [](GLFWwindow* window, double xoffset, double yoffset) {
+    WindowData const& data = *(WindowData*)glfwGetWindowUserPointer(window);
+
+    MouseScrolledEvent event((float)xoffset, (float)yoffset);
+    data.mEventCallback(event);
+  });
+
+  glfwSetCursorPosCallback(mWindow, [](GLFWwindow* window, double xpos, double ypos) {
+    WindowData const& data = *(WindowData*)glfwGetWindowUserPointer(window);
+    MouseMovedEvent event((float)xpos, (float)ypos);
+
+    data.mEventCallback(event);
+  });
 
 #pragma endregion
 }
 
-void WindowsWindow::shutdown() { 
+void WindowsWindow::shutdown() {
   glfwTerminate();
-  glfwDestroyWindow(mWindow); 
+  glfwDestroyWindow(mWindow);
 }
 
 }  // namespace ARIA

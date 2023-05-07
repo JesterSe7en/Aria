@@ -45,16 +45,16 @@ ExampleLayer::ExampleLayer() : Layer("Example Layer"), mSquarePosition(0.0f) {
   mSquareIB = ARIA::IndexBuffer::create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t));
   mSquareVA->set_index_buffer(mSquareIB);
 
-  mFlatColorShader = ARIA::Shader::Create("C:/Users/alyxc/Workspace/Aria/Sandbox/assets/shaders/flatColor.glsl");
-  mTextureShader = ARIA::Shader::Create("C:/Users/alyxc/Workspace/Aria/Sandbox/assets/shaders/texture.glsl");
+  auto flatColorShader = mShaderLibrary.load("C:/Users/alyxc/Workspace/Aria/Sandbox/assets/shaders/flatColor.glsl");
+  auto textureShader = mShaderLibrary.load("C:/Users/alyxc/Workspace/Aria/Sandbox/assets/shaders/texture.glsl");
 
   mTexture2D =
       ARIA::Texture2D::create("C:/Users/alyxc/Workspace/Aria/Sandbox/assets/textures/missing_texture_checkboard.png");
   mCatTexture2D = ARIA::Texture2D::create("C:/Users/alyxc/Workspace/Aria/Sandbox/assets/textures/cat_transparent.png");
 
-  std::dynamic_pointer_cast<ARIA::OpenGLShader>(mTextureShader)->bind();
+  std::dynamic_pointer_cast<ARIA::OpenGLShader>(textureShader)->bind();
   // this indicates what texture slot to load in
-  std::dynamic_pointer_cast<ARIA::OpenGLShader>(mTextureShader)->set_uniform_1i("u_Texture", 0);
+  std::dynamic_pointer_cast<ARIA::OpenGLShader>(textureShader)->set_uniform_1i("u_Texture", 0);
 
   mOrthoCamera.set_position({0.0f, 0.0f, 0.0f});
 }
@@ -125,20 +125,20 @@ void ExampleLayer::on_update(ARIA::Timestep delta_time) {
       glm::vec3 pos(x * 0.11f, y * 0.11f, 0.0f);
       glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos) * scale;
 
-      std::dynamic_pointer_cast<ARIA::OpenGLShader>(mFlatColorShader)
+      std::dynamic_pointer_cast<ARIA::OpenGLShader>(mShaderLibrary.get("flatColor"))
           ->set_uniform_4f("u_Color", mSquareColor.r, mSquareColor.g, mSquareColor.b, mSquareColor.a);
 
-      ARIA::Renderer::submit(mFlatColorShader, mSquareVA, transform);
+      ARIA::Renderer::submit(mShaderLibrary.get("flatColor"), mSquareVA, transform);
     }
   }
 
   // Render a square 1.5x time the size
   // ARIA::Renderer::submit(mFlatColorShader, mSquareVA, glm::scale(glm::mat4(1.0f), glm ::vec3(1.5f)));
   mTexture2D->bind();
-  ARIA::Renderer::submit(mTextureShader, mSquareVA, glm::scale(glm::mat4(1.0f), glm ::vec3(1.5f)));
+  ARIA::Renderer::submit(mShaderLibrary.get("texture"), mSquareVA, glm::scale(glm::mat4(1.0f), glm ::vec3(1.5f)));
 
   mCatTexture2D->bind();
-  ARIA::Renderer::submit(mTextureShader, mSquareVA, glm::scale(glm::mat4(1.0f), glm ::vec3(1.5f)));
+  ARIA::Renderer::submit(mShaderLibrary.get("texture"), mSquareVA, glm::scale(glm::mat4(1.0f), glm ::vec3(1.5f)));
 
   // ARIA::Renderer::submit(mTriangleShader, mTriangleVA);
 

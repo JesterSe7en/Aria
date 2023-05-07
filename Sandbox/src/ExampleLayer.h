@@ -1,5 +1,6 @@
 #pragma once
 #include <Aria.h>
+#include "Aria/Renderer/Shader.h"
 
 class ExampleLayer : public ARIA::Layer {
  public:
@@ -25,6 +26,8 @@ class ExampleLayer : public ARIA::Layer {
   ARIA::Ref<ARIA::Shader> mTextureShader;
 
   ARIA::Ref<ARIA::Texture2D> mTexture2D, mCatTexture2D;
+
+  ARIA::ShaderLibrary mShaderLibrary;
 
   const float camera_move_speed = 5.0f;
   const float camera_rotate_speed = 90.0f;
