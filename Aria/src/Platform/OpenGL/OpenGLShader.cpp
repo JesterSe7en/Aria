@@ -1,4 +1,5 @@
 #include "Aria/Core/Base.h"
+#include "Aria/Renderer/Shader.h"
 #include "ariapch.h"
 #include "OpenGLShader.h"
 #include "Aria/Core/Log.h"
@@ -272,11 +273,13 @@ uint32_t OpenGLShader::create_shaders(const std::unordered_map<GLenum, const std
   }
 
   uint32_t id = glad_glCreateProgram();
-  std::vector<uint32_t> shader_ids;
+  ARIA_CORE_ASSERT(shaders.size() <= 2, "Only supports two shaders at the moment")
+  std::array<GLenum, 2> shader_ids;
+  int idx_shader = 0;
   for (const auto &[type, source] : shaders) {
     uint32_t compiled = compile_shader(type, source);
-    shader_ids.push_back(compiled);
-
+    shader_ids[idx_shader] = compiled;
+    idx_shader++;
     glad_glAttachShader(id, compiled);
   }
 
