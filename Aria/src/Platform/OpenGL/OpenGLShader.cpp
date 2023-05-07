@@ -109,7 +109,7 @@ OpenGLShader::OpenGLShader(const std::string &vertex_src, const std::string &fra
 
     // Use the info_log as you see fit.
     ARIA_CORE_ERROR("Shader linking error: {0}", infoLog.data())
-    ARIA_CORE_ASSERT(false, "Shader linking error");
+    ARIA_CORE_ASSERT(false, "Shader linking error")
     // In this simple program, we'll just leave
     return;
   }

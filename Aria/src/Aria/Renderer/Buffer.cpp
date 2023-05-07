@@ -22,7 +22,7 @@ Ref<VertexBuffer> VertexBuffer::create(float* verticies, uint32_t size) {
       return std::make_shared<OpenGLVertexBuffer>(verticies, size);
     case RendererAPI::API::DirectX:
     case RendererAPI::API::Vulkan:
-      ARIA_CORE_ASSERT(false, "API selected for vertex buffer generation is not implemented");
+      ARIA_CORE_ASSERT(false, "API selected for vertex buffer generation is not implemented")
       return nullptr;
     default:
       ARIA_CORE_ASSERT(false, "Unknown API")
@@ -42,7 +42,7 @@ Ref<IndexBuffer> IndexBuffer::create(uint32_t* indices, uint32_t count) {
       return std::make_shared<OpenGLIndexBuffer>(indices, count);
     case RendererAPI::API::DirectX:
     case RendererAPI::API::Vulkan:
-      ARIA_CORE_ASSERT(false, "API selected for index buffer generation is not implemented");
+      ARIA_CORE_ASSERT(false, "API selected for index buffer generation is not implemented")
       return nullptr;
     default:
       ARIA_CORE_ASSERT(false, "Unknown API")
@@ -102,7 +102,7 @@ uint32_t BufferElement::get_element_count() const {
     case ARIA::ShaderPrimitiveType::Bool:
       return 1;
     default:
-      ARIA_CORE_ASSERT(false, "Unknown shader primitive type");
+      ARIA_CORE_ASSERT(false, "Unknown shader primitive type")
       return 0;
   }
 }
