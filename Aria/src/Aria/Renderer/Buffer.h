@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Aria/Core/Base.h"
 #include "Aria/Core/Log.h"
 
 namespace ARIA {
@@ -45,11 +46,10 @@ static uint32_t get_shader_type_size(ShaderPrimitiveType type) {
       return 4 * 3 * 3;
     case ARIA::ShaderPrimitiveType::Mat4:
       return 4 * 4 * 4;
-      break;
     case ARIA::ShaderPrimitiveType::Bool:
       return 1;
     default:
-      ARIA_CORE_ASSERT(false, "Unknown shader primitive type");
+      ARIA_CORE_ASSERT(false, "Unknown shader primitive type")
       return 0;
   }
 }
@@ -58,7 +58,7 @@ class BufferElement {
  public:
   std::string mName;
   ShaderPrimitiveType mType;
-  size_t mOffset;
+  size_t mOffset = 0;
   uint32_t mSize;
   bool mNormalized;
 
@@ -100,7 +100,7 @@ class VertexBuffer {
   virtual void bind() const = 0;
   virtual void unbind() const = 0;
 
-  static VertexBuffer* create(float* vertices, uint32_t size);
+  static Ref<VertexBuffer> create(float* vertices, uint32_t size);
 };
 
 class IndexBuffer {
@@ -112,7 +112,7 @@ class IndexBuffer {
 
   virtual uint32_t get_count() const = 0;
 
-  static IndexBuffer* create(uint32_t* indices, uint32_t count);
+  static Ref<IndexBuffer> create(uint32_t* indices, uint32_t count);
 };
 
 }  // namespace ARIA

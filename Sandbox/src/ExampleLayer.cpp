@@ -34,7 +34,7 @@ ExampleLayer::ExampleLayer() : Layer("Example Layer"), mSquarePosition(0.0f) {
   float squareVertices[5 * 4] = {-0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 0.5f,  -0.5f, 0.0f, 1.0f, 0.0f,
                                  0.5f,  0.5f,  0.0f, 1.0f, 1.0f, -0.5f, 0.5f,  0.0f, 0.0f, 1.0f};
 
-  mSquareVB.reset(ARIA::VertexBuffer::create(squareVertices, sizeof(squareVertices)));
+  mSquareVB = ARIA::VertexBuffer::create(squareVertices, sizeof(squareVertices));
 
   mSquareVB->set_layout(
       {{ARIA::ShaderPrimitiveType::Float3, "a_Position"}, {ARIA::ShaderPrimitiveType::Float2, "a_TexCoord"}});
@@ -42,7 +42,7 @@ ExampleLayer::ExampleLayer() : Layer("Example Layer"), mSquarePosition(0.0f) {
 
   uint32_t squareIndices[6] = {0, 1, 2, 2, 3, 0};
 
-  mSquareIB.reset(ARIA::IndexBuffer::create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t)));
+  mSquareIB = ARIA::IndexBuffer::create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t));
   mSquareVA->set_index_buffer(mSquareIB);
 
   mFlatColorShader.reset(ARIA::Shader::Create("C:/Users/alyxc/Workspace/Aria/Sandbox/assets/shaders/flatColor.glsl"));
@@ -119,8 +119,6 @@ void ExampleLayer::on_update(ARIA::Timestep delta_time) {
 
   // renders tiles (not ideally how to do this, just example)
   glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm ::vec3(0.1f));
-
-  glm::vec4 red_color(0.906, 0.38f, 0.38f, 1.0f);
 
   for (int y = 0; y < 20; y++) {
     for (int x = 0; x < 20; x++) {

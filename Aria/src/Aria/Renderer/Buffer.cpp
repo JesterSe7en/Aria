@@ -1,3 +1,5 @@
+#include <memory>
+#include "Aria/Core/Base.h"
 #include "ariapch.h"
 
 #include "Aria/Core/Log.h"
@@ -10,14 +12,14 @@ namespace ARIA {
 
 // -------------------------- Vertex Buffer  --------------------------
 
-VertexBuffer* VertexBuffer::create(float* verticies, uint32_t size) {
+Ref<VertexBuffer> VertexBuffer::create(float* verticies, uint32_t size) {
   RendererAPI::API api = RendererAPI::get_api();
   switch (api) {
     case RendererAPI::API::None:
       ARIA_CORE_ASSERT(false, "No renderer API selected for vertex buffer generation")
       return nullptr;
     case RendererAPI::API::OpenGL:
-      return new OpenGLVertexBuffer(verticies, size);
+      return std::make_shared<OpenGLVertexBuffer>(verticies, size);
     case RendererAPI::API::DirectX:
     case RendererAPI::API::Vulkan:
       ARIA_CORE_ASSERT(false, "API selected for vertex buffer generation is not implemented");
@@ -30,14 +32,14 @@ VertexBuffer* VertexBuffer::create(float* verticies, uint32_t size) {
 
 // -------------------------- Index Buffer --------------------------
 
-IndexBuffer* IndexBuffer::create(uint32_t* indices, uint32_t count) {
+Ref<IndexBuffer> IndexBuffer::create(uint32_t* indices, uint32_t count) {
   RendererAPI::API api = RendererAPI::get_api();
   switch (api) {
     case RendererAPI::API::None:
       ARIA_CORE_ASSERT(false, "No renderer API selected for index buffer generation")
       return nullptr;
     case RendererAPI::API::OpenGL:
-      return new OpenGLIndexBuffer(indices, count);
+      return std::make_shared<OpenGLIndexBuffer>(indices, count);
     case RendererAPI::API::DirectX:
     case RendererAPI::API::Vulkan:
       ARIA_CORE_ASSERT(false, "API selected for index buffer generation is not implemented");
@@ -66,13 +68,7 @@ void BufferLayout::calculate_offset_and_stride() {
 // -------------------------- Buffer Elements  --------------------------
 
 BufferElement::BufferElement(ShaderPrimitiveType type, const std::string& name, bool normalized)
-    : mName(name), mType(type), mOffset(0), mSize(get_shader_type_size(type)), mNormalized(normalized) {}
-
-std::string mName;
-ShaderPrimitiveType mType;
-size_t mOffset;
-uint32_t mSize;
-bool mNormalized;
+    : mName(name), mType(type), mSize(get_shader_type_size(type)), mNormalized(normalized) {}
 
 /// <summary>
 /// Returns the number of elements per primitive type e.g. Float3 returns 3 as
