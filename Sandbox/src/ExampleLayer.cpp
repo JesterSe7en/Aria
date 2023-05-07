@@ -45,15 +45,12 @@ ExampleLayer::ExampleLayer() : Layer("Example Layer"), mSquarePosition(0.0f) {
   mSquareIB.reset(ARIA::IndexBuffer::create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t)));
   mSquareVA->set_index_buffer(mSquareIB);
 
-  mFlatColorShader.reset(
-      ARIA::Shader::Create("C:/Users/alyxc/Workspace/Aria/Sandbox/assets/shaders/test_multiple_shaders.glsl"));
-  // mFlatColorShader.reset(ARIA::Shader::Create("C:/Users/alyxc/Workspace/Aria/Aria/res/shaders/flatColor.shader"));
-  // mTextureShader.reset(ARIA::Shader::Create("C:/Users/alyxc/Workspace/Aria/Aria/res/shaders/texture.shader"));
+  mFlatColorShader.reset(ARIA::Shader::Create("C:/Users/alyxc/Workspace/Aria/Sandbox/assets/shaders/flatColor.glsl"));
+  mTextureShader.reset(ARIA::Shader::Create("C:/Users/alyxc/Workspace/Aria/Sandbox/assets/shaders/texture.glsl"));
 
-  // mTexture2D =
-  //     ARIA::Texture2D::create("C:/Users/alyxc/Workspace/Aria/Sandbox/assets/texture/missing_texture_checkboard.png");
-  // mCatTexture2D =
-  // ARIA::Texture2D::create("C:/Users/alyxc/Workspace/Aria/Sandbox/assets/texture/cat_transparent.png");
+  mTexture2D =
+      ARIA::Texture2D::create("C:/Users/alyxc/Workspace/Aria/Sandbox/assets/textures/missing_texture_checkboard.png");
+  mCatTexture2D = ARIA::Texture2D::create("C:/Users/alyxc/Workspace/Aria/Sandbox/assets/textures/cat_transparent.png");
 
   std::dynamic_pointer_cast<ARIA::OpenGLShader>(mTextureShader)->bind();
   // this indicates what texture slot to load in
