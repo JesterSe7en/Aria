@@ -121,6 +121,8 @@ OpenGLShader::OpenGLShader(const std::string &file_path) : mRendererID(0) {
     ARIA_CORE_WARN("Cannot find shader file: {0}", file_path);
   };
 
+  auto shaders = parse_shader_file(file_path);
+  mRendererID = create_shaders(shaders);
   ShaderProgramSrc src = parse_shader(file_path);
   mRendererID = create_shader(src.vertex_source, src.fragment_source);
 }
@@ -176,6 +178,57 @@ void OpenGLShader::set_uniform_mat4f(const std::string &name, const glm::mat4 &m
 }
 
 #pragma region Shader Compilation
+
+std::unordered_map<GLenum, const std::string> OpenGLShader::parse_shader_file(const std::string &file_path) {
+  std::unordered_map<GLenum, const std::string> shaders;
+  std::ifstream stream(file_path);
+
+  std::string line;
+  std::stringstream ss[1];
+  GLenum shader_type = 0;
+
+  // There's probably a better, more robust way to do this...
+  const char *type_token = "#type";
+  size_t size = strlen(type_token);
+  while (getline(stream, line)) {
+    if (line.find("#type") != std::string::npos) {
+      size_t eol = line.find_first_of("\r\n");
+      std::string type = line.substr(size + 1, eol);
+      if (shader_type == 0) {
+        shader_type = get_shader_type(type);
+      } else {
+        shaders.emplace(shader_type, ss[0].str());
+        shader_type = 0;
+        ss[0].str("");
+
+        shader_type = get_shader_type(type);
+      }
+    } else {
+      ss[0] << line << '\n';
+    }
+  }
+
+  if (shader_type != 0) {
+    shaders.emplace(shader_type, ss[0].str());
+  }
+
+  return shaders;
+}
+
+GLenum OpenGLShader::get_shader_type(const std::string &line) const {
+  // All possible types in OpenGl
+  // GL_COMPUTE_SHADER, GL_VERTEX_SHADER, GL_TESS_CONTROL_SHADER, GL_TESS_EVALUATION_SHADER, GL_GEOMETRY_SHADER, or
+  // GL_FRAGMENT_SHADER.
+
+  if (line == "vertex") {
+    return GL_VERTEX_SHADER;
+  } else if (line == "fragment" || line == "pixel") {
+    return GL_FRAGMENT_SHADER;
+  }
+  ARIA_CORE_ASSERT(false, "Unknown shader type");
+  return 0;
+}
+
 // TODO: only supports vertex and frag shaders
 ShaderProgramSrc OpenGLShader::parse_shader(const std::string &file_path) {
   // we need to parse and find our special syntax e.g. (#shader vertex)
@@ -206,29 +259,29 @@ ShaderProgramSrc OpenGLShader::parse_shader(const std::string &file_path) {
 uint32_t OpenGLShader::compile_shader(unsigned int type, const std::string &source) {
   // create an empty vertex shader handle
   int shader_type;
-  unsigned int id = glCreateShader(type);
-  glGetShaderiv(id, GL_SHADER_TYPE, &shader_type);
+  unsigned int id = glad_glCreateShader(type);
+  glad_glGetShaderiv(id, GL_SHADER_TYPE, &shader_type);
 
   // Send the vertex shader source code to GL
   // Note that std::string's .c_str is NULL character terminated.
   const char *src = source.c_str();
-  glShaderSource(id, 1, &src, 0);
+  glad_glShaderSource(id, 1, &src, 0);
 
   // Compile the vertex shader
-  glCompileShader(id);
+  glad_glCompileShader(id);
 
   int is_compiled = 0;
-  glGetShaderiv(id, GL_COMPILE_STATUS, &is_compiled);
+  glad_glGetShaderiv(id, GL_COMPILE_STATUS, &is_compiled);
   if (is_compiled == GL_FALSE) {
     int max_length = 0;
-    glGetShaderiv(id, GL_INFO_LOG_LENGTH, &max_length);
+    glad_glGetShaderiv(id, GL_INFO_LOG_LENGTH, &max_length);
 
     // The max_length includes the NULL character
     std::vector<char> infoLog(max_length);
-    glGetShaderInfoLog(id, max_length, &max_length, &infoLog[0]);
+    glad_glGetShaderInfoLog(id, max_length, &max_length, &infoLog[0]);
 
     // We don't need the shader anymore.
-    glDeleteShader(id);
+    glad_glDeleteShader(id);
 
     // Use the info_log as you see fit.
     ARIA_CORE_ERROR("Shader compile error: {0} - Type: {1} - Source: {2}", infoLog.data(), type, src);
@@ -280,6 +333,40 @@ uint32_t OpenGLShader::create_shader(const std::string &vertex_shader, const std
   glDetachShader(id, fs);
 
   return id;
+}
+
+uint32_t OpenGLShader::create_shaders(const std::unordered_map<GLenum, const std::string> shaders) {
+  uint32_t id = glad_glCreateProgram();
+  for (auto &shader : shaders) {
+    uint32_t compiled = compile_shader(shader.first, shader.second);
+
+    glad_glAttachShader(id, compiled);
+  }
+
+  // Link our program
+  glad_glLinkProgram(id);
+
+  // Note the different functions here: glGetProgram* instead of glGetShader*.
+  int is_linked = 0;
+  glad_glGetProgramiv(id, GL_LINK_STATUS, (int *)&is_linked);
+  if (is_linked == GL_FALSE) {
+    int max_length = 0;
+    glad_glGetProgramiv(id, GL_INFO_LOG_LENGTH, &max_length);
+
+    // The max_length includes the NULL character
+    std::vector<char> infoLog(max_length);
+    glad_glGetProgramInfoLog(id, max_length, &max_length, &infoLog[0]);
+
+    // We don't need the program anymore.
+    glad_glDeleteProgram(id);
+    // Don't leak shaders either.
+    glDeleteShader(fs);
+
+    // Use the info_log as you see fit.
+    ARIA_CORE_ERROR("Shader linking error: {0}", infoLog.data());
+    ARIA_CORE_ASSERT(false);
+    // In this simple program, we'll just leave
+    return 0;
 }
 
 const char *OpenGLShader::get_shader_type(const int shader_type) const {

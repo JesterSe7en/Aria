@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Aria/Renderer/Shader.h"
+#include <glad/gl.h>
 #include <glm/glm.hpp>
 
 namespace ARIA {
@@ -32,9 +33,13 @@ class OpenGLShader : public Shader {
   void set_uniform_mat4f(const std::string &name, const glm::mat4 &matrix);
 
  private:
+  std::unordered_map<GLenum, const std::string> parse_shader_file(const std::string &file_path);
+
+  GLenum get_shader_type(const std::string &type) const;
   ShaderProgramSrc parse_shader(const std::string &file_path);
   uint32_t compile_shader(unsigned int type, const std::string &source);
   uint32_t create_shader(const std::string &vertex_shader, const std::string &fragment_shader);
+  uint32_t create_shaders(const std::unordered_map<GLenum, const std::string> shaders);
   const char *get_shader_type(const int shader_type) const;
   int get_uniform_location(const std::string &name);
 
