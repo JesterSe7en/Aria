@@ -45,8 +45,8 @@ ExampleLayer::ExampleLayer() : Layer("Example Layer"), mSquarePosition(0.0f) {
   mSquareIB = ARIA::IndexBuffer::create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t));
   mSquareVA->set_index_buffer(mSquareIB);
 
-  mFlatColorShader.reset(ARIA::Shader::Create("C:/Users/alyxc/Workspace/Aria/Sandbox/assets/shaders/flatColor.glsl"));
-  mTextureShader.reset(ARIA::Shader::Create("C:/Users/alyxc/Workspace/Aria/Sandbox/assets/shaders/texture.glsl"));
+  mFlatColorShader = ARIA::Shader::Create("C:/Users/alyxc/Workspace/Aria/Sandbox/assets/shaders/flatColor.glsl");
+  mTextureShader = ARIA::Shader::Create("C:/Users/alyxc/Workspace/Aria/Sandbox/assets/shaders/texture.glsl");
 
   mTexture2D =
       ARIA::Texture2D::create("C:/Users/alyxc/Workspace/Aria/Sandbox/assets/textures/missing_texture_checkboard.png");
