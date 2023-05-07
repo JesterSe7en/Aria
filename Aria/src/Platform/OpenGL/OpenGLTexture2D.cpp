@@ -4,22 +4,31 @@
 #include "stb_image.h"
 
 #include <glad/gl.h>
+#include <filesystem>
 
 namespace ARIA {
 
-OpenGLTexture2D::OpenGLTexture2D(const std::string& path) : mWidth(0), mHeight(0), mPath(path) {
+OpenGLTexture2D::OpenGLTexture2D(const std::string& path) : mPath(path) {
+  if (!std::filesystem::exists(path)) {
+    ARIA_CORE_WARN("Cannot find texture file: {0}", path)
+    return;
+  }
+
   // use stb_img to load image
   // OpenGL expects to start at the bottom left to the top right of the image
   stbi_set_flip_vertically_on_load(1);
 
   // 4 channels = rgba
-  int width, height, bpp;
+  int width;
+  int height;
+  int bpp;
   stbi_uc* data = stbi_load(path.c_str(), &width, &height, &bpp, 0);
-  ARIA_CORE_ASSERT(data, "Unable to load texture from {0}", path);
+  ARIA_CORE_ASSERT(data, "Unable to load texture from {0}", path)
   mWidth = width;
   mHeight = height;
 
-  GLenum opengl_format = 0, data_format = 0;
+  GLenum opengl_format = 0;
+  GLenum data_format = 0;
   switch (bpp) {
     case 3:
       opengl_format = GL_RGB8;
@@ -30,7 +39,7 @@ OpenGLTexture2D::OpenGLTexture2D(const std::string& path) : mWidth(0), mHeight(0
       data_format = GL_RGBA;
       break;
     default:
-      ARIA_CORE_ASSERT(false, "Unsupported texture format");
+      ARIA_CORE_ASSERT(false, "Unsupported texture format")
       break;
   }
 
@@ -52,35 +61,11 @@ OpenGLTexture2D::OpenGLTexture2D(const std::string& path) : mWidth(0), mHeight(0
   if (data) {
     stbi_image_free(data);
   }
-
-  // pulled form open gl proj
-  // glad_glGenTextures(1, &mRendererID);
-  // glad_glBindTexture(GL_TEXTURE_2D, mRendererID);
-
-  // glad_glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  // glad_glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-  // // S and T is equivalent to X and Y in texture land
-  // // Clamp = clip or truncate the texture if it doesn't fit
-  // glad_glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-  // glad_glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-  // glad_glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-  // glad_glBindTexture(GL_TEXTURE_2D, 0);
-
-  // if (data) {
-  //   stbi_image_free(data);
-  // }
 }
 
 OpenGLTexture2D::~OpenGLTexture2D() { glad_glDeleteTextures(1, &mRendererID); }
 
-void OpenGLTexture2D::bind(uint32_t slot) const {
-  glad_glBindTextureUnit(slot, mRendererID);
-  // from opengl project
-  // glad_glActiveTexture(GL_TEXTURE0 + slot);
-  // glad_glBindTexture(GL_TEXTURE_2D, mRendererID);
-}
+void OpenGLTexture2D::bind(uint32_t slot) const { glad_glBindTextureUnit(slot, mRendererID); }
 
 void OpenGLTexture2D::unbind() const { glad_glBindTexture(GL_TEXTURE_2D, 0); }
 

@@ -6,16 +6,11 @@
 
 namespace ARIA {
 
-struct ShaderProgramSrc {
-  std::string vertex_source;
-  std::string fragment_source;
-};
-
 class OpenGLShader : public Shader {
  public:
   OpenGLShader(const std::string &vertex_src, const std::string &fragment_src);
-  OpenGLShader(const std::string &file_path);
-  virtual ~OpenGLShader();
+  explicit OpenGLShader(const std::string &file_path);
+  ~OpenGLShader() override;
 
   void bind() const override;
   void unbind() const override;
@@ -33,18 +28,15 @@ class OpenGLShader : public Shader {
   void set_uniform_mat4f(const std::string &name, const glm::mat4 &matrix);
 
  private:
-  std::unordered_map<GLenum, const std::string> parse_shader_file(const std::string &file_path);
+  GLenum get_shader_type(const std::string_view type) const;
+  std::unordered_map<GLenum, const std::string> parse_shader_file(const std::string &file_path) const;
+  uint32_t compile_shader(unsigned int type, const std::string &source) const;
+  uint32_t create_shaders(const std::unordered_map<GLenum, const std::string> &shaders) const;
 
-  GLenum get_shader_type(const std::string &type) const;
-  ShaderProgramSrc parse_shader(const std::string &file_path);
-  uint32_t compile_shader(unsigned int type, const std::string &source);
-  uint32_t create_shader(const std::string &vertex_shader, const std::string &fragment_shader);
-  uint32_t create_shaders(const std::unordered_map<GLenum, const std::string> shaders);
-  const char *get_shader_type(const int shader_type) const;
   int get_uniform_location(const std::string &name);
 
  private:
-  uint32_t mRendererID;
+  uint32_t mRendererID = 0;
   std::unordered_map<std::string, int> mUniformLocationCache;
 };
 }  // namespace ARIA
