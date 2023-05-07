@@ -1,4 +1,4 @@
-#shader vertex
+#type vertex
 #version 330 core
 
 // refers to the layout defined in our vertex attribute
@@ -17,7 +17,7 @@ void main() {
   gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);
 }
 
-#shader fragment
+#type fragment
 #version 330 core
 
 layout(location = 0) out vec4 color;
