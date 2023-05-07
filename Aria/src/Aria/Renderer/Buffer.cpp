@@ -18,13 +18,12 @@ VertexBuffer* VertexBuffer::create(float* verticies, uint32_t size) {
       return nullptr;
     case RendererAPI::API::OpenGL:
       return new OpenGLVertexBuffer(verticies, size);
-      break;
     case RendererAPI::API::DirectX:
     case RendererAPI::API::Vulkan:
       ARIA_CORE_ASSERT(false, "API selected for vertex buffer generation is not implemented");
       return nullptr;
     default:
-      ARIA_CORE_ASSERT("Unknown API");
+      ARIA_CORE_ASSERT(false, "Unknown API")
       return nullptr;
   }
 }
@@ -39,20 +38,19 @@ IndexBuffer* IndexBuffer::create(uint32_t* indices, uint32_t count) {
       return nullptr;
     case RendererAPI::API::OpenGL:
       return new OpenGLIndexBuffer(indices, count);
-      break;
     case RendererAPI::API::DirectX:
     case RendererAPI::API::Vulkan:
       ARIA_CORE_ASSERT(false, "API selected for index buffer generation is not implemented");
       return nullptr;
     default:
-      ARIA_CORE_ASSERT("Unknown API");
+      ARIA_CORE_ASSERT(false, "Unknown API")
       return nullptr;
   }
 }
 
 // -------------------------- Buffer Layout  --------------------------
 
-BufferLayout::BufferLayout(std::initializer_list<BufferElement> elements) : mElements(elements), mStride(0) {
+BufferLayout::BufferLayout(std::initializer_list<BufferElement> elements) : mElements(elements) {
   calculate_offset_and_stride();
 }
 

@@ -75,7 +75,7 @@ class BufferLayout {
   BufferLayout() = default;
   BufferLayout(std::initializer_list<BufferElement> elements);
 
-  std::vector<BufferElement> get_elements() { return mElements; }
+  std::vector<BufferElement> get_elements() const { return mElements; }
   int get_stride() const { return mStride; }
 
   // iterators
@@ -85,7 +85,7 @@ class BufferLayout {
   inline std::vector<BufferElement>::const_iterator end() const { return mElements.end(); }
 
  private:
-  int mStride;
+  int mStride = 0;
   std::vector<BufferElement> mElements;
   void calculate_offset_and_stride();
 };
