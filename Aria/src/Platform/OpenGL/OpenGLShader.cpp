@@ -267,7 +267,7 @@ uint32_t OpenGLShader::compile_shader(unsigned int type, const std::string &sour
 }
 
 uint32_t OpenGLShader::create_shaders(const std::unordered_map<GLenum, const std::string> &shaders) const {
-  if (shaders.size() == 0) {
+  if (shaders.empty()) {
     return 0;
   }
 
