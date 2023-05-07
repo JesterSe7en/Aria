@@ -19,18 +19,18 @@ class ARIA_API Log {
 }  // namespace ARIA
 
 // Core log macros
-#define ARIA_CORE_CRITICAL(...) ::ARIA::Log::get_core_logger()->critical(__VA_ARGS__)
-#define ARIA_CORE_ERROR(...) ::ARIA::Log::get_core_logger()->error(__VA_ARGS__)
-#define ARIA_CORE_WARN(...) ::ARIA::Log::get_core_logger()->warn(__VA_ARGS__)
-#define ARIA_CORE_INFO(...) ::ARIA::Log::get_core_logger()->info(__VA_ARGS__)
-#define ARIA_CORE_TRACE(...) ::ARIA::Log::get_core_logger()->trace(__VA_ARGS__)
+#define ARIA_CORE_CRITICAL(...) ::ARIA::Log::get_core_logger()->critical(__VA_ARGS__);
+#define ARIA_CORE_ERROR(...) ::ARIA::Log::get_core_logger()->error(__VA_ARGS__);
+#define ARIA_CORE_WARN(...) ::ARIA::Log::get_core_logger()->warn(__VA_ARGS__);
+#define ARIA_CORE_INFO(...) ::ARIA::Log::get_core_logger()->info(__VA_ARGS__);
+#define ARIA_CORE_TRACE(...) ::ARIA::Log::get_core_logger()->trace(__VA_ARGS__);
 
 // Client log macros
-#define ARIA_CRITICAL(...) ::ARIA::Log::get_client_logger()->critical(__VA_ARGS__)
-#define ARIA_ERROR(...) ::ARIA::Log::get_client_logger()->error(__VA_ARGS__)
-#define ARIA_WARN(...) ::ARIA::Log::get_client_logger()->warn(__VA_ARGS__)
-#define ARIA_INFO(...) ::ARIA::Log::get_client_logger()->info(__VA_ARGS__)
-#define ARIA_TRACE(...) ::ARIA::Log::get_client_logger()->trace(__VA_ARGS__)
+#define ARIA_CRITICAL(...) ::ARIA::Log::get_client_logger()->critical(__VA_ARGS__);
+#define ARIA_ERROR(...) ::ARIA::Log::get_client_logger()->error(__VA_ARGS__);
+#define ARIA_WARN(...) ::ARIA::Log::get_client_logger()->warn(__VA_ARGS__);
+#define ARIA_INFO(...) ::ARIA::Log::get_client_logger()->info(__VA_ARGS__);
+#define ARIA_TRACE(...) ::ARIA::Log::get_client_logger()->trace(__VA_ARGS__);
 
 // When putting this into a distribution build need to do something like this
 // (disable the macros) #define ARIA_CORE_INFO i.e. define the macros with
