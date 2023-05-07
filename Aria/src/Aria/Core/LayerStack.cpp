@@ -6,6 +6,10 @@ namespace ARIA {
 // Overlays are placed at the back of the vector
 // Layers are place in the layer insert
 
+// TODO: maybe use a std::deque structure
+//  " A double-ended queue that provides efficient insertion and removal at both ends, similar to a vector, but with
+//  potentially better performance for frequent insertions and removals at the beginning."
+
 LayerStack::~LayerStack() {
   for (Layer* layer : mLayers) {
     delete layer;
