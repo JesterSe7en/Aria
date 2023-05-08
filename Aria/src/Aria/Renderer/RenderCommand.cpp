@@ -1,4 +1,5 @@
 #include "Aria/Renderer/RenderCommand.h"
+#include <memory>
 #include "Aria/Core/Base.h"
 #include "Aria/Renderer/RendererAPI.h"
 #include "Platform/Vulkan/VulkanRendererAPI.h"
@@ -11,16 +12,15 @@
 
 namespace ARIA {
 
-RendererAPI* RenderCommand::sRendererAPI = nullptr;
+std::unique_ptr<RendererAPI> RenderCommand::sRendererAPI = nullptr;
 
 void RenderCommand::init(RendererAPI::API api) {
   switch (api) {
     case RendererAPI::API::OpenGL:
-      sRendererAPI = new OpenGLRendererAPI;
+      sRendererAPI = std::make_unique<OpenGLRendererAPI>();
       break;
     case RendererAPI::API::Vulkan:
-      sRendererAPI = new VulkanRendererAPI;
-      // set to vulkan API;
+      sRendererAPI = std::make_unique<VulkanRendererAPI>();
       break;
     default:
       ARIA_CORE_ASSERT(false, "Attempted to initialized unknown API")

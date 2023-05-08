@@ -1,4 +1,5 @@
 #pragma once
+#include <memory>
 #include "Aria/Renderer/RendererAPI.h"
 #include "RendererAPI.h"
 
@@ -12,6 +13,6 @@ class RenderCommand {
   inline static void draw_indexed(const Ref<VertexArray>& vertex_array) { sRendererAPI->draw_indexed(vertex_array); }
 
  private:
-  static RendererAPI* sRendererAPI;
+  static std::unique_ptr<RendererAPI> sRendererAPI;
 };
 }  // namespace ARIA
