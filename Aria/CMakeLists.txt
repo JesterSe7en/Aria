@@ -16,7 +16,7 @@ set(src
 )
 source_group("src" FILES ${src})
 
-set(src__Aria
+set(src__Aria__Core
     "src/Aria/Core/Application.cpp"
     "src/Aria/Core/Application.h"
     "src/Aria/Core/Base.h"
@@ -30,10 +30,6 @@ set(src__Aria
     "src/Aria/Core/Log.cpp"
     "src/Aria/Core/Log.h"
     "src/Aria/Core/Window.h"
-)
-source_group("src\\Aria" FILES ${src__Aria})
-
-set(src__Aria__Core
     "src/Aria/Core/Timestep.h"
 )
 source_group("src\\Aria\\Core" FILES ${src__Aria__Core})
@@ -542,7 +538,6 @@ source_group("vendor\\glm\\glm\\gtx" FILES ${vendor__glm__glm__gtx})
 set(ALL_FILES
     ${no_group_source_files}
     ${src}
-    ${src__Aria}
     ${src__Aria__Core}
     ${src__Aria__Events}
     ${src__Aria__ImGui}
@@ -610,13 +605,14 @@ set_target_properties(${PROJECT_NAME} PROPERTIES MSVC_RUNTIME_LIBRARY ${MSVC_RUN
 # Include directories
 ################################################################################
 target_include_directories(${PROJECT_NAME} PUBLIC
+    "${CMAKE_CURRENT_SOURCE_DIR}/../../../../../VulkanSDK/1.3.246.0/Include;"
     "${CMAKE_CURRENT_SOURCE_DIR}/src;"
     "${CMAKE_CURRENT_SOURCE_DIR}/vendor/spdlog/include;"
     "${CMAKE_CURRENT_SOURCE_DIR}/vendor/GLFW/include;"
     "${CMAKE_CURRENT_SOURCE_DIR}/vendor/Glad/include;"
     "${CMAKE_CURRENT_SOURCE_DIR}/vendor/imgui;"
     "${CMAKE_CURRENT_SOURCE_DIR}/vendor/glm;"
-    "${CMAKE_CURRENT_SOURCE_DIR}/vendor/stb_image"
+    "${CMAKE_CURRENT_SOURCE_DIR}/vendor/stb_image;"
 )
 
 ################################################################################
@@ -733,7 +729,12 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
 )
 
 set(ADDITIONAL_LIBRARY_DEPENDENCIES
-    "opengl32"
+    "opengl32;"
+    "vulkan-1"
 )
 target_link_libraries(${PROJECT_NAME} PUBLIC "${ADDITIONAL_LIBRARY_DEPENDENCIES}")
+
+target_link_directories(${PROJECT_NAME} PUBLIC
+    "${CMAKE_CURRENT_SOURCE_DIR}/../../../../../VulkanSDK/1.3.246.0/Lib;"
+)
 

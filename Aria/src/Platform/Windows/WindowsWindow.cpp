@@ -11,6 +11,7 @@
 
 #include "WindowsWindow.h"
 
+#define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 #include <stdio.h>
 
@@ -76,6 +77,11 @@ void WindowsWindow::init(const WindowProps& props) {
     mContext = new OpenGLContext(mWindow);
     mContext->init();
   }
+
+  uint32_t extensionCount = 0;
+  vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, nullptr);
+
+  ARIA_CORE_INFO("{0} Vulkan extenstions count", extensionCount);
 
   glfwSetWindowUserPointer(mWindow, &mData);
 
