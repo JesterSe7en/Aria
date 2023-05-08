@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Aria/Core/Application.h"
 #include "Base.h"
 #include "Layer.h"
 #include "LayerStack.h"
@@ -8,6 +9,7 @@
 #include "Aria/Events/ApplicationEvent.h"
 #include "Aria/Events/KeyEvent.h"
 #include "Aria/Events/MouseEvent.h"
+#include "Aria/Renderer/RendererAPI.h"
 #include "Aria/Renderer/Camera.h"
 #include "Aria/Renderer/Buffer.h"
 #include "Aria/Renderer/Shader.h"
@@ -16,9 +18,13 @@
 
 namespace ARIA {
 
+struct ARIA_API ApplicationProps {
+  RendererAPI::API mRendererAPI;
+};
+
 class ARIA_API Application {
  public:
-  Application();
+  Application(ApplicationProps &props);
   virtual ~Application() = default;
 
   void run();

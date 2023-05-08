@@ -1,3 +1,4 @@
+#include "Aria/Renderer/RendererAPI.h"
 #include "ariapch.h"
 
 #include "Aria/Core/Base.h"
@@ -11,6 +12,7 @@
 #include "WindowsWindow.h"
 
 #include <GLFW/glfw3.h>
+#include <stdio.h>
 
 namespace ARIA {
 
@@ -53,18 +55,29 @@ void WindowsWindow::init(const WindowProps& props) {
     s_GLFWInitialized = true;
   }
 
-  // If not specified, will load latest from graphics driver
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
-  glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+  switch (RendererAPI::get_api()) {
+    case RendererAPI::API::OpenGL:
+      // If not specified, will load latest from graphics driver
+      glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+      glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+      glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+      break;
+    case RendererAPI::API::Vulkan:
+      glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+      break;
+    default:
+      ARIA_CORE_ASSERT(false, "No rendereing API selected to generate glfw window")
+      break;
+  }
 
   mWindow = glfwCreateWindow((int)props.mWidth, (int)props.mHeight, props.mTitle.c_str(), nullptr, nullptr);
 
-  mContext = new OpenGLContext(mWindow);
-  mContext->init();
+  if (RendererAPI::get_api() == RendererAPI::API::OpenGL) {
+    mContext = new OpenGLContext(mWindow);
+    mContext->init();
+  }
 
   glfwSetWindowUserPointer(mWindow, &mData);
-  set_vsync(true);
 
 #pragma region GLFW Callbacks
 

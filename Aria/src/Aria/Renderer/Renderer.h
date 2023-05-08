@@ -12,7 +12,7 @@
 namespace ARIA {
 class Renderer {
  public:
-  static void init(RendererAPI::API api);
+  static void init();
   static void begin_scene(const OrthographicCamera& camera);
   static void end_scene();
   static void submit(const Ref<Shader>& shader, const Ref<VertexArray>& vertex_array,

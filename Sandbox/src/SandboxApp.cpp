@@ -1,15 +1,20 @@
 #include <Aria.h>
 #include <Aria/Core/EntryPoint.h>
 
+#include "Aria/Core/Application.h"
+#include "Aria/Renderer/RendererAPI.h"
 #include "ExampleLayer.h"
 
 class Sandbox : public ARIA::Application {
  public:
-  Sandbox() {
+  Sandbox(ARIA::ApplicationProps& props) : ARIA::Application(props) {
     auto example_layer = new ExampleLayer();
     push_layer(example_layer);
   };
   ~Sandbox(){};
 };
 
-ARIA::Application* ARIA::create_application() { return new Sandbox(); }
+ARIA::Application* ARIA::create_application() {
+  ApplicationProps props = {RendererAPI::API::Vulkan};
+  return new Sandbox(props);
+}

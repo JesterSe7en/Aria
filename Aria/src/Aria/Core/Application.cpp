@@ -1,4 +1,3 @@
-#include "Aria/Renderer/RendererAPI.h"
 #include "ariapch.h"
 #include "Application.h"
 
@@ -26,15 +25,17 @@ namespace ARIA {
 Application *Application::sInstance = nullptr;
 
 // ortho params are actually what is given to us to use by defualt from OpenGL
-Application::Application() {
+Application::Application(ApplicationProps &props) {
   ARIA_CORE_ASSERT(!sInstance, "Application already exists.")
   sInstance = this;
+
+  RendererAPI::set_api(props.mRendererAPI);
 
   mWindow = std::unique_ptr<Window>(Window::create());
   mWindow->set_vsync(false);
   mWindow->set_event_callback(ARIA_BIND_EVENT_FN(Application::on_event));
 
-  Renderer::init(RendererAPI::API::Vulkan);
+  Renderer::init();
 
   mImGuiLayer = new ImGuiLayer();
   push_overlay(mImGuiLayer);
