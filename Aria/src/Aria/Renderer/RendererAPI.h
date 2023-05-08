@@ -22,6 +22,7 @@ class RendererAPI {
   virtual void draw_indexed(const Ref<VertexArray>& array) = 0;
 
   static API get_api() { return sAPI; }
+  static void set_api(API api);
   static API create();
 
  private:

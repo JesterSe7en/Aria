@@ -1,10 +1,11 @@
 #pragma once
+#include "Aria/Renderer/RendererAPI.h"
 #include "RendererAPI.h"
 
 namespace ARIA {
 class RenderCommand {
  public:
-  inline static void init() { sRendererAPI->init(); }
+  static void init(RendererAPI::API api);
 
   inline static void set_clear_color(glm::vec4 color) { sRendererAPI->set_clear_color(color); }
   inline static void clear() { sRendererAPI->clear(); }

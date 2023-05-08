@@ -1,3 +1,4 @@
+#include "Aria/Renderer/RendererAPI.h"
 #include "ariapch.h"
 #include "Application.h"
 
@@ -33,7 +34,7 @@ Application::Application() {
   mWindow->set_vsync(false);
   mWindow->set_event_callback(ARIA_BIND_EVENT_FN(Application::on_event));
 
-  Renderer::init();
+  Renderer::init(RendererAPI::API::Vulkan);
 
   mImGuiLayer = new ImGuiLayer();
   push_overlay(mImGuiLayer);

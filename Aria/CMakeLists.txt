@@ -89,6 +89,12 @@ set(src__Platform__OpenGL
 )
 source_group("src\\Platform\\OpenGL" FILES ${src__Platform__OpenGL})
 
+set(src__Platform__Vulkan
+    "src/Platform/Vulkan/VulkanRendererAPI.cpp"
+    "src/Platform/Vulkan/VulkanRendererAPI.h"
+)
+source_group("src\\Platform\\Vulkan" FILES ${src__Platform__Vulkan})
+
 set(src__Platform__Windows
     "src/Platform/Windows/WindowsInput.cpp"
     "src/Platform/Windows/WindowsInput.h"
@@ -542,6 +548,7 @@ set(ALL_FILES
     ${src__Aria__ImGui}
     ${src__Aria__Renderer}
     ${src__Platform__OpenGL}
+    ${src__Platform__Vulkan}
     ${src__Platform__Windows}
     ${vendor__glm__glm}
     ${vendor__glm__glm__detail}

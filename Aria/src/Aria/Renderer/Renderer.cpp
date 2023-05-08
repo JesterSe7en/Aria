@@ -1,3 +1,4 @@
+#include "Aria/Renderer/RendererAPI.h"
 #include "ariapch.h"
 
 #include "Platform/OpenGL/OpenGLShader.h"
@@ -10,15 +11,15 @@ namespace ARIA {
 
 Renderer::SceneData* Renderer::sSceneData = new Renderer::SceneData;
 
-void Renderer::init() {
-  RenderCommand::init();
+void Renderer::init(RendererAPI::API api) {
+  RenderCommand::init(api);
+  RendererAPI::set_api(api);
 }
 
 void Renderer::begin_scene(const OrthographicCamera& camera) { sSceneData->mVPMatrix = camera.get_vp_matrix(); }
 void Renderer::end_scene() {}
 
-void Renderer::submit(const Ref<Shader>& shader, const Ref<VertexArray>& vertex_array,
-                      const glm::mat4 transform) {
+void Renderer::submit(const Ref<Shader>& shader, const Ref<VertexArray>& vertex_array, const glm::mat4 transform) {
   std::dynamic_pointer_cast<OpenGLShader>(shader)->bind();
   std::dynamic_pointer_cast<OpenGLShader>(shader)->set_uniform_mat4f("u_ViewProjection", sSceneData->mVPMatrix);
   std::dynamic_pointer_cast<OpenGLShader>(shader)->set_uniform_mat4f("u_Transform", transform);
