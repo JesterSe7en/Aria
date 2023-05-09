@@ -19,16 +19,19 @@ class VulkanRendererAPI : public RendererAPI {
  private:
   struct QueryFamilyIndicies {
     std::optional<uint32_t> mGraphicsFamily;
-    bool is_complete() { return mGraphicsFamily.has_value(); }
+    bool is_complete() const { return mGraphicsFamily.has_value(); }
   };
   VkInstance mInstance;
   VkDebugUtilsMessengerEXT mDebugMessenger;
   VkPhysicalDevice mPhysicalDevice = VK_NULL_HANDLE;
+  VkDevice mLogicalDevice = VK_NULL_HANDLE;
+  VkQueue mGraphicsQueue;
   const std::vector<const char*> mValidationLayers = {"VK_LAYER_KHRONOS_validation"};
 
   void create_instance();
   void setup_vulkan_debug_messenger();
   void pick_physical_device();
+  void create_logical_device();
   bool has_validation_support() const;
   void populate_debug_create_info(VkDebugUtilsMessengerCreateInfoEXT& create_info) const;
   VkResult create_debug_util_messenger_ext(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* p_create_info,

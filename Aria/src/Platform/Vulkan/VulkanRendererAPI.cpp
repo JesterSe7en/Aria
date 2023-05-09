@@ -9,6 +9,7 @@
 #include "VulkanRendererAPI.h"
 #include "vulkan/vulkan_core.h"
 
+#include <fileapi.h>
 #include <glad/gl.h>
 #include <stdint.h>
 #include <wingdi.h>
@@ -27,6 +28,7 @@ void VulkanRendererAPI::init() {
   create_instance();
   setup_vulkan_debug_messenger();
   pick_physical_device();
+  create_logical_device();
 }
 void VulkanRendererAPI::clear() { ARIA_CORE_ASSERT(false, "Not Implemented") }
 void VulkanRendererAPI::set_clear_color(const glm::vec4 color) { ARIA_CORE_ASSERT(false, "Not Implemented") }
@@ -124,6 +126,40 @@ void VulkanRendererAPI::pick_physical_device() {
   //  NVIDIA: VK_LAYER_NV_optimus
   //  AMD: VK_LAYER_AMD_switchable_graphics
   //  INTEL: VK_LAYER_KHRONOS_validation
+}
+
+void VulkanRendererAPI::create_logical_device() {
+  auto indicies = find_queue_families(mPhysicalDevice);
+
+  VkDeviceQueueCreateInfo queue_create_info{};
+  queue_create_info.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
+  queue_create_info.queueFamilyIndex = indicies.mGraphicsFamily.value();
+  queue_create_info.queueCount = 1;
+
+  float queuePriority = 1.0f;
+  queue_create_info.pQueuePriorities = &queuePriority;
+
+  VkPhysicalDeviceFeatures device_features{};
+
+  VkDeviceCreateInfo create_info{};
+  create_info.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
+  create_info.pQueueCreateInfos = &queue_create_info;
+  create_info.queueCreateInfoCount = 1;
+  create_info.pEnabledFeatures = &device_features;
+
+  create_info.enabledExtensionCount = 0;
+  if (enable_validation_layers) {
+    create_info.enabledLayerCount = static_cast<uint32_t>(mValidationLayers.size());
+    create_info.ppEnabledLayerNames = mValidationLayers.data();
+  } else {
+    create_info.enabledLayerCount = 0;
+  }
+
+  if (vkCreateDevice(mPhysicalDevice, &create_info, nullptr, &mLogicalDevice) != VK_SUCCESS) {
+    ARIA_CORE_ERROR("Failed to create logical device")
+  }
+
+  vkGetDeviceQueue(mLogicalDevice, indicies.mGraphicsFamily.value(), 0, &mGraphicsQueue);
 }
 
 bool VulkanRendererAPI::has_validation_support() const {
