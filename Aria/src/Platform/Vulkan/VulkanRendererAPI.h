@@ -1,6 +1,8 @@
 #pragma once
 
+#include <stdint.h>
 #include <glm/glm.hpp>
+#include <optional>
 
 #include "Aria/Renderer/RendererAPI.h"
 #include "vulkan/vk_platform.h"
@@ -15,23 +17,30 @@ class VulkanRendererAPI : public RendererAPI {
   void draw_indexed(const Ref<VertexArray>& vertex_array) override;
 
  private:
+  struct QueryFamilyIndicies {
+    std::optional<uint32_t> mGraphicsFamily;
+    bool is_complete() { return mGraphicsFamily.has_value(); }
+  };
+  VkInstance mInstance;
+  VkDebugUtilsMessengerEXT mDebugMessenger;
+  VkPhysicalDevice mPhysicalDevice = VK_NULL_HANDLE;
+  const std::vector<const char*> mValidationLayers = {"VK_LAYER_KHRONOS_validation"};
+
   void create_instance();
   void setup_vulkan_debug_messenger();
+  void pick_physical_device();
   bool has_validation_support() const;
   void populate_debug_create_info(VkDebugUtilsMessengerCreateInfoEXT& create_info) const;
-
   VkResult create_debug_util_messenger_ext(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* p_create_info,
                                            const VkAllocationCallbacks* p_allocator,
                                            VkDebugUtilsMessengerEXT* p_debug_messenger);
-
   static VKAPI_ATTR VkBool32 VKAPI_CALL vulkan_log_callback(VkDebugUtilsMessageSeverityFlagBitsEXT message_severity,
                                                             VkDebugUtilsMessageTypeFlagsEXT message_type,
                                                             const VkDebugUtilsMessengerCallbackDataEXT* p_callback_data,
                                                             void* p_user_data);
   static std::string get_message_type(VkDebugUtilsMessageTypeFlagsEXT message_type);
-
-  const std::vector<const char*> mValidationLayers = {"VK_LAYER_KHRONOS_validation"};
-  VkInstance mInstance;
-  VkDebugUtilsMessengerEXT mDebugMessenger;
+  bool is_suitable_vulkan_device(VkPhysicalDevice device);
+  std::string get_vendor_name(uint32_t vendor_id) const;
+  QueryFamilyIndicies find_queue_families(VkPhysicalDevice device);
 };
 }  // namespace ARIA

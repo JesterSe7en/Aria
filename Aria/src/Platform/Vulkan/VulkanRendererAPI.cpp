@@ -12,6 +12,8 @@
 #include <glad/gl.h>
 #include <stdint.h>
 #include <wingdi.h>
+#include <array>
+#include <vector>
 
 namespace ARIA {
 
@@ -24,6 +26,7 @@ const bool enable_validation_layers = true;
 void VulkanRendererAPI::init() {
   create_instance();
   setup_vulkan_debug_messenger();
+  pick_physical_device();
 }
 void VulkanRendererAPI::clear() { ARIA_CORE_ASSERT(false, "Not Implemented") }
 void VulkanRendererAPI::set_clear_color(const glm::vec4 color) { ARIA_CORE_ASSERT(false, "Not Implemented") }
@@ -87,6 +90,40 @@ void VulkanRendererAPI::setup_vulkan_debug_messenger() {
   if (create_debug_util_messenger_ext(mInstance, &create_info, nullptr, &mDebugMessenger) != VK_SUCCESS) {
     ARIA_CORE_WARN("Cannot setup debug messenger; debug messenger extention not available")
   }
+}
+
+void VulkanRendererAPI::pick_physical_device() {
+  uint32_t device_count = 0;
+  vkEnumeratePhysicalDevices(mInstance, &device_count, nullptr);
+
+  // TODO: maybe error out completely?
+  ARIA_CORE_ASSERT(device_count != 0, "You tried to setup with Vulkan API, but no GPU's found with Vulkan support")
+
+  std::vector<VkPhysicalDevice> devices(device_count);
+  vkEnumeratePhysicalDevices(mInstance, &device_count, devices.data());
+
+  for (const auto& device : devices) {
+    if (is_suitable_vulkan_device(device)) {
+      mPhysicalDevice = device;
+      break;
+    }
+  }
+
+  ARIA_CORE_ASSERT(mPhysicalDevice != VK_NULL_HANDLE,
+                   "Found GPUs with Vulkan support, but no suitable devices for Aria Engine")
+
+  VkPhysicalDeviceProperties properties;
+  vkGetPhysicalDeviceProperties(mPhysicalDevice, &properties);
+
+  ARIA_CORE_INFO("--- Vulkan GUI Device --- ")
+  ARIA_CORE_INFO("Name: {0}", properties.deviceName)
+  ARIA_CORE_INFO("Driver version: {0}", properties.driverVersion)
+
+  // TODO: get driver version
+  //  check layers' description for human-readable driver version
+  //  NVIDIA: VK_LAYER_NV_optimus
+  //  AMD: VK_LAYER_AMD_switchable_graphics
+  //  INTEL: VK_LAYER_KHRONOS_validation
 }
 
 bool VulkanRendererAPI::has_validation_support() const {
@@ -176,6 +213,58 @@ std::string VulkanRendererAPI::get_message_type(VkDebugUtilsMessageTypeFlagsEXT 
     default:
       return "Unknown Message Type";
   }
+}
+
+bool VulkanRendererAPI::is_suitable_vulkan_device(VkPhysicalDevice device) {
+  QueryFamilyIndicies indicies = find_queue_families(device);
+
+  return indicies.is_complete();
+
+  // VkPhysicalDeviceProperties properties;
+  // vkGetPhysicalDeviceProperties(device, &properties);
+
+  // VkPhysicalDeviceFeatures features;
+  // vkGetPhysicalDeviceFeatures(device, &features);
+
+  // as mentioned, can use scoring system to defer using Discrete GPU first
+  // then integrated, or allow user to select
+  // return properties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU && features.geometryShader;
+}
+
+std::string VulkanRendererAPI::get_vendor_name(uint32_t vendor_id) const {
+  switch (vendor_id) {
+    case 0x10DE:
+      return "NVIDIA";
+    case 0x1002:
+      return "AMD";
+    case 0x8086:
+      return "INTEL";
+    default:
+      return "Unknown";
+  }
+}
+
+VulkanRendererAPI::QueryFamilyIndicies VulkanRendererAPI::find_queue_families(VkPhysicalDevice device) {
+  QueryFamilyIndicies indicies;
+
+  uint32_t query_family_count = 0;
+  vkGetPhysicalDeviceQueueFamilyProperties(device, &query_family_count, nullptr);
+
+  std::vector<VkQueueFamilyProperties> query_families(query_family_count);
+  vkGetPhysicalDeviceQueueFamilyProperties(device, &query_family_count, query_families.data());
+
+  int i = 0;
+  for (const auto& queueFamily : query_families) {
+    if (queueFamily.queueFlags & VK_QUEUE_GRAPHICS_BIT) {
+      indicies.mGraphicsFamily = i;
+    }
+
+    if (indicies.is_complete()) {
+      break;
+    }
+    i++;
+  }
+  return indicies;
 }
 
 }  // namespace ARIA
