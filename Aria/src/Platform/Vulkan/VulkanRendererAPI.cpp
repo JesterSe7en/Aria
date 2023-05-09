@@ -11,6 +11,7 @@
 
 #include <glad/gl.h>
 #include <stdint.h>
+#include <wingdi.h>
 
 namespace ARIA {
 
@@ -21,8 +22,8 @@ const bool enable_validation_layers = true;
 #endif
 
 void VulkanRendererAPI::init() {
-  ARIA_CORE_TRACE("hi from vulkan renderer api")
   create_instance();
+  setup_vulkan_debug_messenger();
 }
 void VulkanRendererAPI::clear() { ARIA_CORE_ASSERT(false, "Not Implemented") }
 void VulkanRendererAPI::set_clear_color(const glm::vec4 color) { ARIA_CORE_ASSERT(false, "Not Implemented") }
@@ -56,13 +57,35 @@ void VulkanRendererAPI::create_instance() {
   create_info.ppEnabledExtensionNames = glfw_extensions;
   create_info.enabledLayerCount = 0;
 
+  // setup another create info struct to capture events during creation and destruction of VKInstance
+  // Vulkan 1.3 spec pg. 3921
+  VkDebugUtilsMessengerCreateInfoEXT debug_create_info{};
   if (enable_validation_layers) {
     create_info.enabledLayerCount = mValidationLayers.size();
     create_info.ppEnabledLayerNames = mValidationLayers.data();
+    populate_debug_create_info(debug_create_info);
+    create_info.pNext = &debug_create_info;
+  } else {
+    create_info.enabledLayerCount = 0;
+    create_info.pNext = nullptr;
   }
 
   if (vkCreateInstance(&create_info, nullptr, &mInstance) != VK_SUCCESS) {
     ARIA_CORE_ERROR("Failed to create vulkan instance")
+  }
+}
+
+void VulkanRendererAPI::setup_vulkan_debug_messenger() {
+  if (!enable_validation_layers) {
+    return;
+  }
+  ARIA_CORE_ASSERT(mInstance != nullptr, "Did you create VkInstance before setting up debug messenger?")
+
+  VkDebugUtilsMessengerCreateInfoEXT create_info;
+  populate_debug_create_info(create_info);
+
+  if (create_debug_util_messenger_ext(mInstance, &create_info, nullptr, &mDebugMessenger) != VK_SUCCESS) {
+    ARIA_CORE_WARN("Cannot setup debug messenger; debug messenger extention not available")
   }
 }
 
@@ -90,7 +113,69 @@ bool VulkanRendererAPI::has_validation_support() const {
   return true;
 }
 
-// WIP -add the creation of debug message config struct
-// https://vulkan-tutorial.com/code/02_validation_layers.cpp
+void VulkanRendererAPI::populate_debug_create_info(VkDebugUtilsMessengerCreateInfoEXT& create_info) const {
+  create_info = {};
+  create_info.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
+  create_info.messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT |
+                                VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT |
+                                VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;
+  create_info.messageType = VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT |
+                            VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT |
+                            VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
+  create_info.pfnUserCallback = vulkan_log_callback;
+}
+
+VkResult VulkanRendererAPI::create_debug_util_messenger_ext(VkInstance instance,
+                                                            const VkDebugUtilsMessengerCreateInfoEXT* p_create_info,
+                                                            const VkAllocationCallbacks* p_allocator,
+                                                            VkDebugUtilsMessengerEXT* p_debug_messenger) {
+  auto func = (PFN_vkCreateDebugUtilsMessengerEXT)vkGetInstanceProcAddr(instance, "vkCreateDebugUtilsMessengerEXT");
+  if (func != nullptr) {
+    return func(instance, p_create_info, p_allocator, p_debug_messenger);
+  } else {
+    return VK_ERROR_EXTENSION_NOT_PRESENT;
+  }
+}
+
+VKAPI_ATTR VkBool32 VKAPI_CALL VulkanRendererAPI::vulkan_log_callback(
+    VkDebugUtilsMessageSeverityFlagBitsEXT message_severity, VkDebugUtilsMessageTypeFlagsEXT message_type,
+    const VkDebugUtilsMessengerCallbackDataEXT* p_callback_data, void* p_user_data) {
+  switch (message_severity) {
+    case VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT:
+      ARIA_CORE_INFO("Vulkan {0} Info: {1}", get_message_type(message_type), p_callback_data->pMessage)
+      break;
+    case VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT:
+      ARIA_CORE_TRACE("Vulkan {0} Trace: {1}", get_message_type(message_type), p_callback_data->pMessage)
+      break;
+    case VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT:
+      ARIA_CORE_ERROR("Vulkan {0} Error: {1}", get_message_type(message_type), p_callback_data->pMessage)
+      break;
+    case VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT:
+      ARIA_CORE_WARN("Vulkan {0} Error: {1}", get_message_type(message_type), p_callback_data->pMessage)
+      break;
+    default:
+      ARIA_CORE_ASSERT(false, "Unknown error type")
+      break;
+  }
+  // per vulkan 1.3 spec, pg.3566
+  // The callback returns a VkBool32, which is interpreted in a layer-specified manner. The application
+  // should always return VK_FALSE. The VK_TRUE value is reserved for use in layer development.
+  return VK_FALSE;
+}
+
+std::string VulkanRendererAPI::get_message_type(VkDebugUtilsMessageTypeFlagsEXT message_type) {
+  switch (message_type) {
+    case VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT:
+      return "General";
+    case VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT:
+      return "Performance";
+    case VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT:
+      return "Validation";
+    case VK_DEBUG_UTILS_MESSAGE_TYPE_DEVICE_ADDRESS_BINDING_BIT_EXT:
+      return "Device Address";
+    default:
+      return "Unknown Message Type";
+  }
+}
 
 }  // namespace ARIA
