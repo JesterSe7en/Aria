@@ -121,6 +121,16 @@ void VulkanRendererAPI::pick_physical_device() {
   ARIA_CORE_INFO("Name: {0}", properties.deviceName)
   ARIA_CORE_INFO("Driver version: {0}", properties.driverVersion)
 
+  uint32_t extensions_count = 0;
+  vkEnumerateDeviceExtensionProperties(mPhysicalDevice, nullptr, &extensions_count, nullptr);
+
+  std::vector<VkExtensionProperties> extensions(extensions_count);
+  vkEnumerateDeviceExtensionProperties(mPhysicalDevice, nullptr, &extensions_count, extensions.data());
+
+  ARIA_CORE_INFO("Available extensions for physical device:")
+  for (const auto& extension : extensions) {
+    ARIA_CORE_INFO(extension.extensionName)
+  }
   // TODO: get driver version
   //  check layers' description for human-readable driver version
   //  NVIDIA: VK_LAYER_NV_optimus
