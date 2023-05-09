@@ -1,5 +1,6 @@
 #pragma once
 
+#include <stdint.h>
 #include "Aria/Core/Window.h"
 #include "Aria/Renderer/GraphicsContext.h"
 
@@ -18,14 +19,14 @@ class WindowsWindow : public Window {
   inline unsigned int get_height() const override { return mData.mHeight; }
 
   // Window attributes
-  inline void set_event_callback(const EventCallbackFn& callback) override {
-    mData.mEventCallback = callback;
-  }
+  inline void set_event_callback(const EventCallbackFn& callback) override { mData.mEventCallback = callback; }
 
   void set_vsync(bool enabled) override;
   bool is_vsync() const override;
 
-  virtual void* get_native_window() const override { return mWindow; }
+  const char** get_required_instance_extensions(uint32_t& count) const override;
+
+  void* get_native_window() const override { return mWindow; }
 
  private:
   virtual void init(const WindowProps& props);

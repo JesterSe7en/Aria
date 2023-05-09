@@ -1,3 +1,4 @@
+#include <stdint.h>
 #include "Aria/Renderer/RendererAPI.h"
 #include "ariapch.h"
 
@@ -41,6 +42,13 @@ void WindowsWindow::set_vsync(bool enabled) {
 }
 
 bool WindowsWindow::is_vsync() const { return mData.mVSync; }
+
+const char** WindowsWindow::get_required_instance_extensions(uint32_t& count) const {
+  uint32_t ext_count = 0;
+  auto extentions = glfwGetRequiredInstanceExtensions(&ext_count);
+  count = ext_count;
+  return extentions;
+}
 
 void WindowsWindow::init(const WindowProps& props) {
   mData.mTitle = props.mTitle;

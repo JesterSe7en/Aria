@@ -14,6 +14,10 @@ class VulkanRendererAPI : public RendererAPI {
   void draw_indexed(const Ref<VertexArray>& vertex_array) override;
 
  private:
-  VkInstance create_instance();
+  void create_instance();
+  bool has_validation_support() const;
+
+  const std::vector<const char*> mValidationLayers = {"VK_LAYER_KHRONOS_validation"};
+  VkInstance mInstance;
 };
 }  // namespace ARIA
