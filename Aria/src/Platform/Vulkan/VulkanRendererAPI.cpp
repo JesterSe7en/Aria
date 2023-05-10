@@ -2,6 +2,7 @@
 #include "Aria/Core/Application.h"
 #include "Aria/Core/Base.h"
 #include "Aria/Core/Log.h"
+#include "GLFW/glfw3.h"
 #include "ariapch.h"
 
 #include "Aria/Renderer/VertexArray.h"
@@ -10,7 +11,6 @@
 #include "vulkan/vulkan_core.h"
 
 #include <fileapi.h>
-#include <glad/gl.h>
 #include <stdint.h>
 #include <wingdi.h>
 #include <array>
@@ -53,11 +53,9 @@ void VulkanRendererAPI::create_instance() {
   create_info.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
   create_info.pApplicationInfo = &app_info;
 
-  Application& client_app = Application::get();
   uint32_t count;
-  const char** glfw_extensions;
-  // This is a hack to call glfw functions()
-  glfw_extensions = client_app.get_window().get_required_instance_extensions(count);
+  // can only be called after glfwinit()
+  const char** glfw_extensions = glfwGetRequiredInstanceExtensions(&count);
 
   create_info.enabledExtensionCount = count;
   create_info.ppEnabledExtensionNames = glfw_extensions;
