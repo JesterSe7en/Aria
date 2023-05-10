@@ -1,4 +1,4 @@
-# Aria
+# Aria Game Engine
 
 
 Ongoing personal side project - Based off The Cherno's game engine series.  Branched off from OpenGL 4.6 to Vulkan API 1.3.
