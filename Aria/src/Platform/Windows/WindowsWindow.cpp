@@ -1,5 +1,6 @@
 #include <stdint.h>
 #include "Aria/Renderer/RendererAPI.h"
+#include "Platform/Windows/WindowsWindow.h"
 #include "ariapch.h"
 
 #include "Aria/Core/Base.h"
@@ -27,7 +28,12 @@ Window* Window::create(const WindowProps& props) {
   return new WindowsWindow(props);
 }
 
-WindowsWindow::WindowsWindow(const WindowProps& props) { init(props); }
+WindowsWindow::WindowsWindow(const WindowProps& props) {
+  mData.mTitle = props.mTitle;
+  mData.mWidth = props.mWidth;
+  mData.mHeight = props.mHeight;
+  init();
+}
 
 WindowsWindow::~WindowsWindow() {}
 
@@ -43,19 +49,8 @@ void WindowsWindow::set_vsync(bool enabled) {
 
 bool WindowsWindow::is_vsync() const { return mData.mVSync; }
 
-const char** WindowsWindow::get_required_instance_extensions(uint32_t& count) const {
-  uint32_t ext_count = 0;
-  auto extentions = glfwGetRequiredInstanceExtensions(&ext_count);
-  count = ext_count;
-  return extentions;
-}
-
-void WindowsWindow::init(const WindowProps& props) {
-  mData.mTitle = props.mTitle;
-  mData.mWidth = props.mWidth;
-  mData.mHeight = props.mHeight;
-
-  ARIA_CORE_INFO("Creating window {0} ({1}, {2})", props.mTitle, props.mWidth, props.mHeight)
+void WindowsWindow::init() {
+  ARIA_CORE_INFO("Creating window {0} ({1}, {2})", mData.mTitle, mData.mWidth, mData.mHeight)
 
   if (!s_GLFWInitialized) {
     int success = glfwInit();
@@ -78,19 +73,15 @@ void WindowsWindow::init(const WindowProps& props) {
       ARIA_CORE_ASSERT(false, "No rendereing API selected to generate glfw window")
       break;
   }
+  create_window();
+}
 
-  mWindow = glfwCreateWindow((int)props.mWidth, (int)props.mHeight, props.mTitle.c_str(), nullptr, nullptr);
-
+void WindowsWindow::create_window() {
+  mWindow = glfwCreateWindow((int)mData.mWidth, (int)mData.mHeight, mData.mTitle.c_str(), nullptr, nullptr);
   if (RendererAPI::get_api() == RendererAPI::API::OpenGL) {
     mContext = new OpenGLContext(mWindow);
     mContext->init();
   }
-
-  uint32_t extensionCount = 0;
-  vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, nullptr);
-
-  ARIA_CORE_INFO("{0} Vulkan extenstions count", extensionCount);
-
   glfwSetWindowUserPointer(mWindow, &mData);
 
 #pragma region GLFW Callbacks

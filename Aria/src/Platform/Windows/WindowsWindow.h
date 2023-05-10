@@ -24,13 +24,12 @@ class WindowsWindow : public Window {
   void set_vsync(bool enabled) override;
   bool is_vsync() const override;
 
-  const char** get_required_instance_extensions(uint32_t& count) const override;
-
   void* get_native_window() const override { return mWindow; }
 
  private:
-  virtual void init(const WindowProps& props);
-  virtual void shutdown();
+  void init();
+  void create_window();
+  void shutdown();
 
  private:
   GLFWwindow* mWindow;
