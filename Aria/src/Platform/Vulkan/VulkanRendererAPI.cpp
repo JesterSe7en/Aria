@@ -56,6 +56,7 @@ void VulkanRendererAPI::create_instance() {
   Application& client_app = Application::get();
   uint32_t count;
   const char** glfw_extensions;
+  // This is a hack to call glfw functions()
   glfw_extensions = client_app.get_window().get_required_instance_extensions(count);
 
   create_info.enabledExtensionCount = count;
