@@ -31,6 +31,29 @@ Application::Application(ApplicationProps &props) {
 
   RendererAPI::set_api(props.mRendererAPI);
 
+  switch (props.mRendererAPI) {
+    case RendererAPI::API::Vulkan:
+      init_vulkan_app();
+      break;
+    case RendererAPI::API::OpenGL:
+      init_opengl_app();
+      break;
+    default:
+      ARIA_CORE_ASSERT(false, "Aria engine currently only supports Vulkan and OpenGL")
+  }
+}
+
+void Application::init_vulkan_app() {
+  // TODO: ordering for createing window and initializing renderer is different than opengl for vulkan
+  Renderer::init();
+  mWindow = std::unique_ptr<Window>(Window::create());
+  mWindow->set_vsync(false);
+  mWindow->set_event_callback(ARIA_BIND_EVENT_FN(Application::on_event));
+  mImGuiLayer = new ImGuiLayer();
+  push_overlay(mImGuiLayer);
+}
+
+void Application::init_opengl_app() {
   mWindow = std::unique_ptr<Window>(Window::create());
   mWindow->set_vsync(false);
   mWindow->set_event_callback(ARIA_BIND_EVENT_FN(Application::on_event));

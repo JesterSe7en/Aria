@@ -42,6 +42,9 @@ class ARIA_API Application {
  private:
   bool on_window_close(WindowCloseEvent &e);
 
+  void init_vulkan_app();
+  void init_opengl_app();
+
   std::unique_ptr<Window> mWindow;
   bool mRunning = true;
   LayerStack mLayerStack;
