@@ -22,7 +22,7 @@ class WindowsWindow : public Window {
   inline void set_event_callback(const EventCallbackFn& callback) override { mData.mEventCallback = callback; }
 
   void set_vsync(bool enabled) override;
-  bool is_vsync() const override;
+  inline bool is_vsync() const override { return mData.mVSync; }
 
   void* get_native_window() const override { return mWindow; }
 

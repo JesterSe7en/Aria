@@ -42,8 +42,6 @@ void WindowsWindow::set_vsync(bool enabled) {
   mData.mVSync = enabled;
 }
 
-bool WindowsWindow::is_vsync() const { return mData.mVSync; }
-
 void WindowsWindow::init() {
   ARIA_CORE_INFO("Creating window {0} ({1}, {2})", mData.mTitle, mData.mWidth, mData.mHeight)
 

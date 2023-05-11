@@ -14,7 +14,7 @@ namespace ARIA {
 class VulkanWindow : public Window {
  public:
   VulkanWindow(const WindowProps& props);
-  ~VulkanWindow() = default;
+  virtual ~VulkanWindow() = default;
 
   void on_update() override;
 
@@ -22,23 +22,25 @@ class VulkanWindow : public Window {
   inline unsigned int get_height() const override { return window_data.height; }
 
   // Window attributes
-  inline void set_event_callback(const EventCallbackFn& callback) override;
+  inline void set_event_callback(const EventCallbackFn& callback) override { window_data.event_callback = callback; }
   void set_vsync(bool enabled) override;
-  bool is_vsync() const override { return window_data.vsync; }
+  inline bool is_vsync() const override { return window_data.vsync; }
 
-  void* get_native_window() const override;
+  void* get_native_window() const override { return glfw_window; }
 
  private:
   void init();
   void create_surface(VkInstance& instance);
   void create_window();
 
+  bool glfw_initalized = false;
   GLFWwindow* glfw_window;
   VkSurfaceKHR vk_surface;
 
   struct VulkanWindowData {
     std::string title;
-    unsigned int width, height;
+    unsigned int width;
+    unsigned int height;
     bool vsync;
 
     EventCallbackFn event_callback;
