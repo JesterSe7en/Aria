@@ -608,7 +608,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES MSVC_RUNTIME_LIBRARY ${MSVC_RUN
 # Include directories
 ################################################################################
 target_include_directories(${PROJECT_NAME} PUBLIC
-    "${CMAKE_CURRENT_SOURCE_DIR}/../../../../../VulkanSDK/1.3.246.0/Include;"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../../../../../ProgramData/scoop/apps/vulkan/current/Include/;"
     "${CMAKE_CURRENT_SOURCE_DIR}/src;"
     "${CMAKE_CURRENT_SOURCE_DIR}/vendor/spdlog/include;"
     "${CMAKE_CURRENT_SOURCE_DIR}/vendor/GLFW/include;"
@@ -730,5 +730,5 @@ set(ADDITIONAL_LIBRARY_DEPENDENCIES
 target_link_libraries(${PROJECT_NAME} PUBLIC "${ADDITIONAL_LIBRARY_DEPENDENCIES}")
 
 target_link_directories(${PROJECT_NAME} PUBLIC
-    "${CMAKE_CURRENT_SOURCE_DIR}/../../../../../VulkanSDK/1.3.246.0/Lib;"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../../../../../ProgramData/scoop/apps/vulkan/current/Lib;"
 )
