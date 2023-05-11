@@ -29,6 +29,7 @@ set(src__Aria__Core
     "src/Aria/Core/LayerStack.h"
     "src/Aria/Core/Log.cpp"
     "src/Aria/Core/Log.h"
+    "src/Aria/Core/Window.cpp"
     "src/Aria/Core/Window.h"
     "src/Aria/Core/Timestep.h"
 )
@@ -92,6 +93,8 @@ set(src__Platform__Vulkan
 source_group("src\\Platform\\Vulkan" FILES ${src__Platform__Vulkan})
 
 set(src__Platform__Windows
+    "src/Platform/Windows/VulkanWindow.cpp"
+    "src/Platform/Windows/VulkanWindow.h"
     "src/Platform/Windows/WindowsInput.cpp"
     "src/Platform/Windows/WindowsInput.h"
     "src/Platform/Windows/WindowsWindow.cpp"
@@ -571,16 +574,16 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 # Target name
 ################################################################################
 set_target_properties(${PROJECT_NAME} PROPERTIES
-    TARGET_NAME_DEBUG   "Aria"
-    TARGET_NAME_DIST    "Aria"
+    TARGET_NAME_DEBUG "Aria"
+    TARGET_NAME_DIST "Aria"
     TARGET_NAME_RELEASE "Aria"
 )
 ################################################################################
 # Output directory
 ################################################################################
 set_target_properties(${PROJECT_NAME} PROPERTIES
-    OUTPUT_DIRECTORY_DEBUG   "${CMAKE_CURRENT_SOURCE_DIR}/../bin/Debug-windows-x86_64/Aria/"
-    OUTPUT_DIRECTORY_DIST    "${CMAKE_CURRENT_SOURCE_DIR}/../bin/Dist-windows-x86_64/Aria/"
+    OUTPUT_DIRECTORY_DEBUG "${CMAKE_CURRENT_SOURCE_DIR}/../bin/Debug-windows-x86_64/Aria/"
+    OUTPUT_DIRECTORY_DIST "${CMAKE_CURRENT_SOURCE_DIR}/../bin/Dist-windows-x86_64/Aria/"
     OUTPUT_DIRECTORY_RELEASE "${CMAKE_CURRENT_SOURCE_DIR}/../bin/Release-windows-x86_64/Aria/"
 )
 ################################################################################
@@ -618,22 +621,14 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 ################################################################################
 # Compile definitions
 ################################################################################
-target_compile_definitions(${PROJECT_NAME} PRIVATE
-    "$<$<CONFIG:Debug>:"
+target_compile_definitions(${PROJECT_NAME} PRIVATE "$<$<CONFIG:Debug>:"
         "ARIA_DEBUG"
         "ARIA_ENABLE_ASSERTS;"
-    ">"
-    "$<$<CONFIG:Dist>:"
+    ">" "$<$<CONFIG:Dist>:"
         "ARIA_DIST"
-    ">"
-    "$<$<CONFIG:Release>:"
+    ">" "$<$<CONFIG:Release>:"
         "ARIA_RELEASE"
-    ">"
-    "ARIA_PLATFORM_WINDOWS;"
-    "ARIA_BUILD_DLL;"
-    "UNICODE;"
-    "_UNICODE"
-)
+    ">" "ARIA_PLATFORM_WINDOWS;" "ARIA_BUILD_DLL;" "UNICODE;" "_UNICODE")
 
 ################################################################################
 # Compile and link options
@@ -641,80 +636,80 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE
 if(MSVC)
     target_compile_options(${PROJECT_NAME} PRIVATE
         $<$<CONFIG:Debug>:
-            /Od;
-            /ZI
-        >
+                /Od;
+                /ZI
+            >
         $<$<CONFIG:Dist>:
-            /Gm-;
-            /Ox;
-            /Oi;
-            /GF;
-            /Gy;
-            ${DEFAULT_CXX_DEBUG_INFORMATION_FORMAT}
-        >
+                /Gm-;
+                /Ox;
+                /Oi;
+                /GF;
+                /Gy;
+                ${DEFAULT_CXX_DEBUG_INFORMATION_FORMAT}
+            >
         $<$<CONFIG:Release>:
-            /Gm-;
-            /Ox;
-            /Oi;
-            /GF;
-            /Gy;
-            ${DEFAULT_CXX_DEBUG_INFORMATION_FORMAT}
-        >
+                /Gm-;
+                /Ox;
+                /Oi;
+                /GF;
+                /Gy;
+                ${DEFAULT_CXX_DEBUG_INFORMATION_FORMAT}
+            >
         /std:c++17;
         /W3;
         ${DEFAULT_CXX_EXCEPTION_HANDLING}
     )
     target_link_options(${PROJECT_NAME} PRIVATE
         $<$<CONFIG:Dist>:
-            /OPT:REF;
-            /OPT:ICF
-        >
+                /OPT:REF;
+                /OPT:ICF
+            >
         $<$<CONFIG:Release>:
-            /OPT:REF;
-            /OPT:ICF
-        >
+                /OPT:REF;
+                /OPT:ICF
+            >
         /SUBSYSTEM:WINDOWS
     )
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     target_compile_options(${PROJECT_NAME} PRIVATE
         $<$<CONFIG:Debug>:
-            -O0;
-            -g;
-            -Wall;
-            -Wextra;
-            -pedantic;
-            -fno-inline-functions;
-            -fno-omit-frame-pointer            
-        >
+                -O0;
+                -g;
+                -Wall;
+                -Wextra;
+                -pedantic;
+                -fno-inline-functions;
+                -fno-omit-frame-pointer            
+            >
         $<$<CONFIG:Dist>:
-            -O2;
-            -DNDEBUG;
-            -fstack-protector-strong;
-            -pie;
-            -fvisibility=hidden;
-            -fdata-sections;
-            -ffunction-sections;
-       >
+                -O2;
+                -DNDEBUG;
+                -fstack-protector-strong;
+                -pie;
+                -fvisibility=hidden;
+                -fdata-sections;
+                -ffunction-sections;
+           >
         $<$<CONFIG:Release>:
-            -O2;
-            -g;
-            -DNDEBUG;
-            -fvisibility=hidden;
-            -fdata-sections;
-            -ffunction-sections;
-        >
+                -O2;
+                -g;
+                -DNDEBUG;
+                -fvisibility=hidden;
+                -fdata-sections;
+                -ffunction-sections;
+            >
         -std=c++17;
         ${DEFAULT_CXX_EXCEPTION_HANDLING}
     )
     target_link_options(${PROJECT_NAME} PRIVATE
         $<$<CONFIG:Dist>:
-            /OPT:REF;
-            /OPT:ICF
-        >
+                /OPT:REF;
+                /OPT:ICF
+            >
         $<$<CONFIG:Release>:
-            /OPT:REF;
-            /OPT:ICF
-        >
+                /OPT:REF;
+                /OPT:ICF
+            >
     )
 endif()
 
@@ -737,4 +732,3 @@ target_link_libraries(${PROJECT_NAME} PUBLIC "${ADDITIONAL_LIBRARY_DEPENDENCIES}
 target_link_directories(${PROJECT_NAME} PUBLIC
     "${CMAKE_CURRENT_SOURCE_DIR}/../../../../../VulkanSDK/1.3.246.0/Lib;"
 )
-

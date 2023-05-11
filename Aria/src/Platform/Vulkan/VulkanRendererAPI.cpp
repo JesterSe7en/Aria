@@ -31,7 +31,9 @@ void VulkanRendererAPI::init() {
   create_logical_device();
 }
 void VulkanRendererAPI::clear() { ARIA_CORE_ASSERT(false, "Not Implemented") }
+
 void VulkanRendererAPI::set_clear_color(const glm::vec4 color) { ARIA_CORE_ASSERT(false, "Not Implemented") }
+
 void VulkanRendererAPI::draw_indexed(const Ref<VertexArray>& vertex_array) {
   ARIA_CORE_ASSERT(false, "Not Implemented")
 }

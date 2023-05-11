@@ -13,7 +13,6 @@
 
 #include "WindowsWindow.h"
 
-#define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 #include <stdio.h>
 
@@ -23,10 +22,6 @@ static bool s_GLFWInitialized = false;
 
 static void GLFWErrorCallback(int error_code, const char* description){
     ARIA_CORE_ERROR("GLFW Error ({0}) - {1}", error_code, description)}
-
-Window* Window::create(const WindowProps& props) {
-  return new WindowsWindow(props);
-}
 
 WindowsWindow::WindowsWindow(const WindowProps& props) {
   mData.mTitle = props.mTitle;
@@ -59,20 +54,10 @@ void WindowsWindow::init() {
     s_GLFWInitialized = true;
   }
 
-  switch (RendererAPI::get_api()) {
-    case RendererAPI::API::OpenGL:
-      // If not specified, will load latest from graphics driver
-      glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-      glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
-      glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-      break;
-    case RendererAPI::API::Vulkan:
-      glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-      break;
-    default:
-      ARIA_CORE_ASSERT(false, "No rendereing API selected to generate glfw window")
-      break;
-  }
+  // If not specified, will load latest from graphics driver
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+  glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
   create_window();
 }
 
