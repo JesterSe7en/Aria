@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Aria/Renderer/Renderer.h"
+#include "Aria/Renderer/RendererAPI.h"
 #include "ariapch.h"
 #include "Base.h"
 #include "Aria/Events/Event.h"
@@ -31,6 +33,17 @@ class ARIA_API Window {
   virtual bool is_vsync() const = 0;
 
   virtual void* get_native_window() const = 0;
+
+  virtual void create_window() = 0;
+
+  // TODO: I don't really like that Window's abstraction has these by themselves. Argubably, OpenGL could call these but
+  // it isn't used
+  virtual void create_surface(Ref<RendererAPI> renderer) {
+    // Vulkan ONLY
+  }
+  virtual const char** get_requred_instance_extenstions(uint32_t& count) {
+    // Vulkan ONLY
+  }
 
   static Window* create(const WindowProps& props = WindowProps());
 };

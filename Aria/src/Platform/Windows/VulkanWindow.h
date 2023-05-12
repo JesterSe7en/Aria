@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Aria/Core/Window.h"
+#include "Aria/Renderer/RendererAPI.h"
+#include "Platform/Vulkan/VulkanRendererAPI.h"
 
 #define VK_USE_PLATFORM_WIN32_KHR
 #define GLFW_INCLUDE_VULKAN
@@ -26,12 +28,12 @@ class VulkanWindow : public Window {
   void set_vsync(bool enabled) override;
   inline bool is_vsync() const override { return window_data.vsync; }
 
+  void create_window() override;
+  void create_surface(Ref<RendererAPI> renderer) override;
   void* get_native_window() const override { return glfw_window; }
 
  private:
   void init();
-  void create_surface(VkInstance& instance);
-  void create_window();
 
   bool glfw_initalized = false;
   GLFWwindow* glfw_window;

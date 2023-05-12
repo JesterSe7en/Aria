@@ -16,6 +16,8 @@ class VulkanRendererAPI : public RendererAPI {
   void set_clear_color(const glm::vec4 color) override;
   void draw_indexed(const Ref<VertexArray>& vertex_array) override;
 
+  VkInstance get_vk_instance() { return mInstance; }
+
  private:
   struct QueryFamilyIndicies {
     std::optional<uint32_t> mGraphicsFamily;

@@ -24,11 +24,16 @@ class WindowsWindow : public Window {
   void set_vsync(bool enabled) override;
   inline bool is_vsync() const override { return mData.mVSync; }
 
+  void create_window() override;
+  void create_surface(Ref<RendererAPI> renderer) override {
+    // FIXME: OpenGL does not need this
+    return;
+  }
+
   void* get_native_window() const override { return mWindow; }
 
  private:
   void init();
-  void create_window();
   void shutdown();
 
  private:

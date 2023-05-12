@@ -1,3 +1,6 @@
+#include "Aria/Core/Base.h"
+#include "Aria/Core/Log.h"
+#include "Platform/Vulkan/VulkanRendererAPI.h"
 #include "ariapch.h"
 #include "VulkanWindow.h"
 
@@ -26,18 +29,20 @@ void VulkanWindow::set_vsync(bool enabled) {
 
 void VulkanWindow::init() {
   ARIA_CORE_INFO("Creating window {0} ({1}, {2})", window_data.title, window_data.width, window_data.height)
-  if (glfw_initalized) {
+  if (!glfw_initalized) {
     int success = glfwInit();
     ARIA_ASSERT(success, "Failed to initialize GLFW")
     glfwSetErrorCallback(glfw_error_callback);
-    glfw_initalized = true;
+    glfw_initalized = !glfw_initalized;
   }
   glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 }
 
-void VulkanWindow::create_surface(VkInstance& instance) {
-  if (glfwCreateWindowSurface(instance, glfw_window, nullptr, &vk_surface) != VK_SUCCESS) {
-    ARIA_CORE_ERROR("Cannot create window surface for Vulkan")
+void VulkanWindow::create_surface(Ref<RendererAPI> renderer) {
+  auto* vk = (VulkanRendererAPI*)(&renderer);
+  ARIA_CORE_ASSERT(glfw_window, "Did you create window first before creating surface?")
+  if (glfwCreateWindowSurface(vk->get_vk_instance(), glfw_window, nullptr, &vk_surface) != VK_SUCCESS) {
+    ARIA_CORE_ERROR("Cannot create vulkan surface")
   }
 }
 

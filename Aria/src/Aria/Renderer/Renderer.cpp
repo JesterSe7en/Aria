@@ -1,3 +1,4 @@
+#include "Aria/Renderer/RenderCommand.h"
 #include "Aria/Renderer/RendererAPI.h"
 #include "ariapch.h"
 
@@ -10,6 +11,8 @@
 namespace ARIA {
 
 Renderer::SceneData* Renderer::sSceneData = new Renderer::SceneData;
+
+Ref<RendererAPI> Renderer::get_renderer_instance() { return RenderCommand::get_api_instance(); }
 
 void Renderer::init() { RenderCommand::init(RendererAPI::get_api()); }
 

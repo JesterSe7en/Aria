@@ -1,7 +1,7 @@
 #include "ariapch.h"
 #include "Application.h"
 
-#include <GLFW/glfw3.h> //TODO: abstract it out only deltatime use this
+#include <GLFW/glfw3.h>  //TODO: abstract it out only deltatime use this
 
 #include "Aria/Events/ApplicationEvent.h"
 #include "Aria/Events/KeyEvent.h"
@@ -45,8 +45,12 @@ Application::Application(ApplicationProps &props) {
 
 void Application::init_vulkan_app() {
   // TODO: ordering for createing window and initializing renderer is different than opengl for vulkan
-  Renderer::init();
   mWindow = std::unique_ptr<Window>(Window::create());
+  Renderer::init();
+
+  mWindow->create_window();
+  mWindow->create_surface(Renderer::get_renderer_instance());
+
   mWindow->set_vsync(false);
   mWindow->set_event_callback(ARIA_BIND_EVENT_FN(Application::on_event));
   mImGuiLayer = new ImGuiLayer();
