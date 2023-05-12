@@ -12,9 +12,7 @@
 
 namespace ARIA {
 
-Ref<RendererAPI> RenderCommand::sRendererAPI = nullptr;
-
-Ref<RendererAPI> RenderCommand::get_api_instance() { return sRendererAPI; }
+std::unique_ptr<RendererAPI> RenderCommand::sRendererAPI = nullptr;
 
 void RenderCommand::init(RendererAPI::API api) {
   switch (api) {

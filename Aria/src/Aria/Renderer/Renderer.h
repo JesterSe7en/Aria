@@ -19,7 +19,6 @@ class Renderer {
                      const glm::mat4 transform = glm::mat4(1.0f));
 
   inline static RendererAPI::API get_api() { return RendererAPI::get_api(); }
-  static Ref<RendererAPI> get_renderer_instance();
 
  private:
   struct SceneData {

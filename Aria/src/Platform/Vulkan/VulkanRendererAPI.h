@@ -16,14 +16,14 @@ class VulkanRendererAPI : public RendererAPI {
   void set_clear_color(const glm::vec4 color) override;
   void draw_indexed(const Ref<VertexArray>& vertex_array) override;
 
-  VkInstance get_vk_instance() { return mInstance; }
+  static VkInstance get_vk_instance() { return sInstance; }
 
  private:
   struct QueryFamilyIndicies {
     std::optional<uint32_t> mGraphicsFamily;
     bool is_complete() const { return mGraphicsFamily.has_value(); }
   };
-  VkInstance mInstance;
+  static VkInstance sInstance;
   VkDebugUtilsMessengerEXT mDebugMessenger;
   VkPhysicalDevice mPhysicalDevice = VK_NULL_HANDLE;
   VkDevice mLogicalDevice = VK_NULL_HANDLE;

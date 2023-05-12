@@ -49,7 +49,7 @@ void Application::init_vulkan_app() {
   Renderer::init();
 
   mWindow->create_window();
-  mWindow->create_surface(Renderer::get_renderer_instance());
+  mWindow->create_surface();
 
   mWindow->set_vsync(false);
   mWindow->set_event_callback(ARIA_BIND_EVENT_FN(Application::on_event));

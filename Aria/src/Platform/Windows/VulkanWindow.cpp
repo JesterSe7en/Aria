@@ -38,10 +38,11 @@ void VulkanWindow::init() {
   glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 }
 
-void VulkanWindow::create_surface(Ref<RendererAPI> renderer) {
-  auto* vk = (VulkanRendererAPI*)(&renderer);
+void VulkanWindow::create_surface() {
+  auto i = VulkanRendererAPI::get_vk_instance();
+  ARIA_CORE_ASSERT(i, "Did you create VkInstance first?")
   ARIA_CORE_ASSERT(glfw_window, "Did you create window first before creating surface?")
-  if (glfwCreateWindowSurface(vk->get_vk_instance(), glfw_window, nullptr, &vk_surface) != VK_SUCCESS) {
+  if (glfwCreateWindowSurface(i, glfw_window, nullptr, &vk_surface) != VK_SUCCESS) {
     ARIA_CORE_ERROR("Cannot create vulkan surface")
   }
 }

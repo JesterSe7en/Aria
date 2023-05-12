@@ -29,7 +29,7 @@ class VulkanWindow : public Window {
   inline bool is_vsync() const override { return window_data.vsync; }
 
   void create_window() override;
-  void create_surface(Ref<RendererAPI> renderer) override;
+  void create_surface() override;
   void* get_native_window() const override { return glfw_window; }
 
  private:

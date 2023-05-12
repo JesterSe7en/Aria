@@ -38,7 +38,7 @@ class ARIA_API Window {
 
   // TODO: I don't really like that Window's abstraction has these by themselves. Argubably, OpenGL could call these but
   // it isn't used
-  virtual void create_surface(Ref<RendererAPI> renderer) {
+  virtual void create_surface() {
     // Vulkan ONLY
   }
   virtual const char** get_requred_instance_extenstions(uint32_t& count) {

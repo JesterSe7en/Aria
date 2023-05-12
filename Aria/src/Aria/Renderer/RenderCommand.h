@@ -11,9 +11,8 @@ class RenderCommand {
   inline static void set_clear_color(glm::vec4 color) { sRendererAPI->set_clear_color(color); }
   inline static void clear() { sRendererAPI->clear(); }
   inline static void draw_indexed(const Ref<VertexArray>& vertex_array) { sRendererAPI->draw_indexed(vertex_array); }
-  static Ref<RendererAPI> get_api_instance();
 
  private:
-  static Ref<RendererAPI> sRendererAPI;
+  static std::unique_ptr<RendererAPI> sRendererAPI;
 };
 }  // namespace ARIA

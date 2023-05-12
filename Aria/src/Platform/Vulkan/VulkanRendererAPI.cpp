@@ -24,6 +24,8 @@ const bool enable_validation_layers = false;
 const bool enable_validation_layers = true;
 #endif
 
+VkInstance VulkanRendererAPI::sInstance = nullptr;
+
 void VulkanRendererAPI::init() {
   create_instance();
   setup_vulkan_debug_messenger();
@@ -74,7 +76,7 @@ void VulkanRendererAPI::create_instance() {
     create_info.pNext = nullptr;
   }
 
-  if (vkCreateInstance(&create_info, nullptr, &mInstance) != VK_SUCCESS) {
+  if (vkCreateInstance(&create_info, nullptr, &sInstance) != VK_SUCCESS) {
     ARIA_CORE_ERROR("Failed to create vulkan instance")
   }
 }
@@ -83,25 +85,25 @@ void VulkanRendererAPI::setup_vulkan_debug_messenger() {
   if (!enable_validation_layers) {
     return;
   }
-  ARIA_CORE_ASSERT(mInstance != nullptr, "Did you create VkInstance before setting up debug messenger?")
+  ARIA_CORE_ASSERT(sInstance != nullptr, "Did you create VkInstance before setting up debug messenger?")
 
   VkDebugUtilsMessengerCreateInfoEXT create_info;
   populate_debug_create_info(create_info);
 
-  if (create_debug_util_messenger_ext(mInstance, &create_info, nullptr, &mDebugMessenger) != VK_SUCCESS) {
+  if (create_debug_util_messenger_ext(sInstance, &create_info, nullptr, &mDebugMessenger) != VK_SUCCESS) {
     ARIA_CORE_WARN("Cannot setup debug messenger; debug messenger extention not available")
   }
 }
 
 void VulkanRendererAPI::pick_physical_device() {
   uint32_t device_count = 0;
-  vkEnumeratePhysicalDevices(mInstance, &device_count, nullptr);
+  vkEnumeratePhysicalDevices(sInstance, &device_count, nullptr);
 
   // TODO: maybe error out completely?
   ARIA_CORE_ASSERT(device_count != 0, "You tried to setup with Vulkan API, but no GPU's found with Vulkan support")
 
   std::vector<VkPhysicalDevice> devices(device_count);
-  vkEnumeratePhysicalDevices(mInstance, &device_count, devices.data());
+  vkEnumeratePhysicalDevices(sInstance, &device_count, devices.data());
 
   for (const auto& device : devices) {
     if (is_suitable_vulkan_device(device)) {
