@@ -47,5 +47,6 @@ class VulkanRendererAPI : public RendererAPI {
   bool is_suitable_vulkan_device(VkPhysicalDevice device);
   std::string get_vendor_name(uint32_t vendor_id) const;
   QueryFamilyIndicies find_queue_families(VkPhysicalDevice device);
+  std::vector<const char*> get_required_extensions();
 };
 }  // namespace ARIA

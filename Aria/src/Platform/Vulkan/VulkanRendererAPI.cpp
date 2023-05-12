@@ -55,12 +55,10 @@ void VulkanRendererAPI::create_instance() {
   create_info.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
   create_info.pApplicationInfo = &app_info;
 
-  uint32_t count;
-  // can only be called after glfwinit()
-  const char** glfw_extensions = glfwGetRequiredInstanceExtensions(&count);
+  auto extensions = get_required_extensions();
 
-  create_info.enabledExtensionCount = count;
-  create_info.ppEnabledExtensionNames = glfw_extensions;
+  create_info.enabledExtensionCount = extensions.size();
+  create_info.ppEnabledExtensionNames = extensions.data();
   create_info.enabledLayerCount = 0;
 
   // setup another create info struct to capture events during creation and destruction of VKInstance
@@ -312,6 +310,20 @@ VulkanRendererAPI::QueryFamilyIndicies VulkanRendererAPI::find_queue_families(Vk
     i++;
   }
   return indicies;
+}
+
+std::vector<const char*> VulkanRendererAPI::get_required_extensions() {
+  uint32_t glfwExtensionCount = 0;
+  const char** glfwExtensions;
+  glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
+
+  std::vector<const char*> extensions(glfwExtensions, glfwExtensions + glfwExtensionCount);
+
+  if (enable_validation_layers) {
+    extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
+  }
+
+  return extensions;
 }
 
 }  // namespace ARIA
