@@ -42,7 +42,8 @@ class WindowsWindow : public Window {
 
   struct WindowData {
     std::string mTitle;
-    unsigned int mWidth, mHeight;
+    unsigned int mWidth;
+    unsigned int mHeight;
     bool mVSync;
 
     EventCallbackFn mEventCallback;

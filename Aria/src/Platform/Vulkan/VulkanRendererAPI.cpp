@@ -27,8 +27,8 @@ const bool enable_validation_layers = true;
 void VulkanRendererAPI::init() {
   create_instance();
   setup_vulkan_debug_messenger();
-  pick_physical_device();
-  create_logical_device();
+  // pick_physical_device();
+  // create_logical_device();
 }
 void VulkanRendererAPI::clear() { ARIA_CORE_ASSERT(false, "Not Implemented") }
 

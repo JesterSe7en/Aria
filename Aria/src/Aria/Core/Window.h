@@ -43,6 +43,7 @@ class ARIA_API Window {
   }
   virtual const char** get_requred_instance_extenstions(uint32_t& count) {
     // Vulkan ONLY
+    return nullptr;
   }
 
   static Window* create(const WindowProps& props = WindowProps());
