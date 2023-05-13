@@ -76,6 +76,21 @@ void VulkanRendererAPI::create_instance() {
     create_info.pNext = nullptr;
   }
 
+  // query the supported instance extensions
+  uint32_t numInstanceExtensions = 0;
+  std::vector<VkExtensionProperties> instanceExtensionProperties;
+  // Query the instance extensions.
+  vkEnumerateInstanceExtensionProperties(nullptr, &numInstanceExtensions, nullptr);
+
+  // If there are any extensions, query their properties.
+
+  if (numInstanceExtensions != 0) {
+    instanceExtensionProperties.resize(numInstanceExtensions);
+    vkEnumerateInstanceExtensionProperties(nullptr, &numInstanceExtensions, instanceExtensionProperties.data());
+  }
+  // if instance extenions are enabled, look for function pointers via
+  // vkGetInstanceProcAddr() func
+
   if (vkCreateInstance(&create_info, nullptr, &sInstance) != VK_SUCCESS) {
     ARIA_CORE_ERROR("Failed to create vulkan instance")
   }
@@ -122,6 +137,10 @@ void VulkanRendererAPI::pick_physical_device() {
   ARIA_CORE_INFO("Name: {0}", properties.deviceName)
   ARIA_CORE_INFO("Driver version: {0}", properties.driverVersion)
 
+  // features can include optional capabilities such as geometry shaders, tessellation shaders, multi-viewport
+  // rendering, texture compression formats, and more.
+
+  // extensions
   uint32_t extensions_count = 0;
   vkEnumerateDeviceExtensionProperties(mPhysicalDevice, nullptr, &extensions_count, nullptr);
 
@@ -132,6 +151,13 @@ void VulkanRendererAPI::pick_physical_device() {
   for (const auto& extension : extensions) {
     ARIA_CORE_INFO(extension.extensionName)
   }
+
+  // physical device layers
+  uint32_t layerCount;
+  vkEnumerateDeviceLayerProperties(mPhysicalDevice, &layerCount, nullptr);
+
+  std::vector<VkLayerProperties> availableLayers(layerCount);
+  vkEnumerateDeviceLayerProperties(mPhysicalDevice, &layerCount, availableLayers.data());
   // TODO: get driver version
   //  check layers' description for human-readable driver version
   //  NVIDIA: VK_LAYER_NV_optimus
@@ -146,11 +172,12 @@ void VulkanRendererAPI::create_logical_device() {
   queue_create_info.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
   queue_create_info.queueFamilyIndex = indicies.mGraphicsFamily.value();
   queue_create_info.queueCount = 1;
+  queue_create_info.pQueuePriorities = nullptr;  // use same, default priority
 
-  float queuePriority = 1.0f;
-  queue_create_info.pQueuePriorities = &queuePriority;
-
+  // use zero optional features of physical device for now
   VkPhysicalDeviceFeatures device_features{};
+  // can quere and use all optional features with this...
+  // vkGetPhysicalDeviceFeatures(mPhysicalDevice, &device_features);
 
   VkDeviceCreateInfo create_info{};
   create_info.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
@@ -174,6 +201,7 @@ void VulkanRendererAPI::create_logical_device() {
 }
 
 bool VulkanRendererAPI::has_validation_support() const {
+  // how many instance layers can the vulkan system suport?
   uint32_t layerCount;
   vkEnumerateInstanceLayerProperties(&layerCount, nullptr);
 
@@ -301,6 +329,9 @@ VulkanRendererAPI::QueryFamilyIndicies VulkanRendererAPI::find_queue_families(Vk
   vkGetPhysicalDeviceQueueFamilyProperties(device, &query_family_count, query_families.data());
 
   int i = 0;
+  // All possible queue families
+  // https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkQueueFlagBits.html
+
   for (const auto& queueFamily : query_families) {
     if (queueFamily.queueFlags & VK_QUEUE_GRAPHICS_BIT) {
       indicies.mGraphicsFamily = i;
