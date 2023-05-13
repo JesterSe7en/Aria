@@ -1,5 +1,4 @@
 #include "Platform/Vulkan/VulkanRendererAPI.h"
-#include "Aria/Core/Application.h"
 #include "Aria/Core/Base.h"
 #include "Aria/Core/Log.h"
 #include "GLFW/glfw3.h"
@@ -7,12 +6,9 @@
 
 #include "Aria/Renderer/VertexArray.h"
 
-#include "VulkanRendererAPI.h"
 #include "vulkan/vulkan_core.h"
 
 #include <fileapi.h>
-#include <stdint.h>
-#include <wingdi.h>
 #include <array>
 #include <vector>
 
@@ -88,7 +84,7 @@ void VulkanRendererAPI::create_instance() {
     instanceExtensionProperties.resize(numInstanceExtensions);
     vkEnumerateInstanceExtensionProperties(nullptr, &numInstanceExtensions, instanceExtensionProperties.data());
   }
-  // if instance extenions are enabled, look for function pointers via
+  // if instance extensions are enabled, look for function pointers via
   // vkGetInstanceProcAddr() func
 
   if (vkCreateInstance(&create_info, nullptr, &sInstance) != VK_SUCCESS) {
@@ -166,17 +162,17 @@ void VulkanRendererAPI::pick_physical_device() {
 }
 
 void VulkanRendererAPI::create_logical_device() {
-  auto indicies = find_queue_families(mPhysicalDevice);
+  auto queue_families = find_queue_families(mPhysicalDevice);
 
   VkDeviceQueueCreateInfo queue_create_info{};
   queue_create_info.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
-  queue_create_info.queueFamilyIndex = indicies.mGraphicsFamily.value();
+  queue_create_info.queueFamilyIndex = queue_families.mGraphicsFamily.value();
   queue_create_info.queueCount = 1;
   queue_create_info.pQueuePriorities = nullptr;  // use same, default priority
 
   // use zero optional features of physical device for now
   VkPhysicalDeviceFeatures device_features{};
-  // can quere and use all optional features with this...
+  // can query and use all optional features with this...
   // vkGetPhysicalDeviceFeatures(mPhysicalDevice, &device_features);
 
   VkDeviceCreateInfo create_info{};
@@ -197,11 +193,11 @@ void VulkanRendererAPI::create_logical_device() {
     ARIA_CORE_ERROR("Failed to create logical device")
   }
 
-  vkGetDeviceQueue(mLogicalDevice, indicies.mGraphicsFamily.value(), 0, &mGraphicsQueue);
+  vkGetDeviceQueue(mLogicalDevice, queue_families.mGraphicsFamily.value(), 0, &mGraphicsQueue);
 }
 
 bool VulkanRendererAPI::has_validation_support() const {
-  // how many instance layers can the vulkan system suport?
+  // how many instance layers can the vulkan system support?
   uint32_t layerCount;
   vkEnumerateInstanceLayerProperties(&layerCount, nullptr);
 
@@ -242,8 +238,7 @@ VkResult VulkanRendererAPI::create_debug_util_messenger_ext(VkInstance instance,
                                                             const VkAllocationCallbacks* p_allocator,
                                                             VkDebugUtilsMessengerEXT* p_debug_messenger) {
   auto func = (PFN_vkCreateDebugUtilsMessengerEXT)vkGetInstanceProcAddr(instance, "vkCreateDebugUtilsMessengerEXT");
-  if (func != nullptr) {
-    return func(instance, p_create_info, p_allocator, p_debug_messenger);
+  if (func != nullptr) {queue_familiesbug_messenger);
   } else {
     return VK_ERROR_EXTENSION_NOT_PRESENT;
   }
@@ -291,9 +286,9 @@ std::string VulkanRendererAPI::get_message_type(VkDebugUtilsMessageTypeFlagsEXT 
 }
 
 bool VulkanRendererAPI::is_suitable_vulkan_device(VkPhysicalDevice device) {
-  QueryFamilyIndicies indicies = find_queue_families(device);
+  QueryFamilyIndicies queue_families = find_queue_families(device);
 
-  return indicies.is_complete();
+  return queue_families.is_complete();
 
   // VkPhysicalDeviceProperties properties;
   // vkGetPhysicalDeviceProperties(device, &properties);

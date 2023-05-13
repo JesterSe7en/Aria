@@ -41,7 +41,7 @@ class ARIA_API Window {
   virtual void create_surface() {
     // Vulkan ONLY
   }
-  virtual const char** get_requred_instance_extenstions(uint32_t& count) {
+  virtual const char** get_required_instance_extensions(uint32_t& count) {
     // Vulkan ONLY
     return nullptr;
   }

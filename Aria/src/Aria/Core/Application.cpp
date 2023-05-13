@@ -1,13 +1,10 @@
 #include "ariapch.h"
 #include "Application.h"
 
-#include <GLFW/glfw3.h>  //TODO: abstract it out only deltatime use this
+#include <GLFW/glfw3.h>  //TODO: abstract it out only delta time use this
 
 #include "Aria/Events/ApplicationEvent.h"
-#include "Aria/Events/KeyEvent.h"
-#include "Aria/Core/Input.h"
 #include "Aria/Renderer/Buffer.h"
-#include "Aria/Renderer/VertexArray.h"
 #include "Aria/Renderer/Renderer.h"
 #include "Aria/Renderer/Camera.h"
 #include "Aria/Core/Timestep.h"
@@ -24,7 +21,7 @@ namespace ARIA {
 
 Application *Application::sInstance = nullptr;
 
-// ortho params are actually what is given to us to use by defualt from OpenGL
+// ortho params are actually what is given to us to use by default from OpenGL
 Application::Application(ApplicationProps &props) {
   ARIA_CORE_ASSERT(!sInstance, "Application already exists.")
   sInstance = this;
@@ -44,7 +41,7 @@ Application::Application(ApplicationProps &props) {
 }
 
 void Application::init_vulkan_app() {
-  // TODO: ordering for createing window and initializing renderer is different than opengl for vulkan
+  // TODO: ordering for creating window and initializing renderer is different than opengl for vulkan
   mWindow = std::unique_ptr<Window>(Window::create());
   Renderer::init();
 
@@ -70,13 +67,13 @@ void Application::init_opengl_app() {
 
 void Application::run() {
   while (mRunning) {
-    float time = (float)glfwGetTime();  // Platform::GetTime() should be used.  Somehow grab the time passed from the
+    auto time = (float)glfwGetTime();  // Platform::GetTime() should be used.  Somehow grab the time passed from the
                                         // OS. Windows as QueryPerformaceTimer()
-    Timestep timestep = time - mLastFrameTime;
+    Timestep delta_time = time - mLastFrameTime;
     mLastFrameTime = time;
 
     for (Layer *layer : mLayerStack) {
-      layer->on_update(timestep);
+      layer->on_update(delta_time);
     }
 
     mImGuiLayer->begin();
