@@ -53,7 +53,7 @@ void VulkanRendererAPI::create_instance() {
   create_info.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
   create_info.pApplicationInfo = &app_info;
 
-  auto extensions = get_required_extensions();
+  std::vector<const char*> extensions = get_required_extensions();
 
   create_info.enabledExtensionCount = extensions.size();
   create_info.ppEnabledExtensionNames = extensions.data();
@@ -148,6 +148,9 @@ void VulkanRendererAPI::pick_physical_device() {
     ARIA_CORE_INFO(extension.extensionName)
   }
 
+  // to call device extensions funcs
+  // vkGetDeviceProcAddr()
+
   // physical device layers
   uint32_t layerCount;
   vkEnumerateDeviceLayerProperties(mPhysicalDevice, &layerCount, nullptr);
@@ -238,7 +241,8 @@ VkResult VulkanRendererAPI::create_debug_util_messenger_ext(VkInstance instance,
                                                             const VkAllocationCallbacks* p_allocator,
                                                             VkDebugUtilsMessengerEXT* p_debug_messenger) {
   auto func = (PFN_vkCreateDebugUtilsMessengerEXT)vkGetInstanceProcAddr(instance, "vkCreateDebugUtilsMessengerEXT");
-  if (func != nullptr) {queue_familiesbug_messenger);
+  if (func != nullptr) {
+    func(instance, p_create_info, p_allocator, p_debug_messenger);
   } else {
     return VK_ERROR_EXTENSION_NOT_PRESENT;
   }
