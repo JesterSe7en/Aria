@@ -1,12 +1,13 @@
 #pragma once
 
-#include <stdint.h>
-#include <glm/glm.hpp>
-#include <optional>
-
 #include "Aria/Renderer/RendererAPI.h"
 #include "vulkan/vk_platform.h"
 #include "vulkan/vulkan_core.h"
+
+#include <stdint.h>
+
+#include <glm/glm.hpp>
+#include <optional>
 
 namespace ARIA {
 class VulkanRendererAPI : public RendererAPI {

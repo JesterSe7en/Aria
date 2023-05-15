@@ -1,15 +1,15 @@
 #include "ariapch.h"
 
 #include "VulkanRendererAPI.h"
+
 #include "Aria/Core/Base.h"
 #include "Aria/Core/Log.h"
-#include "GLFW/glfw3.h"
-
 #include "Aria/Renderer/VertexArray.h"
-
+#include "GLFW/glfw3.h"
 #include "vulkan/vulkan_core.h"
 
 #include <fileapi.h>
+
 #include <array>
 #include <vector>
 
