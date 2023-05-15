@@ -1,9 +1,9 @@
-#include <Aria.h>
-#include <Aria/Core/EntryPoint.h>
-
 #include "Aria/Core/Application.h"
 #include "Aria/Renderer/RendererAPI.h"
 #include "ExampleLayer.h"
+
+#include <Aria.h>
+#include <Aria/Core/EntryPoint.h>
 
 class Sandbox : public ARIA::Application {
  public:
@@ -15,6 +15,7 @@ class Sandbox : public ARIA::Application {
 };
 
 ARIA::Application* ARIA::create_application() {
-  ApplicationProps props = {RendererAPI::API::Vulkan};
+  // ApplicationProps props = {RendererAPI::API::Vulkan};
+  ApplicationProps props = {RendererAPI::API::OpenGL};
   return new Sandbox(props);
 }
