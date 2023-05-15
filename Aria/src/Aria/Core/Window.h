@@ -2,7 +2,6 @@
 
 #include "Aria/Renderer/Renderer.h"
 #include "Aria/Renderer/RendererAPI.h"
-#include "ariapch.h"
 #include "Base.h"
 #include "Aria/Events/Event.h"
 

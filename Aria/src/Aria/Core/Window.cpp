@@ -1,3 +1,4 @@
+#include "ariapch.h"
 #include "Window.h"
 #include "Aria/Renderer/RendererAPI.h"
 #include "Platform/Windows/WindowsWindow.h"
