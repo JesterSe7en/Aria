@@ -15,7 +15,7 @@ class Sandbox : public ARIA::Application {
 };
 
 ARIA::Application* ARIA::create_application() {
-  // ApplicationProps props = {RendererAPI::API::Vulkan};
-  ApplicationProps props = {RendererAPI::API::OpenGL};
+  ApplicationProps props = {RendererAPI::API::Vulkan};
+  // ApplicationProps props = {RendererAPI::API::OpenGL};
   return new Sandbox(props);
 }

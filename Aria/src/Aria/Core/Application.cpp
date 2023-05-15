@@ -1,13 +1,14 @@
 #include "ariapch.h"
+
 #include "Application.h"
 
-#include <GLFW/glfw3.h>  //TODO: abstract it out only delta time use this
-
+#include "Aria/Core/Timestep.h"
 #include "Aria/Events/ApplicationEvent.h"
 #include "Aria/Renderer/Buffer.h"
-#include "Aria/Renderer/Renderer.h"
 #include "Aria/Renderer/Camera.h"
-#include "Aria/Core/Timestep.h"
+#include "Aria/Renderer/Renderer.h"
+
+#include <GLFW/glfw3.h>  //TODO: abstract it out only delta time use this
 
 #ifdef WIN32
 #include <Windows.h>
@@ -46,7 +47,6 @@ void Application::init_vulkan_app() {
   Renderer::init();
 
   mWindow->create_window();
-  mWindow->create_surface();
 
   mWindow->set_vsync(false);
   mWindow->set_event_callback(ARIA_BIND_EVENT_FN(Application::on_event));
@@ -68,7 +68,7 @@ void Application::init_opengl_app() {
 void Application::run() {
   while (mRunning) {
     auto time = (float)glfwGetTime();  // Platform::GetTime() should be used.  Somehow grab the time passed from the
-                                        // OS. Windows as QueryPerformaceTimer()
+                                       // OS. Windows as QueryPerformaceTimer()
     Timestep delta_time = time - mLastFrameTime;
     mLastFrameTime = time;
 

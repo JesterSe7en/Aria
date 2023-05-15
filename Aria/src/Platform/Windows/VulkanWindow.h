@@ -9,7 +9,6 @@
 #include <GLFW/glfw3.h>
 #define GLFW_EXPOSE_NATIVE_WIN32
 #include <GLFW/glfw3native.h>
-
 #include <vulkan/vulkan_core.h>
 
 namespace ARIA {
@@ -29,7 +28,6 @@ class VulkanWindow : public Window {
   inline bool is_vsync() const override { return window_data.vsync; }
 
   void create_window() override;
-  void create_surface() override;
   void* get_native_window() const override { return glfw_window; }
 
  private:
@@ -37,7 +35,6 @@ class VulkanWindow : public Window {
 
   bool glfw_initalized = false;
   GLFWwindow* glfw_window;
-  VkSurfaceKHR vk_surface;
 
   struct VulkanWindowData {
     std::string title;

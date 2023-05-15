@@ -12,29 +12,42 @@
 namespace ARIA {
 class VulkanRendererAPI : public RendererAPI {
  public:
+  ~VulkanRendererAPI();
+
   void init() override;
   void clear() override;
   void set_clear_color(const glm::vec4 color) override;
   void draw_indexed(const Ref<VertexArray>& vertex_array) override;
 
-  static VkInstance get_vk_instance() { return sInstance; }
+  static VkInstance get_vk_instance() {
+    ARIA_CORE_ASSERT(VulkanRendererAPI::sInstance, "Did you initialize a Vulkan instance?")
+    return sInstance;
+  }
+
+  static VkDevice get_vk_device() { return sDevice; }
 
  private:
   struct QueryFamilyIndicies {
     std::optional<uint32_t> mGraphicsFamily;
-    bool is_complete() const { return mGraphicsFamily.has_value(); }
+    std::optional<uint32_t> mPresentFamily;
+    bool is_complete() const { return mGraphicsFamily.has_value() && mPresentFamily.has_value(); }
   };
   static VkInstance sInstance;
+  static VkDevice sDevice;
+
   VkDebugUtilsMessengerEXT mDebugMessenger;
   VkPhysicalDevice mPhysicalDevice = VK_NULL_HANDLE;
   VkDevice mLogicalDevice = VK_NULL_HANDLE;
   VkQueue mGraphicsQueue;
+  VkSurfaceKHR mSurface;
   const std::vector<const char*> mValidationLayers = {"VK_LAYER_KHRONOS_validation"};
 
   void create_instance();
   void setup_vulkan_debug_messenger();
+  void create_presentation_surface();
   void pick_physical_device();
   void create_logical_device();
+
   bool has_validation_support() const;
   void populate_debug_create_info(VkDebugUtilsMessengerCreateInfoEXT& create_info) const;
   VkResult create_debug_util_messenger_ext(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* p_create_info,

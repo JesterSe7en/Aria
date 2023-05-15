@@ -2,8 +2,10 @@
 
 #include "VulkanRendererAPI.h"
 
+#include "Aria/Core/Application.h"
 #include "Aria/Core/Base.h"
 #include "Aria/Core/Log.h"
+#include "Aria/Renderer/RendererAPI.h"
 #include "Aria/Renderer/VertexArray.h"
 #include "GLFW/glfw3.h"
 #include "vulkan/vulkan_core.h"
@@ -22,10 +24,16 @@ const bool enable_validation_layers = true;
 #endif
 
 VkInstance VulkanRendererAPI::sInstance = nullptr;
+VkDevice VulkanRendererAPI::sDevice = VK_NULL_HANDLE;
+
+VulkanRendererAPI::~VulkanRendererAPI() {
+  // TODO: Need to fill this in with memory deallocation calls
+}
 
 void VulkanRendererAPI::init() {
   create_instance();
   setup_vulkan_debug_messenger();
+  create_presentation_surface();
   pick_physical_device();
   create_logical_device();
 }
@@ -104,6 +112,15 @@ void VulkanRendererAPI::setup_vulkan_debug_messenger() {
 
   if (create_debug_util_messenger_ext(sInstance, &create_info, nullptr, &mDebugMessenger) != VK_SUCCESS) {
     ARIA_CORE_WARN("Cannot setup debug messenger; debug messenger extention not available")
+  }
+}
+
+void VulkanRendererAPI::create_presentation_surface() {
+  ARIA_CORE_ASSERT(sInstance, "Did you create VkInstance first?")
+  auto glfw_window = static_cast<GLFWwindow*>(Application::get().get_window().get_native_window());
+  ARIA_CORE_ASSERT(glfw_window, "Did you create window first before creating surface?")
+  if (glfwCreateWindowSurface(sInstance, glfw_window, nullptr, &mSurface) != VK_SUCCESS) {
+    ARIA_CORE_ERROR("Cannot create vulkan surface")
   }
 }
 
@@ -193,11 +210,11 @@ void VulkanRendererAPI::create_logical_device() {
     create_info.enabledLayerCount = 0;
   }
 
-  if (vkCreateDevice(mPhysicalDevice, &create_info, nullptr, &mLogicalDevice) != VK_SUCCESS) {
+  if (vkCreateDevice(mPhysicalDevice, &create_info, nullptr, &sDevice) != VK_SUCCESS) {
     ARIA_CORE_ERROR("Failed to create logical device")
   }
 
-  vkGetDeviceQueue(mLogicalDevice, queue_families.mGraphicsFamily.value(), 0, &mGraphicsQueue);
+  // vkGetDeviceQueue(mLogicalDevice, queue_families.mGraphicsFamily.value(), 0, &mGraphicsQueue);
 }
 
 bool VulkanRendererAPI::has_validation_support() const {
@@ -321,6 +338,7 @@ std::string VulkanRendererAPI::get_vendor_name(uint32_t vendor_id) const {
 
 VulkanRendererAPI::QueryFamilyIndicies VulkanRendererAPI::find_queue_families(VkPhysicalDevice device) {
   QueryFamilyIndicies indicies;
+  auto glfw_window = Application::get().get_window().get_native_window();
 
   uint32_t query_family_count = 0;
   vkGetPhysicalDeviceQueueFamilyProperties(device, &query_family_count, nullptr);
@@ -333,6 +351,13 @@ VulkanRendererAPI::QueryFamilyIndicies VulkanRendererAPI::find_queue_families(Vk
   // https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkQueueFlagBits.html
 
   for (const auto& queueFamily : query_families) {
+    VkBool32 surface_supported = false;
+    vkGetPhysicalDeviceSurfaceSupportKHR(mPhysicalDevice, i, mSurface, &surface_supported);
+
+    if (surface_supported) {
+      indicies.mPresentFamily = i;
+    }
+
     if (queueFamily.queueFlags & VK_QUEUE_GRAPHICS_BIT) {
       indicies.mGraphicsFamily = i;
     }

@@ -1,8 +1,9 @@
 #pragma once
 
-#include <stdint.h>
 #include "Aria/Core/Window.h"
 #include "Aria/Renderer/GraphicsContext.h"
+
+#include <stdint.h>
 
 struct GLFWwindow;
 
@@ -25,11 +26,6 @@ class WindowsWindow : public Window {
   inline bool is_vsync() const override { return mData.mVSync; }
 
   void create_window() override;
-  void create_surface() override {
-    // FIXME: OpenGL does not need this
-    return;
-  }
-
   void* get_native_window() const override { return mWindow; }
 
  private:

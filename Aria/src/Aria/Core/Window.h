@@ -1,9 +1,9 @@
 #pragma once
 
+#include "Aria/Events/Event.h"
 #include "Aria/Renderer/Renderer.h"
 #include "Aria/Renderer/RendererAPI.h"
 #include "Base.h"
-#include "Aria/Events/Event.h"
 
 namespace ARIA {
 
@@ -35,11 +35,6 @@ class ARIA_API Window {
 
   virtual void create_window() = 0;
 
-  // TODO: I don't really like that Window's abstraction has these by themselves. Argubably, OpenGL could call these but
-  // it isn't used
-  virtual void create_surface() {
-    // Vulkan ONLY
-  }
   virtual const char** get_required_instance_extensions(uint32_t& count) {
     // Vulkan ONLY
     return nullptr;

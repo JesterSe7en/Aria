@@ -1,12 +1,13 @@
-#include "Aria/Core/Base.h"
-#include "Aria/Core/Log.h"
-#include "Platform/Vulkan/VulkanRendererAPI.h"
 #include "ariapch.h"
+
 #include "VulkanWindow.h"
 
+#include "Aria/Core/Base.h"
+#include "Aria/Core/Log.h"
 #include "Aria/Events/ApplicationEvent.h"
 #include "Aria/Events/KeyEvent.h"
 #include "Aria/Events/MouseEvent.h"
+#include "Platform/Vulkan/VulkanRendererAPI.h"
 
 namespace ARIA {
 
@@ -18,6 +19,7 @@ VulkanWindow::VulkanWindow(const WindowProps& props) {
   window_data.height = props.mHeight;
   window_data.width = props.mWidth;
   init();
+  VulkanWindow::create_window();
 }
 
 void VulkanWindow::on_update() { glfwPollEvents(); }
@@ -36,15 +38,6 @@ void VulkanWindow::init() {
     glfw_initalized = !glfw_initalized;
   }
   glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-}
-
-void VulkanWindow::create_surface() {
-  auto i = VulkanRendererAPI::get_vk_instance();
-  ARIA_CORE_ASSERT(i, "Did you create VkInstance first?")
-  ARIA_CORE_ASSERT(glfw_window, "Did you create window first before creating surface?")
-  if (glfwCreateWindowSurface(i, glfw_window, nullptr, &vk_surface) != VK_SUCCESS) {
-    ARIA_CORE_ERROR("Cannot create vulkan surface")
-  }
 }
 
 void VulkanWindow::create_window() {
