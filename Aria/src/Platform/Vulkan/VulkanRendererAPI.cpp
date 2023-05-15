@@ -74,22 +74,22 @@ void VulkanRendererAPI::create_instance() {
   }
 
   // query the supported instance extensions
-  uint32_t numInstanceExtensions = 0;
-  std::vector<VkExtensionProperties> instanceExtensionProperties;
+  // uint32_t numInstanceExtensions = 0;
+  // std::vector<VkExtensionProperties> instanceExtensionProperties;
   // Query the instance extensions.
-  vkEnumerateInstanceExtensionProperties(nullptr, &numInstanceExtensions, nullptr);
+  // vkEnumerateInstanceExtensionProperties(nullptr, &numInstanceExtensions, nullptr);
 
   // If there are any extensions, query their properties.
 
-  if (numInstanceExtensions != 0) {
-    instanceExtensionProperties.resize(numInstanceExtensions);
-    vkEnumerateInstanceExtensionProperties(nullptr, &numInstanceExtensions, instanceExtensionProperties.data());
-  }
+  // if (numInstanceExtensions != 0) {
+  // instanceExtensionProperties.resize(numInstanceExtensions);
+  // vkEnumerateInstanceExtensionProperties(nullptr, &numInstanceExtensions, instanceExtensionProperties.data());
+  // }
   // if instance extensions are enabled, look for function pointers via
   // vkGetInstanceProcAddr() func
 
   if (vkCreateInstance(&create_info, nullptr, &sInstance) != VK_SUCCESS) {
-    ARIA_CORE_ERROR("Failed to create vulkan instance")
+    // ARIA_CORE_ERROR("Failed to create vulkan instance")
   }
 }
 
@@ -168,7 +168,7 @@ void VulkanRendererAPI::pick_physical_device() {
 void VulkanRendererAPI::create_logical_device() {
   auto queue_families = find_queue_families(mPhysicalDevice);
 
-  VkDeviceQueueCreateInfo queue_create_info{};
+  VkDeviceQueueCreateInfo queue_create_info;
   queue_create_info.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
   queue_create_info.queueFamilyIndex = queue_families.mGraphicsFamily.value();
   queue_create_info.queueCount = 1;
@@ -179,7 +179,7 @@ void VulkanRendererAPI::create_logical_device() {
   // can query and use all optional features with this...
   // vkGetPhysicalDeviceFeatures(mPhysicalDevice, &device_features);
 
-  VkDeviceCreateInfo create_info{};
+  VkDeviceCreateInfo create_info;
   create_info.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
   create_info.pQueueCreateInfos = &queue_create_info;
   create_info.queueCreateInfoCount = 1;
@@ -243,7 +243,7 @@ VkResult VulkanRendererAPI::create_debug_util_messenger_ext(VkInstance instance,
                                                             VkDebugUtilsMessengerEXT* p_debug_messenger) {
   auto func = (PFN_vkCreateDebugUtilsMessengerEXT)vkGetInstanceProcAddr(instance, "vkCreateDebugUtilsMessengerEXT");
   if (func != nullptr) {
-    func(instance, p_create_info, p_allocator, p_debug_messenger);
+    return func(instance, p_create_info, p_allocator, p_debug_messenger);
   } else {
     return VK_ERROR_EXTENSION_NOT_PRESENT;
   }
