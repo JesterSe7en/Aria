@@ -3,4 +3,15 @@ IndentWidth: 2
 TabWidth: 2
 UseTab: Never
 ColumnLimit: 120
-SortIncludes: false
+SortIncludes: true
+IncludeCategories:
+  - Regex: '.*\.generated\.h'
+    Priority: 100
+  - Regex: ".*(PCH).*"
+    Priority: -1
+  - Regex: '".*"'
+    Priority: 1
+  - Regex: '^<.*\.(h)>'
+    Priority: 3
+  - Regex: "^<.*>"
+    Priority: 4
