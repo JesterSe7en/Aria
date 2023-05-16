@@ -1,6 +1,6 @@
 #include "ariapch.h"
 
-#include "VulkanRendererAPI.h"
+#include "Platform/Vulkan/VulkanRendererAPI.h"
 
 #include "Aria/Core/Application.h"
 #include "Aria/Core/Base.h"
@@ -8,12 +8,15 @@
 #include "Aria/Renderer/RendererAPI.h"
 #include "Aria/Renderer/VertexArray.h"
 #include "GLFW/glfw3.h"
+#include "Platform/Windows/VulkanWindow.h"
+#include "VulkanRendererAPI.h"
 #include "vulkan/vulkan_core.h"
 
 #include <fileapi.h>
 #include <stdint.h>
 
 #include <array>
+#include <limits>
 #include <set>
 #include <vector>
 
@@ -30,6 +33,7 @@ VkDevice VulkanRendererAPI::sDevice = VK_NULL_HANDLE;
 
 VulkanRendererAPI::~VulkanRendererAPI() {
   // TODO: Need to fill this in with memory deallocation calls
+  cleanup();
 }
 
 void VulkanRendererAPI::init() {
@@ -38,6 +42,7 @@ void VulkanRendererAPI::init() {
   create_presentation_surface();
   pick_physical_device();
   create_logical_device();
+  create_swap_chain();
 }
 void VulkanRendererAPI::clear() { ARIA_CORE_ASSERT(false, "Not Implemented") }
 
@@ -228,6 +233,56 @@ void VulkanRendererAPI::create_logical_device() {
 
   vkGetDeviceQueue(sDevice, indices.graphicsFamily.value(), 0, &mGraphicsQueue);
   vkGetDeviceQueue(sDevice, indices.presentFamily.value(), 0, &mPresentQueue);
+}
+
+void VulkanRendererAPI::create_swap_chain() {
+  SwapChainDetails details = query_swap_chain_support(mPhysicalDevice);
+
+  VkSurfaceFormatKHR surface_format = get_swap_surface_format(details.formats);
+  VkPresentModeKHR present_mode = get_present_mode(details.presentModes);
+  VkExtent2D extent = get_swap_extent(details.capabilities);
+
+  uint32_t image_count = details.capabilities.minImageCount + 1;
+  if (details.capabilities.maxImageCount > 0 && image_count > details.capabilities.maxImageCount) {
+    image_count = details.capabilities.maxImageCount;
+  }
+
+  VkSwapchainCreateInfoKHR create_info;
+  create_info.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
+  create_info.pNext = nullptr;
+  create_info.flags = 0;
+  create_info.surface = mSurface;
+  create_info.minImageCount = image_count;
+  create_info.imageFormat = surface_format.format;
+  create_info.imageColorSpace = surface_format.colorSpace;
+  create_info.imageExtent = extent;
+  create_info.imageArrayLayers = 1;
+  create_info.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+
+  VulkanRendererAPI::QueryFamilyIndicies indicies = query_queue_families(mPhysicalDevice);
+  uint32_t queue_family_indicies[] = {indicies.graphicsFamily.value(), indicies.presentFamily.value()};
+
+  if (indicies.graphicsFamily != indicies.presentFamily) {
+    create_info.imageSharingMode = VK_SHARING_MODE_CONCURRENT;
+    create_info.queueFamilyIndexCount = 3;
+    create_info.pQueueFamilyIndices = queue_family_indicies;
+  } else {
+    create_info.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
+    create_info.queueFamilyIndexCount = 0;
+    create_info.pQueueFamilyIndices = nullptr;
+  }
+
+  create_info.preTransform = details.capabilities.currentTransform;
+  create_info.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
+  create_info.presentMode = present_mode;
+  create_info.clipped = VK_TRUE;
+  // this is in the event window size has been changed, existing swap chain is invalid
+  // as a swap chain is tied to window size
+  create_info.oldSwapchain = VK_NULL_HANDLE;
+
+  if (vkCreateSwapchainKHR(sDevice, &create_info, nullptr, &mSwapChain) != VK_SUCCESS) {
+    ARIA_CORE_ERROR("Cannot create swap chain")
+  }
 }
 
 bool VulkanRendererAPI::has_validation_support() const {
@@ -436,6 +491,63 @@ bool VulkanRendererAPI::check_device_extensions_support(VkPhysicalDevice device)
     required_extensions.erase(extension.extensionName);
   }
   return required_extensions.empty();
+}
+
+// By default, use VK_FORMAT_B8G8R8A8_SRGB and sRGB color space
+VkSurfaceFormatKHR VulkanRendererAPI::get_swap_surface_format(const std::vector<VkSurfaceFormatKHR>& formats) {
+  for (const auto& format : formats) {
+    if (format.format == VK_FORMAT_B8G8R8A8_SRGB && format.colorSpace == VK_COLOR_SPACE_SRGB_NONLINEAR_KHR) {
+      return format;
+    }
+  }
+
+  return formats[0];
+}
+
+VkPresentModeKHR VulkanRendererAPI::get_present_mode(const std::vector<VkPresentModeKHR>& modes) {
+  for (const auto& mode : modes) {
+    if (mode == VK_PRESENT_MODE_MAILBOX_KHR) {
+      return mode;
+    }
+  }
+  // Only guarenteed this mode
+  // vkspec v1.3 pg 2717
+  return VK_PRESENT_MODE_FIFO_KHR;
+}
+
+VkExtent2D VulkanRendererAPI::get_swap_extent(const VkSurfaceCapabilitiesKHR& capabilities) {
+  if (capabilities.currentExtent.width != std::numeric_limits<uint32_t>::max()) {
+    return capabilities.currentExtent;
+  } else {
+    GLFWwindow* glfw_window = (GLFWwindow*)Application::get().get_window().get_native_window();
+    int width;
+    int height;
+
+    glfwGetFramebufferSize(glfw_window, &width, &height);
+
+    VkExtent2D extent = {static_cast<uint32_t>(width), static_cast<uint32_t>(height)};
+
+    extent.width = std::clamp(extent.width, capabilities.minImageExtent.width, capabilities.maxImageExtent.width);
+    extent.height = std::clamp(extent.height, capabilities.minImageExtent.height, capabilities.maxImageExtent.height);
+
+    return extent;
+  }
+}
+
+void VulkanRendererAPI::cleanup() {
+  vkDestroySwapchainKHR(sDevice, mSwapChain, nullptr);
+  vkDestroyDevice(sDevice, nullptr);
+
+  if (enable_validation_layers) {
+    auto func =
+        (PFN_vkDestroyDebugUtilsMessengerEXT)vkGetInstanceProcAddr(sInstance, "vkDestroyDebugUtilsMessengerEXT");
+    if (func != nullptr) {
+      func(sInstance, mDebugMessenger, nullptr);
+    }
+  }
+
+  vkDestroySurfaceKHR(sInstance, mSurface, nullptr);
+  vkDestroyInstance(sInstance, nullptr);
 }
 
 }  // namespace ARIA

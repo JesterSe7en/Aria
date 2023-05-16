@@ -49,6 +49,7 @@ class VulkanRendererAPI : public RendererAPI {
   VkQueue mPresentQueue;
   VkQueue mGraphicsQueue;
   VkSurfaceKHR mSurface;
+  VkSwapchainKHR mSwapChain;
 
   const std::vector<const char*> mValidationLayers = {"VK_LAYER_KHRONOS_validation"};
   const std::vector<const char*> mDeviceExtensions = {"VK_KHR_swapchain"};
@@ -58,6 +59,7 @@ class VulkanRendererAPI : public RendererAPI {
   void create_presentation_surface();
   void pick_physical_device();
   void create_logical_device();
+  void create_swap_chain();
 
   bool has_validation_support() const;
   void populate_debug_create_info(VkDebugUtilsMessengerCreateInfoEXT& create_info) const;
@@ -75,5 +77,12 @@ class VulkanRendererAPI : public RendererAPI {
   SwapChainDetails query_swap_chain_support(VkPhysicalDevice device);
   std::vector<const char*> get_glfw_required_extensions();
   bool check_device_extensions_support(VkPhysicalDevice device);
+
+  // ----- For Swap Chain ------
+  VkSurfaceFormatKHR get_swap_surface_format(const std::vector<VkSurfaceFormatKHR>& formats);
+  VkPresentModeKHR get_present_mode(const std::vector<VkPresentModeKHR>& modes);
+  VkExtent2D get_swap_extent(const VkSurfaceCapabilitiesKHR& capabilities);
+
+  void cleanup();
 };
 }  // namespace ARIA
