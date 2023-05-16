@@ -43,6 +43,7 @@ void VulkanRendererAPI::init() {
   pick_physical_device();
   create_logical_device();
   create_swap_chain();
+  create_image_views();
 }
 void VulkanRendererAPI::clear() { ARIA_CORE_ASSERT(false, "Not Implemented") }
 
@@ -281,7 +282,7 @@ void VulkanRendererAPI::create_swap_chain() {
   create_info.oldSwapchain = VK_NULL_HANDLE;
 
   if (vkCreateSwapchainKHR(sDevice, &create_info, nullptr, &mSwapChain) != VK_SUCCESS) {
-    ARIA_CORE_ERROR("Cannot create swap chain")
+    ARIA_CORE_ERROR("Failed to create swap chain")
   }
 
   vkGetSwapchainImagesKHR(sDevice, mSwapChain, &image_count, nullptr);
@@ -297,6 +298,25 @@ void VulkanRendererAPI::create_image_views() {
 
   for (size_t idx = 0; idx < mSwapChainImages.size(); idx++) {
     VkImageViewCreateInfo create_info;
+    create_info.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+    create_info.pNext = nullptr;
+    create_info.flags = 0;
+    create_info.image = mSwapChainImages[idx];
+    create_info.viewType = VK_IMAGE_VIEW_TYPE_2D;
+    create_info.format = mSwapChainFormat;
+
+    create_info.components.r = create_info.components.g = create_info.components.b = create_info.components.a =
+        VK_COMPONENT_SWIZZLE_IDENTITY;
+
+    create_info.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+    create_info.subresourceRange.baseMipLevel = 0;
+    create_info.subresourceRange.levelCount = 1;
+    create_info.subresourceRange.baseArrayLayer = 0;
+    create_info.subresourceRange.layerCount = 1;
+
+    if (vkCreateImageView(sDevice, &create_info, nullptr, &mSwapChainImageViews[idx]) != VK_SUCCESS) {
+      ARIA_CORE_ERROR("Failed to create image views")
+    }
   }
 }
 
@@ -550,6 +570,9 @@ VkExtent2D VulkanRendererAPI::get_swap_extent(const VkSurfaceCapabilitiesKHR& ca
 }
 
 void VulkanRendererAPI::cleanup() {
+  for (auto view : mSwapChainImageViews) {
+    vkDestroyImageView(sDevice, view, nullptr);
+  }
   vkDestroySwapchainKHR(sDevice, mSwapChain, nullptr);
   vkDestroyDevice(sDevice, nullptr);
 
