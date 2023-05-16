@@ -97,7 +97,7 @@ void VulkanRendererAPI::create_instance() {
   // vkGetInstanceProcAddr() func
 
   if (vkCreateInstance(&create_info, nullptr, &sInstance) != VK_SUCCESS) {
-    // ARIA_CORE_ERROR("Failed to create vulkan instance")
+    ARIA_CORE_ERROR("Failed to create vulkan instance")
   }
 }
 
