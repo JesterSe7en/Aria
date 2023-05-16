@@ -11,6 +11,7 @@
 #include "vulkan/vulkan_core.h"
 
 #include <fileapi.h>
+#include <stdint.h>
 
 #include <array>
 #include <set>
@@ -63,7 +64,7 @@ void VulkanRendererAPI::create_instance() {
   create_info.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
   create_info.pApplicationInfo = &app_info;
 
-  std::vector<const char*> extensions = get_required_extensions();
+  std::vector<const char*> extensions = get_glfw_required_extensions();
 
   create_info.enabledExtensionCount = extensions.size();
   create_info.ppEnabledExtensionNames = extensions.data();
@@ -184,10 +185,10 @@ void VulkanRendererAPI::pick_physical_device() {
 }
 
 void VulkanRendererAPI::create_logical_device() {
-  QueryFamilyIndicies indices = find_queue_families(mPhysicalDevice);
+  QueryFamilyIndicies indices = query_queue_families(mPhysicalDevice);
 
   std::vector<VkDeviceQueueCreateInfo> queue_create_infos;
-  std::set<uint32_t> uniqueQueueFamilies = {indices.mGraphicsFamily.value(), indices.mPresentFamily.value()};
+  std::set<uint32_t> uniqueQueueFamilies = {indices.graphicsFamily.value(), indices.presentFamily.value()};
 
   float queuePriority = 1.0f;
   for (uint32_t queueFamily : uniqueQueueFamilies) {
@@ -207,7 +208,12 @@ void VulkanRendererAPI::create_logical_device() {
   VkPhysicalDeviceFeatures deviceFeatures{};
   create_info.pEnabledFeatures = &deviceFeatures;
 
-  create_info.enabledExtensionCount = 0;
+  if (check_device_extensions_support(mPhysicalDevice)) {
+    create_info.ppEnabledExtensionNames = mDeviceExtensions.data();
+    create_info.enabledExtensionCount = static_cast<uint32_t>(mDeviceExtensions.size());
+  } else {
+    create_info.enabledExtensionCount = 0;
+  }
 
   if (enable_validation_layers) {
     create_info.enabledLayerCount = static_cast<uint32_t>(mValidationLayers.size());
@@ -220,8 +226,8 @@ void VulkanRendererAPI::create_logical_device() {
     ARIA_CORE_ERROR("Cannot create logical device")
   }
 
-  vkGetDeviceQueue(sDevice, indices.mGraphicsFamily.value(), 0, &mGraphicsQueue);
-  vkGetDeviceQueue(sDevice, indices.mPresentFamily.value(), 0, &mPresentQueue);
+  vkGetDeviceQueue(sDevice, indices.graphicsFamily.value(), 0, &mGraphicsQueue);
+  vkGetDeviceQueue(sDevice, indices.presentFamily.value(), 0, &mPresentQueue);
 }
 
 bool VulkanRendererAPI::has_validation_support() const {
@@ -315,7 +321,7 @@ std::string VulkanRendererAPI::get_message_type(VkDebugUtilsMessageTypeFlagsEXT 
 }
 
 bool VulkanRendererAPI::is_suitable_vulkan_device(VkPhysicalDevice device) {
-  QueryFamilyIndicies queue_families = find_queue_families(device);
+  QueryFamilyIndicies queue_families = query_queue_families(device);
 
   return queue_families.is_complete();
 
@@ -343,7 +349,7 @@ std::string VulkanRendererAPI::get_vendor_name(uint32_t vendor_id) const {
   }
 }
 
-VulkanRendererAPI::QueryFamilyIndicies VulkanRendererAPI::find_queue_families(VkPhysicalDevice device) {
+VulkanRendererAPI::QueryFamilyIndicies VulkanRendererAPI::query_queue_families(VkPhysicalDevice device) {
   QueryFamilyIndicies indicies;
 
   uint32_t query_family_count = 0;
@@ -361,11 +367,11 @@ VulkanRendererAPI::QueryFamilyIndicies VulkanRendererAPI::find_queue_families(Vk
     vkGetPhysicalDeviceSurfaceSupportKHR(device, i, mSurface, &surface_supported);
 
     if (surface_supported) {
-      indicies.mPresentFamily = i;
+      indicies.presentFamily = i;
     }
 
     if (queueFamily.queueFlags & VK_QUEUE_GRAPHICS_BIT) {
-      indicies.mGraphicsFamily = i;
+      indicies.graphicsFamily = i;
     }
 
     if (indicies.is_complete()) {
@@ -376,7 +382,22 @@ VulkanRendererAPI::QueryFamilyIndicies VulkanRendererAPI::find_queue_families(Vk
   return indicies;
 }
 
-std::vector<const char*> VulkanRendererAPI::get_required_extensions() {
+VulkanRendererAPI::SwapChainDetails VulkanRendererAPI::query_swap_chain_support(VkPhysicalDevice device) {
+  SwapChainDetails details;
+  vkGetPhysicalDeviceSurfaceCapabilitiesKHR(mPhysicalDevice, mSurface, &details.capabilities);
+
+  uint32_t formatCount;
+  vkGetPhysicalDeviceSurfaceFormatsKHR(mPhysicalDevice, mSurface, &formatCount, nullptr);
+
+  if (formatCount) {
+    details.formats.resize(formatCount);
+    vkGetPhysicalDeviceSurfaceFormatsKHR(mPhysicalDevice, mSurface, &formatCount, details.formats.data());
+  }
+
+  return details;
+}
+
+std::vector<const char*> VulkanRendererAPI::get_glfw_required_extensions() {
   uint32_t glfwExtensionCount = 0;
   const char** glfwExtensions;
   glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
@@ -388,6 +409,21 @@ std::vector<const char*> VulkanRendererAPI::get_required_extensions() {
   }
 
   return extensions;
+}
+
+bool VulkanRendererAPI::check_device_extensions_support(VkPhysicalDevice device) {
+  uint32_t count;
+  vkEnumerateDeviceExtensionProperties(mPhysicalDevice, nullptr, &count, nullptr);
+
+  std::vector<VkExtensionProperties> extensions(count);
+  vkEnumerateDeviceExtensionProperties(mPhysicalDevice, nullptr, &count, extensions.data());
+
+  std::set<std::string> required_extensions(mDeviceExtensions.begin(), mDeviceExtensions.end());
+
+  for (const auto& extension : extensions) {
+    required_extensions.erase(extension.extensionName);
+  }
+  return required_extensions.empty();
 }
 
 }  // namespace ARIA

@@ -8,6 +8,7 @@
 
 #include <glm/glm.hpp>
 #include <optional>
+#include <vector>
 
 namespace ARIA {
 class VulkanRendererAPI : public RendererAPI {
@@ -28,10 +29,17 @@ class VulkanRendererAPI : public RendererAPI {
 
  private:
   struct QueryFamilyIndicies {
-    std::optional<uint32_t> mGraphicsFamily;
-    std::optional<uint32_t> mPresentFamily;
-    bool is_complete() const { return mGraphicsFamily.has_value() && mPresentFamily.has_value(); }
+    std::optional<uint32_t> graphicsFamily;
+    std::optional<uint32_t> presentFamily;
+    bool is_complete() const { return graphicsFamily.has_value() && presentFamily.has_value(); }
   };
+
+  struct SwapChainDetails {
+    VkSurfaceCapabilitiesKHR capabilities;
+    std::vector<VkSurfaceFormatKHR> formats;
+    std::vector<VkPresentModeKHR> presentModes;
+  };
+
   static VkInstance sInstance;
   static VkDevice sDevice;
 
@@ -41,7 +49,9 @@ class VulkanRendererAPI : public RendererAPI {
   VkQueue mPresentQueue;
   VkQueue mGraphicsQueue;
   VkSurfaceKHR mSurface;
+
   const std::vector<const char*> mValidationLayers = {"VK_LAYER_KHRONOS_validation"};
+  const std::vector<const char*> mDeviceExtensions = {"VK_KHR_swapchain"};
 
   void create_instance();
   void setup_vulkan_debug_messenger();
@@ -61,7 +71,9 @@ class VulkanRendererAPI : public RendererAPI {
   static std::string get_message_type(VkDebugUtilsMessageTypeFlagsEXT message_type);
   bool is_suitable_vulkan_device(VkPhysicalDevice device);
   std::string get_vendor_name(uint32_t vendor_id) const;
-  QueryFamilyIndicies find_queue_families(VkPhysicalDevice device);
-  std::vector<const char*> get_required_extensions();
+  QueryFamilyIndicies query_queue_families(VkPhysicalDevice device);
+  SwapChainDetails query_swap_chain_support(VkPhysicalDevice device);
+  std::vector<const char*> get_glfw_required_extensions();
+  bool check_device_extensions_support(VkPhysicalDevice device);
 };
 }  // namespace ARIA
