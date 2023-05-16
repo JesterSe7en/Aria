@@ -44,12 +44,10 @@ Application::Application(ApplicationProps &props) {
 void Application::init_vulkan_app() {
   // TODO: ordering for creating window and initializing renderer is different than opengl for vulkan
   mWindow = std::unique_ptr<Window>(Window::create());
-  Renderer::init();
-
-  mWindow->create_window();
-
   mWindow->set_vsync(false);
   mWindow->set_event_callback(ARIA_BIND_EVENT_FN(Application::on_event));
+  Renderer::init();
+
   mImGuiLayer = new ImGuiLayer();
   push_overlay(mImGuiLayer);
 }

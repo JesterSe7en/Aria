@@ -19,7 +19,6 @@ VulkanWindow::VulkanWindow(const WindowProps& props) {
   window_data.height = props.mHeight;
   window_data.width = props.mWidth;
   init();
-  VulkanWindow::create_window();
 }
 
 void VulkanWindow::on_update() { glfwPollEvents(); }
@@ -38,6 +37,7 @@ void VulkanWindow::init() {
     glfw_initalized = !glfw_initalized;
   }
   glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+  create_window();
 }
 
 void VulkanWindow::create_window() {
