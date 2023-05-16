@@ -283,6 +283,21 @@ void VulkanRendererAPI::create_swap_chain() {
   if (vkCreateSwapchainKHR(sDevice, &create_info, nullptr, &mSwapChain) != VK_SUCCESS) {
     ARIA_CORE_ERROR("Cannot create swap chain")
   }
+
+  vkGetSwapchainImagesKHR(sDevice, mSwapChain, &image_count, nullptr);
+  mSwapChainImages.resize(image_count);
+  vkGetSwapchainImagesKHR(sDevice, mSwapChain, &image_count, mSwapChainImages.data());
+
+  mSwapChainFormat = surface_format.format;
+  mSwapChainExtent = extent;
+}
+
+void VulkanRendererAPI::create_image_views() {
+  mSwapChainImageViews.resize(mSwapChainImages.size());
+
+  for (size_t idx = 0; idx < mSwapChainImages.size(); idx++) {
+    VkImageViewCreateInfo create_info;
+  }
 }
 
 bool VulkanRendererAPI::has_validation_support() const {
