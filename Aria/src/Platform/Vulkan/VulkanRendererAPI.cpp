@@ -323,7 +323,13 @@ std::string VulkanRendererAPI::get_message_type(VkDebugUtilsMessageTypeFlagsEXT 
 bool VulkanRendererAPI::is_suitable_vulkan_device(VkPhysicalDevice device) {
   QueryFamilyIndicies queue_families = query_queue_families(device);
 
-  return queue_families.is_complete();
+  bool swap_chain_supported = false;
+  if (check_device_extensions_support(device)) {
+    SwapChainDetails details = query_swap_chain_support(device);
+    swap_chain_supported = !details.formats.empty() && !details.presentModes.empty();
+  }
+
+  return queue_families.is_complete() && swap_chain_supported;
 
   // VkPhysicalDeviceProperties properties;
   // vkGetPhysicalDeviceProperties(device, &properties);
@@ -384,14 +390,20 @@ VulkanRendererAPI::QueryFamilyIndicies VulkanRendererAPI::query_queue_families(V
 
 VulkanRendererAPI::SwapChainDetails VulkanRendererAPI::query_swap_chain_support(VkPhysicalDevice device) {
   SwapChainDetails details;
-  vkGetPhysicalDeviceSurfaceCapabilitiesKHR(mPhysicalDevice, mSurface, &details.capabilities);
+  vkGetPhysicalDeviceSurfaceCapabilitiesKHR(device, mSurface, &details.capabilities);
 
   uint32_t formatCount;
-  vkGetPhysicalDeviceSurfaceFormatsKHR(mPhysicalDevice, mSurface, &formatCount, nullptr);
-
+  vkGetPhysicalDeviceSurfaceFormatsKHR(device, mSurface, &formatCount, nullptr);
   if (formatCount) {
     details.formats.resize(formatCount);
-    vkGetPhysicalDeviceSurfaceFormatsKHR(mPhysicalDevice, mSurface, &formatCount, details.formats.data());
+    vkGetPhysicalDeviceSurfaceFormatsKHR(device, mSurface, &formatCount, details.formats.data());
+  }
+
+  uint32_t presentCount;
+  vkGetPhysicalDeviceSurfacePresentModesKHR(device, mSurface, &presentCount, nullptr);
+  if (presentCount) {
+    details.presentModes.resize(presentCount);
+    vkGetPhysicalDeviceSurfacePresentModesKHR(device, mSurface, &presentCount, details.presentModes.data());
   }
 
   return details;
@@ -413,10 +425,10 @@ std::vector<const char*> VulkanRendererAPI::get_glfw_required_extensions() {
 
 bool VulkanRendererAPI::check_device_extensions_support(VkPhysicalDevice device) {
   uint32_t count;
-  vkEnumerateDeviceExtensionProperties(mPhysicalDevice, nullptr, &count, nullptr);
+  vkEnumerateDeviceExtensionProperties(device, nullptr, &count, nullptr);
 
   std::vector<VkExtensionProperties> extensions(count);
-  vkEnumerateDeviceExtensionProperties(mPhysicalDevice, nullptr, &count, extensions.data());
+  vkEnumerateDeviceExtensionProperties(device, nullptr, &count, extensions.data());
 
   std::set<std::string> required_extensions(mDeviceExtensions.begin(), mDeviceExtensions.end());
 
