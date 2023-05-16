@@ -13,6 +13,7 @@
 #include <fileapi.h>
 
 #include <array>
+#include <set>
 #include <vector>
 
 namespace ARIA {
@@ -183,26 +184,31 @@ void VulkanRendererAPI::pick_physical_device() {
 }
 
 void VulkanRendererAPI::create_logical_device() {
-  auto queue_families = find_queue_families(mPhysicalDevice);
+  QueryFamilyIndicies indices = find_queue_families(mPhysicalDevice);
 
-  VkDeviceQueueCreateInfo queue_create_info;
-  queue_create_info.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
-  queue_create_info.queueFamilyIndex = queue_families.mGraphicsFamily.value();
-  queue_create_info.queueCount = 1;
-  queue_create_info.pQueuePriorities = nullptr;  // use same, default priority
+  std::vector<VkDeviceQueueCreateInfo> queue_create_infos;
+  std::set<uint32_t> uniqueQueueFamilies = {indices.mGraphicsFamily.value(), indices.mPresentFamily.value()};
 
-  // use zero optional features of physical device for now
-  VkPhysicalDeviceFeatures device_features{};
-  // can query and use all optional features with this...
-  // vkGetPhysicalDeviceFeatures(mPhysicalDevice, &device_features);
+  float queuePriority = 1.0f;
+  for (uint32_t queueFamily : uniqueQueueFamilies) {
+    VkDeviceQueueCreateInfo queue_create_info{};
+    queue_create_info.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
+    queue_create_info.queueFamilyIndex = queueFamily;
+    queue_create_info.queueCount = 1;
+    queue_create_info.pQueuePriorities = &queuePriority;
+    queue_create_infos.push_back(queue_create_info);
+  }
 
-  VkDeviceCreateInfo create_info;
+  VkDeviceCreateInfo create_info{};
   create_info.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
-  create_info.pQueueCreateInfos = &queue_create_info;
-  create_info.queueCreateInfoCount = 1;
-  create_info.pEnabledFeatures = &device_features;
+  create_info.queueCreateInfoCount = static_cast<uint32_t>(queue_create_infos.size());
+  create_info.pQueueCreateInfos = queue_create_infos.data();
+
+  VkPhysicalDeviceFeatures deviceFeatures{};
+  create_info.pEnabledFeatures = &deviceFeatures;
 
   create_info.enabledExtensionCount = 0;
+
   if (enable_validation_layers) {
     create_info.enabledLayerCount = static_cast<uint32_t>(mValidationLayers.size());
     create_info.ppEnabledLayerNames = mValidationLayers.data();
@@ -211,10 +217,11 @@ void VulkanRendererAPI::create_logical_device() {
   }
 
   if (vkCreateDevice(mPhysicalDevice, &create_info, nullptr, &sDevice) != VK_SUCCESS) {
-    ARIA_CORE_ERROR("Failed to create logical device")
+    ARIA_CORE_ERROR("Cannot create logical device")
   }
 
-  // vkGetDeviceQueue(mLogicalDevice, queue_families.mGraphicsFamily.value(), 0, &mGraphicsQueue);
+  vkGetDeviceQueue(sDevice, indices.mGraphicsFamily.value(), 0, &mGraphicsQueue);
+  vkGetDeviceQueue(sDevice, indices.mPresentFamily.value(), 0, &mPresentQueue);
 }
 
 bool VulkanRendererAPI::has_validation_support() const {
@@ -338,7 +345,6 @@ std::string VulkanRendererAPI::get_vendor_name(uint32_t vendor_id) const {
 
 VulkanRendererAPI::QueryFamilyIndicies VulkanRendererAPI::find_queue_families(VkPhysicalDevice device) {
   QueryFamilyIndicies indicies;
-  auto glfw_window = Application::get().get_window().get_native_window();
 
   uint32_t query_family_count = 0;
   vkGetPhysicalDeviceQueueFamilyProperties(device, &query_family_count, nullptr);
@@ -352,7 +358,7 @@ VulkanRendererAPI::QueryFamilyIndicies VulkanRendererAPI::find_queue_families(Vk
 
   for (const auto& queueFamily : query_families) {
     VkBool32 surface_supported = false;
-    vkGetPhysicalDeviceSurfaceSupportKHR(mPhysicalDevice, i, mSurface, &surface_supported);
+    vkGetPhysicalDeviceSurfaceSupportKHR(device, i, mSurface, &surface_supported);
 
     if (surface_supported) {
       indicies.mPresentFamily = i;

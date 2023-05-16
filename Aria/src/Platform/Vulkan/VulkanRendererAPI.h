@@ -38,6 +38,7 @@ class VulkanRendererAPI : public RendererAPI {
   VkDebugUtilsMessengerEXT mDebugMessenger;
   VkPhysicalDevice mPhysicalDevice = VK_NULL_HANDLE;
   VkDevice mLogicalDevice = VK_NULL_HANDLE;
+  VkQueue mPresentQueue;
   VkQueue mGraphicsQueue;
   VkSurfaceKHR mSurface;
   const std::vector<const char*> mValidationLayers = {"VK_LAYER_KHRONOS_validation"};
