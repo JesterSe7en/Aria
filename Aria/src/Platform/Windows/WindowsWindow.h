@@ -3,8 +3,6 @@
 #include "Aria/Core/Window.h"
 #include "Aria/Renderer/GraphicsContext.h"
 
-#include <stdint.h>
-
 struct GLFWwindow;
 
 namespace ARIA {

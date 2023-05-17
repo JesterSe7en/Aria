@@ -87,7 +87,7 @@ void VulkanRendererAPI::create_instance() {
   }
 
   // query the supported instance extensions
-  // uint32_t numInstanceExtensions = 0;
+  // std::uint32_t numInstanceExtensions = 0;
   // std::vector<VkExtensionProperties> instanceExtensionProperties;
   // Query the instance extensions.
   // vkEnumerateInstanceExtensionProperties(nullptr, &numInstanceExtensions, nullptr);
@@ -116,7 +116,7 @@ void VulkanRendererAPI::setup_vulkan_debug_messenger() {
   populate_debug_create_info(create_info);
 
   if (create_debug_util_messenger_ext(sInstance, &create_info, nullptr, &mDebugMessenger) != VK_SUCCESS) {
-    ARIA_CORE_WARN("Cannot setup debug messenger; debug messenger extention not available")
+    ARIA_CORE_WARN("Cannot setup debug messenger; debug messenger extension not available")
   }
 }
 
@@ -130,7 +130,7 @@ void VulkanRendererAPI::create_presentation_surface() {
 }
 
 void VulkanRendererAPI::pick_physical_device() {
-  uint32_t device_count = 0;
+  std::uint32_t device_count = 0;
   vkEnumeratePhysicalDevices(sInstance, &device_count, nullptr);
 
   // TODO: maybe error out completely?
@@ -160,7 +160,7 @@ void VulkanRendererAPI::pick_physical_device() {
   // rendering, texture compression formats, and more.
 
   // extensions
-  uint32_t extensions_count = 0;
+  std::uint32_t extensions_count = 0;
   vkEnumerateDeviceExtensionProperties(mPhysicalDevice, nullptr, &extensions_count, nullptr);
 
   std::vector<VkExtensionProperties> extensions(extensions_count);
@@ -175,7 +175,7 @@ void VulkanRendererAPI::pick_physical_device() {
   // vkGetDeviceProcAddr()
 
   // physical device layers
-  uint32_t layerCount;
+  std::uint32_t layerCount;
   vkEnumerateDeviceLayerProperties(mPhysicalDevice, &layerCount, nullptr);
 
   std::vector<VkLayerProperties> availableLayers(layerCount);
@@ -188,13 +188,13 @@ void VulkanRendererAPI::pick_physical_device() {
 }
 
 void VulkanRendererAPI::create_logical_device() {
-  QueryFamilyIndicies indices = query_queue_families(mPhysicalDevice);
+  QueryFamilyIndices indices = query_queue_families(mPhysicalDevice);
 
   std::vector<VkDeviceQueueCreateInfo> queue_create_infos;
-  std::set<uint32_t> uniqueQueueFamilies = {indices.graphicsFamily.value(), indices.presentFamily.value()};
+  std::set<std::uint32_t> uniqueQueueFamilies = {indices.graphicsFamily.value(), indices.presentFamily.value()};
 
   float queuePriority = 1.0f;
-  for (uint32_t queueFamily : uniqueQueueFamilies) {
+  for (std::uint32_t queueFamily : uniqueQueueFamilies) {
     VkDeviceQueueCreateInfo queue_create_info{};
     queue_create_info.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
     queue_create_info.queueFamilyIndex = queueFamily;
@@ -205,7 +205,7 @@ void VulkanRendererAPI::create_logical_device() {
 
   VkDeviceCreateInfo create_info{};
   create_info.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
-  create_info.queueCreateInfoCount = static_cast<uint32_t>(queue_create_infos.size());
+  create_info.queueCreateInfoCount = static_cast<std::uint32_t>(queue_create_infos.size());
   create_info.pQueueCreateInfos = queue_create_infos.data();
 
   VkPhysicalDeviceFeatures deviceFeatures{};
@@ -213,13 +213,13 @@ void VulkanRendererAPI::create_logical_device() {
 
   if (check_device_extensions_support(mPhysicalDevice)) {
     create_info.ppEnabledExtensionNames = mDeviceExtensions.data();
-    create_info.enabledExtensionCount = static_cast<uint32_t>(mDeviceExtensions.size());
+    create_info.enabledExtensionCount = static_cast<std::uint32_t>(mDeviceExtensions.size());
   } else {
     create_info.enabledExtensionCount = 0;
   }
 
   if (enable_validation_layers) {
-    create_info.enabledLayerCount = static_cast<uint32_t>(mValidationLayers.size());
+    create_info.enabledLayerCount = static_cast<std::uint32_t>(mValidationLayers.size());
     create_info.ppEnabledLayerNames = mValidationLayers.data();
   } else {
     create_info.enabledLayerCount = 0;
@@ -240,7 +240,7 @@ void VulkanRendererAPI::create_swap_chain() {
   VkPresentModeKHR present_mode = get_present_mode(details.presentModes);
   VkExtent2D extent = get_swap_extent(details.capabilities);
 
-  uint32_t image_count = details.capabilities.minImageCount + 1;
+  std::uint32_t image_count = details.capabilities.minImageCount + 1;
   if (details.capabilities.maxImageCount > 0 && image_count > details.capabilities.maxImageCount) {
     image_count = details.capabilities.maxImageCount;
   }
@@ -257,13 +257,13 @@ void VulkanRendererAPI::create_swap_chain() {
   create_info.imageArrayLayers = 1;
   create_info.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
 
-  VulkanRendererAPI::QueryFamilyIndicies indicies = query_queue_families(mPhysicalDevice);
-  uint32_t queue_family_indicies[] = {indicies.graphicsFamily.value(), indicies.presentFamily.value()};
+  VulkanRendererAPI::QueryFamilyIndices indices = query_queue_families(mPhysicalDevice);
+  std::array<std::uint32_t, 2> queue_family_indices = {indices.graphicsFamily.value(), indices.presentFamily.value()};
 
-  if (indicies.graphicsFamily != indicies.presentFamily) {
+  if (indices.graphicsFamily != indices.presentFamily) {
     create_info.imageSharingMode = VK_SHARING_MODE_CONCURRENT;
-    create_info.queueFamilyIndexCount = 3;
-    create_info.pQueueFamilyIndices = queue_family_indicies;
+    create_info.queueFamilyIndexCount = 2;
+    create_info.pQueueFamilyIndices = queue_family_indices.data();
   } else {
     create_info.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
     create_info.queueFamilyIndexCount = 0;
@@ -500,7 +500,7 @@ void VulkanRendererAPI::create_graphics_pipeline() {
 
 bool VulkanRendererAPI::has_validation_support() const {
   // how many instance layers can the vulkan system support?
-  uint32_t layerCount;
+  std::uint32_t layerCount;
   vkEnumerateInstanceLayerProperties(&layerCount, nullptr);
 
   std::vector<VkLayerProperties> availableLayers(layerCount);
@@ -589,7 +589,7 @@ std::string VulkanRendererAPI::get_message_type(VkDebugUtilsMessageTypeFlagsEXT 
 }
 
 bool VulkanRendererAPI::is_suitable_vulkan_device(VkPhysicalDevice device) {
-  QueryFamilyIndicies queue_families = query_queue_families(device);
+  QueryFamilyIndices queue_families = query_queue_families(device);
 
   bool swap_chain_supported = false;
   if (check_device_extensions_support(device)) {
@@ -610,7 +610,7 @@ bool VulkanRendererAPI::is_suitable_vulkan_device(VkPhysicalDevice device) {
   // return properties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU && features.geometryShader;
 }
 
-std::string VulkanRendererAPI::get_vendor_name(uint32_t vendor_id) const {
+std::string VulkanRendererAPI::get_vendor_name(std::uint32_t vendor_id) const {
   switch (vendor_id) {
     case 0x10DE:
       return "NVIDIA";
@@ -623,10 +623,10 @@ std::string VulkanRendererAPI::get_vendor_name(uint32_t vendor_id) const {
   }
 }
 
-VulkanRendererAPI::QueryFamilyIndicies VulkanRendererAPI::query_queue_families(VkPhysicalDevice device) {
-  QueryFamilyIndicies indicies;
+VulkanRendererAPI::QueryFamilyIndices VulkanRendererAPI::query_queue_families(VkPhysicalDevice device) {
+  QueryFamilyIndices indices;
 
-  uint32_t query_family_count = 0;
+  std::uint32_t query_family_count = 0;
   vkGetPhysicalDeviceQueueFamilyProperties(device, &query_family_count, nullptr);
 
   std::vector<VkQueueFamilyProperties> query_families(query_family_count);
@@ -641,33 +641,33 @@ VulkanRendererAPI::QueryFamilyIndicies VulkanRendererAPI::query_queue_families(V
     vkGetPhysicalDeviceSurfaceSupportKHR(device, i, mSurface, &surface_supported);
 
     if (surface_supported) {
-      indicies.presentFamily = i;
+      indices.presentFamily = i;
     }
 
     if (queueFamily.queueFlags & VK_QUEUE_GRAPHICS_BIT) {
-      indicies.graphicsFamily = i;
+      indices.graphicsFamily = i;
     }
 
-    if (indicies.is_complete()) {
+    if (indices.is_complete()) {
       break;
     }
     i++;
   }
-  return indicies;
+  return indices;
 }
 
 VulkanRendererAPI::SwapChainDetails VulkanRendererAPI::query_swap_chain_support(VkPhysicalDevice device) {
   SwapChainDetails details;
   vkGetPhysicalDeviceSurfaceCapabilitiesKHR(device, mSurface, &details.capabilities);
 
-  uint32_t formatCount;
+  std::uint32_t formatCount;
   vkGetPhysicalDeviceSurfaceFormatsKHR(device, mSurface, &formatCount, nullptr);
   if (formatCount) {
     details.formats.resize(formatCount);
     vkGetPhysicalDeviceSurfaceFormatsKHR(device, mSurface, &formatCount, details.formats.data());
   }
 
-  uint32_t presentCount;
+  std::uint32_t presentCount;
   vkGetPhysicalDeviceSurfacePresentModesKHR(device, mSurface, &presentCount, nullptr);
   if (presentCount) {
     details.presentModes.resize(presentCount);
@@ -678,7 +678,7 @@ VulkanRendererAPI::SwapChainDetails VulkanRendererAPI::query_swap_chain_support(
 }
 
 std::vector<const char*> VulkanRendererAPI::get_glfw_required_extensions() {
-  uint32_t glfwExtensionCount = 0;
+  std::uint32_t glfwExtensionCount = 0;
   const char** glfwExtensions;
   glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
 
@@ -692,7 +692,7 @@ std::vector<const char*> VulkanRendererAPI::get_glfw_required_extensions() {
 }
 
 bool VulkanRendererAPI::check_device_extensions_support(VkPhysicalDevice device) {
-  uint32_t count;
+  std::uint32_t count;
   vkEnumerateDeviceExtensionProperties(device, nullptr, &count, nullptr);
 
   std::vector<VkExtensionProperties> extensions(count);
@@ -723,22 +723,22 @@ VkPresentModeKHR VulkanRendererAPI::get_present_mode(const std::vector<VkPresent
       return mode;
     }
   }
-  // Only guarenteed this mode
-  // vkspec v1.3 pg 2717
+  // Only guaranteed this mode
+  // vulkan spec v1.3 pg 2717
   return VK_PRESENT_MODE_FIFO_KHR;
 }
 
 VkExtent2D VulkanRendererAPI::get_swap_extent(const VkSurfaceCapabilitiesKHR& capabilities) {
-  if (capabilities.currentExtent.width != std::numeric_limits<uint32_t>::max()) {
+  if (capabilities.currentExtent.width != std::numeric_limits<std::uint32_t>::max()) {
     return capabilities.currentExtent;
   } else {
-    GLFWwindow* glfw_window = (GLFWwindow*)Application::get().get_window().get_native_window();
+    auto* glfw_window = (GLFWwindow*)Application::get().get_window().get_native_window();
     int width;
     int height;
 
     glfwGetFramebufferSize(glfw_window, &width, &height);
 
-    VkExtent2D extent = {static_cast<uint32_t>(width), static_cast<uint32_t>(height)};
+    VkExtent2D extent = {static_cast<std::uint32_t>(width), static_cast<std::uint32_t>(height)};
 
     extent.width = std::clamp(extent.width, capabilities.minImageExtent.width, capabilities.maxImageExtent.width);
     extent.height = std::clamp(extent.height, capabilities.minImageExtent.height, capabilities.maxImageExtent.height);

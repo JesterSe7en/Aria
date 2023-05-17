@@ -7,7 +7,6 @@
 #include "Aria/Events/ApplicationEvent.h"
 #include "Aria/Events/KeyEvent.h"
 #include "Aria/Events/MouseEvent.h"
-#include "Platform/Vulkan/VulkanRendererAPI.h"
 
 namespace ARIA {
 

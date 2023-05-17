@@ -3,7 +3,7 @@
 #include "Aria/Renderer/Shader.h"
 #include "vulkan/vulkan_core.h"
 
-#include <stdint.h>
+#include <cstdint>
 
 namespace ARIA {
 class VulkanShader : public Shader {

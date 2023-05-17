@@ -1,4 +1,3 @@
-#include <stdint.h>
 #include "Aria/Renderer/RendererAPI.h"
 #include "Platform/Windows/WindowsWindow.h"
 #include "ariapch.h"
@@ -11,10 +10,7 @@
 #include "Aria/Events/MouseEvent.h"
 #include "Platform/OpenGL/OpenGLContext.h"
 
-#include "WindowsWindow.h"
-
 #include <GLFW/glfw3.h>
-#include <stdio.h>
 
 namespace ARIA {
 

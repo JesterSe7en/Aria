@@ -4,7 +4,7 @@
 #include "vulkan/vk_platform.h"
 #include "vulkan/vulkan_core.h"
 
-#include <stdint.h>
+#include <cstdint>
 
 #include <glm/glm.hpp>
 #include <optional>
@@ -28,9 +28,9 @@ class VulkanRendererAPI : public RendererAPI {
   static VkDevice get_vk_device() { return sDevice; }
 
  private:
-  struct QueryFamilyIndicies {
-    std::optional<uint32_t> graphicsFamily;
-    std::optional<uint32_t> presentFamily;
+  struct QueryFamilyIndices {
+    std::optional<std::uint32_t> graphicsFamily;
+    std::optional<std::uint32_t> presentFamily;
     bool is_complete() const { return graphicsFamily.has_value() && presentFamily.has_value(); }
   };
 
@@ -45,7 +45,6 @@ class VulkanRendererAPI : public RendererAPI {
 
   VkDebugUtilsMessengerEXT mDebugMessenger;
   VkPhysicalDevice mPhysicalDevice = VK_NULL_HANDLE;
-  VkDevice mLogicalDevice = VK_NULL_HANDLE;
   VkQueue mPresentQueue;
   VkQueue mGraphicsQueue;
   VkSurfaceKHR mSurface;
@@ -84,7 +83,7 @@ class VulkanRendererAPI : public RendererAPI {
   static std::string get_message_type(VkDebugUtilsMessageTypeFlagsEXT message_type);
   bool is_suitable_vulkan_device(VkPhysicalDevice device);
   std::string get_vendor_name(uint32_t vendor_id) const;
-  QueryFamilyIndicies query_queue_families(VkPhysicalDevice device);
+  QueryFamilyIndices query_queue_families(VkPhysicalDevice device);
   SwapChainDetails query_swap_chain_support(VkPhysicalDevice device);
   std::vector<const char*> get_glfw_required_extensions();
   bool check_device_extensions_support(VkPhysicalDevice device);

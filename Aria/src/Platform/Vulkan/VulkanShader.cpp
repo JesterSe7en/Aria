@@ -2,10 +2,6 @@
 
 #include "Aria/Core/Log.h"
 #include "Platform/Vulkan/VulkanRendererAPI.h"
-#include "Platform/Vulkan/VulkanShader.h"
-
-#include <stdint.h>
-#include <vcruntime.h>
 
 #include <filesystem>
 
