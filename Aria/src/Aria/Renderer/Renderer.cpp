@@ -1,10 +1,10 @@
-#include "Aria/Renderer/RenderCommand.h"
-#include "Aria/Renderer/RendererAPI.h"
 #include "ariapch.h"
 
-#include "Platform/OpenGL/OpenGLShader.h"
-
 #include "Renderer.h"
+
+#include "Aria/Renderer/RenderCommand.h"
+#include "Aria/Renderer/RendererAPI.h"
+#include "Platform/OpenGL/OpenGLShader.h"
 #include "RenderCommand.h"
 #include "Shader.h"
 
@@ -24,4 +24,6 @@ void Renderer::submit(const Ref<Shader>& shader, const Ref<VertexArray>& vertex_
   vertex_array->bind();
   RenderCommand::draw_indexed(vertex_array);
 }
+
+void Renderer::create_pipeline() { RenderCommand::create_pipeline(); }
 }  // namespace ARIA

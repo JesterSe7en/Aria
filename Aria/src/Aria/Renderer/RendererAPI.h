@@ -1,8 +1,8 @@
 #pragma once
 
-#include <glm/glm.hpp>
-
 #include "Aria/Renderer/VertexArray.h"
+
+#include <glm/glm.hpp>
 
 namespace ARIA {
 class RendererAPI {
@@ -24,6 +24,8 @@ class RendererAPI {
   static API get_api() { return sAPI; }
   static void set_api(API api);
   static API create();
+
+  virtual void create_pipeline() = 0;
 
  private:
   static API sAPI;

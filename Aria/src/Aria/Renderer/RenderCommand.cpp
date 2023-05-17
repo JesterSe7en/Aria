@@ -1,14 +1,14 @@
-#include "Aria/Renderer/RenderCommand.h"
-#include <memory>
-#include "Aria/Core/Base.h"
-#include "Aria/Renderer/RendererAPI.h"
-#include "Platform/Vulkan/VulkanRendererAPI.h"
 #include "ariapch.h"
 
+#include "Aria/Renderer/RenderCommand.h"
+
+#include "Aria/Core/Base.h"
+#include "Aria/Renderer/RendererAPI.h"
 #include "Platform/OpenGL/OpenGLRendererAPI.h"
 #include "Platform/Vulkan/VulkanRendererAPI.h"
-
 #include "RenderCommand.h"
+
+#include <memory>
 
 namespace ARIA {
 
@@ -29,4 +29,6 @@ void RenderCommand::init(RendererAPI::API api) {
 
   sRendererAPI->init();
 }
+
+void RenderCommand::create_pipeline() { sRendererAPI->create_pipeline(); }
 }  // namespace ARIA

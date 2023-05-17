@@ -1,7 +1,9 @@
 #include "VulkanShader.h"
 
 #include "Aria/Core/Log.h"
+#include "Aria/Renderer/Shader.h"
 #include "Platform/Vulkan/VulkanRendererAPI.h"
+#include "Platform/Vulkan/VulkanShader.h"
 
 #include <filesystem>
 
@@ -9,10 +11,22 @@ namespace ARIA {
 // Only accepts SPIR-V byte code...for now
 VulkanShader::VulkanShader(const std::string& file_path) {
   if (!std::filesystem::exists(file_path)) {
-    ARIA_CORE_WARN("Cannot find shader bytecode file: {0}", file_path);
+    ARIA_CORE_WARN("Cannot find shader bytecode file: {0}", file_path)
     return;
   }
   create_shader(file_path);
+  add_to_pipeline();
+}
+
+VulkanShader::VulkanShader(const std::string& file_path, ShaderType type) : mType(type) {
+  if (!std::filesystem::exists(file_path)) {
+    ARIA_CORE_WARN("Cannot find shader bytecode file: {0}", file_path)
+    return;
+  }
+
+  mName = std::filesystem::path(file_path).filename().stem().string();
+  create_shader(file_path);
+  add_to_pipeline();
 }
 
 VulkanShader::~VulkanShader() { vkDestroyShaderModule(VulkanRendererAPI::get_vk_device(), mShaderModule, nullptr); }
@@ -55,5 +69,7 @@ void VulkanShader::create_shader_module(const std::vector<char>& code) {
     ARIA_CORE_ERROR("Cannot create shader module for {0}", mName)  // TODO: more useful if file path?
   }
 }
+
+void VulkanShader::add_to_pipeline() { VulkanRendererAPI::add_to_pipeline(mShaderModule, mType); }
 
 }  // namespace ARIA

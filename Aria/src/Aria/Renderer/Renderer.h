@@ -1,13 +1,13 @@
 #pragma once
 
-#include <glm/glm.hpp>
-
 #include "Aria/Renderer/RendererAPI.h"
-#include "RendererAPI.h"
-#include "VertexArray.h"
-#include "RenderCommand.h"
 #include "Camera.h"
+#include "RenderCommand.h"
+#include "RendererAPI.h"
 #include "Shader.h"
+#include "VertexArray.h"
+
+#include <glm/glm.hpp>
 
 namespace ARIA {
 class Renderer {
@@ -19,6 +19,7 @@ class Renderer {
                      const glm::mat4 transform = glm::mat4(1.0f));
 
   inline static RendererAPI::API get_api() { return RendererAPI::get_api(); }
+  static void create_pipeline();  // This is a hack for now
 
  private:
   struct SceneData {

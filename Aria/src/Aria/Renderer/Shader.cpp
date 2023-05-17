@@ -3,6 +3,7 @@
 #include "Shader.h"
 
 #include "Aria/Core/Base.h"
+#include "Aria/Renderer/Renderer.h"
 #include "Platform/OpenGL/OpenGLShader.h"
 #include "Platform/Vulkan/VulkanShader.h"
 #include "Renderer.h"
@@ -47,6 +48,16 @@ Ref<Shader> Shader::Create(const std::string& file_path) {
   }
 }
 
+Ref<Shader> Shader::Create(const std::string& file_path, ShaderType type) {
+  switch (RendererAPI::get_api()) {
+    case RendererAPI::API::Vulkan:
+      return std::make_shared<VulkanShader>(file_path, type);
+    default:
+      ARIA_CORE_ASSERT(false, "Should not be calling this other than for vulkan... for now")
+      return nullptr;
+  }
+}
+
 void ShaderLibrary::add(const Ref<Shader>& shader) {
   auto& name = shader->get_name();
   ARIA_CORE_ASSERT(!exists(name), "Shader already exists")
@@ -60,6 +71,12 @@ void ShaderLibrary::add(const std::string& name, const Ref<Shader>& shader) {
 
 Ref<Shader> ShaderLibrary::load(const std::string& file_path) {
   auto shader = Shader::Create(file_path);
+  add(shader);
+  return shader;
+}
+
+Ref<Shader> ShaderLibrary::load(const std::string& file_path, ShaderType type) {
+  auto shader = Shader::Create(file_path, type);
   add(shader);
   return shader;
 }

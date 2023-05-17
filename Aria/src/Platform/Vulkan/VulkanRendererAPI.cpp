@@ -5,6 +5,7 @@
 #include "Aria/Core/Application.h"
 #include "Aria/Core/Base.h"
 #include "Aria/Core/Log.h"
+#include "Aria/Renderer/Shader.h"
 #include "Aria/Renderer/VertexArray.h"
 #include "GLFW/glfw3.h"
 #include "vulkan/vk_enum_string_helper.h"
@@ -27,6 +28,8 @@ const bool enable_validation_layers = true;
 
 VkInstance VulkanRendererAPI::sInstance = nullptr;
 VkDevice VulkanRendererAPI::sDevice = VK_NULL_HANDLE;
+std::vector<VkShaderModule> VulkanRendererAPI::sShaderModules = {};
+std::vector<VkPipelineShaderStageCreateInfo> VulkanRendererAPI::sShaderStages = {};
 
 VulkanRendererAPI::~VulkanRendererAPI() {
   // TODO: Need to fill this in with memory deallocation calls
@@ -41,7 +44,8 @@ void VulkanRendererAPI::init() {
   create_logical_device();
   create_swap_chain();
   create_image_views();
-  create_graphics_pipeline();
+  create_render_pass();
+  // create_graphics_pipeline();
 }
 void VulkanRendererAPI::clear() { ARIA_CORE_ASSERT(false, "Not Implemented") }
 
@@ -50,6 +54,31 @@ void VulkanRendererAPI::set_clear_color(const glm::vec4 color) { ARIA_CORE_ASSER
 void VulkanRendererAPI::draw_indexed(const Ref<VertexArray>& vertex_array) {
   ARIA_CORE_ASSERT(false, "Not Implemented")
 }
+
+void VulkanRendererAPI::add_to_pipeline(VkShaderModule& shader_module, ShaderType type) {
+  VkPipelineShaderStageCreateInfo create_info;
+  create_info.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+  create_info.flags = 0;
+  create_info.pNext = nullptr;
+
+  switch (type) {
+    case ShaderType::VERTEX:
+      create_info.stage = VK_SHADER_STAGE_VERTEX_BIT;
+      break;
+    case ShaderType::FRAGMENT:
+      create_info.stage = VK_SHADER_STAGE_FRAGMENT_BIT;
+      break;
+    default:
+      ARIA_CORE_ASSERT(false, "Unknown shader type; cannot create VkShaderModule")
+      break;
+  }
+  create_info.module = shader_module;
+  create_info.pName = "main";
+  create_info.pSpecializationInfo = nullptr;
+  sShaderStages.push_back(create_info);
+}
+
+void VulkanRendererAPI::create_pipeline() { create_graphics_pipeline(); }
 
 void VulkanRendererAPI::create_instance() {
   if (enable_validation_layers && !has_validation_support()) {
@@ -344,33 +373,43 @@ void VulkanRendererAPI::create_render_pass() {
   subpass.colorAttachmentCount = 1;
   subpass.pColorAttachments = &color_attachment_ref;
 
-  VkRenderPassCreateInfo render_pass_info;
+  VkRenderPassCreateInfo render_pass_info{};
   render_pass_info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
-  render_pass_info.pNext = nullptr;
-  render_pass_info.flags = 0;
   render_pass_info.attachmentCount = 1;
   render_pass_info.pAttachments = &color_attachment;
   render_pass_info.subpassCount = 1;
   render_pass_info.pSubpasses = &subpass;
+
+  VkResult result = vkCreateRenderPass(sDevice, &render_pass_info, nullptr, &mRenderPass);
+  if (result != VK_SUCCESS) {
+    ARIA_CORE_ERROR("Failed to create render pass - {0}", string_VkResult(result))
+  }
 }
 
 void VulkanRendererAPI::create_graphics_pipeline() {
   //
 
   // ======================== Shader Create Info ========================
-  VkPipelineShaderStageCreateInfo vertex_shader_stage_info;
-  vertex_shader_stage_info.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
-  vertex_shader_stage_info.stage = VK_SHADER_STAGE_VERTEX_BIT;
-  // vertex_shader_stage_info.module = Need to grab vertex shader from ShaderLibrary in VulkanLayer
-  vertex_shader_stage_info.pName = "main";
+  // VkPipelineShaderStageCreateInfo vertex_shader_stage_info;
+  // vertex_shader_stage_info.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+  // vertex_shader_stage_info.stage = VK_SHADER_STAGE_VERTEX_BIT;
+  // // TODO: vertex_shader_stage_info.module = Need to grab vertex shader from ShaderLibrary in VulkanLayer
+  // vertex_shader_stage_info.pName = "main";
 
-  VkPipelineShaderStageCreateInfo frag_shader_stage_info;
-  frag_shader_stage_info.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
-  frag_shader_stage_info.stage = VK_SHADER_STAGE_FRAGMENT_BIT;
-  // frag_shader_stage_info.module = Need to grab frag shader from ShaderLibrary in VulkanLayer
-  frag_shader_stage_info.pName = "main";
+  // VkPipelineShaderStageCreateInfo frag_shader_stage_info;
+  // frag_shader_stage_info.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+  // frag_shader_stage_info.stage = VK_SHADER_STAGE_FRAGMENT_BIT;
+  // // TODO: frag_shader_stage_info.module = Need to grab frag shader from ShaderLibrary in VulkanLayer
+  // frag_shader_stage_info.pName = "main";
 
-  std::array<VkPipelineShaderStageCreateInfo, 2> shader_stages = {vertex_shader_stage_info, frag_shader_stage_info};
+  // std::array<VkPipelineShaderStageCreateInfo, 2> shader_stages = {vertex_shader_stage_info, frag_shader_stage_info};
+
+  // ======================== Dynamic Create Info ========================
+
+  VkPipelineDynamicStateCreateInfo dynamic_state{};
+  dynamic_state.sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
+  dynamic_state.dynamicStateCount = static_cast<uint32_t>(dynamicStates.size());
+  dynamic_state.pDynamicStates = dynamicStates.data();
 
   // ======================== Vertex Input Create Info ========================
   VkPipelineVertexInputStateCreateInfo vertex_input_state;
@@ -481,8 +520,8 @@ void VulkanRendererAPI::create_graphics_pipeline() {
 
   VkGraphicsPipelineCreateInfo pipeline_info{};
   pipeline_info.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
-  pipeline_info.stageCount = shader_stages.size();
-  pipeline_info.pStages = shader_stages.data();
+  pipeline_info.stageCount = static_cast<std::uint32_t>(sShaderStages.size());
+  pipeline_info.pStages = sShaderStages.data();
   pipeline_info.pVertexInputState = &vertex_input_state;
   pipeline_info.pInputAssemblyState = &input_assembly_state;
   pipeline_info.pViewportState = &viewport_state;
@@ -490,7 +529,7 @@ void VulkanRendererAPI::create_graphics_pipeline() {
   pipeline_info.pMultisampleState = &multisample_state_info;
   pipeline_info.pDepthStencilState = nullptr;
   pipeline_info.pColorBlendState = &color_blending;
-  // pipeline_info.pDynamicState = &dynamicState;
+  pipeline_info.pDynamicState = &dynamic_state;
 
   pipeline_info.layout = mPipelineLayout;
   pipeline_info.renderPass = mRenderPass;

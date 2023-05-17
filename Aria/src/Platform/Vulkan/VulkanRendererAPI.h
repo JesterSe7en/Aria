@@ -1,11 +1,11 @@
 #pragma once
 
 #include "Aria/Renderer/RendererAPI.h"
+#include "Aria/Renderer/Shader.h"
 #include "vulkan/vk_platform.h"
 #include "vulkan/vulkan_core.h"
 
 #include <cstdint>
-
 #include <glm/glm.hpp>
 #include <optional>
 #include <vector>
@@ -20,12 +20,16 @@ class VulkanRendererAPI : public RendererAPI {
   void set_clear_color(const glm::vec4 color) override;
   void draw_indexed(const Ref<VertexArray>& vertex_array) override;
 
+  void create_pipeline() override;
+
   static VkInstance get_vk_instance() {
     ARIA_CORE_ASSERT(VulkanRendererAPI::sInstance, "Did you initialize a Vulkan instance?")
     return sInstance;
   }
 
   static VkDevice get_vk_device() { return sDevice; }
+
+  static void add_to_pipeline(VkShaderModule& shader_module, ShaderType type);
 
  private:
   struct QueryFamilyIndices {
@@ -42,6 +46,8 @@ class VulkanRendererAPI : public RendererAPI {
 
   static VkInstance sInstance;
   static VkDevice sDevice;
+  static std::vector<VkShaderModule> sShaderModules;
+  static std::vector<VkPipelineShaderStageCreateInfo> sShaderStages;
 
   VkDebugUtilsMessengerEXT mDebugMessenger;
   VkPhysicalDevice mPhysicalDevice = VK_NULL_HANDLE;
@@ -60,6 +66,7 @@ class VulkanRendererAPI : public RendererAPI {
 
   const std::vector<const char*> mValidationLayers = {"VK_LAYER_KHRONOS_validation"};
   const std::vector<const char*> mDeviceExtensions = {"VK_KHR_swapchain"};
+  const std::vector<VkDynamicState> dynamicStates = {VK_DYNAMIC_STATE_VIEWPORT, VK_DYNAMIC_STATE_SCISSOR};
 
   void create_instance();
   void setup_vulkan_debug_messenger();
