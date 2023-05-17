@@ -18,4 +18,5 @@ class VulkanLayer : public ARIA::Layer {
  private:
   ARIA::Ref<ARIA::Shader> mVertexShader;
   ARIA::Ref<ARIA::Shader> mFragShader;
+  ARIA::ShaderLibrary mShaderLibrary;
 };

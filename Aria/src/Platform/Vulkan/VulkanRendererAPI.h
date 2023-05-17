@@ -52,6 +52,8 @@ class VulkanRendererAPI : public RendererAPI {
   VkSwapchainKHR mSwapChain;
   VkFormat mSwapChainFormat;
   VkExtent2D mSwapChainExtent;
+  VkRenderPass mRenderPass;
+  VkPipelineLayout mPipelineLayout;
 
   std::vector<VkImage> mSwapChainImages;
   std::vector<VkImageView> mSwapChainImageViews;
@@ -66,6 +68,7 @@ class VulkanRendererAPI : public RendererAPI {
   void create_logical_device();
   void create_swap_chain();
   void create_image_views();
+  void create_render_pass();
   void create_graphics_pipeline();
 
   bool has_validation_support() const;

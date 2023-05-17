@@ -5,15 +5,11 @@
 #include "Aria/Core/Application.h"
 #include "Aria/Core/Base.h"
 #include "Aria/Core/Log.h"
-#include "Aria/Renderer/RendererAPI.h"
 #include "Aria/Renderer/VertexArray.h"
 #include "GLFW/glfw3.h"
-#include "Platform/Windows/VulkanWindow.h"
-#include "VulkanRendererAPI.h"
 #include "vulkan/vulkan_core.h"
 
 #include <fileapi.h>
-#include <stdint.h>
 
 #include <array>
 #include <limits>
@@ -321,8 +317,160 @@ void VulkanRendererAPI::create_image_views() {
   }
 }
 
+void VulkanRendererAPI::create_render_pass() {
+  //
+  VkAttachmentDescription color_attachment{};
+  color_attachment.format = mSwapChainFormat;
+  color_attachment.samples = VK_SAMPLE_COUNT_1_BIT;
+  color_attachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+  color_attachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+  color_attachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+  color_attachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+  color_attachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+  color_attachment.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+
+  VkAttachmentReference color_attachment_ref{};
+  color_attachment_ref.attachment = 0;
+  color_attachment_ref.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+
+  VkSubpassDescription subpass{};
+  subpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
+  subpass.colorAttachmentCount = 1;
+  subpass.pColorAttachments = &color_attachment_ref;
+
+  VkRenderPassCreateInfo render_pass_info;
+  render_pass_info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
+  render_pass_info.pNext = nullptr;
+  render_pass_info.flags = 0;
+  render_pass_info.attachmentCount = 1;
+  render_pass_info.pAttachments = &color_attachment;
+  render_pass_info.subpassCount = 1;
+  render_pass_info.pSubpasses = &subpass;
+}
+
 void VulkanRendererAPI::create_graphics_pipeline() {
   //
+
+  // ======================== Shader Create Info ========================
+  VkPipelineShaderStageCreateInfo vertex_shader_stage_info;
+  vertex_shader_stage_info.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+  vertex_shader_stage_info.stage = VK_SHADER_STAGE_VERTEX_BIT;
+  // vertex_shader_stage_info.module = Need to grab vertex shader from ShaderLibrary in VulkanLayer
+  vertex_shader_stage_info.pName = "main";
+
+  VkPipelineShaderStageCreateInfo frag_shader_stage_info;
+  frag_shader_stage_info.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+  frag_shader_stage_info.stage = VK_SHADER_STAGE_FRAGMENT_BIT;
+  // frag_shader_stage_info.module = Need to grab frag shader from ShaderLibrary in VulkanLayer
+  frag_shader_stage_info.pName = "main";
+
+  VkPipelineShaderStageCreateInfo shader_stages[] = {vertex_shader_stage_info, frag_shader_stage_info};
+
+  // ======================== Vertex Input Create Info ========================
+  VkPipelineVertexInputStateCreateInfo vertex_input_info;
+  vertex_input_info.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
+  vertex_input_info.pNext = nullptr;
+  vertex_input_info.flags = 0;
+  vertex_input_info.vertexBindingDescriptionCount = 0;
+  vertex_input_info.pVertexBindingDescriptions = nullptr;
+  vertex_input_info.vertexAttributeDescriptionCount = 0;
+  vertex_input_info.pVertexAttributeDescriptions = nullptr;
+
+  // ======================== Input Assembly Create Info ========================
+  VkPipelineInputAssemblyStateCreateInfo input_assembly_info;
+  input_assembly_info.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
+  input_assembly_info.pNext = nullptr;
+  input_assembly_info.flags = 0;
+  input_assembly_info.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+  input_assembly_info.primitiveRestartEnable = VK_FALSE;
+
+  // ======================== Viewport ========================
+  VkViewport viewport;
+  viewport.x = viewport.y = 0.0f;
+  viewport.width = (float)mSwapChainExtent.width;
+  viewport.height = (float)mSwapChainExtent.height;
+  viewport.minDepth = 0.0f;
+  viewport.maxDepth = 1.0f;
+
+  // ======================== Scissor ========================
+  VkRect2D scissor;
+  scissor.offset = {0, 0};
+  scissor.extent = mSwapChainExtent;
+
+  // ======================== Viewport State Create Info ========================
+  VkPipelineViewportStateCreateInfo viewport_state_info;
+  viewport_state_info.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
+  viewport_state_info.pNext = nullptr;
+  viewport_state_info.flags = 0;
+  viewport_state_info.viewportCount = 1;
+  viewport_state_info.pViewports = &viewport;
+  viewport_state_info.scissorCount = 1;
+  viewport_state_info.pScissors = &scissor;
+
+  // ======================== Rasterizer Create Info ========================
+  VkPipelineRasterizationStateCreateInfo rasterizer;
+  rasterizer.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
+  rasterizer.pNext = nullptr;
+  rasterizer.flags = 0;
+  rasterizer.depthClampEnable = VK_FALSE;
+  rasterizer.polygonMode = VK_POLYGON_MODE_FILL;
+  rasterizer.lineWidth = 1.0f;
+  rasterizer.cullMode = VK_CULL_MODE_BACK_BIT;
+  rasterizer.frontFace = VK_FRONT_FACE_CLOCKWISE;
+  rasterizer.depthBiasEnable = VK_FALSE;
+  rasterizer.depthBiasConstantFactor = 0.0f;
+  rasterizer.depthBiasClamp = 0.0f;
+  rasterizer.depthBiasSlopeFactor = 0.0f;
+
+  // ======================== Multisampling Create Info ========================
+  VkPipelineMultisampleStateCreateInfo multisample_state_info;
+  multisample_state_info.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
+  multisample_state_info.pNext = nullptr;
+  multisample_state_info.flags = 0;
+  multisample_state_info.rasterizationSamples = VK_SAMPLE_COUNT_1_BIT;
+  multisample_state_info.sampleShadingEnable = VK_FALSE;
+  multisample_state_info.minSampleShading = 1.0f;
+  multisample_state_info.pSampleMask = nullptr;
+  multisample_state_info.alphaToCoverageEnable = VK_FALSE;
+  multisample_state_info.alphaToOneEnable = VK_FALSE;
+
+  // ======================== Color Blending ========================
+  VkPipelineColorBlendAttachmentState color_blend_attachment;
+  color_blend_attachment.blendEnable = VK_FALSE;
+  color_blend_attachment.srcColorBlendFactor = VK_BLEND_FACTOR_ONE;
+  color_blend_attachment.dstColorBlendFactor = VK_BLEND_FACTOR_ZERO;
+  color_blend_attachment.colorBlendOp = VK_BLEND_OP_ADD;
+  color_blend_attachment.srcAlphaBlendFactor = VK_BLEND_FACTOR_ONE;
+  color_blend_attachment.dstAlphaBlendFactor = VK_BLEND_FACTOR_ZERO;
+  color_blend_attachment.alphaBlendOp = VK_BLEND_OP_ADD;
+
+  // ======================== Color Blending ========================
+  VkPipelineColorBlendStateCreateInfo color_blending{};
+  color_blending.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
+  color_blending.pNext = nullptr;
+  color_blending.flags = 0;
+  color_blending.logicOpEnable = VK_FALSE;
+  color_blending.logicOp = VK_LOGIC_OP_COPY;
+  color_blending.attachmentCount = 1;
+  color_blending.pAttachments = &color_blend_attachment;
+  color_blending.blendConstants[0] = 0.0f;
+  color_blending.blendConstants[1] = 0.0f;
+  color_blending.blendConstants[2] = 0.0f;
+  color_blending.blendConstants[3] = 0.0f;
+
+  // ======================== Pipeline Layout Create Info ========================
+  VkPipelineLayoutCreateInfo pipeline_layout_info;
+  pipeline_layout_info.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
+  pipeline_layout_info.pNext = nullptr;
+  pipeline_layout_info.flags = 0;
+  pipeline_layout_info.setLayoutCount = 0;
+  pipeline_layout_info.pSetLayouts = nullptr;
+  pipeline_layout_info.pushConstantRangeCount = 0;
+  pipeline_layout_info.pPushConstantRanges = nullptr;
+
+  if (vkCreatePipelineLayout(sDevice, &pipeline_layout_info, nullptr, &mPipelineLayout) != VK_SUCCESS) {
+    ARIA_CORE_ERROR("Failed to create pipeline layout")
+  }
 }
 
 bool VulkanRendererAPI::has_validation_support() const {
@@ -575,6 +723,8 @@ VkExtent2D VulkanRendererAPI::get_swap_extent(const VkSurfaceCapabilitiesKHR& ca
 }
 
 void VulkanRendererAPI::cleanup() {
+  vkDestroyPipelineLayout(sDevice, mPipelineLayout, nullptr);
+  vkDestroyRenderPass(sDevice, mRenderPass, nullptr);
   for (auto view : mSwapChainImageViews) {
     vkDestroyImageView(sDevice, view, nullptr);
   }
