@@ -364,7 +364,7 @@ void VulkanRendererAPI::create_graphics_pipeline() {
   // frag_shader_stage_info.module = Need to grab frag shader from ShaderLibrary in VulkanLayer
   frag_shader_stage_info.pName = "main";
 
-  VkPipelineShaderStageCreateInfo shader_stages[] = {vertex_shader_stage_info, frag_shader_stage_info};
+  std::array<VkPipelineShaderStageCreateInfo, 2> shader_stages = {vertex_shader_stage_info, frag_shader_stage_info};
 
   // ======================== Vertex Input Create Info ========================
   VkPipelineVertexInputStateCreateInfo vertex_input_state;
@@ -474,8 +474,8 @@ void VulkanRendererAPI::create_graphics_pipeline() {
 
   VkGraphicsPipelineCreateInfo pipeline_info{};
   pipeline_info.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
-  pipeline_info.stageCount = 2;
-  pipeline_info.pStages = shader_stages;
+  pipeline_info.stageCount = shader_stages.size();
+  pipeline_info.pStages = shader_stages.data();
   pipeline_info.pVertexInputState = &vertex_input_state;
   pipeline_info.pInputAssemblyState = &input_assembly_state;
   pipeline_info.pViewportState = &viewport_state;
