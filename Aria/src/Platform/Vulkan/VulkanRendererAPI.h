@@ -63,6 +63,7 @@ class VulkanRendererAPI : public RendererAPI {
 
   std::vector<VkImage> mSwapChainImages;
   std::vector<VkImageView> mSwapChainImageViews;
+  std::vector<VkFramebuffer> mSwapChainFrameBuffers;
 
   const std::vector<const char*> mValidationLayers = {"VK_LAYER_KHRONOS_validation"};
   const std::vector<const char*> mDeviceExtensions = {"VK_KHR_swapchain"};
@@ -77,6 +78,7 @@ class VulkanRendererAPI : public RendererAPI {
   void create_image_views();
   void create_render_pass();
   void create_graphics_pipeline();
+  void create_frame_buffers();
 
   bool has_validation_support() const;
   void populate_debug_create_info(VkDebugUtilsMessengerCreateInfoEXT& create_info) const;

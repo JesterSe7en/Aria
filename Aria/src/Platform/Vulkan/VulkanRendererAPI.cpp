@@ -78,7 +78,10 @@ void VulkanRendererAPI::add_to_pipeline(VkShaderModule& shader_module, ShaderTyp
   sShaderStages.push_back(create_info);
 }
 
-void VulkanRendererAPI::create_pipeline() { create_graphics_pipeline(); }
+void VulkanRendererAPI::create_pipeline() {
+  create_graphics_pipeline();
+  create_frame_buffers();
+}
 
 void VulkanRendererAPI::create_instance() {
   if (enable_validation_layers && !has_validation_support()) {
@@ -544,6 +547,30 @@ void VulkanRendererAPI::create_graphics_pipeline() {
   }
 }
 
+void VulkanRendererAPI::create_frame_buffers() {
+  mSwapChainFrameBuffers.resize(mSwapChainImages.size());
+
+  for (size_t i = 0; i < mSwapChainImageViews.size(); i++) {
+    std::array<VkImageView, 1> attachments = {mSwapChainImageViews[i]};
+
+    VkFramebufferCreateInfo frame_buffer_info;
+    frame_buffer_info.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
+    frame_buffer_info.flags = 0;
+    frame_buffer_info.pNext = nullptr;
+    frame_buffer_info.renderPass = mRenderPass;
+    frame_buffer_info.attachmentCount = attachments.size();
+    frame_buffer_info.pAttachments = attachments.data();
+    frame_buffer_info.width = mSwapChainExtent.width;
+    frame_buffer_info.height = mSwapChainExtent.height;
+    frame_buffer_info.layers = 1;
+
+    VkResult result = vkCreateFramebuffer(sDevice, &frame_buffer_info, nullptr, &mSwapChainFrameBuffers[i]);
+    if (result != VK_SUCCESS) {
+      ARIA_CORE_ERROR("Failed to create frame buffer - {0}", string_VkResult(result))
+    }
+  }
+}
+
 bool VulkanRendererAPI::has_validation_support() const {
   // how many instance layers can the vulkan system support?
   std::uint32_t layerCount;
@@ -794,6 +821,9 @@ VkExtent2D VulkanRendererAPI::get_swap_extent(const VkSurfaceCapabilitiesKHR& ca
 }
 
 void VulkanRendererAPI::cleanup() {
+  for (auto buffer : mSwapChainFrameBuffers) {
+    vkDestroyFramebuffer(sDevice, buffer, nullptr);
+  }
   vkDestroyPipeline(sDevice, mGraphicsPipeline, nullptr);
   vkDestroyPipelineLayout(sDevice, mPipelineLayout, nullptr);
   vkDestroyRenderPass(sDevice, mRenderPass, nullptr);
