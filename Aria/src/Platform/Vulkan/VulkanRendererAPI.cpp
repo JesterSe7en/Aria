@@ -7,6 +7,7 @@
 #include "Aria/Core/Log.h"
 #include "Aria/Renderer/VertexArray.h"
 #include "GLFW/glfw3.h"
+#include "vulkan/vk_enum_string_helper.h"
 #include "vulkan/vulkan_core.h"
 
 #include <fileapi.h>
@@ -101,8 +102,9 @@ void VulkanRendererAPI::create_instance() {
   // if instance extensions are enabled, look for function pointers via
   // vkGetInstanceProcAddr() func
 
-  if (vkCreateInstance(&create_info, nullptr, &sInstance) != VK_SUCCESS) {
-    ARIA_CORE_ERROR("Failed to create vulkan instance")
+  VkResult result = vkCreateInstance(&create_info, nullptr, &sInstance);
+  if (result != VK_SUCCESS) {
+    ARIA_CORE_ERROR("Failed to create vulkan instance - {0}", string_VkResult(result))
   }
 }
 
@@ -124,8 +126,9 @@ void VulkanRendererAPI::create_presentation_surface() {
   ARIA_CORE_ASSERT(sInstance, "Did you create VkInstance first?")
   auto glfw_window = static_cast<GLFWwindow*>(Application::get().get_window().get_native_window());
   ARIA_CORE_ASSERT(glfw_window, "Did you create window first before creating surface?")
-  if (glfwCreateWindowSurface(sInstance, glfw_window, nullptr, &mSurface) != VK_SUCCESS) {
-    ARIA_CORE_ERROR("Cannot create vulkan surface")
+  VkResult result = glfwCreateWindowSurface(sInstance, glfw_window, nullptr, &mSurface);
+  if (result != VK_SUCCESS) {
+    ARIA_CORE_ERROR("Cannot create vulkan surface - {0}", string_VkResult(result))
   }
 }
 
@@ -225,8 +228,9 @@ void VulkanRendererAPI::create_logical_device() {
     create_info.enabledLayerCount = 0;
   }
 
-  if (vkCreateDevice(mPhysicalDevice, &create_info, nullptr, &sDevice) != VK_SUCCESS) {
-    ARIA_CORE_ERROR("Cannot create logical device")
+  VkResult result = vkCreateDevice(mPhysicalDevice, &create_info, nullptr, &sDevice);
+  if (result != VK_SUCCESS) {
+    ARIA_CORE_ERROR("Cannot create logical device - {0}", string_VkResult(result))
   }
 
   vkGetDeviceQueue(sDevice, indices.graphicsFamily.value(), 0, &mGraphicsQueue);
@@ -278,8 +282,9 @@ void VulkanRendererAPI::create_swap_chain() {
   // as a swap chain is tied to window size
   create_info.oldSwapchain = VK_NULL_HANDLE;
 
-  if (vkCreateSwapchainKHR(sDevice, &create_info, nullptr, &mSwapChain) != VK_SUCCESS) {
-    ARIA_CORE_ERROR("Failed to create swap chain")
+  VkResult result = vkCreateSwapchainKHR(sDevice, &create_info, nullptr, &mSwapChain);
+  if (result != VK_SUCCESS) {
+    ARIA_CORE_ERROR("Failed to create swap chain - {0}", string_VkResult(result))
   }
 
   vkGetSwapchainImagesKHR(sDevice, mSwapChain, &image_count, nullptr);
@@ -311,8 +316,9 @@ void VulkanRendererAPI::create_image_views() {
     create_info.subresourceRange.baseArrayLayer = 0;
     create_info.subresourceRange.layerCount = 1;
 
-    if (vkCreateImageView(sDevice, &create_info, nullptr, &mSwapChainImageViews[idx]) != VK_SUCCESS) {
-      ARIA_CORE_ERROR("Failed to create image views")
+    VkResult result = vkCreateImageView(sDevice, &create_info, nullptr, &mSwapChainImageViews[idx]);
+    if (result != VK_SUCCESS) {
+      ARIA_CORE_ERROR("Failed to create image views - {0}", string_VkResult(result))
     }
   }
 }
@@ -468,8 +474,9 @@ void VulkanRendererAPI::create_graphics_pipeline() {
   pipeline_layout_info.pushConstantRangeCount = 0;
   pipeline_layout_info.pPushConstantRanges = nullptr;
 
-  if (vkCreatePipelineLayout(sDevice, &pipeline_layout_info, nullptr, &mPipelineLayout) != VK_SUCCESS) {
-    ARIA_CORE_ERROR("Failed to create pipeline layout")
+  VkResult result = vkCreatePipelineLayout(sDevice, &pipeline_layout_info, nullptr, &mPipelineLayout);
+  if (result != VK_SUCCESS) {
+    ARIA_CORE_ERROR("Failed to create pipeline layout - {0}", string_VkResult(result))
   }
 
   VkGraphicsPipelineCreateInfo pipeline_info{};
@@ -492,9 +499,9 @@ void VulkanRendererAPI::create_graphics_pipeline() {
   pipeline_info.basePipelineHandle = VK_NULL_HANDLE;
   pipeline_info.basePipelineIndex = -1;
 
-  if (vkCreateGraphicsPipelines(sDevice, VK_NULL_HANDLE, 1, &pipeline_info, nullptr, &mGraphicsPipeline) !=
-      VK_SUCCESS) {
-    ARIA_CORE_ERROR("Failed to create graphics pipeline")
+  result = vkCreateGraphicsPipelines(sDevice, VK_NULL_HANDLE, 1, &pipeline_info, nullptr, &mGraphicsPipeline);
+  if (result != VK_SUCCESS) {
+    ARIA_CORE_ERROR("Failed to create graphics pipeline - {0}", string_VkResult(result))
   }
 }
 
