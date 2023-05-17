@@ -48,8 +48,9 @@ void Application::init_vulkan_app() {
   mWindow->set_event_callback(ARIA_BIND_EVENT_FN(Application::on_event));
   Renderer::init();
 
-  mImGuiLayer = new ImGuiLayer();
-  push_overlay(mImGuiLayer);
+  // TODO: this imgui uses opengl to load
+  //  mImGuiLayer = new ImGuiLayer();
+  //  push_overlay(mImGuiLayer);
 }
 
 void Application::init_opengl_app() {
