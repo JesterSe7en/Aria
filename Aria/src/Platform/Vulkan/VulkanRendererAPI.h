@@ -54,6 +54,7 @@ class VulkanRendererAPI : public RendererAPI {
   VkExtent2D mSwapChainExtent;
   VkRenderPass mRenderPass;
   VkPipelineLayout mPipelineLayout;
+  VkPipeline mGraphicsPipeline;
 
   std::vector<VkImage> mSwapChainImages;
   std::vector<VkImageView> mSwapChainImageViews;

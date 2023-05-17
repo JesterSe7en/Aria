@@ -367,22 +367,22 @@ void VulkanRendererAPI::create_graphics_pipeline() {
   VkPipelineShaderStageCreateInfo shader_stages[] = {vertex_shader_stage_info, frag_shader_stage_info};
 
   // ======================== Vertex Input Create Info ========================
-  VkPipelineVertexInputStateCreateInfo vertex_input_info;
-  vertex_input_info.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
-  vertex_input_info.pNext = nullptr;
-  vertex_input_info.flags = 0;
-  vertex_input_info.vertexBindingDescriptionCount = 0;
-  vertex_input_info.pVertexBindingDescriptions = nullptr;
-  vertex_input_info.vertexAttributeDescriptionCount = 0;
-  vertex_input_info.pVertexAttributeDescriptions = nullptr;
+  VkPipelineVertexInputStateCreateInfo vertex_input_state;
+  vertex_input_state.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
+  vertex_input_state.pNext = nullptr;
+  vertex_input_state.flags = 0;
+  vertex_input_state.vertexBindingDescriptionCount = 0;
+  vertex_input_state.pVertexBindingDescriptions = nullptr;
+  vertex_input_state.vertexAttributeDescriptionCount = 0;
+  vertex_input_state.pVertexAttributeDescriptions = nullptr;
 
   // ======================== Input Assembly Create Info ========================
-  VkPipelineInputAssemblyStateCreateInfo input_assembly_info;
-  input_assembly_info.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
-  input_assembly_info.pNext = nullptr;
-  input_assembly_info.flags = 0;
-  input_assembly_info.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
-  input_assembly_info.primitiveRestartEnable = VK_FALSE;
+  VkPipelineInputAssemblyStateCreateInfo input_assembly_state;
+  input_assembly_state.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
+  input_assembly_state.pNext = nullptr;
+  input_assembly_state.flags = 0;
+  input_assembly_state.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+  input_assembly_state.primitiveRestartEnable = VK_FALSE;
 
   // ======================== Viewport ========================
   VkViewport viewport;
@@ -398,14 +398,14 @@ void VulkanRendererAPI::create_graphics_pipeline() {
   scissor.extent = mSwapChainExtent;
 
   // ======================== Viewport State Create Info ========================
-  VkPipelineViewportStateCreateInfo viewport_state_info;
-  viewport_state_info.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
-  viewport_state_info.pNext = nullptr;
-  viewport_state_info.flags = 0;
-  viewport_state_info.viewportCount = 1;
-  viewport_state_info.pViewports = &viewport;
-  viewport_state_info.scissorCount = 1;
-  viewport_state_info.pScissors = &scissor;
+  VkPipelineViewportStateCreateInfo viewport_state;
+  viewport_state.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
+  viewport_state.pNext = nullptr;
+  viewport_state.flags = 0;
+  viewport_state.viewportCount = 1;
+  viewport_state.pViewports = &viewport;
+  viewport_state.scissorCount = 1;
+  viewport_state.pScissors = &scissor;
 
   // ======================== Rasterizer Create Info ========================
   VkPipelineRasterizationStateCreateInfo rasterizer;
@@ -470,6 +470,31 @@ void VulkanRendererAPI::create_graphics_pipeline() {
 
   if (vkCreatePipelineLayout(sDevice, &pipeline_layout_info, nullptr, &mPipelineLayout) != VK_SUCCESS) {
     ARIA_CORE_ERROR("Failed to create pipeline layout")
+  }
+
+  VkGraphicsPipelineCreateInfo pipeline_info{};
+  pipeline_info.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
+  pipeline_info.stageCount = 2;
+  pipeline_info.pStages = shader_stages;
+  pipeline_info.pVertexInputState = &vertex_input_state;
+  pipeline_info.pInputAssemblyState = &input_assembly_state;
+  pipeline_info.pViewportState = &viewport_state;
+  pipeline_info.pRasterizationState = &rasterizer;
+  pipeline_info.pMultisampleState = &multisample_state_info;
+  pipeline_info.pDepthStencilState = nullptr;
+  pipeline_info.pColorBlendState = &color_blending;
+  // pipeline_info.pDynamicState = &dynamicState;
+
+  pipeline_info.layout = mPipelineLayout;
+  pipeline_info.renderPass = mRenderPass;
+  pipeline_info.subpass = 0;
+
+  pipeline_info.basePipelineHandle = VK_NULL_HANDLE;
+  pipeline_info.basePipelineIndex = -1;
+
+  if (vkCreateGraphicsPipelines(sDevice, VK_NULL_HANDLE, 1, &pipeline_info, nullptr, &mGraphicsPipeline) !=
+      VK_SUCCESS) {
+    ARIA_CORE_ERROR("Failed to create graphics pipeline")
   }
 }
 
@@ -723,6 +748,7 @@ VkExtent2D VulkanRendererAPI::get_swap_extent(const VkSurfaceCapabilitiesKHR& ca
 }
 
 void VulkanRendererAPI::cleanup() {
+  vkDestroyPipeline(sDevice, mGraphicsPipeline, nullptr);
   vkDestroyPipelineLayout(sDevice, mPipelineLayout, nullptr);
   vkDestroyRenderPass(sDevice, mRenderPass, nullptr);
   for (auto view : mSwapChainImageViews) {
