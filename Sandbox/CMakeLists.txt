@@ -5,11 +5,14 @@ set(PROJECT_NAME Sandbox)
 ################################################################################
 set(Headers
     "src/ExampleLayer.h"
+    "src/VulkanLayer.h"
+
 )
 source_group("Headers" FILES ${Headers})
 
 set(Sources
     "src/ExampleLayer.cpp"
+    "src/VulkanLayer.cpp"
     "src/SandboxApp.cpp"
 )
 source_group("Sources" FILES ${Sources})

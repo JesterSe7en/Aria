@@ -44,6 +44,7 @@ void VulkanRendererAPI::init() {
   create_logical_device();
   create_swap_chain();
   create_image_views();
+  create_graphics_pipeline();
 }
 void VulkanRendererAPI::clear() { ARIA_CORE_ASSERT(false, "Not Implemented") }
 
@@ -318,6 +319,10 @@ void VulkanRendererAPI::create_image_views() {
       ARIA_CORE_ERROR("Failed to create image views")
     }
   }
+}
+
+void VulkanRendererAPI::create_graphics_pipeline() {
+  //
 }
 
 bool VulkanRendererAPI::has_validation_support() const {

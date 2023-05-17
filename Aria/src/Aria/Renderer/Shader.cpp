@@ -1,12 +1,14 @@
-#include <memory>
-#include <string_view>
-#include "Aria/Core/Base.h"
 #include "ariapch.h"
 
-#include "Platform/OpenGL/OpenGLShader.h"
-
 #include "Shader.h"
+
+#include "Aria/Core/Base.h"
+#include "Platform/OpenGL/OpenGLShader.h"
+#include "Platform/Vulkan/VulkanShader.h"
 #include "Renderer.h"
+
+#include <memory>
+#include <string_view>
 
 namespace ARIA {
 
@@ -35,9 +37,10 @@ Ref<Shader> Shader::Create(const std::string& file_path) {
     case RendererAPI::API::OpenGL:
       return std::make_shared<OpenGLShader>(file_path);
     case RendererAPI::API::DirectX:
-    case RendererAPI::API::Vulkan:
       ARIA_CORE_ASSERT(false, "API selected for shader generation is not implemented")
       return nullptr;
+    case RendererAPI::API::Vulkan:
+      return std::make_shared<VulkanShader>(file_path);
     default:
       ARIA_CORE_ASSERT(false, "Unknown API")
       return nullptr;

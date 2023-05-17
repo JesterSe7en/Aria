@@ -66,6 +66,7 @@ class VulkanRendererAPI : public RendererAPI {
   void create_logical_device();
   void create_swap_chain();
   void create_image_views();
+  void create_graphics_pipeline();
 
   bool has_validation_support() const;
   void populate_debug_create_info(VkDebugUtilsMessengerCreateInfoEXT& create_info) const;

@@ -15,7 +15,7 @@ class OpenGLShader : public Shader {
   void bind() const override;
   void unbind() const override;
 
-  const std::string get_name() const override { return mName; }
+  const std::string& get_name() const override { return mName; }
 
   void set_uniform_1i(const std::string &name, int value);
   void set_uniform_1f(const std::string &name, float v0);
