@@ -20,7 +20,8 @@ class Renderer {
 
   inline static RendererAPI::API get_api() { return RendererAPI::get_api(); }
   static void create_pipeline();  // This is a hack for now
-
+  static void create_command_buffer();
+  
  private:
   struct SceneData {
     glm::mat4 mVPMatrix;

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Aria/Renderer/Camera.h"
 #include "Aria/Renderer/RendererAPI.h"
 #include "Aria/Renderer/Shader.h"
 #include "vulkan/vk_platform.h"
@@ -60,6 +61,8 @@ class VulkanRendererAPI : public RendererAPI {
   VkRenderPass mRenderPass;
   VkPipelineLayout mPipelineLayout;
   VkPipeline mGraphicsPipeline;
+  VkCommandPool mCommandPool;
+  VkCommandBuffer mCommandBuffer;
 
   std::vector<VkImage> mSwapChainImages;
   std::vector<VkImageView> mSwapChainImageViews;
@@ -79,6 +82,10 @@ class VulkanRendererAPI : public RendererAPI {
   void create_render_pass();
   void create_graphics_pipeline();
   void create_frame_buffers();
+  void create_command_pool();
+  void create_command_buffer();
+
+  void record_command_buffer(VkCommandBuffer cmd_buffer, std::uint32_t image_idx);
 
   bool has_validation_support() const;
   void populate_debug_create_info(VkDebugUtilsMessengerCreateInfoEXT& create_info) const;

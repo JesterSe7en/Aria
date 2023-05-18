@@ -45,6 +45,7 @@ void VulkanRendererAPI::init() {
   create_swap_chain();
   create_image_views();
   create_render_pass();
+  create_command_pool();
   // create_graphics_pipeline();
 }
 void VulkanRendererAPI::clear() { ARIA_CORE_ASSERT(false, "Not Implemented") }
@@ -571,6 +572,86 @@ void VulkanRendererAPI::create_frame_buffers() {
   }
 }
 
+void VulkanRendererAPI::create_command_pool() {
+  QueryFamilyIndices queue_family_indicies = query_queue_families(mPhysicalDevice);
+
+  VkCommandPoolCreateInfo cmd_pool_info;
+  cmd_pool_info.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
+  cmd_pool_info.flags = 0;
+  cmd_pool_info.pNext = nullptr;
+  cmd_pool_info.queueFamilyIndex = queue_family_indicies.graphicsFamily.value();
+
+  VkResult result = vkCreateCommandPool(sDevice, &cmd_pool_info, nullptr, &mCommandPool);
+  if (result != VK_SUCCESS) {
+    ARIA_CORE_ERROR("Failed to create command pool - {0}", string_VkResult(result))
+  }
+}
+
+void VulkanRendererAPI::create_command_buffer() {
+  VkCommandBufferAllocateInfo buffer_alloc_info;
+  buffer_alloc_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+  buffer_alloc_info.pNext = nullptr;
+  buffer_alloc_info.commandPool = mCommandPool;
+  buffer_alloc_info.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+  buffer_alloc_info.commandBufferCount = 1;
+
+  VkResult result = vkAllocateCommandBuffers(sDevice, &buffer_alloc_info, &mCommandBuffer);
+  if (result != VK_SUCCESS) {
+    ARIA_CORE_ERROR("Failed to create command buffer - {0}", string_VkResult(result))
+  }
+}
+
+void VulkanRendererAPI::record_command_buffer(VkCommandBuffer cmd_buffer, std::uint32_t image_idx) {
+  VkCommandBufferBeginInfo cmd_buffer_begin;
+  cmd_buffer_begin.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+  cmd_buffer_begin.flags = 0;
+  cmd_buffer_begin.pNext = nullptr;
+  cmd_buffer_begin.pInheritanceInfo = nullptr;
+
+  VkResult result = vkBeginCommandBuffer(cmd_buffer, &cmd_buffer_begin);
+  if (result != VK_SUCCESS) {
+    ARIA_CORE_ERROR("Faield to begin recording command buffer - {0}", string_VkResult(result))
+  }
+
+  VkRenderPassBeginInfo render_pass_begin;
+  render_pass_begin.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+  render_pass_begin.pNext = nullptr;
+  render_pass_begin.renderPass = mRenderPass;
+  render_pass_begin.framebuffer = mSwapChainFrameBuffers[image_idx];
+  render_pass_begin.renderArea.offset = {0, 0};
+  render_pass_begin.renderArea.extent = mSwapChainExtent;
+
+  VkClearValue clear_color = {{{0.0f, 0.0f, 0.0f, 1.0f}}};  // black
+  render_pass_begin.clearValueCount = 1;
+  render_pass_begin.pClearValues = &clear_color;
+
+  vkCmdBeginRenderPass(cmd_buffer, &render_pass_begin, VK_SUBPASS_CONTENTS_INLINE);
+
+  vkCmdBindPipeline(cmd_buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, mGraphicsPipeline);
+
+  VkViewport viewport;
+  viewport.x = viewport.y = 0.0f;
+  viewport.width = static_cast<float>(mSwapChainExtent.width);
+  viewport.height = static_cast<float>(mSwapChainExtent.height);
+  viewport.minDepth = 0.0f;
+  viewport.maxDepth = 1.0f;
+  vkCmdSetViewport(cmd_buffer, 0, 1, &viewport);
+
+  VkRect2D scissor;
+  scissor.offset = {0, 0};
+  scissor.extent = mSwapChainExtent;
+  vkCmdSetScissor(cmd_buffer, 0, 1, &scissor);
+
+  vkCmdDraw(cmd_buffer, 3, 1, 0, 0);
+
+  vkCmdEndRenderPass(cmd_buffer);
+
+  result = vkEndCommandBuffer(cmd_buffer);
+  if (result != VK_SUCCESS) {
+    ARIA_CORE_ERROR("Failed to finish recording command buffer - {0}", string_VkResult(result))
+  }
+}
+
 bool VulkanRendererAPI::has_validation_support() const {
   // how many instance layers can the vulkan system support?
   std::uint32_t layerCount;
@@ -821,6 +902,8 @@ VkExtent2D VulkanRendererAPI::get_swap_extent(const VkSurfaceCapabilitiesKHR& ca
 }
 
 void VulkanRendererAPI::cleanup() {
+  vkDestroyCommandPool(sDevice, mCommandPool, nullptr);
+
   for (auto buffer : mSwapChainFrameBuffers) {
     vkDestroyFramebuffer(sDevice, buffer, nullptr);
   }
