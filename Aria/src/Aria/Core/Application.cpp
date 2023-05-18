@@ -75,11 +75,11 @@ void Application::run() {
       layer->on_update(delta_time);
     }
 
-    mImGuiLayer->begin();
-    for (Layer *layer : mLayerStack) {
-      layer->on_imgui_render();
-    }
-    mImGuiLayer->end();
+    // mImGuiLayer->begin();
+    // for (Layer *layer : mLayerStack) {
+    //   layer->on_imgui_render();
+    // }
+    // mImGuiLayer->end();
 
     mWindow->on_update();
   }

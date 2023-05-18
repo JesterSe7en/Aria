@@ -29,6 +29,17 @@ class VulkanRendererAPI : public RendererAPI {
   }
 
   static VkDevice get_vk_device() { return sDevice; }
+  static VkSwapchainKHR get_vk_swap_chain() { return sSwapChain; }
+  static VkCommandBuffer create_vk_command_buffer();
+  static VkCommandBuffer get_vk_command_buffer() {
+    return sCommandBuffer;
+  }  // this is a hack for now, really should not do this.  perhaps create static func to create buffer for layer usage
+
+  static void record_command_buffer(VkCommandBuffer cmd_buffer,
+                                    std::uint32_t image_idx);  // again a hack, should put this in vulkan layer
+
+  static VkCommandPool get_vk_command_pool() { return sCommandPool; }
+  static VkPipeline get_vk_graphics_pipeline() { return sGraphicsPipeline; }
 
   static void add_to_pipeline(VkShaderModule& shader_module, ShaderType type);
 
@@ -47,6 +58,10 @@ class VulkanRendererAPI : public RendererAPI {
 
   static VkInstance sInstance;
   static VkDevice sDevice;
+  static VkPipeline sGraphicsPipeline;
+  static VkSwapchainKHR sSwapChain;
+  static VkCommandPool sCommandPool;
+  static VkCommandBuffer sCommandBuffer;
   static std::vector<VkShaderModule> sShaderModules;
   static std::vector<VkPipelineShaderStageCreateInfo> sShaderStages;
 
@@ -55,14 +70,11 @@ class VulkanRendererAPI : public RendererAPI {
   VkQueue mPresentQueue;
   VkQueue mGraphicsQueue;
   VkSurfaceKHR mSurface;
-  VkSwapchainKHR mSwapChain;
+
   VkFormat mSwapChainFormat;
   VkExtent2D mSwapChainExtent;
   VkRenderPass mRenderPass;
   VkPipelineLayout mPipelineLayout;
-  VkPipeline mGraphicsPipeline;
-  VkCommandPool mCommandPool;
-  VkCommandBuffer mCommandBuffer;
 
   std::vector<VkImage> mSwapChainImages;
   std::vector<VkImageView> mSwapChainImageViews;
@@ -84,8 +96,6 @@ class VulkanRendererAPI : public RendererAPI {
   void create_frame_buffers();
   void create_command_pool();
   void create_command_buffer();
-
-  void record_command_buffer(VkCommandBuffer cmd_buffer, std::uint32_t image_idx);
 
   bool has_validation_support() const;
   void populate_debug_create_info(VkDebugUtilsMessengerCreateInfoEXT& create_info) const;
