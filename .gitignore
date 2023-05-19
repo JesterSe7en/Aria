@@ -47,3 +47,5 @@ CMakeFiles/
 .cache
 build/
 out/
+.idea
+cmake-build-*
