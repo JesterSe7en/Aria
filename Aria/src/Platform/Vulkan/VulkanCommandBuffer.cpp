@@ -21,9 +21,29 @@ VulkanCommandBuffer::VulkanCommandBuffer() {
   if (result != VK_SUCCESS) {
     ARIA_CORE_ERROR("Failed to create command buffer - {0}", string_VkResult(result))
   }
+
+  set_viewport();
+  set_scissor();
 }
 
-bool VulkanCommandBuffer::begin_recording() {
+void VulkanCommandBuffer::set_viewport() {
+  VkViewport viewport;
+  viewport.x = viewport.y = 0.0f;
+  viewport.width = static_cast<float>(mSwapChainExtent.width);
+  viewport.height = static_cast<float>(mSwapChainExtent.height);
+  viewport.minDepth = 0.0f;
+  viewport.maxDepth = 1.0f;
+  vkCmdSetViewport(mCommandBuffer, 0, 1, &viewport);
+}
+
+void VulkanCommandBuffer::set_scissor() {
+  VkRect2D scissor;
+  scissor.offset = {0, 0};
+  scissor.extent = mSwapChainExtent;
+  vkCmdSetScissor(mCommandBuffer, 0, 1, &scissor);
+}
+
+bool VulkanCommandBuffer::start_recording() {
   VkCommandBufferBeginInfo cmd_buffer_begin;
   cmd_buffer_begin.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
   cmd_buffer_begin.flags = 0;
@@ -59,6 +79,8 @@ void VulkanCommandBuffer::start_render_pass(glm::vec4 color) {
 
   vkCmdBeginRenderPass(mCommandBuffer, &render_pass_begin, VK_SUBPASS_CONTENTS_INLINE);
 }
+
+void VulkanCommandBuffer::end_render_pass() { vkCmdEndRenderPass(mCommandBuffer); }
 
 bool VulkanCommandBuffer::reset() {
   VkResult result = vkResetCommandBuffer(mCommandBuffer, 0);

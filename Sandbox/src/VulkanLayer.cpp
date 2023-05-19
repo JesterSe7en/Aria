@@ -58,41 +58,13 @@ void VulkanLayer::on_update(ARIA::Timestep delta_time) {
   }
 
   mCommandBuffer.reset();
-  mCommandBuffer.begin_recording();
-
-  VkRenderPassBeginInfo render_pass_begin;
-  render_pass_begin.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-  render_pass_begin.pNext = nullptr;
-  render_pass_begin.renderPass = mRenderPass;
-  render_pass_begin.framebuffer = mSwapChainFrameBuffers[image_idx];
-  render_pass_begin.renderArea.offset = {0, 0};
-  render_pass_begin.renderArea.extent = mSwapChainExtent;
-
-  VkClearValue clear_color = {{{0.0f, 0.0f, 0.0f, 1.0f}}};  // black
-  render_pass_begin.clearValueCount = 1;
-  render_pass_begin.pClearValues = &clear_color;
-
-  vkCmdBeginRenderPass(mCommandBuffer, &render_pass_begin, VK_SUBPASS_CONTENTS_INLINE);
-
+  mCommandBuffer.start_recording();
+  mCommandBuffer.start_render_pass();
   mCommandBuffer.bind();
-
-  VkViewport viewport;
-  viewport.x = viewport.y = 0.0f;
-  viewport.width = static_cast<float>(mSwapChainExtent.width);
-  viewport.height = static_cast<float>(mSwapChainExtent.height);
-  viewport.minDepth = 0.0f;
-  viewport.maxDepth = 1.0f;
-  vkCmdSetViewport(mCommandBuffer, 0, 1, &viewport);
-
-  VkRect2D scissor;
-  scissor.offset = {0, 0};
-  scissor.extent = mSwapChainExtent;
-  vkCmdSetScissor(mCommandBuffer, 0, 1, &scissor);
 
   mCommandBuffer.draw(3, 1, 0, 0);
 
-  vkCmdEndRenderPass(mCommandBuffer);
-
+  mCommandBuffer.end_render_pass();
   mCommandBuffer.end_recording();
 }
 
