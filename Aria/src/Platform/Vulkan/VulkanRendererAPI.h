@@ -23,7 +23,7 @@ class VulkanRendererAPI : public RendererAPI {
 
   void create_pipeline() override;
 
-  static VkInstance get_vk_instance() {
+  static VkInstance& get_vk_instance() {
     ARIA_CORE_ASSERT(VulkanRendererAPI::sInstance, "Did you initialize a Vulkan instance?")
     return sInstance;
   }

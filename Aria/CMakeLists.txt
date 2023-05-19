@@ -89,6 +89,8 @@ source_group("src\\Platform\\OpenGL" FILES ${src__Platform__OpenGL})
 set(src__Platform__Vulkan
     "src/Platform/Vulkan/VulkanCommandBuffer.cpp"
     "src/Platform/Vulkan/VulkanCommandBuffer.h"
+    "src/Platform/Vulkan/VulkanDeviceManager.cpp"
+    "src/Platform/Vulkan/VulkanDeviceManager.h"
     "src/Platform/Vulkan/VulkanRendererAPI.cpp"
     "src/Platform/Vulkan/VulkanRendererAPI.h"
     "src/Platform/Vulkan/VulkanShader.cpp"

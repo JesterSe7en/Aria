@@ -166,7 +166,6 @@ void VulkanRendererAPI::pick_physical_device() {
   std::uint32_t device_count = 0;
   vkEnumeratePhysicalDevices(sInstance, &device_count, nullptr);
 
-  // TODO: maybe error out completely?
   ARIA_CORE_ASSERT(device_count != 0, "You tried to setup with Vulkan API, but no GPU's found with Vulkan support")
 
   std::vector<VkPhysicalDevice> devices(device_count);
