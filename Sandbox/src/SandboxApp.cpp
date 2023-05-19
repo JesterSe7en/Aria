@@ -3,13 +3,13 @@
 
 #include "ExampleLayer.h"
 
-class Sandbox : public ARIA::Application {
+class Sandbox : public aria::Application {
  public:
   Sandbox() {
     auto example_layer = new ExampleLayer();
-    push_layer(example_layer);
+    PushLayer(example_layer);
   };
   ~Sandbox(){};
 };
 
-ARIA::Application* ARIA::create_application() { return new Sandbox(); }
+aria::Application* aria::CreateApplication() { return new Sandbox(); }

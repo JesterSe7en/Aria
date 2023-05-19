@@ -1,11 +1,11 @@
 #include "ariapch.h"
 
-#include "Platform/OpenGL/OpenGLRendererAPI.h"
+#include "Platform/OpenGL/OpenGlRendererApi.h"
 
 #include "RenderCommand.h"
 
-namespace ARIA {
+namespace aria {
 
-RendererAPI* RenderCommand::sRendererAPI = new OpenGLRendererAPI;
+RendererApi* RenderCommand::p_renderer_api_ = new OpenGlRendererApi;
 
 }

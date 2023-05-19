@@ -62,8 +62,8 @@ set(src__Aria__Renderer
     "src/Aria/Renderer/RenderCommand.h"
     "src/Aria/Renderer/Renderer.cpp"
     "src/Aria/Renderer/Renderer.h"
-    "src/Aria/Renderer/RendererAPI.cpp"
-    "src/Aria/Renderer/RendererAPI.h"
+    "src/Aria/Renderer/RendererApi.cpp"
+    "src/Aria/Renderer/RendererApi.h"
     "src/Aria/Renderer/Shader.cpp"
     "src/Aria/Renderer/Shader.h"
     "src/Aria/Renderer/Texture.cpp"
@@ -74,18 +74,18 @@ set(src__Aria__Renderer
 source_group("src\\Aria\\Renderer" FILES ${src__Aria__Renderer})
 
 set(src__Platform__OpenGL
-    "src/Platform/OpenGL/OpenGLBuffer.cpp"
-    "src/Platform/OpenGL/OpenGLBuffer.h"
-    "src/Platform/OpenGL/OpenGLContext.cpp"
-    "src/Platform/OpenGL/OpenGLContext.h"
-    "src/Platform/OpenGL/OpenGLRendererAPI.cpp"
-    "src/Platform/OpenGL/OpenGLRendererAPI.h"
-    "src/Platform/OpenGL/OpenGLShader.cpp"
-    "src/Platform/OpenGL/OpenGLShader.h"
-    "src/Platform/OpenGL/OpenGLTexture2D.cpp"
-    "src/Platform/OpenGL/OpenGLTexture2D.h"
-    "src/Platform/OpenGL/OpenGLVertexArray.cpp"
-    "src/Platform/OpenGL/OpenGLVertexArray.h"
+    "src/Platform/OpenGL/OpenGlBuffer.cpp"
+    "src/Platform/OpenGL/OpenGlBuffer.h"
+    "src/Platform/OpenGL/OpenGlContext.cpp"
+    "src/Platform/OpenGL/OpenGlContext.h"
+    "src/Platform/OpenGL/OpenGlRendererApi.cpp"
+    "src/Platform/OpenGL/OpenGlRendererApi.h"
+    "src/Platform/OpenGL/OpenGlShader.cpp"
+    "src/Platform/OpenGL/OpenGlShader.h"
+    "src/Platform/OpenGL/OpenGlTexture2D.cpp"
+    "src/Platform/OpenGL/OpenGlTexture2D.h"
+    "src/Platform/OpenGL/OpenGlVertexArray.cpp"
+    "src/Platform/OpenGL/OpenGlVertexArray.h"
 )
 source_group("src\\Platform\\OpenGL" FILES ${src__Platform__OpenGL})
 

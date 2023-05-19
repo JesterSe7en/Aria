@@ -6,50 +6,50 @@
 #include "Aria/Events/ApplicationEvent.h"
 #include "Aria/Events/KeyEvent.h"
 #include "Aria/Events/MouseEvent.h"
-#include "Platform/OpenGL/OpenGLContext.h"
+#include "Platform/OpenGL/OpenGlContext.h"
 
 #include "WindowsWindow.h"
 
 #include <GLFW/glfw3.h>
 
-namespace ARIA {
+namespace aria {
 
 static bool s_GLFWInitialized = false;
 
-static void GLFWErrorCallback(int error_code, const char* description){
+static void GlfwErrorCallback(int error_code, const char* description){
     ARIA_CORE_ERROR("GLFW Error ({0}) - {1}", error_code, description)}
 
-Window* Window::create(const WindowProps& props) {
+Window* Window::Create(const WindowProps& props) {
   return new WindowsWindow(props);
 }
 
-WindowsWindow::WindowsWindow(const WindowProps& props) { init(props); }
+WindowsWindow::WindowsWindow(const WindowProps& props) { Init(props); }
 
 WindowsWindow::~WindowsWindow() {}
 
-void WindowsWindow::on_update() {
+void WindowsWindow::OnUpdate() {
   glfwPollEvents();
-  mContext->swap_buffers();
+  p_graphics_context_->SwapBuffers();
 }
 
-void WindowsWindow::set_vsync(bool enabled) {
+void WindowsWindow::SetVSync(bool enabled) {
   glfwSwapInterval(enabled ? 1 : 0);
-  mData.mVSync = enabled;
+  window_data_.v_sync = enabled;
 }
 
-bool WindowsWindow::is_vsync() const { return mData.mVSync; }
+bool WindowsWindow::IsVSync() const { return window_data_.v_sync; }
 
-void WindowsWindow::init(const WindowProps& props) {
-  mData.mTitle = props.mTitle;
-  mData.mWidth = props.mWidth;
-  mData.mHeight = props.mHeight;
+void WindowsWindow::Init(const WindowProps& props) {
+  window_data_.title = props.title;
+  window_data_.width = props.width;
+  window_data_.height = props.height;
 
-  ARIA_CORE_INFO("Creating window {0} ({1}, {2})", props.mTitle, props.mWidth, props.mHeight)
+  ARIA_CORE_INFO("Creating window {0} ({1}, {2})", props.title, props.width, props.height)
 
   if (!s_GLFWInitialized) {
     int success = glfwInit();
     ARIA_ASSERT(success, "Failed to initialize GLFW")
-    glfwSetErrorCallback(GLFWErrorCallback);
+    glfwSetErrorCallback(GlfwErrorCallback);
     s_GLFWInitialized = true;
   }
 
@@ -58,45 +58,45 @@ void WindowsWindow::init(const WindowProps& props) {
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-  mWindow = glfwCreateWindow((int)props.mWidth, (int)props.mHeight, props.mTitle.c_str(), nullptr, nullptr);
+  p_glfw_window_ = glfwCreateWindow((int)props.width, (int)props.height, props.title.c_str(), nullptr, nullptr);
 
-  mContext = new OpenGLContext(mWindow);
-  mContext->init();
+  p_graphics_context_ = new OpenGlContext(p_glfw_window_);
+  p_graphics_context_->Init();
 
-  glfwSetWindowUserPointer(mWindow, &mData);
-  set_vsync(true);
+  glfwSetWindowUserPointer(p_glfw_window_, &window_data_);
+  SetVSync(true);
 
 #pragma region GLFW Callbacks
 
-  glfwSetWindowSizeCallback(mWindow, [](GLFWwindow* window, int width, int height) {
+  glfwSetWindowSizeCallback(p_glfw_window_, [](GLFWwindow* window, int width, int height) {
     WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
-    data.mWidth = width;
-    data.mHeight = height;
+    data.width = width;
+    data.height = height;
 
     WindowResizeEvent event(width, height);
-    data.mEventCallback(event);
+    data.event_callback_fn(event);
   });
 
-  glfwSetWindowCloseCallback(mWindow, [](GLFWwindow* window) {
-    WindowData const& data = *(WindowData*)glfwGetWindowUserPointer(window);
+  glfwSetWindowCloseCallback(p_glfw_window_, [](GLFWwindow* window) {
+    WindowData const& kData = *(WindowData*)glfwGetWindowUserPointer(window);
     WindowCloseEvent event;
 
-    data.mEventCallback(event);
+    kData.event_callback_fn(event);
   });
 
-  glfwSetWindowFocusCallback(mWindow, [](GLFWwindow* window, int focused) {
-    WindowData const& data = *(WindowData*)glfwGetWindowUserPointer(window);
+  glfwSetWindowFocusCallback(p_glfw_window_, [](GLFWwindow* window, int focused) {
+    WindowData const& kData = *(WindowData*)glfwGetWindowUserPointer(window);
 
     switch (focused) {
       case GLFW_TRUE: {
         WindowFocusEvent event;
-        data.mEventCallback(event);
+        kData.event_callback_fn(event);
         break;
       }
       case GLFW_FALSE: {
         WindowLostFocusEvent event;
-        data.mEventCallback(event);
+        kData.event_callback_fn(event);
         break;
       }
       default:
@@ -105,24 +105,24 @@ void WindowsWindow::init(const WindowProps& props) {
     }
   });
 
-  glfwSetKeyCallback(mWindow, [](GLFWwindow* window, int key, int scancode, int action, int mods) {
-    WindowData const& data = *(WindowData*)glfwGetWindowUserPointer(window);
+  glfwSetKeyCallback(p_glfw_window_, [](GLFWwindow* window, int key, int scancode, int action, int mods) {
+    WindowData const& kData = *(WindowData*)glfwGetWindowUserPointer(window);
 
     switch (action) {
       case GLFW_PRESS: {
         KeyPressedEvent event(key, 0);
-        data.mEventCallback(event);
+        kData.event_callback_fn(event);
         break;
       }
       case GLFW_RELEASE: {
         KeyReleasedEvent event(key);
-        data.mEventCallback(event);
+        kData.event_callback_fn(event);
         break;
       }
       case GLFW_REPEAT: {
         // TODO : extract actual repeat
         KeyPressedEvent event(key, 1);
-        data.mEventCallback(event);
+        kData.event_callback_fn(event);
         break;
       }
       default:
@@ -131,18 +131,18 @@ void WindowsWindow::init(const WindowProps& props) {
     }
   });
 
-  glfwSetMouseButtonCallback(mWindow, [](GLFWwindow* window, int button, int action, int mods) {
-    WindowData const& data = *(WindowData*)glfwGetWindowUserPointer(window);
+  glfwSetMouseButtonCallback(p_glfw_window_, [](GLFWwindow* window, int button, int action, int mods) {
+    WindowData const& kData = *(WindowData*)glfwGetWindowUserPointer(window);
 
     switch (action) {
       case GLFW_PRESS: {
         MouseButtonPressedEvent event(button);
-        data.mEventCallback(event);
+        kData.event_callback_fn(event);
         break;
       }
       case GLFW_RELEASE: {
         MouseButtonReleasedEvent event(button);
-        data.mEventCallback(event);
+        kData.event_callback_fn(event);
         break;
       }
       default:
@@ -151,26 +151,26 @@ void WindowsWindow::init(const WindowProps& props) {
     }
   });
 
-  glfwSetScrollCallback(mWindow, [](GLFWwindow* window, double xoffset, double yoffset) {
-    WindowData const& data = *(WindowData*)glfwGetWindowUserPointer(window);
+  glfwSetScrollCallback(p_glfw_window_, [](GLFWwindow* window, double xoffset, double yoffset) {
+    WindowData const& kData = *(WindowData*)glfwGetWindowUserPointer(window);
 
     MouseScrolledEvent event((float)xoffset, (float)yoffset);
-    data.mEventCallback(event);
+    kData.event_callback_fn(event);
   });
 
-  glfwSetCursorPosCallback(mWindow, [](GLFWwindow* window, double xpos, double ypos) {
-    WindowData const& data = *(WindowData*)glfwGetWindowUserPointer(window);
+  glfwSetCursorPosCallback(p_glfw_window_, [](GLFWwindow* window, double xpos, double ypos) {
+    WindowData const& kData = *(WindowData*)glfwGetWindowUserPointer(window);
     MouseMovedEvent event((float)xpos, (float)ypos);
 
-    data.mEventCallback(event);
+    kData.event_callback_fn(event);
   });
 
 #pragma endregion
 }
 
-void WindowsWindow::shutdown() {
+void WindowsWindow::Shutdown() {
   glfwTerminate();
-  glfwDestroyWindow(mWindow);
+  glfwDestroyWindow(p_glfw_window_);
 }
 
 }  // namespace ARIA

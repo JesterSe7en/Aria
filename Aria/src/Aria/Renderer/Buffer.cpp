@@ -3,25 +3,25 @@
 #include "ariapch.h"
 
 #include "Aria/Core/Log.h"
-#include "Platform/OpenGL/OpenGLBuffer.h"
+#include "Platform/OpenGL/OpenGlBuffer.h"
 
 #include "Buffer.h"
-#include "RendererAPI.h"
+#include "RendererApi.h"
 
-namespace ARIA {
+namespace aria {
 
 // -------------------------- Vertex Buffer  --------------------------
 
-Ref<VertexBuffer> VertexBuffer::create(float* verticies, uint32_t size) {
-  RendererAPI::API api = RendererAPI::get_api();
+Ref<VertexBuffer> VertexBuffer::Create(float* verticies, uint32_t size) {
+  RendererApi::Api api = RendererApi::GetApi();
   switch (api) {
-    case RendererAPI::API::None:
+    case RendererApi::Api::NONE:
       ARIA_CORE_ASSERT(false, "No renderer API selected for vertex buffer generation")
       return nullptr;
-    case RendererAPI::API::OpenGL:
-      return std::make_shared<OpenGLVertexBuffer>(verticies, size);
-    case RendererAPI::API::DirectX:
-    case RendererAPI::API::Vulkan:
+    case RendererApi::Api::OPEN_GL:
+      return std::make_shared<OpenGlVertexBuffer>(verticies, size);
+    case RendererApi::Api::DIRECT_X:
+    case RendererApi::Api::VULKAN:
       ARIA_CORE_ASSERT(false, "API selected for vertex buffer generation is not implemented")
       return nullptr;
     default:
@@ -32,16 +32,16 @@ Ref<VertexBuffer> VertexBuffer::create(float* verticies, uint32_t size) {
 
 // -------------------------- Index Buffer --------------------------
 
-Ref<IndexBuffer> IndexBuffer::create(uint32_t* indices, uint32_t count) {
-  RendererAPI::API api = RendererAPI::get_api();
+Ref<IndexBuffer> IndexBuffer::Create(uint32_t* indices, uint32_t count) {
+  RendererApi::Api api = RendererApi::GetApi();
   switch (api) {
-    case RendererAPI::API::None:
+    case RendererApi::Api::NONE:
       ARIA_CORE_ASSERT(false, "No renderer API selected for index buffer generation")
       return nullptr;
-    case RendererAPI::API::OpenGL:
-      return std::make_shared<OpenGLIndexBuffer>(indices, count);
-    case RendererAPI::API::DirectX:
-    case RendererAPI::API::Vulkan:
+    case RendererApi::Api::OPEN_GL:
+      return std::make_shared<OpenGlIndexBuffer>(indices, count);
+    case RendererApi::Api::DIRECT_X:
+    case RendererApi::Api::VULKAN:
       ARIA_CORE_ASSERT(false, "API selected for index buffer generation is not implemented")
       return nullptr;
     default:
@@ -52,54 +52,54 @@ Ref<IndexBuffer> IndexBuffer::create(uint32_t* indices, uint32_t count) {
 
 // -------------------------- Buffer Layout  --------------------------
 
-BufferLayout::BufferLayout(std::initializer_list<BufferElement> elements) : mElements(elements) {
-  calculate_offset_and_stride();
+BufferLayout::BufferLayout(std::initializer_list<BufferElement> elements) : elements_(elements) {
+  CalculateOffsetAndStride();
 }
 
-void BufferLayout::calculate_offset_and_stride() {
+void BufferLayout::CalculateOffsetAndStride() {
   size_t offset = 0;
-  for (BufferElement& element : mElements) {
-    element.mOffset = offset;
-    offset += element.mSize;
-    mStride += element.mSize;
+  for (BufferElement& element : elements_) {
+    element.offset_ = offset;
+    offset += element.size_;
+    stride_ += element.size_;
   }
 }
 
 // -------------------------- Buffer Elements  --------------------------
 
 BufferElement::BufferElement(ShaderPrimitiveType type, const std::string& name, bool normalized)
-    : mName(name), mType(type), mSize(get_shader_type_size(type)), mNormalized(normalized) {}
+    : name_(name), shader_primitive_type_(type), size_(get_shader_type_size(type)), normalized_(normalized) {}
 
 /// <summary>
 /// Returns the number of elements per primitive type e.g. Float3 returns 3 as
 /// there are 3 floats(elements) that comprises a Float3 type.
 /// </summary>
 /// <returns>uint32_t - number of elements</returns>
-uint32_t BufferElement::get_element_count() const {
-  switch (mType) {
-    case ARIA::ShaderPrimitiveType::Float:
+uint32_t BufferElement::GetElementCount() const {
+  switch (shader_primitive_type_) {
+    case aria::ShaderPrimitiveType::Float:
       return 1;
-    case ARIA::ShaderPrimitiveType::Float2:
+    case aria::ShaderPrimitiveType::Float2:
       return 2;
-    case ARIA::ShaderPrimitiveType::Float3:
+    case aria::ShaderPrimitiveType::Float3:
       return 3;
-    case ARIA::ShaderPrimitiveType::Float4:
+    case aria::ShaderPrimitiveType::Float4:
       return 4;
-    case ARIA::ShaderPrimitiveType::Mat2:
+    case aria::ShaderPrimitiveType::Mat2:
       return 2;
-    case ARIA::ShaderPrimitiveType::Mat3:
+    case aria::ShaderPrimitiveType::Mat3:
       return 3;
-    case ARIA::ShaderPrimitiveType::Mat4:
+    case aria::ShaderPrimitiveType::Mat4:
       return 4;
-    case ARIA::ShaderPrimitiveType::Int:
+    case aria::ShaderPrimitiveType::Int:
       return 1;
-    case ARIA::ShaderPrimitiveType::Int2:
+    case aria::ShaderPrimitiveType::Int2:
       return 2;
-    case ARIA::ShaderPrimitiveType::Int3:
+    case aria::ShaderPrimitiveType::Int3:
       return 3;
-    case ARIA::ShaderPrimitiveType::Int4:
+    case aria::ShaderPrimitiveType::Int4:
       return 4;
-    case ARIA::ShaderPrimitiveType::Bool:
+    case aria::ShaderPrimitiveType::Bool:
       return 1;
     default:
       ARIA_CORE_ASSERT(false, "Unknown shader primitive type")

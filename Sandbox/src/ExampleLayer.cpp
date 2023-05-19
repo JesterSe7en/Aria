@@ -1,5 +1,5 @@
 #include "ExampleLayer.h"
-#include "Platform/OpenGL/OpenGLShader.h"
+#include "Platform/OpenGL/OpenGlShader.h"
 
 #include <imgui.h>
 #include <glm/gtc/matrix_transform.hpp>
@@ -29,93 +29,93 @@ ExampleLayer::ExampleLayer() : Layer("Example Layer"), mSquarePosition(0.0f) {
   // mTriangleShader.reset(ARIA::Shader::Create("C:/Users/alyxc/Workspace/Aria/Aria/res/shaders/basicTriangle.shader"));
 
   // --------------- Rendering SQUARE ---------------
-  mSquareVA = ARIA::VertexArray::create();
+  mSquareVA = aria::VertexArray::Create();
 
   float squareVertices[5 * 4] = {-0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 0.5f,  -0.5f, 0.0f, 1.0f, 0.0f,
                                  0.5f,  0.5f,  0.0f, 1.0f, 1.0f, -0.5f, 0.5f,  0.0f, 0.0f, 1.0f};
 
-  mSquareVB = ARIA::VertexBuffer::create(squareVertices, sizeof(squareVertices));
+  mSquareVB = aria::VertexBuffer::Create(squareVertices, sizeof(squareVertices));
 
-  mSquareVB->set_layout(
-      {{ARIA::ShaderPrimitiveType::Float3, "a_Position"}, {ARIA::ShaderPrimitiveType::Float2, "a_TexCoord"}});
-  mSquareVA->add_vertex_buffer(mSquareVB);
+  mSquareVB->SetLayout(
+      {{aria::ShaderPrimitiveType::Float3, "a_Position"}, {aria::ShaderPrimitiveType::Float2, "a_TexCoord"}});
+  mSquareVA->AddVertexBuffer(mSquareVB);
 
   uint32_t squareIndices[6] = {0, 1, 2, 2, 3, 0};
 
-  mSquareIB = ARIA::IndexBuffer::create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t));
-  mSquareVA->set_index_buffer(mSquareIB);
+  mSquareIB = aria::IndexBuffer::Create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t));
+  mSquareVA->SetIndexBuffer(mSquareIB);
 
-  auto flatColorShader = mShaderLibrary.load("C:/Users/alyxc/Workspace/Aria/Sandbox/assets/shaders/flatColor.glsl");
-  auto textureShader = mShaderLibrary.load("C:/Users/alyxc/Workspace/Aria/Sandbox/assets/shaders/texture.glsl");
+  auto flatColorShader = mShaderLibrary.Load("C:/Users/alyxc/Workspace/Aria/Sandbox/assets/shaders/flatColor.glsl");
+  auto textureShader = mShaderLibrary.Load("C:/Users/alyxc/Workspace/Aria/Sandbox/assets/shaders/texture.glsl");
 
   mTexture2D =
-      ARIA::Texture2D::create("C:/Users/alyxc/Workspace/Aria/Sandbox/assets/textures/missing_texture_checkboard.png");
-  mCatTexture2D = ARIA::Texture2D::create("C:/Users/alyxc/Workspace/Aria/Sandbox/assets/textures/cat_transparent.png");
+      aria::Texture2D::Create("C:/Users/alyxc/Workspace/Aria/Sandbox/assets/textures/missing_texture_checkboard.png");
+  mCatTexture2D = aria::Texture2D::Create("C:/Users/alyxc/Workspace/Aria/Sandbox/assets/textures/cat_transparent.png");
 
-  std::dynamic_pointer_cast<ARIA::OpenGLShader>(textureShader)->bind();
+  std::dynamic_pointer_cast<aria::OpenGlShader>(textureShader)->Bind();
   // this indicates what texture slot to load in
-  std::dynamic_pointer_cast<ARIA::OpenGLShader>(textureShader)->set_uniform_1i("u_Texture", 0);
+  std::dynamic_pointer_cast<aria::OpenGlShader>(textureShader)->SetUniform1I("u_Texture", 0);
 
-  mOrthoCamera.set_position({0.0f, 0.0f, 0.0f});
+  mOrthoCamera.SetPosition({0.0f, 0.0f, 0.0f});
 }
 
-void ExampleLayer::on_update(ARIA::Timestep delta_time) {
+void ExampleLayer::OnUpdate(aria::Timestep delta_time) {
 #pragma region Camera Control
-  auto position = mOrthoCamera.get_position();
-  auto rotation = mOrthoCamera.get_rotation();
+  auto position = mOrthoCamera.GetPosition();
+  auto rotation = mOrthoCamera.GetRotation();
 
-  if (ARIA::Input::is_key_pressed(ARIA_KEY_W)) {
+  if (aria::Input::IsKeyPressed(ARIA_KEY_W)) {
     position.y -= camera_move_speed * delta_time;
-  } else if (ARIA::Input::is_key_pressed(ARIA_KEY_S)) {
+  } else if (aria::Input::IsKeyPressed(ARIA_KEY_S)) {
     position.y += camera_move_speed * delta_time;
   }
 
-  if (ARIA::Input::is_key_pressed(ARIA_KEY_A)) {
+  if (aria::Input::IsKeyPressed(ARIA_KEY_A)) {
     position.x += camera_move_speed * delta_time;
-  } else if (ARIA::Input::is_key_pressed(ARIA_KEY_D)) {
+  } else if (aria::Input::IsKeyPressed(ARIA_KEY_D)) {
     position.x -= camera_move_speed * delta_time;
   }
 
-  if (ARIA::Input::is_key_pressed(ARIA_KEY_R)) {
-    mOrthoCamera.set_position({0.0f, 0.0f, 0.0f});
-    mOrthoCamera.set_rotation(0.0f);
+  if (aria::Input::IsKeyPressed(ARIA_KEY_R)) {
+    mOrthoCamera.SetPosition({0.0f, 0.0f, 0.0f});
+    mOrthoCamera.SetRotation(0.0f);
     return;
   }
 
   // ---------------------------------------------
 
-  if (ARIA::Input::is_key_pressed(ARIA_KEY_J)) {
+  if (aria::Input::IsKeyPressed(ARIA_KEY_J)) {
     mSquarePosition.x -= square_move_speed * delta_time;
-  } else if (ARIA::Input::is_key_pressed(ARIA_KEY_L)) {
+  } else if (aria::Input::IsKeyPressed(ARIA_KEY_L)) {
     mSquarePosition.x += square_move_speed * delta_time;
   }
 
-  if (ARIA::Input::is_key_pressed(ARIA_KEY_I)) {
+  if (aria::Input::IsKeyPressed(ARIA_KEY_I)) {
     mSquarePosition.y += square_move_speed * delta_time;
-  } else if (ARIA::Input::is_key_pressed(ARIA_KEY_K)) {
+  } else if (aria::Input::IsKeyPressed(ARIA_KEY_K)) {
     mSquarePosition.y -= square_move_speed * delta_time;
   }
 
   // ----------------------------------------------
 
-  if (ARIA::Input::is_key_pressed(ARIA_KEY_LEFT)) {
+  if (aria::Input::IsKeyPressed(ARIA_KEY_LEFT)) {
     rotation += camera_rotate_speed * delta_time;
   }
 
-  if (ARIA::Input::is_key_pressed(ARIA_KEY_RIGHT)) {
+  if (aria::Input::IsKeyPressed(ARIA_KEY_RIGHT)) {
     rotation -= camera_rotate_speed * delta_time;
   }
 
-  mOrthoCamera.set_position(position);
-  mOrthoCamera.set_rotation(rotation);
+  mOrthoCamera.SetPosition(position);
+  mOrthoCamera.SetRotation(rotation);
 
 #pragma endregion
 
   // delta_time with the float operator is returning time in SECONDS
-  ARIA::RenderCommand::set_clear_color(glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
-  ARIA::RenderCommand::clear();
+  aria::RenderCommand::SetClearColor(glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
+  aria::RenderCommand::Clear();
 
-  ARIA::Renderer::begin_scene(mOrthoCamera);
+  aria::Renderer::BeginScene(mOrthoCamera);
 
   // renders tiles (not ideally how to do this, just example)
   glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm ::vec3(0.1f));
@@ -125,27 +125,27 @@ void ExampleLayer::on_update(ARIA::Timestep delta_time) {
       glm::vec3 pos(x * 0.11f, y * 0.11f, 0.0f);
       glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos) * scale;
 
-      std::dynamic_pointer_cast<ARIA::OpenGLShader>(mShaderLibrary.get("flatColor"))
-          ->set_uniform_4f("u_Color", mSquareColor.r, mSquareColor.g, mSquareColor.b, mSquareColor.a);
+      std::dynamic_pointer_cast<aria::OpenGlShader>(mShaderLibrary.Get("flatColor"))
+          ->SetUniform4F("u_Color", mSquareColor.r, mSquareColor.g, mSquareColor.b, mSquareColor.a);
 
-      ARIA::Renderer::submit(mShaderLibrary.get("flatColor"), mSquareVA, transform);
+      aria::Renderer::Submit(mShaderLibrary.Get("flatColor"), mSquareVA, transform);
     }
   }
 
   // Render a square 1.5x time the size
   // ARIA::Renderer::submit(mFlatColorShader, mSquareVA, glm::scale(glm::mat4(1.0f), glm ::vec3(1.5f)));
-  mTexture2D->bind();
-  ARIA::Renderer::submit(mShaderLibrary.get("texture"), mSquareVA, glm::scale(glm::mat4(1.0f), glm ::vec3(1.5f)));
+  mTexture2D->Bind();
+  aria::Renderer::Submit(mShaderLibrary.Get("texture"), mSquareVA, glm::scale(glm::mat4(1.0f), glm ::vec3(1.5f)));
 
-  mCatTexture2D->bind();
-  ARIA::Renderer::submit(mShaderLibrary.get("texture"), mSquareVA, glm::scale(glm::mat4(1.0f), glm ::vec3(1.5f)));
+  mCatTexture2D->Bind();
+  aria::Renderer::Submit(mShaderLibrary.Get("texture"), mSquareVA, glm::scale(glm::mat4(1.0f), glm ::vec3(1.5f)));
 
   // ARIA::Renderer::submit(mTriangleShader, mTriangleVA);
 
-  ARIA::Renderer::end_scene();
+  aria::Renderer::EndScene();
 }
 
-void ExampleLayer::on_event(ARIA::Event& event) {
+void ExampleLayer::OnEvent(aria::Event &event) {
   // ARIA::EventDispatcher dispatcher(event);
   // dispatcher.dispatch<ARIA::KeyPressedEvent>(ARIA_BIND_EVENT_FN(ExampleLayer::on_key_pressed_event));
 }
@@ -176,7 +176,7 @@ void ExampleLayer::on_event(ARIA::Event& event) {
 // return false;
 // }
 
-void ExampleLayer::on_imgui_render() {
+void ExampleLayer::OnImGuiRender() {
   ImGui::Begin("Settings");
   ImGui::ColorEdit3("Square Color", glm::value_ptr(mSquareColor));
   ImGui::End();

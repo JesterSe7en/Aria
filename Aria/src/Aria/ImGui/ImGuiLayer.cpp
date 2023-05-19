@@ -9,17 +9,17 @@
 #include <backends/imgui_impl_glfw.h>
 #include <backends/imgui_impl_opengl3.h>
 
-namespace ARIA {
+namespace aria {
 
 ImGuiLayer::ImGuiLayer() : Layer("ImGuiLayer") {}
 
-void ImGuiLayer::on_attach() {
+void ImGuiLayer::OnAttach() {
   // Load ImGui
   bool success = IMGUI_CHECKVERSION();
   ARIA_CORE_ASSERT(success, "Failed to initialize Dear ImGui")
   ARIA_CORE_INFO("Loaded Dear ImGui {0}", IMGUI_VERSION)
 
-  Application& app = Application::get();
+  Application& app = Application::Get();
 
   ImGui::CreateContext();
   ImGuiIO& io = ImGui::GetIO();
@@ -36,32 +36,32 @@ void ImGuiLayer::on_attach() {
     style.Colors[ImGuiCol_WindowBg].w = 1.0f;
   }
 
-  io.DisplaySize = ImVec2((float)app.get_window().get_width(), (float)app.get_window().get_height());
+  io.DisplaySize = ImVec2((float)app.GetWindow().GetWidth(), (float)app.GetWindow().GetHeight());
 
   ImGui::StyleColorsDark();
 
-  GLFWwindow* window = static_cast<GLFWwindow*>(app.get_window().get_native_window());
+  GLFWwindow* window = static_cast<GLFWwindow*>(app.GetWindow().GetNativeWindow());
 
   // Setup Platform/Renderer bindings
   ImGui_ImplGlfw_InitForOpenGL(window, true);
-  ImGui_ImplOpenGL3_Init(GLSL_VERSION);
+  ImGui_ImplOpenGL3_Init(glsl_version_);
 }
 
-void ImGuiLayer::on_detach() {
+void ImGuiLayer::OnDetach() {
   ImGui_ImplOpenGL3_Shutdown();
   ImGui_ImplGlfw_Shutdown();
   ImGui::DestroyContext();
 }
 
-void ImGuiLayer::on_event(Event& event) {}
+void ImGuiLayer::OnEvent(Event& event) {}
 
-void ImGuiLayer::begin() const {
+void ImGuiLayer::Begin() const {
   ImGui_ImplOpenGL3_NewFrame();
   ImGui_ImplGlfw_NewFrame();
   ImGui::NewFrame();
 }
 
-void ImGuiLayer::end() const {
+void ImGuiLayer::End() const {
   static bool show = true;
   ImGui::ShowDemoWindow(&show);
   ImGui::Render();

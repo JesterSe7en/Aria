@@ -14,40 +14,40 @@
 #include "Aria/Renderer/VertexArray.h"
 #include "Window.h"
 
-namespace ARIA {
+namespace aria {
 
 class ARIA_API Application {
  public:
   Application();
   virtual ~Application() = default;
 
-  void run();
-  void on_event(Event &e);
+  void Run();
+  void OnEvent(Event &e);
 
-  void push_layer(Layer *layer);
-  void push_overlay(Layer *overlay);
-  void pop_layer(Layer *layer);
-  void pop_overlay(Layer *overlay);
+  void PushLayer(Layer *layer);
+  void PushOverlay(Layer *overlay);
+  void PopLayer(Layer *layer);
+  void PopOverlay(Layer *overlay);
 
-  inline Window &get_window() { return *mWindow; }
+  inline Window &GetWindow() { return *window_; }
 
-  inline static Application &get() { return *sInstance; }
-
- private:
-  bool on_window_close(WindowCloseEvent &e);
-
-  std::unique_ptr<Window> mWindow;
-  bool mRunning = true;
-  LayerStack mLayerStack;
-
-  Timestep mTimestep;
-  float mLastFrameTime = 0.0f;
+  inline static Application &Get() { return *p_application_; }
 
  private:
-  static Application *sInstance;
-  ImGuiLayer *mImGuiLayer;
+  bool OnWindowClose(WindowCloseEvent &e);
+
+  std::unique_ptr<Window> window_;
+  bool running_ = true;
+  LayerStack layer_stack_;
+
+  Timestep timestep_;
+  float last_frame_time_ = 0.0f;
+
+ private:
+  static Application *p_application_;
+  ImGuiLayer *im_gui_layer_;
 };
 
 // To be defined in CLIENT
-Application *create_application();
+Application *CreateApplication();
 }  // namespace ARIA

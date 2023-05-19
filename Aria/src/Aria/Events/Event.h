@@ -3,58 +3,58 @@
 #include "Aria/Core/Base.h"
 #include "ariapch.h"
 
-namespace ARIA {
+namespace aria {
 
 // Events are blocking
 
 enum class EventType {
-  None = 0,
-  WindowClosed,
-  WindowResize,
-  WindowFocus,
-  WindowLostFocus,
-  WindowMoved,
+  NONE = 0,
+  WINDOW_CLOSED,
+  WINDOW_RESIZE,
+  WINDOW_FOCUS,
+  WINDOW_LOST_FOCUS,
+  WINDOW_MOVED,
 
-  AppTick,
-  AppUpdate,
-  AppRender,
+  APP_TICK,
+  APP_UPDATE,
+  APP_RENDER,
 
-  KeyPressed,
-  KeyReleased,
-  MouseButtonPressed,
-  MouseButtonReleased,
+  KEY_PRESSED,
+  KEY_RELEASED,
+  MOUSE_BUTTON_PRESSED,
+  MOUSE_BUTTON_RELEASED,
   MouseMoved,
-  MouseScrolled,
+  MOUSE_SCROLLED,
 };
 
-enum EventCatagory {
-  None = 0,
-  EventCategoryApplication = BIT(1),
-  EventCatagoryInput = BIT(2),
-  EventCatagoryKeyboard = BIT(3),
-  EventCatagoryMouse = BIT(4)
+enum EventCategory {
+  NONE = 0,
+  EVENT_CATEGORY_APPLICATION = BIT(1),
+  EVENT_CATEGORY_INPUT = BIT(2),
+  EVENT_CATEGORY_KEYBOARD = BIT(3),
+  EVENT_CATEGORY_MOUSE = BIT(4)
 };
 
 #define EVENT_CLASS_TYPE(type)                                     \
-  static EventType get_static_type() { return EventType::type; } \
-  virtual EventType get_event_type() const override {              \
-    return get_static_type();                                      \
+  static EventType GetStaticType() { return EventType::type; } \
+  virtual EventType GetEventType() const override {              \
+    return GetStaticType();                                      \
   }                                                                \
-  virtual const char* get_name() const override { return #type; }
+  virtual const char* GetName() const override { return #type; }
 #define EVENT_CLASS_CATEGORY(category) \
-  virtual int get_category_flags() const override { return category; }
+  virtual int GetCategoryFlags() const override { return category; }
 
 class ARIA_API Event {
  public:
-  virtual EventType get_event_type() const = 0;
-  virtual const char* get_name() const = 0;
-  virtual int get_category_flags() const = 0;
-  virtual std::string ToString() const { return get_name(); }
+  virtual EventType GetEventType() const = 0;
+  virtual const char* GetName() const = 0;
+  virtual int GetCategoryFlags() const = 0;
+  virtual std::string ToString() const { return GetName(); }
 
-  inline bool is_in_category(EventCatagory category) {
-    return get_category_flags() & category;
+  inline bool IsInCategory(EventCategory category) {
+    return GetCategoryFlags() & category;
   }
-  bool Handled = false;
+  bool handled_ = false;
 };
 
 class EventDispatcher {
@@ -62,19 +62,19 @@ class EventDispatcher {
   using EventFn = std::is_function<bool(T&)>;
 
  public:
-  EventDispatcher(Event& event) : mEvent(event) {}
+  EventDispatcher(Event& event) : event_(event) {}
 
   template <typename T, typename F>
-  bool dispatch(const F& func) {
-    if (mEvent.get_event_type() == T::get_static_type()) {
-      mEvent.Handled |= func(static_cast<T&>(mEvent));
+  bool Dispatch(const F& func) {
+    if (event_.GetEventType() == T::GetStaticType()) {
+      event_.handled_ |= func(static_cast<T&>(event_));
       return true;
     }
     return false;
   }
 
  private:
-  Event& mEvent;
+  Event& event_;
 };
 
 inline std::ostream& operator<<(std::ostream& os, const Event& e) {

@@ -5,9 +5,7 @@
 
 #include "Aria/Events/ApplicationEvent.h"
 #include "Aria/Events/KeyEvent.h"
-#include "Aria/Core/Input.h"
 #include "Aria/Renderer/Buffer.h"
-#include "Aria/Renderer/VertexArray.h"
 #include "Aria/Renderer/Renderer.h"
 #include "Aria/Renderer/Camera.h"
 #include "Aria/Core/Timestep.h"
@@ -20,83 +18,83 @@ __declspec(dllexport) int AmdPowerXpressRequestHighPerformance = 1;
 }
 #endif  // def WIN32
 
-namespace ARIA {
+namespace aria {
 
-Application *Application::sInstance = nullptr;
+Application *Application::p_application_ = nullptr;
 
 // ortho params are actually what is given to us to use by defualt from OpenGL
 Application::Application() {
-  ARIA_CORE_ASSERT(!sInstance, "Application already exists.")
-  sInstance = this;
+  ARIA_CORE_ASSERT(!p_application_, "Application already exists.")
+  p_application_ = this;
 
-  mWindow = std::unique_ptr<Window>(Window::create());
-  mWindow->set_vsync(false);
-  mWindow->set_event_callback(ARIA_BIND_EVENT_FN(Application::on_event));
+  window_ = std::unique_ptr<Window>(Window::Create());
+  window_->SetVSync(false);
+  window_->SetEventCallback(ARIA_BIND_EVENT_FN(Application::OnEvent));
 
-  Renderer::init();
+  Renderer::Init();
 
-  mImGuiLayer = new ImGuiLayer();
-  push_overlay(mImGuiLayer);
+  im_gui_layer_ = new ImGuiLayer();
+  PushOverlay(im_gui_layer_);
 }
 
-void Application::run() {
-  while (mRunning) {
+void Application::Run() {
+  while (running_) {
     float time = (float)glfwGetTime();  // Platform::GetTime() should be used.  Somehow grab the time passed from the
                                         // OS. Windows as QueryPerformaceTimer()
-    Timestep timestep = time - mLastFrameTime;
-    mLastFrameTime = time;
+    Timestep timestep = time - last_frame_time_;
+    last_frame_time_ = time;
 
-    for (Layer *layer : mLayerStack) {
-      layer->on_update(timestep);
+    for (Layer *layer : layer_stack_) {
+      layer->OnUpdate(timestep);
     }
 
-    mImGuiLayer->begin();
-    for (Layer *layer : mLayerStack) {
-      layer->on_imgui_render();
+    im_gui_layer_->Begin();
+    for (Layer *layer : layer_stack_) {
+      layer->OnImGuiRender();
     }
-    mImGuiLayer->end();
+    im_gui_layer_->End();
 
-    mWindow->on_update();
+    window_->OnUpdate();
   }
 }
-void Application::on_event(Event &e) {
+void Application::OnEvent(Event &e) {
   EventDispatcher dispatcher(e);
 
-  dispatcher.dispatch<WindowCloseEvent>(ARIA_BIND_EVENT_FN(Application::on_window_close));
+  dispatcher.Dispatch<WindowCloseEvent>(ARIA_BIND_EVENT_FN(Application::OnWindowClose));
 
   // Go through the Layer Stack (backwards) and fire off events
 
-  for (auto it = mLayerStack.end(); it != mLayerStack.begin();) {
-    (*--it)->on_event(e);
-    if (e.Handled) {
+  for (auto it = layer_stack_.end(); it != layer_stack_.begin();) {
+    (*--it)->OnEvent(e);
+    if (e.handled_) {
       // stop at the first ("highest z value") layer (or overlay) that responded
       // to the event firing
       break;
     }
   }
 }
-void Application::push_layer(Layer *layer) {
-  mLayerStack.push_layer(layer);
-  layer->on_attach();
+void Application::PushLayer(Layer *layer) {
+  layer_stack_.PushLayer(layer);
+  layer->OnAttach();
 }
 
-void Application::push_overlay(Layer *overlay) {
-  mLayerStack.push_overlay(overlay);
-  overlay->on_attach();
+void Application::PushOverlay(Layer *overlay) {
+  layer_stack_.PushOverlay(overlay);
+  overlay->OnAttach();
 }
 
-void Application::pop_layer(Layer *layer) {
-  mLayerStack.pop_layer(layer);
-  layer->on_detach();
+void Application::PopLayer(Layer *layer) {
+  layer_stack_.PopLayer(layer);
+  layer->OnDetach();
 }
 
-void Application::pop_overlay(Layer *overlay) {
-  mLayerStack.pop_layer(overlay);
-  overlay->on_detach();
+void Application::PopOverlay(Layer *overlay) {
+  layer_stack_.PopLayer(overlay);
+  overlay->OnDetach();
 }
 
-bool Application::on_window_close(WindowCloseEvent &e) {
-  mRunning = false;
+bool Application::OnWindowClose(WindowCloseEvent &e) {
+  running_ = false;
   return true;
 }
 }  // namespace ARIA

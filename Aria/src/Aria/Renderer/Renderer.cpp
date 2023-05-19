@@ -1,28 +1,28 @@
 #include "ariapch.h"
 
-#include "Platform/OpenGL/OpenGLShader.h"
+#include "Platform/OpenGL/OpenGlShader.h"
 
 #include "Renderer.h"
 #include "RenderCommand.h"
 #include "Shader.h"
 
-namespace ARIA {
+namespace aria {
 
-Renderer::SceneData* Renderer::sSceneData = new Renderer::SceneData;
+Renderer::SceneData* Renderer::p_scene_data_ = new Renderer::SceneData;
 
-void Renderer::init() {
-  RenderCommand::init();
+void Renderer::Init() {
+  RenderCommand::Init();
 }
 
-void Renderer::begin_scene(const OrthographicCamera& camera) { sSceneData->mVPMatrix = camera.get_vp_matrix(); }
-void Renderer::end_scene() {}
+void Renderer::BeginScene(const OrthographicCamera& camera) { p_scene_data_->vp_matrix = camera.GetVpMatrix(); }
+void Renderer::EndScene() {}
 
-void Renderer::submit(const Ref<Shader>& shader, const Ref<VertexArray>& vertex_array,
+void Renderer::Submit(const Ref<Shader>& shader, const Ref<VertexArray>& vertex_array,
                       const glm::mat4 transform) {
-  std::dynamic_pointer_cast<OpenGLShader>(shader)->bind();
-  std::dynamic_pointer_cast<OpenGLShader>(shader)->set_uniform_mat4f("u_ViewProjection", sSceneData->mVPMatrix);
-  std::dynamic_pointer_cast<OpenGLShader>(shader)->set_uniform_mat4f("u_Transform", transform);
-  vertex_array->bind();
-  RenderCommand::draw_indexed(vertex_array);
+  std::dynamic_pointer_cast<OpenGlShader>(shader)->Bind();
+  std::dynamic_pointer_cast<OpenGlShader>(shader)->SetUniformMat4F("u_ViewProjection", p_scene_data_->vp_matrix);
+  std::dynamic_pointer_cast<OpenGlShader>(shader)->SetUniformMat4F("u_Transform", transform);
+  vertex_array->Bind();
+  RenderCommand::DrawIndexed(vertex_array);
 }
 }  // namespace ARIA

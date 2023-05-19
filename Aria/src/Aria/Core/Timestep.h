@@ -1,17 +1,17 @@
 #pragma once
 
-namespace ARIA {
+namespace aria {
 class Timestep {
  public:
-  Timestep(float time = 0.0f) : mTime(time) {}
+  Timestep(float time = 0.0f) : time_(time) {}
 
-  operator float() const { return mTime; }
+  operator float() const { return time_; }
 
-  float get_seconds() const { return mTime; };
-  float get_milliseconds() const { return mTime * 1000.0f; }
+  float GetSeconds() const { return time_; };
+  float GetMilliseconds() const { return time_ * 1000.0f; }
 
  private:
-  float mTime = 0.0f;
+  float time_ = 0.0f;
 };
 
 }  // namespace ARIA

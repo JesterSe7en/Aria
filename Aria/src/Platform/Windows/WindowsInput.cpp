@@ -6,44 +6,44 @@
 
 #include <GLFW/glfw3.h>
 
-namespace ARIA {
+namespace aria {
 
-Input* Input::sInstance = new WindowsInput();
+Input* Input::p_input_ = new WindowsInput();
 
 // keycode param is a GLFW keycode for now
-bool WindowsInput::is_key_pressed_impl(int keycode) {
+bool WindowsInput::IsKeyPressedImpl(int keycode) {
   auto window = static_cast<GLFWwindow*>(
-      Application::get().get_window().get_native_window());
+      Application::Get().GetWindow().GetNativeWindow());
 
   auto state = glfwGetKey(window, keycode);
   return state == GLFW_PRESS || state == GLFW_REPEAT;
 }
 
-bool WindowsInput::is_mouse_button_pressed_impl(int button) {
+bool WindowsInput::IsMouseButtonPressedImpl(int button) {
   auto window = static_cast<GLFWwindow*>(
-      Application::get().get_window().get_native_window());
+      Application::Get().GetWindow().GetNativeWindow());
 
   auto state = glfwGetMouseButton(window, button);
   return state == GLFW_PRESS;
 }
 
-float WindowsInput::get_mouse_x_impl() {
-  auto [x, y] = get_mouse_position_impl();
+float WindowsInput::GetMouseXImpl() {
+  auto [x, y] = GetMousePositionImpl();
   return x;
 }
 
-float WindowsInput::get_mouse_y_impl() {
-  auto [x, y] = get_mouse_position_impl();
+float WindowsInput::GetMouseYImpl() {
+  auto [x, y] = GetMousePositionImpl();
   return y;
 }
 
-std::pair<float, float> WindowsInput::get_mouse_position_impl() {
-  double xpos, ypos;
+std::pair<float, float> WindowsInput::GetMousePositionImpl() {
+  double x_pos, y_pos;
   auto window = static_cast<GLFWwindow*>(
-      Application::get().get_window().get_native_window());
+      Application::Get().GetWindow().GetNativeWindow());
 
-  glfwGetCursorPos(window, &xpos, &ypos);
-  return std::pair<float, float>(static_cast<float>(xpos), static_cast<float>(ypos));
+  glfwGetCursorPos(window, &x_pos, &y_pos);
+  return std::pair<float, float>(static_cast<float>(x_pos), static_cast<float>(y_pos));
 }
 
 }  // namespace ARIA

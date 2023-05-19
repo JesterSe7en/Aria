@@ -5,44 +5,44 @@
 
 struct GLFWwindow;
 
-namespace ARIA {
+namespace aria {
 
 class WindowsWindow : public Window {
  public:
   WindowsWindow(const WindowProps& props);
   virtual ~WindowsWindow();
 
-  void on_update() override;
+  void OnUpdate() override;
 
-  inline unsigned int get_width() const override { return mData.mWidth; }
-  inline unsigned int get_height() const override { return mData.mHeight; }
+  inline unsigned int GetWidth() const override { return window_data_.width; }
+  inline unsigned int GetHeight() const override { return window_data_.height; }
 
   // Window attributes
-  inline void set_event_callback(const EventCallbackFn& callback) override {
-    mData.mEventCallback = callback;
+  inline void SetEventCallback(const EventCallbackFn& callback) override {
+    window_data_.event_callback_fn = callback;
   }
 
-  void set_vsync(bool enabled) override;
-  bool is_vsync() const override;
+  void SetVSync(bool enabled) override;
+  bool IsVSync() const override;
 
-  virtual void* get_native_window() const override { return mWindow; }
-
- private:
-  virtual void init(const WindowProps& props);
-  virtual void shutdown();
+  virtual void* GetNativeWindow() const override { return p_glfw_window_; }
 
  private:
-  GLFWwindow* mWindow;
-  GraphicsContext* mContext;
+  virtual void Init(const WindowProps& props);
+  virtual void Shutdown();
+
+ private:
+  GLFWwindow* p_glfw_window_;
+  GraphicsContext* p_graphics_context_;
 
   struct WindowData {
-    std::string mTitle;
-    unsigned int mWidth, mHeight;
-    bool mVSync;
+    std::string title;
+    unsigned int width, height;
+    bool v_sync;
 
-    EventCallbackFn mEventCallback;
+    EventCallbackFn event_callback_fn;
   };
 
-  WindowData mData;
+  WindowData window_data_;
 };
 }  // namespace ARIA

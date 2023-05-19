@@ -2,11 +2,11 @@
 
 #include "Event.h"
 
-namespace ARIA {
+namespace aria {
 
 class ARIA_API WindowCloseEvent : public Event {
  public:
-  WindowCloseEvent() {}
+  WindowCloseEvent() = default;
 
   std::string ToString() const override {
     std::stringstream ss;
@@ -14,77 +14,77 @@ class ARIA_API WindowCloseEvent : public Event {
     return ss.str();
   }
 
-  EVENT_CLASS_TYPE(WindowClosed)
-  EVENT_CLASS_CATEGORY(EventCategoryApplication)
+  EVENT_CLASS_TYPE(WINDOW_CLOSED)
+  EVENT_CLASS_CATEGORY(EVENT_CATEGORY_APPLICATION)
 };
 
 class ARIA_API WindowResizeEvent : public Event {
  public:
   WindowResizeEvent(unsigned int width, unsigned int height)
-      : mWidth(width), mHeight(height) {}
+      : width_(width), height_(height) {}
 
-  inline unsigned int get_width() const { return mWidth; }
-  inline unsigned int get_height() const { return mHeight; }
+  inline unsigned int GetWidth() const { return width_; }
+  inline unsigned int GetHeight() const { return height_; }
 
   std::string ToString() const override {
     std::stringstream ss;
-    ss << "WindowResizeEvent: " << mWidth << ", " << mHeight;
+    ss << "WindowResizeEvent: " << width_ << ", " << height_;
     return ss.str();
   }
 
-  EVENT_CLASS_TYPE(WindowResize)
-  EVENT_CLASS_CATEGORY(EventCategoryApplication)
+  EVENT_CLASS_TYPE(WINDOW_RESIZE)
+  EVENT_CLASS_CATEGORY(EVENT_CATEGORY_APPLICATION)
 
  private:
-  unsigned int mWidth;
-  unsigned int mHeight;
+  unsigned int width_;
+  unsigned int height_;
 };
 
 class ARIA_API WindowFocusEvent : public Event {
  public:
-  WindowFocusEvent() {}
+  WindowFocusEvent() = default;
 
-  EVENT_CLASS_TYPE(WindowFocus)
-  EVENT_CLASS_CATEGORY(EventCategoryApplication)
+  EVENT_CLASS_TYPE(WINDOW_FOCUS)
+  EVENT_CLASS_CATEGORY(EVENT_CATEGORY_APPLICATION)
 };
 
 class ARIA_API WindowLostFocusEvent : public Event {
  public:
-  WindowLostFocusEvent() {}
+  WindowLostFocusEvent() = default;
 
-  EVENT_CLASS_TYPE(WindowLostFocus)
-  EVENT_CLASS_CATEGORY(EventCategoryApplication)
+  EVENT_CLASS_TYPE(WINDOW_LOST_FOCUS)
+  EVENT_CLASS_CATEGORY(EVENT_CATEGORY_APPLICATION)
 };
 
 class ARIA_API WindowMovedEvent : public Event {
  public:
-  WindowMovedEvent() {}
+  WindowMovedEvent() = default;
 
-  EVENT_CLASS_TYPE(WindowMoved)
-  EVENT_CLASS_CATEGORY(EventCategoryApplication)
+  EVENT_CLASS_TYPE(WINDOW_MOVED)
+  EVENT_CLASS_CATEGORY(EVENT_CATEGORY_APPLICATION)
 };
 
 class ARIA_API AppTickEvent : public Event {
  public:
-  AppTickEvent() {}
+  AppTickEvent() = default;
 
-  EVENT_CLASS_TYPE(AppTick)
-  EVENT_CLASS_CATEGORY(EventCategoryApplication)
+  EVENT_CLASS_TYPE(APP_TICK)
+  EVENT_CLASS_CATEGORY(EVENT_CATEGORY_APPLICATION)
 };
 
 class ARIA_API AppUpdateEvent : public Event {
  public:
-  AppUpdateEvent() {}
+  AppUpdateEvent() = default;
 
-  EVENT_CLASS_TYPE(AppUpdate)
-  EVENT_CLASS_CATEGORY(EventCategoryApplication)
+  EVENT_CLASS_TYPE(APP_UPDATE)
+  EVENT_CLASS_CATEGORY(EVENT_CATEGORY_APPLICATION)
 };
 
 class ARIA_API AppRenderEvent : public Event {
  public:
-  AppRenderEvent() {}
+  AppRenderEvent() = default;
 
-  EVENT_CLASS_TYPE(AppRender)
-  EVENT_CLASS_CATEGORY(EventCategoryApplication)
+  EVENT_CLASS_TYPE(APP_RENDER)
+  EVENT_CLASS_CATEGORY(EVENT_CATEGORY_APPLICATION)
 };
 }  // namespace ARIA
