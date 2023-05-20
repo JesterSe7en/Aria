@@ -1,56 +1,56 @@
 #include "VulkanCommandBuffer.h"
 
 #include "Platform/Vulkan/VulkanCommandBuffer.h"
-#include "Platform/Vulkan/VulkanRendererAPI.h"
+#include "Platform/Vulkan/VulkanRendererApi.h"
 #include "glm/fwd.hpp"
 #include "vulkan/vk_enum_string_helper.h"
 
 #include <cstdint>
 
-namespace ARIA {
+namespace aria {
 
 VulkanCommandBuffer::VulkanCommandBuffer() {
   VkCommandBufferAllocateInfo buffer_alloc_info;
   buffer_alloc_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
   buffer_alloc_info.pNext = nullptr;
-  buffer_alloc_info.commandPool = VulkanRendererAPI::get_vk_command_pool();
+  buffer_alloc_info.commandPool = VulkanRendererApi::GetVkCommandPool();
   buffer_alloc_info.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
   buffer_alloc_info.commandBufferCount = 1;
 
-  VkResult result = vkAllocateCommandBuffers(VulkanRendererAPI::get_vk_device(), &buffer_alloc_info, &mCommandBuffer);
+  VkResult result = vkAllocateCommandBuffers(VulkanRendererApi::GetVkDevice(), &buffer_alloc_info, &command_buffer_);
   if (result != VK_SUCCESS) {
     ARIA_CORE_ERROR("Failed to create command buffer - {0}", string_VkResult(result))
   }
 
-  set_viewport();
-  set_scissor();
+  SetViewport();
+  SetScissor();
 }
 
-void VulkanCommandBuffer::set_viewport() {
+void VulkanCommandBuffer::SetViewport() {
   VkViewport viewport;
   viewport.x = viewport.y = 0.0f;
   viewport.width = static_cast<float>(mSwapChainExtent.width);
   viewport.height = static_cast<float>(mSwapChainExtent.height);
   viewport.minDepth = 0.0f;
   viewport.maxDepth = 1.0f;
-  vkCmdSetViewport(mCommandBuffer, 0, 1, &viewport);
+  vkCmdSetViewport(command_buffer_, 0, 1, &viewport);
 }
 
-void VulkanCommandBuffer::set_scissor() {
+void VulkanCommandBuffer::SetScissor() {
   VkRect2D scissor;
   scissor.offset = {0, 0};
   scissor.extent = mSwapChainExtent;
-  vkCmdSetScissor(mCommandBuffer, 0, 1, &scissor);
+  vkCmdSetScissor(command_buffer_, 0, 1, &scissor);
 }
 
-bool VulkanCommandBuffer::start_recording() {
+bool VulkanCommandBuffer::StartRecording() {
   VkCommandBufferBeginInfo cmd_buffer_begin;
   cmd_buffer_begin.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
   cmd_buffer_begin.flags = 0;
   cmd_buffer_begin.pNext = nullptr;
   cmd_buffer_begin.pInheritanceInfo = nullptr;
 
-  VkResult result = vkBeginCommandBuffer(mCommandBuffer, &cmd_buffer_begin);
+  VkResult result = vkBeginCommandBuffer(command_buffer_, &cmd_buffer_begin);
   if (result != VK_SUCCESS) {
     ARIA_CORE_ERROR("Failed to begin recording command buffer - {0}", string_VkResult(result))
   }
@@ -58,12 +58,12 @@ bool VulkanCommandBuffer::start_recording() {
   return result;
 }
 
-void VulkanCommandBuffer::draw(std::uint32_t vertexCount, std::uint32_t instanceCount, std::uint32_t firstVertex,
-                               std::uint32_t firstInstance) {
-  vkCmdDraw(mCommandBuffer, 3, 1, 0, 0);
+void VulkanCommandBuffer::Draw(std::uint32_t vertex_count, std::uint32_t instance_count, std::uint32_t first_vertex,
+                               std::uint32_t first_instance) {
+  vkCmdDraw(command_buffer_, 3, 1, 0, 0);
 }
 
-void VulkanCommandBuffer::start_render_pass(glm::vec4 color) {
+void VulkanCommandBuffer::StartRenderPass(glm::vec4 color) {
   // TODO: can we check if begin recording is called first? assert
   VkRenderPassBeginInfo render_pass_begin;
   render_pass_begin.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
@@ -77,25 +77,25 @@ void VulkanCommandBuffer::start_render_pass(glm::vec4 color) {
   render_pass_begin.clearValueCount = 1;
   render_pass_begin.pClearValues = &clear_color;
 
-  vkCmdBeginRenderPass(mCommandBuffer, &render_pass_begin, VK_SUBPASS_CONTENTS_INLINE);
+  vkCmdBeginRenderPass(command_buffer_, &render_pass_begin, VK_SUBPASS_CONTENTS_INLINE);
 }
 
-void VulkanCommandBuffer::end_render_pass() { vkCmdEndRenderPass(mCommandBuffer); }
+void VulkanCommandBuffer::EndRenderPass() { vkCmdEndRenderPass(command_buffer_); }
 
-bool VulkanCommandBuffer::reset() {
-  VkResult result = vkResetCommandBuffer(mCommandBuffer, 0);
+bool VulkanCommandBuffer::Reset() {
+  VkResult result = vkResetCommandBuffer(command_buffer_, 0);
   if (result != VK_SUCCESS) {
     ARIA_CORE_ERROR("Failed to begin recording command buffer - {0}", string_VkResult(result))
   }
   return result;
 }
 
-bool VulkanCommandBuffer::bind() {
-  vkCmdBindPipeline(mCommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, VulkanRendererAPI::get_vk_graphics_pipeline());
+bool VulkanCommandBuffer::Bind() {
+  vkCmdBindPipeline(command_buffer_, VK_PIPELINE_BIND_POINT_GRAPHICS, VulkanRendererApi::GetVkGraphicsPipeline());
 }
 
-bool VulkanCommandBuffer::end_recording() {
-  VkResult result = vkEndCommandBuffer(mCommandBuffer);
+bool VulkanCommandBuffer::EndRecording() {
+  VkResult result = vkEndCommandBuffer(command_buffer_);
   if (result != VK_SUCCESS) {
     ARIA_CORE_ERROR("Failed to finish recording command buffer - {0}", string_VkResult(result))
   }

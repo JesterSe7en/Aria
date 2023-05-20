@@ -13,7 +13,7 @@
 #include <unordered_map>
 #include <unordered_set>
 
-#include <stdio.h>
+#include <cstdio>
 
 #ifdef ARIA_PLATFORM_WINDOWS
 #include <Windows.h>

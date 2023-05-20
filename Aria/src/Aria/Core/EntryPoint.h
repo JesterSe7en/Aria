@@ -6,10 +6,10 @@
 
 #ifdef ARIA_PLATFORM_WINDOWS
 
-extern ARIA::Application* ARIA::create_application();
+extern aria::Application *aria::CreateApplication();
 
-int main(int argc, char** argv) {
-  ARIA::Log::init();
+int main(int argc, char **argv) {
+  aria::Log::Init();
 
   ARIA_CORE_WARN("Initialized log!")
   int a = 4;
@@ -18,8 +18,8 @@ int main(int argc, char** argv) {
   ARIA_ERROR("Oh noes! An error!")
   ARIA_WARN("Warning! Warning!")
 
-  auto app = ARIA::create_application();
-  app->run();
+  auto app = aria::CreateApplication();
+  app->Run();
   delete app;
 }
 

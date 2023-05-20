@@ -1,25 +1,23 @@
 #include "ariapch.h"
 
-#include "Platform/OpenGL/OpenGLVertexArray.h"
+#include "Platform/OpenGL/OpenGlVertexArray.h"
 
 #include "VertexArray.h"
-#include "RendererAPI.h"
+#include "RendererApi.h"
 
-namespace ARIA {
+namespace aria {
 
-Ref<VertexArray> VertexArray::create() {
-  switch (RendererAPI::get_api()) {
-    case RendererAPI::API::None:
-      ARIA_CORE_ASSERT(false, "No renderer API selected for vertex array generation")
+Ref<VertexArray> VertexArray::Create() {
+  switch (RendererApi::GetApi()) {
+    case RendererApi::Api::NONE: ARIA_CORE_ASSERT(false, "No renderer API selected for vertex array generation")
       return nullptr;
-    case RendererAPI::API::OpenGL:
-      return std::make_shared<OpenGLVertexArray>();
-    case RendererAPI::API::DirectX:
-    case RendererAPI::API::Vulkan:
-      ARIA_CORE_ASSERT(false, "API selected for vertex array generation is not implemented")
+    case RendererApi::Api::OPEN_GL:return std::make_shared<OpenGlVertexArray>();
+    case RendererApi::Api::DIRECT_X:
+    case RendererApi::Api::VULKAN: ARIA_CORE_ASSERT(false,
+                                                    "API selected for vertex array generation is not implemented")
       return nullptr;
-    default:
-      ARIA_CORE_ASSERT(false, "Unknown API") return nullptr;
+    default: ARIA_CORE_ASSERT(false, "Unknown API")
+      return nullptr;
       return nullptr;
   }
 }

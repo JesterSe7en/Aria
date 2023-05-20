@@ -4,22 +4,22 @@
 #include "Timestep.h"
 #include "Aria/Events/Event.h"
 
-namespace ARIA {
+namespace aria {
 class ARIA_API Layer {
  public:
-  Layer(const std::string& name = "Layer");
+  Layer(const std::string &name = "Layer");
   virtual ~Layer() = default;
 
   // TODO: Enable/disable layers
-  virtual void on_attach() {}
-  virtual void on_detach() {}
-  virtual void on_update(Timestep delta_time) {}
-  virtual void on_event(Event& event) {}
-  virtual void on_imgui_render() {}
+  virtual void OnAttach() {}
+  virtual void OnDetach() {}
+  virtual void OnUpdate(Timestep delta_time) {}
+  virtual void OnEvent(Event &event) {}
+  virtual void OnImGuiRender() {}
 
-  inline const std::string& get_name() const { return mDebugName; }
+  inline const std::string &GetName() const { return debug_name_; }
 
  protected:
-  std::string mDebugName;
+  std::string debug_name_;
 };
 }  // namespace ARIA

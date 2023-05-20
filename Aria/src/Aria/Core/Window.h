@@ -2,44 +2,44 @@
 
 #include "Aria/Events/Event.h"
 #include "Aria/Renderer/Renderer.h"
-#include "Aria/Renderer/RendererAPI.h"
+#include "Aria/Renderer/RendererApi.h"
 #include "Base.h"
 
-namespace ARIA {
+namespace aria {
 
 struct WindowProps {
-  std::string mTitle;
-  unsigned int mWidth;
-  unsigned int mHeight;
+  std::string title;
+  unsigned int width;
+  unsigned int height;
 
-  WindowProps(const std::string& title = "Aria Engine", unsigned int width = 1280, unsigned int height = 720)
-      : mTitle(title), mWidth(width), mHeight(height) {}
+  WindowProps(const std::string &title = "Aria Engine", unsigned int width = 1280, unsigned int height = 720)
+      : title(title), width(width), height(height) {}
 };
 
 // Interface only meant for platforms with a desktop system
 class ARIA_API Window {
  public:
-  using EventCallbackFn = std::function<void(Event&)>;
+  using EventCallbackFn = std::function<void(Event &)>;
 
-  virtual void on_update() = 0;
+  virtual void OnUpdate() = 0;
 
-  virtual unsigned int get_width() const = 0;
-  virtual unsigned int get_height() const = 0;
+  virtual unsigned int GetWidth() const = 0;
+  virtual unsigned int GetHeight() const = 0;
 
   // Window attributes
-  virtual void set_event_callback(const EventCallbackFn& callback) = 0;
-  virtual void set_vsync(bool enabled) = 0;
-  virtual bool is_vsync() const = 0;
+  virtual void SetEventCallback(const EventCallbackFn &callback) = 0;
+  virtual void SetVSync(bool enabled) = 0;
+  virtual bool IsVSync() const = 0;
 
-  virtual void* get_native_window() const = 0;
+  virtual void *GetNativeWindow() const = 0;
 
-  virtual void create_window() = 0;
+  virtual void CreateAriaWindow() = 0;
 
-  virtual const char** get_required_instance_extensions(uint32_t& count) {
+  virtual const char **GetRequiredInstanceExtensions(uint32_t &count) {
     // Vulkan ONLY
     return nullptr;
   }
 
-  static Window* create(const WindowProps& props = WindowProps());
+  static Window *Create(const WindowProps &props = WindowProps());
 };
 }  // namespace ARIA

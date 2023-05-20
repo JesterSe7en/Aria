@@ -3,34 +3,34 @@
 #include <glm/fwd.hpp>
 #include <glm/glm.hpp>
 
-namespace ARIA {
+namespace aria {
 
 class OrthographicCamera {
  public:
   OrthographicCamera(float left, float right, float bottom, float top);
   ~OrthographicCamera() = default;
 
-  void set_position(const glm::vec3 &position);
-  void set_rotation(float rotation);
+  void SetPosition(const glm::vec3 &position);
+  void SetRotation(float rotation);
 
-  const glm::vec3 &get_position() const { return mPosition; }
-  float get_rotation() const { return mRotation; }
+  const glm::vec3 &GetPosition() const { return position_; }
+  float GetRotation() const { return rotation_; }
 
-  const glm::mat4 &get_view_matrix() const { return mViewMatrix; }
-  const glm::mat4 &get_projection_matrix() const { return mProjectionMatrix; }
-  const glm::mat4 &get_vp_matrix() const { return mVPMatrix; }
-
- private:
-  void recalculate_view_matrix();
+  const glm::mat4 &GetViewMatrix() const { return view_matrix_; }
+  const glm::mat4 &GetProjectionMatrix() const { return projection_matrix_; }
+  const glm::mat4 &GetVpMatrix() const { return vp_matrix_; }
 
  private:
-  glm::mat4 mViewMatrix = glm::mat4(1.0f);
-  glm::mat4 mProjectionMatrix;
-  glm::mat4 mVPMatrix;  // for caching purposes - view projection matrix
+  void RecalculateViewMatrix();
 
-  glm::vec3 mPosition = {0.0f, 0.0f, 0.0f};
+ private:
+  glm::mat4 view_matrix_ = glm::mat4(1.0f);
+  glm::mat4 projection_matrix_;
+  glm::mat4 vp_matrix_;  // for caching purposes - view projection matrix
 
-  float mRotation = 0.0f;
+  glm::vec3 position_ = {0.0f, 0.0f, 0.0f};
+
+  float rotation_ = 0.0f;
 };
 
 class PerspectiveCamera {
@@ -39,11 +39,11 @@ class PerspectiveCamera {
   ~PerspectiveCamera() = default;
 
  private:
-  glm::mat4 mViewMatrix;
-  glm::mat4 mProjectionMatrix;
-  glm::mat4 mVPMatrix;  // for caching purposes
+  glm::mat4 view_matrix_;
+  glm::mat4 projection_matrix_;
+  glm::mat4 vp_matrix_;  // for caching purposes
 
-  glm::vec3 mPosition;
+  glm::vec3 position_;
 
   // need a quaternion here to track rotation
 };

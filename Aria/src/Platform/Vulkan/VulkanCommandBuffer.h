@@ -4,28 +4,28 @@
 
 #include <glm/glm.hpp>
 
-namespace ARIA {
+namespace aria {
 class VulkanCommandBuffer {
  public:
   VulkanCommandBuffer();
 
-  // not doing anything in destructor - destroying command pool is sufficent
+  // not doing anything in destructor - destroying command pool is sufficient
   // vk spec 1.3 pg. 201
   ~VulkanCommandBuffer() = default;
 
-  bool start_recording();
-  void draw(std::uint32_t vertexCount, std::uint32_t instanceCount, std::uint32_t firstVertex,
-            std::uint32_t firstInstance);
-  void start_render_pass(glm::vec4 color = {0.0f, 0.0f, 0.0f, 1.0f});
-  void end_render_pass();
-  bool reset();
-  bool bind();
-  bool end_recording();
+  bool StartRecording();
+  void Draw(std::uint32_t vertex_count, std::uint32_t instance_count, std::uint32_t first_vertex,
+            std::uint32_t first_instance);
+  void StartRenderPass(glm::vec4 color = {0.0f, 0.0f, 0.0f, 1.0f});
+  void EndRenderPass();
+  bool Reset();
+  bool Bind();
+  bool EndRecording();
 
  private:
-  VkCommandBuffer mCommandBuffer;
+  VkCommandBuffer command_buffer_ = nullptr;
 
-  void set_viewport();
-  void set_scissor();
+  void SetViewport();
+  void SetScissor();
 };
 }  // namespace ARIA

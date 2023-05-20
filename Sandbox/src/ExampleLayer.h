@@ -4,32 +4,32 @@
 
 #include <Aria.h>
 
-class ExampleLayer : public ARIA::Layer {
+class ExampleLayer : public aria::Layer {
  public:
   ExampleLayer();
 
-  void on_update(ARIA::Timestep delta_time) override;
-  void on_event(ARIA::Event& event) override;
+  void OnUpdate(aria::Timestep delta_time) override;
+  void OnEvent(aria::Event &event) override;
 
-  void on_imgui_render() override;
+  void OnImGuiRender() override;
 
  private:
-  ARIA::OrthographicCamera mOrthoCamera = ARIA::OrthographicCamera(-1.6f, 1.6f, -0.9f, 0.9f);
-  ARIA::Ref<ARIA::Shader> mTriangleShader;
-  ARIA::Ref<ARIA::VertexBuffer> mTriangleVB;
-  ARIA::Ref<ARIA::IndexBuffer> mTriangleIB;
-  ARIA::Ref<ARIA::VertexArray> mTriangleVA;
+  aria::OrthographicCamera mOrthoCamera = aria::OrthographicCamera(-1.6f, 1.6f, -0.9f, 0.9f);
+  aria::Ref<aria::Shader> mTriangleShader;
+  aria::Ref<aria::VertexBuffer> mTriangleVB;
+  aria::Ref<aria::IndexBuffer> mTriangleIB;
+  aria::Ref<aria::VertexArray> mTriangleVA;
 
-  ARIA::Ref<ARIA::VertexArray> mSquareVA;
-  ARIA::Ref<ARIA::VertexBuffer> mSquareVB;
-  ARIA::Ref<ARIA::IndexBuffer> mSquareIB;
-  ARIA::Ref<ARIA::Shader> mFlatColorShader;
+  aria::Ref<aria::VertexArray> mSquareVA;
+  aria::Ref<aria::VertexBuffer> mSquareVB;
+  aria::Ref<aria::IndexBuffer> mSquareIB;
+  aria::Ref<aria::Shader> mFlatColorShader;
 
-  ARIA::Ref<ARIA::Shader> mTextureShader;
+  aria::Ref<aria::Shader> mTextureShader;
 
-  ARIA::Ref<ARIA::Texture2D> mTexture2D, mCatTexture2D;
+  aria::Ref<aria::Texture2D> mTexture2D, mCatTexture2D;
 
-  ARIA::ShaderLibrary mShaderLibrary;
+  aria::ShaderLibrary mShaderLibrary;
 
   const float camera_move_speed = 5.0f;
   const float camera_rotate_speed = 90.0f;

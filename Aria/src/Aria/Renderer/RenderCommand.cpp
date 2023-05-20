@@ -3,32 +3,28 @@
 #include "Aria/Renderer/RenderCommand.h"
 
 #include "Aria/Core/Base.h"
-#include "Aria/Renderer/RendererAPI.h"
-#include "Platform/OpenGL/OpenGLRendererAPI.h"
-#include "Platform/Vulkan/VulkanRendererAPI.h"
-#include "RenderCommand.h"
+#include "Aria/Renderer/RendererApi.h"
+#include "Platform/OpenGL/OpenGlRendererApi.h"
+#include "Platform/Vulkan/VulkanRendererApi.h"
 
 #include <memory>
 
-namespace ARIA {
+namespace aria {
 
-std::unique_ptr<RendererAPI> RenderCommand::sRendererAPI = nullptr;
+std::unique_ptr<RendererApi> RenderCommand::p_renderer_api_ = nullptr;
 
-void RenderCommand::init(RendererAPI::API api) {
+void RenderCommand::Init(RendererApi::Api api) {
   switch (api) {
-    case RendererAPI::API::OpenGL:
-      sRendererAPI = std::make_unique<OpenGLRendererAPI>();
+    case RendererApi::Api::OPEN_GL:p_renderer_api_ = std::make_unique<OpenGlRendererApi>();
       break;
-    case RendererAPI::API::Vulkan:
-      sRendererAPI = std::make_unique<VulkanRendererAPI>();
+    case RendererApi::Api::VULKAN:p_renderer_api_ = std::make_unique<VulkanRendererApi>();
       break;
-    default:
-      ARIA_CORE_ASSERT(false, "Attempted to initialized unknown API")
+    default: ARIA_CORE_ASSERT(false, "Attempted to initialized unknown API")
       return;
   }
 
-  sRendererAPI->init();
+  p_renderer_api_->Init();
 }
 
-void RenderCommand::create_pipeline() { sRendererAPI->create_pipeline(); }
+void RenderCommand::CreatePipeline() { p_renderer_api_->CreatePipeline(); }
 }  // namespace ARIA

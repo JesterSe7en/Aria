@@ -6,48 +6,48 @@
 #include <optional>
 #include <vector>
 
-namespace ARIA {
+namespace aria {
 class VulkanDeviceManager {
  public:
   VulkanDeviceManager();
 
-  static VulkanDeviceManager& get_instance() {
+  static VulkanDeviceManager &GetInstance() {
     static VulkanDeviceManager instance;
     return instance;
   }
 
  private:
   struct QueueFamilyIndices {
-    std::optional<std::uint32_t> graphicsFamily;
-    std::optional<std::uint32_t> presentFamily;
-    bool is_complete() const { return graphicsFamily.has_value() && presentFamily.has_value(); }
+    std::optional<std::uint32_t> graphics_family;
+    std::optional<std::uint32_t> present_family;
+    bool IsComplete() const { return graphics_family.has_value() && present_family.has_value(); }
   };
 
  public:
   struct VulkanPhysicalDevice {
-    VkPhysicalDevice physicalDevice;
-    std::vector<VkQueueFamilyProperties> queueFamilies;
+    VkPhysicalDevice physical_device;
+    std::vector<VkQueueFamilyProperties> queue_families;
   };
 
-  VulkanDeviceManager(const VulkanDeviceManager&) = delete;
-  VulkanDeviceManager& operator=(const VulkanDeviceManager&) = delete;
+  VulkanDeviceManager(const VulkanDeviceManager &) = delete;
+  VulkanDeviceManager &operator=(const VulkanDeviceManager &) = delete;
 
-  static VkDevice get_logical_device();
-  static VulkanPhysicalDevice get_physical_device() { return sPhysicalDevice; }
+  static VkDevice GetLogicalDevice();
+  static VulkanPhysicalDevice GetPhysicalDevice() { return physical_device_; }
 
  private:
   // only one for now..yeah??
-  static VkDevice sDevice;
-  static VulkanPhysicalDevice sPhysicalDevice;
-  static QueueFamilyIndices mQueueFamilies;
+  static VkDevice device_;
+  static VulkanPhysicalDevice physical_device_;
+  static QueueFamilyIndices queue_family_indices_;
 
-  VkInstance& mInstance;
+  VkInstance &instance_;
 
-  std::vector<VkPhysicalDevice> mAllPhysicalDevices;
+  std::vector<VkPhysicalDevice> all_physical_devices_;
 
-  void selectSuitablePhysicalDevice();
-  void createLogicalDevice();
-  std::vector<VkQueueFamilyProperties> queryQueueFamilies(VkPhysicalDevice& physicalDevice);
-  bool isSuitableVulkanDevice(VkPhysicalDevice& physicalDevice);
+  void SelectSuitablePhysicalDevice();
+  void CreateLogicalDevice();
+  std::vector<VkQueueFamilyProperties> QueryQueueFamilies(VkPhysicalDevice &physical_device);
+  bool IsSuitableVulkanDevice(VkPhysicalDevice &physical_device);
 };
 }  // namespace ARIA

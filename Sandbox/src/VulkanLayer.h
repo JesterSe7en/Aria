@@ -4,30 +4,30 @@
 #include "Aria/Events/Event.h"
 #include "Aria/Renderer/Shader.h"
 #include "Platform/Vulkan/VulkanCommandBuffer.h"
-#include "Platform/Vulkan/VulkanRendererAPI.h"
+#include "Platform/Vulkan/VulkanRendererApi.h"
 #include "vulkan/vulkan_core.h"
 
 #include <Aria.h>
 
-class VulkanLayer : public ARIA::Layer {
+class VulkanLayer : public aria::Layer {
  public:
   VulkanLayer();
   ~VulkanLayer() override;
 
-  void on_update(ARIA::Timestep delta_time) override;
-  void on_event(ARIA::Event& event) override;
+  void OnUpdate(aria::Timestep delta_time) override;
+  void OnEvent(aria::Event &event) override;
 
-  void on_imgui_render() override;
+  void OnImGuiRender() override;
 
   static VkDevice sDevice;
 
  private:
-  ARIA::Ref<ARIA::Shader> mVertexShader;
-  ARIA::Ref<ARIA::Shader> mFragShader;
-  ARIA::ShaderLibrary mShaderLibrary;
+  aria::Ref<aria::Shader> mVertexShader;
+  aria::Ref<aria::Shader> mFragShader;
+  aria::ShaderLibrary mShaderLibrary;
 
   VkSemaphore mImageAvailableSemaphore;
   VkSemaphore mRenderFinishedSemaphore;
   VkFence mInFlightFence;
-  ARIA::VulkanCommandBuffer mCommandBuffer;
+  aria::VulkanCommandBuffer mCommandBuffer;
 };

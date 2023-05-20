@@ -2,52 +2,51 @@
 
 #include "Aria/Core/Log.h"
 #include "Aria/Renderer/Shader.h"
-#include "Platform/Vulkan/VulkanRendererAPI.h"
-#include "Platform/Vulkan/VulkanShader.h"
+#include "Platform/Vulkan/VulkanRendererApi.h"
 
 #include <filesystem>
 
-namespace ARIA {
+namespace aria {
 // Only accepts SPIR-V byte code...for now
-VulkanShader::VulkanShader(const std::string& file_path) {
+VulkanShader::VulkanShader(const std::string &file_path) {
   if (!std::filesystem::exists(file_path)) {
     ARIA_CORE_WARN("Cannot find shader bytecode file: {0}", file_path)
     return;
   }
-  create_shader(file_path);
-  add_to_pipeline();
+  CreateShader(file_path);
+  AddToPipeline();
 }
 
-VulkanShader::VulkanShader(const std::string& file_path, ShaderType type) : mType(type) {
+VulkanShader::VulkanShader(const std::string &file_path, ShaderType type) : shader_type_(type) {
   if (!std::filesystem::exists(file_path)) {
     ARIA_CORE_WARN("Cannot find shader bytecode file: {0}", file_path)
     return;
   }
 
-  mName = std::filesystem::path(file_path).filename().stem().string();
-  create_shader(file_path);
-  add_to_pipeline();
+  name_ = std::filesystem::path(file_path).filename().stem().string();
+  CreateShader(file_path);
+  AddToPipeline();
 }
 
-VulkanShader::~VulkanShader() { vkDestroyShaderModule(VulkanRendererAPI::get_vk_device(), mShaderModule, nullptr); }
+VulkanShader::~VulkanShader() { vkDestroyShaderModule(VulkanRendererApi::GetVkDevice(), vk_shader_module_, nullptr); }
 
-void VulkanShader::bind() const {}
+void VulkanShader::Bind() const {}
 
-void VulkanShader::unbind() const {}
+void VulkanShader::Unbind() const {}
 
-void VulkanShader::create_shader(const std::string& file_path) {
-  auto bytecode = parse_bytecode_file(file_path);
-  create_shader_module(bytecode);
+void VulkanShader::CreateShader(const std::string &file_path) {
+  auto bytecode = ParseByteCodeFile(file_path);
+  CreateShaderModule(bytecode);
 }
 
-std::vector<char> VulkanShader::parse_bytecode_file(const std::string& file_path) const {
+std::vector<char> VulkanShader::ParseByteCodeFile(const std::string &file_path) const {
   std::ifstream bytecode_file(file_path, std::ios::ate | std::ios::binary);
 
   if (!bytecode_file.is_open()) {
     ARIA_CORE_ERROR("Cannot open shader bytecode file: {0}", file_path)
   }
 
-  auto file_size = (size_t)bytecode_file.tellg();
+  auto file_size = (size_t) bytecode_file.tellg();
   std::vector<char> buffer(file_size);
 
   bytecode_file.seekg(0);
@@ -57,19 +56,20 @@ std::vector<char> VulkanShader::parse_bytecode_file(const std::string& file_path
   return buffer;
 }
 
-void VulkanShader::create_shader_module(const std::vector<char>& code) {
+void VulkanShader::CreateShaderModule(const std::vector<char> &code) {
   VkShaderModuleCreateInfo create_info;
   create_info.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
   create_info.pNext = nullptr;
   create_info.flags = 0;
   create_info.codeSize = code.size();
-  create_info.pCode = reinterpret_cast<const uint32_t*>(code.data());  // TODO: use dynamic cast?
+  create_info.pCode = reinterpret_cast<const uint32_t *>(code.data());  // TODO: use dynamic cast?
 
-  if (vkCreateShaderModule(VulkanRendererAPI::get_vk_device(), &create_info, nullptr, &mShaderModule) != VK_SUCCESS) {
-    ARIA_CORE_ERROR("Cannot create shader module for {0}", mName)  // TODO: more useful if file path?
+  if (vkCreateShaderModule(VulkanRendererApi::GetVkDevice(), &create_info, nullptr, &vk_shader_module_)
+      != VK_SUCCESS) {
+    ARIA_CORE_ERROR("Cannot create shader module for {0}", name_)  // TODO: more useful if file path?
   }
 }
 
-void VulkanShader::add_to_pipeline() { VulkanRendererAPI::add_to_pipeline(mShaderModule, mType); }
+void VulkanShader::AddToPipeline() { VulkanRendererApi::AddToPipeline(vk_shader_module_, shader_type_); }
 
 }  // namespace ARIA

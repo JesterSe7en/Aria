@@ -2,58 +2,58 @@
 
 #include "Event.h"
 
-namespace ARIA {
+namespace aria {
 
 class ARIA_API MouseMovedEvent : public Event {
  public:
-  MouseMovedEvent(float x, float y) : mMouseX(x), mMouseY(y) {}
+  MouseMovedEvent(float x, float y) : mouse_x_(x), mouse_y_(y) {}
 
-  inline float get_x() const { return mMouseX; }
-  inline float get_y() const { return mMouseY; }
+  inline float GetX() const { return mouse_x_; }
+  inline float GetY() const { return mouse_y_; }
 
   std::string ToString() const override {
     std::stringstream ss;
-    ss << "MouseMovedEvent: " << mMouseX << ", " << mMouseY;
+    ss << "MouseMovedEvent: " << mouse_x_ << ", " << mouse_y_;
     return ss.str();
   }
 
   EVENT_CLASS_TYPE(MouseMoved)
-  EVENT_CLASS_CATEGORY(EventCatagoryMouse | EventCatagoryInput)
+  EVENT_CLASS_CATEGORY(EVENT_CATEGORY_MOUSE | EVENT_CATEGORY_INPUT)
 
  private:
-  float mMouseX, mMouseY;
+  float mouse_x_, mouse_y_;
 };
 
 class ARIA_API MouseScrolledEvent : public Event {
  public:
-  MouseScrolledEvent(float xOffset, float yOffset)
-      : mXOffset(xOffset), mYOffset(yOffset) {}
+  MouseScrolledEvent(float x_offset, float y_offset)
+      : x_offset_(x_offset), y_offset_(y_offset) {}
 
-  inline float get_x_offset() const { return mXOffset; }
-  inline float get_y_offset() const { return mYOffset; }
+  inline float GetXOffset() const { return x_offset_; }
+  inline float GetYOffset() const { return y_offset_; }
 
   std::string ToString() const override {
     std::stringstream ss;
-    ss << "MouseScrolledEvent: " << mXOffset << ", " << mYOffset;
+    ss << "MouseScrolledEvent: " << x_offset_ << ", " << y_offset_;
     return ss.str();
   }
 
   EVENT_CLASS_TYPE(MouseScrolled)
-  EVENT_CLASS_CATEGORY(EventCatagoryMouse | EventCatagoryInput)
+  EVENT_CLASS_CATEGORY(EVENT_CATEGORY_MOUSE | EVENT_CATEGORY_INPUT)
 
  private:
-  float mXOffset, mYOffset;
+  float x_offset_, y_offset_;
 };
 
 class ARIA_API MouseButtonEvent : public Event {
  public:
-  inline int get_mouse_button() const { return mButton; }
+  inline int GetMouseButton() const { return button_; }
 
-  EVENT_CLASS_CATEGORY(EventCatagoryMouse | EventCatagoryInput)
+  EVENT_CLASS_CATEGORY(EVENT_CATEGORY_MOUSE | EVENT_CATEGORY_INPUT)
  protected:
-  MouseButtonEvent(int button) : mButton(button) {}
+  MouseButtonEvent(int button) : button_(button) {}
 
-  int mButton;
+  int button_;
 };
 
 class ARIA_API MouseButtonPressedEvent : public MouseButtonEvent {
@@ -62,11 +62,11 @@ class ARIA_API MouseButtonPressedEvent : public MouseButtonEvent {
 
   std::string ToString() const override {
     std::stringstream ss;
-    ss << "MouseButtonPressedEvent: " << mButton;
+    ss << "MouseButtonPressedEvent: " << button_;
     return ss.str();
   }
 
-  EVENT_CLASS_TYPE(MouseButtonPressed)
+  EVENT_CLASS_TYPE(MOUSE_BUTTON_PRESSED)
 };
 
 class ARIA_API MouseButtonReleasedEvent : public MouseButtonEvent {
@@ -75,10 +75,10 @@ class ARIA_API MouseButtonReleasedEvent : public MouseButtonEvent {
 
   std::string ToString() const override {
     std::stringstream ss;
-    ss << "MouseButtonReleasedEvent: " << mButton;
+    ss << "MouseButtonReleasedEvent: " << button_;
     return ss.str();
   }
 
-  EVENT_CLASS_TYPE(MouseButtonReleased)
+  EVENT_CLASS_TYPE(MOUSE_BUTTON_RELEASED)
 };
 }  // namespace ARIA

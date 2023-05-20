@@ -2,36 +2,36 @@
 #include "Platform/Vulkan/VulkanDeviceManager.h"
 
 #include "Aria/Core/Log.h"
-#include "Platform/Vulkan/VulkanRendererAPI.h"
+#include "Platform/Vulkan/VulkanRendererApi.h"
 #include "vulkan/vk_enum_string_helper.h"
 
-#include <string.h>
+#include <cstring>
 
-namespace ARIA {
+namespace aria {
 
 VulkanDeviceManager::VulkanPhysicalDevice sPhysicalDevice{VK_NULL_HANDLE, {}};
 
-VulkanDeviceManager::VulkanDeviceManager() : mInstance(VulkanRendererAPI::get_vk_instance()) {
-  selectSuitablePhysicalDevice();
-  createLogicalDevice();
+VulkanDeviceManager::VulkanDeviceManager() : instance_(VulkanRendererApi::GetVkInstance()) {
+  SelectSuitablePhysicalDevice();
+  CreateLogicalDevice();
 }
 
-void VulkanDeviceManager::selectSuitablePhysicalDevice() {
+void VulkanDeviceManager::SelectSuitablePhysicalDevice() {
   std::uint32_t device_count = 0;
-  vkEnumeratePhysicalDevices(mInstance, &device_count, nullptr);
+  vkEnumeratePhysicalDevices(instance_, &device_count, nullptr);
 
   ARIA_CORE_ASSERT(device_count != 0, "You tried to setup with Vulkan API, but no GPU's found with Vulkan support")
 
-  mAllPhysicalDevices.resize(device_count);
-  vkEnumeratePhysicalDevices(mInstance, &device_count, mAllPhysicalDevices.data());
+  all_physical_devices_.resize(device_count);
+  vkEnumeratePhysicalDevices(instance_, &device_count, all_physical_devices_.data());
 
-  for (VkPhysicalDevice physicalDevice : mAllPhysicalDevices) {
-    if (isSuitableVulkanDevice(physicalDevice)) {
-      sPhysicalDevice.physicalDevice = physicalDevice;
-      sPhysicalDevice.queueFamilies = queryQueueFamilies(sPhysicalDevice.physicalDevice);
+  for (VkPhysicalDevice physical_device : all_physical_devices_) {
+    if (IsSuitableVulkanDevice(physical_device)) {
+      physical_device_.physical_device = physical_device;
+      physical_device_.queue_families = QueryQueueFamilies(physical_device_.physical_device);
 
       VkPhysicalDeviceProperties properties;
-      vkGetPhysicalDeviceProperties(sPhysicalDevice.physicalDevice, &properties);
+      vkGetPhysicalDeviceProperties(physical_device_.physical_device, &properties);
 
       ARIA_CORE_INFO("--- Vulkan GUI Device --- ")
       ARIA_CORE_INFO("Name: {0}", properties.deviceName)
@@ -41,7 +41,7 @@ void VulkanDeviceManager::selectSuitablePhysicalDevice() {
     }
   }
 
-  ARIA_CORE_ASSERT(sPhysicalDevice.physicalDevice != VK_NULL_HANDLE,
+  ARIA_CORE_ASSERT(physical_device_.physical_device != VK_NULL_HANDLE,
                    "Found GPUs with Vulkan support, but no suitable devices for Aria Engine")
 
   // features can include optional capabilities such as geometry shaders, tessellation shaders, multi-viewport
@@ -123,46 +123,46 @@ void VulkanDeviceManager::selectSuitablePhysicalDevice() {
 //   // vkGetDeviceQueue(sDevice, indices.presentFamily.value(), 0, &mPresentQueue);
 // }
 
-std::vector<VkQueueFamilyProperties> VulkanDeviceManager::queryQueueFamilies(VkPhysicalDevice& physicalDevice) {
-  std::uint32_t queueFamilyCount = 0;
-  vkGetPhysicalDeviceQueueFamilyProperties(physicalDevice, &queueFamilyCount, nullptr);
+std::vector<VkQueueFamilyProperties> VulkanDeviceManager::QueryQueueFamilies(VkPhysicalDevice &physical_device) {
+  std::uint32_t queue_family_count = 0;
+  vkGetPhysicalDeviceQueueFamilyProperties(physical_device, &queue_family_count, nullptr);
 
-  std::vector<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
-  vkGetPhysicalDeviceQueueFamilyProperties(physicalDevice, &queueFamilyCount, queueFamilies.data());
+  std::vector<VkQueueFamilyProperties> queue_families(queue_family_count);
+  vkGetPhysicalDeviceQueueFamilyProperties(physical_device, &queue_family_count, queue_families.data());
 
   int i = 0;
   // All possible queue families
   // https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkQueueFlagBits.html
 
-  for (const auto& queueFamily : queueFamilies) {
+  for (const auto &kQueueFamily : queue_families) {
     VkBool32 surface_supported = false;
-    vkGetPhysicalDeviceSurfaceSupportKHR(physicalDevice, i, mSurface, &surface_supported);
+    vkGetPhysicalDeviceSurfaceSupportKHR(physical_device, i, mSurface, &surface_supported);
 
     if (surface_supported) {
-      mQueueFamilies.presentFamily = i;
+      queue_family_indices_.present_family = i;
     }
 
-    if (queueFamily.queueFlags & VK_QUEUE_GRAPHICS_BIT) {
-      mQueueFamilies.graphicsFamily = i;
+    if (kQueueFamily.queueFlags & VK_QUEUE_GRAPHICS_BIT) {
+      queue_family_indices_.graphics_family = i;
     }
 
-    if (mQueueFamilies.is_complete()) {
+    if (queue_family_indices_.IsComplete()) {
       break;
     }
     i++;
   }
 }
 
-bool VulkanDeviceManager::isSuitableVulkanDevice(VkPhysicalDevice device) {
-  QueryFamilyIndices queue_families = queryQueueFamilies(device);
+bool VulkanDeviceManager::IsSuitableVulkanDevice(VkPhysicalDevice &physical_device) {
+  QueryFamilyIndices queue_families = QueryQueueFamilies(physical_device);
 
   bool swap_chain_supported = false;
-  if (check_device_extensions_support(device)) {
-    SwapChainDetails details = query_swap_chain_support(device);
-    swap_chain_supported = !details.formats.empty() && !details.presentModes.empty();
+  if (check_device_extensions_support(physical_device)) {
+    SwapChainDetails details = query_swap_chain_support(physical_device);
+    swap_chain_supported = !details.formats.empty() && !details.present_modes.empty();
   }
 
-  return queue_families.is_complete() && swap_chain_supported;
+  return queue_families.IsComplete() && swap_chain_supported;
 
   // VkPhysicalDeviceProperties properties;
   // vkGetPhysicalDeviceProperties(device, &properties);

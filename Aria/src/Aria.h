@@ -2,7 +2,7 @@
 
 // For use by ARIA applications
 
-#include <stdio.h>
+#include <cstdio>
 #include "Aria/Core/Base.h"
 #include "Aria/Core/Application.h"
 #include "Aria/Core/Layer.h"

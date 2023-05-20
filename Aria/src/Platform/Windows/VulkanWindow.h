@@ -1,40 +1,39 @@
 #pragma once
 
 #include "Aria/Core/Window.h"
-#include "Aria/Renderer/RendererAPI.h"
-#include "Platform/Vulkan/VulkanRendererAPI.h"
+#include "Aria/Renderer/RendererApi.h"
+#include "Platform/Vulkan/VulkanRendererApi.h"
 
-#define VK_USE_PLATFORM_WIN32_KHR
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 #define GLFW_EXPOSE_NATIVE_WIN32
 #include <GLFW/glfw3native.h>
 #include <vulkan/vulkan_core.h>
 
-namespace ARIA {
+namespace aria {
 class VulkanWindow : public Window {
  public:
-  VulkanWindow(const WindowProps& props);
+  VulkanWindow(const WindowProps &props);
   virtual ~VulkanWindow() = default;
 
-  void on_update() override;
+  void OnUpdate() override;
 
-  inline unsigned int get_width() const override { return window_data.width; }
-  inline unsigned int get_height() const override { return window_data.height; }
+  inline unsigned int GetWidth() const override { return window_data_.width; }
+  inline unsigned int GetHeight() const override { return window_data_.height; }
 
   // Window attributes
-  inline void set_event_callback(const EventCallbackFn& callback) override { window_data.event_callback = callback; }
-  void set_vsync(bool enabled) override;
-  inline bool is_vsync() const override { return window_data.vsync; }
+  inline void SetEventCallback(const EventCallbackFn &callback) override { window_data_.event_callback = callback; }
+  void SetVSync(bool enabled) override;
+  inline bool IsVSync() const override { return window_data_.vsync; }
 
-  void create_window() override;
-  void* get_native_window() const override { return glfw_window; }
+  void CreateAriaWindow() override;
+  void *GetNativeWindow() const override { return p_glfw_window_; }
 
  private:
-  void init();
+  void Init();
 
-  bool glfw_initalized = false;
-  GLFWwindow* glfw_window;
+  bool glfw_initialized_ = false;
+  GLFWwindow *p_glfw_window_;
 
   struct VulkanWindowData {
     std::string title;
@@ -45,6 +44,6 @@ class VulkanWindow : public Window {
     EventCallbackFn event_callback;
   };
 
-  VulkanWindowData window_data;
+  VulkanWindowData window_data_;
 };
 }  // namespace ARIA
