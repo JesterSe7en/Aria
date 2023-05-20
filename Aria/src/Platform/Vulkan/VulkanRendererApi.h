@@ -50,6 +50,8 @@ class VulkanRendererApi : public RendererApi {
 
   static void AddToPipeline(VkShaderModule &shader_module, ShaderType type);
 
+  constexpr static const std::array<const char *, 1> validation_layers_ = {"VK_LAYER_KHRONOS_validation"};
+
  private:
   struct QueryFamilyIndices {
     std::optional<std::uint32_t> graphics_family;
@@ -87,7 +89,6 @@ class VulkanRendererApi : public RendererApi {
   std::vector<VkImageView> swap_chain_image_views_;
   std::vector<VkFramebuffer> swap_chain_frame_buffers_;
 
-  const std::vector<const char *> validation_layers_ = {"VK_LAYER_KHRONOS_validation"};
   const std::vector<const char *> device_extensions_ = {"VK_KHR_swapchain"};
   const std::vector<VkDynamicState> dynamic_states_ = {VK_DYNAMIC_STATE_VIEWPORT, VK_DYNAMIC_STATE_SCISSOR};
 

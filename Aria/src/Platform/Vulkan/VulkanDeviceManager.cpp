@@ -109,8 +109,8 @@ void VulkanDeviceManager::CreateLogicalDevice() {
   }
 
   if (kEnableValidationLayers) {
-    create_info.enabledLayerCount = static_cast<std::uint32_t>(mValidationLayers.size());
-    create_info.ppEnabledLayerNames = mValidationLayers.data();
+    create_info.enabledLayerCount = static_cast<std::uint32_t>(VulkanRendererApi::validation_layers_.size());
+    create_info.ppEnabledLayerNames = VulkanRendererApi::validation_layers_.data();
   } else {
     create_info.enabledLayerCount = 0;
   }
