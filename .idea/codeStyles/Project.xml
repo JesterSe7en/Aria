@@ -8,7 +8,6 @@
       <option name="INDENT_VISIBILITY_KEYWORDS" value="1" />
       <option name="INDENT_INSIDE_CODE_BLOCK" value="2" />
       <option name="KEEP_STRUCTURES_IN_ONE_LINE" value="true" />
-      <option name="KEEP_CASE_EXPRESSIONS_IN_ONE_LINE" value="true" />
       <option name="FUNCTION_NON_TOP_AFTER_RETURN_TYPE_WRAP" value="0" />
       <option name="FUNCTION_TOP_AFTER_RETURN_TYPE_WRAP" value="0" />
       <option name="FUNCTION_PARAMETERS_WRAP" value="5" />
@@ -59,6 +58,7 @@
       <option name="BINARY_OPERATION_SIGN_ON_NEXT_LINE" value="true" />
       <option name="FOR_STATEMENT_WRAP" value="1" />
       <option name="ASSIGNMENT_WRAP" value="1" />
+      <option name="SOFT_MARGINS" value="120" />
       <indentOptions>
         <option name="INDENT_SIZE" value="2" />
         <option name="CONTINUATION_INDENT_SIZE" value="4" />
