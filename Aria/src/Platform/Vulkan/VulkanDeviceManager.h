@@ -23,6 +23,12 @@ class VulkanDeviceManager {
     bool IsComplete() const { return graphics_family.has_value() && present_family.has_value(); }
   };
 
+  struct SwapChainDetails {
+    VkSurfaceCapabilitiesKHR capabilities;
+    std::vector<VkSurfaceFormatKHR> formats;
+    std::vector<VkPresentModeKHR> present_modes;
+  };
+
  public:
   struct VulkanPhysicalDevice {
     VkPhysicalDevice physical_device;
@@ -32,14 +38,16 @@ class VulkanDeviceManager {
   VulkanDeviceManager(const VulkanDeviceManager &) = delete;
   VulkanDeviceManager &operator=(const VulkanDeviceManager &) = delete;
 
-  static VkDevice GetLogicalDevice();
+  static VkDevice GetLogicalDevice() { return device_; }
   static VulkanPhysicalDevice GetPhysicalDevice() { return physical_device_; }
 
  private:
-  // only one for now..yeah??
+  // only one for now...yeah??
   static VkDevice device_;
   static VulkanPhysicalDevice physical_device_;
   static QueueFamilyIndices queue_family_indices_;
+
+  const std::vector<const char *> device_extensions_ = {"VK_KHR_swapchain"};
 
   VkInstance &instance_;
 
@@ -49,5 +57,7 @@ class VulkanDeviceManager {
   void CreateLogicalDevice();
   std::vector<VkQueueFamilyProperties> QueryQueueFamilies(VkPhysicalDevice &physical_device);
   bool IsSuitableVulkanDevice(VkPhysicalDevice &physical_device);
+  SwapChainDetails QuerySwapChainSupport(VkPhysicalDevice &physical_device);
+  bool CheckDeviceExtensionsSupport(VkPhysicalDevice &physical_device);
 };
-}  // namespace ARIA
+}// namespace aria

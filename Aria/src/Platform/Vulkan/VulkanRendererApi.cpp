@@ -20,12 +20,6 @@
 
 namespace aria {
 
-#ifdef NDEBUG
-const bool kEnableValidationLayers = false;
-#else
-const bool kEnableValidationLayers = true;
-#endif
-
 VkInstance VulkanRendererApi::p_vk_instance_t_ = nullptr;
 VkDevice VulkanRendererApi::p_device_t_ = VK_NULL_HANDLE;
 std::vector<VkShaderModule> VulkanRendererApi::shader_modules_ = {};

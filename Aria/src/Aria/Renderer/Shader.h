@@ -8,6 +8,7 @@
 namespace aria {
 
 enum class ShaderType {
+  NONE,
   VERTEX,
   FRAGMENT,
   // add more later

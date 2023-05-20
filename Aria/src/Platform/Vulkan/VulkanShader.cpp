@@ -8,7 +8,7 @@
 
 namespace aria {
 // Only accepts SPIR-V byte code...for now
-VulkanShader::VulkanShader(const std::string &file_path) {
+VulkanShader::VulkanShader(const std::string &file_path) : shader_type_(ShaderType::NONE) {
   if (!std::filesystem::exists(file_path)) {
     ARIA_CORE_WARN("Cannot find shader bytecode file: {0}", file_path)
     return;

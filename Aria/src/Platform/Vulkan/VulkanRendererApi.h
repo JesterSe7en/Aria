@@ -12,6 +12,13 @@
 #include <vector>
 
 namespace aria {
+
+#ifdef NDEBUG
+const bool kEnableValidationLayers = false;
+#else
+const bool kEnableValidationLayers = true;
+#endif
+
 class VulkanRendererApi : public RendererApi {
  public:
   ~VulkanRendererApi();

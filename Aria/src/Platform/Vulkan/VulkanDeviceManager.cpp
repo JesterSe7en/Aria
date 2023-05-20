@@ -6,10 +6,11 @@
 #include "vulkan/vk_enum_string_helper.h"
 
 #include <cstring>
+#include <set>
 
 namespace aria {
 
-VulkanDeviceManager::VulkanPhysicalDevice sPhysicalDevice{VK_NULL_HANDLE, {}};
+VulkanDeviceManager::VulkanPhysicalDevice vulkanPhysicalDevice{VK_NULL_HANDLE, {}};
 
 VulkanDeviceManager::VulkanDeviceManager() : instance_(VulkanRendererApi::GetVkInstance()) {
   SelectSuitablePhysicalDevice();
@@ -76,52 +77,52 @@ void VulkanDeviceManager::SelectSuitablePhysicalDevice() {
   //  INTEL: VK_LAYER_KHRONOS_validation
 }
 
-// void VulkanDeviceManager::createLogicalDevice() {
-//   QueryFamilyIndices indices = queryQueueFamilies(sPhysicalDevice);
+void VulkanDeviceManager::CreateLogicalDevice() {
 
-//   std::vector<VkDeviceQueueCreateInfo> queue_create_infos;
-//   std::set<std::uint32_t> uniqueQueueFamilies = {indices.graphicsFamily.value(), indices.presentFamily.value()};
+  std::vector<VkDeviceQueueCreateInfo> queue_create_infos;
+  std::set<std::uint32_t> unique_queue_families =
+      {queue_family_indices_.graphics_family.value(), queue_family_indices_.present_family.value()};
 
-//   float queuePriority = 1.0f;
-//   for (std::uint32_t queueFamily : uniqueQueueFamilies) {
-//     VkDeviceQueueCreateInfo queue_create_info{};
-//     queue_create_info.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
-//     queue_create_info.queueFamilyIndex = queueFamily;
-//     queue_create_info.queueCount = 1;
-//     queue_create_info.pQueuePriorities = &queuePriority;
-//     queue_create_infos.push_back(queue_create_info);
-//   }
+  float queue_priority = 1.0f;
+  for (std::uint32_t queue_family : unique_queue_families) {
+    VkDeviceQueueCreateInfo queue_create_info{};
+    queue_create_info.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
+    queue_create_info.queueFamilyIndex = queue_family;
+    queue_create_info.queueCount = 1;
+    queue_create_info.pQueuePriorities = &queue_priority;
+    queue_create_infos.push_back(queue_create_info);
+  }
 
-//   VkDeviceCreateInfo create_info{};
-//   create_info.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
-//   create_info.queueCreateInfoCount = static_cast<std::uint32_t>(queue_create_infos.size());
-//   create_info.pQueueCreateInfos = queue_create_infos.data();
+  VkDeviceCreateInfo create_info{};
+  create_info.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
+  create_info.queueCreateInfoCount = static_cast<std::uint32_t>(queue_create_infos.size());
+  create_info.pQueueCreateInfos = queue_create_infos.data();
 
-//   VkPhysicalDeviceFeatures deviceFeatures{};
-//   create_info.pEnabledFeatures = &deviceFeatures;
+  VkPhysicalDeviceFeatures device_features;
+  create_info.pEnabledFeatures = &device_features;
 
-//   if (check_device_extensions_support(sPhysicalDevice)) {
-//     create_info.ppEnabledExtensionNames = mDeviceExtensions.data();
-//     create_info.enabledExtensionCount = static_cast<std::uint32_t>(mDeviceExtensions.size());
-//   } else {
-//     create_info.enabledExtensionCount = 0;
-//   }
+  if (CheckDeviceExtensionsSupport(physical_device_.physical_device)) {
+    create_info.ppEnabledExtensionNames = device_extensions_.data();
+    create_info.enabledExtensionCount = static_cast<std::uint32_t>(device_extensions_.size());
+  } else {
+    create_info.enabledExtensionCount = 0;
+  }
 
-//   if (enable_validation_layers) {
-//     create_info.enabledLayerCount = static_cast<std::uint32_t>(mValidationLayers.size());
-//     create_info.ppEnabledLayerNames = mValidationLayers.data();
-//   } else {
-//     create_info.enabledLayerCount = 0;
-//   }
+  if (kEnableValidationLayers) {
+    create_info.enabledLayerCount = static_cast<std::uint32_t>(mValidationLayers.size());
+    create_info.ppEnabledLayerNames = mValidationLayers.data();
+  } else {
+    create_info.enabledLayerCount = 0;
+  }
 
-//   VkResult result = vkCreateDevice(sPhysicalDevice, &create_info, nullptr, &sDevice);
-//   if (result != VK_SUCCESS) {
-//     ARIA_CORE_ERROR("Cannot create logical device - {0}", string_VkResult(result))
-//   }
+  VkResult result = vkCreateDevice(physical_device_.physical_device, &create_info, nullptr, &device_);
+  if (result != VK_SUCCESS) {
+    ARIA_CORE_ERROR("Cannot create logical device - {0}", string_VkResult(result))
+  }
 
-//   // vkGetDeviceQueue(sDevice, indices.graphicsFamily.value(), 0, &mGraphicsQueue);
-//   // vkGetDeviceQueue(sDevice, indices.presentFamily.value(), 0, &mPresentQueue);
-// }
+  // vkGetDeviceQueue(sDevice, indices.graphicsFamily.value(), 0, &mGraphicsQueue);
+  // vkGetDeviceQueue(sDevice, indices.presentFamily.value(), 0, &mPresentQueue);
+}
 
 std::vector<VkQueueFamilyProperties> VulkanDeviceManager::QueryQueueFamilies(VkPhysicalDevice &physical_device) {
   std::uint32_t queue_family_count = 0;
@@ -154,15 +155,13 @@ std::vector<VkQueueFamilyProperties> VulkanDeviceManager::QueryQueueFamilies(VkP
 }
 
 bool VulkanDeviceManager::IsSuitableVulkanDevice(VkPhysicalDevice &physical_device) {
-  QueryFamilyIndices queue_families = QueryQueueFamilies(physical_device);
-
   bool swap_chain_supported = false;
-  if (check_device_extensions_support(physical_device)) {
-    SwapChainDetails details = query_swap_chain_support(physical_device);
+  if (CheckDeviceExtensionsSupport(physical_device)) {
+    SwapChainDetails details = QuerySwapChainSupport(physical_device);
     swap_chain_supported = !details.formats.empty() && !details.present_modes.empty();
   }
 
-  return queue_families.IsComplete() && swap_chain_supported;
+  return queue_family_indices_.IsComplete() && swap_chain_supported;
 
   // VkPhysicalDeviceProperties properties;
   // vkGetPhysicalDeviceProperties(device, &properties);
@@ -173,6 +172,42 @@ bool VulkanDeviceManager::IsSuitableVulkanDevice(VkPhysicalDevice &physical_devi
   // as mentioned, can use scoring system to defer using Discrete GPU first
   // then integrated, or allow user to select
   // return properties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU && features.geometryShader;
+}
+
+VulkanDeviceManager::SwapChainDetails VulkanDeviceManager::QuerySwapChainSupport(VkPhysicalDevice &physical_device) {
+  SwapChainDetails details;
+  vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physical_device, surface_, &details.capabilities);
+
+  std::uint32_t format_count;
+  vkGetPhysicalDeviceSurfaceFormatsKHR(physical_device, surface_, &format_count, nullptr);
+  if (format_count) {
+    details.formats.resize(format_count);
+    vkGetPhysicalDeviceSurfaceFormatsKHR(physical_device, surface_, &format_count, details.formats.data());
+  }
+
+  std::uint32_t present_count;
+  vkGetPhysicalDeviceSurfacePresentModesKHR(physical_device, surface_, &present_count, nullptr);
+  if (present_count) {
+    details.present_modes.resize(present_count);
+    vkGetPhysicalDeviceSurfacePresentModesKHR(physical_device, surface_, &present_count, details.present_modes.data());
+  }
+
+  return details;
+}
+
+bool VulkanDeviceManager::CheckDeviceExtensionsSupport(VkPhysicalDevice &physical_device) {
+  std::uint32_t count;
+  vkEnumerateDeviceExtensionProperties(physical_device, nullptr, &count, nullptr);
+
+  std::vector<VkExtensionProperties> extensions(count);
+  vkEnumerateDeviceExtensionProperties(physical_device, nullptr, &count, extensions.data());
+
+  std::set<std::string> required_extensions(device_extensions_.begin(), device_extensions_.end());
+
+  for (const auto &kExtension : extensions) {
+    required_extensions.erase(kExtension.extensionName);
+  }
+  return required_extensions.empty();
 }
 
 }  // namespace ARIA
