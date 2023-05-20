@@ -2,12 +2,8 @@
 
 namespace aria {
 
-VulkanDebugMessenger::VulkanDebugMessenger() {
-  SetupVulkanDebugMessenger();
-}
-
 VulkanDebugMessenger::~VulkanDebugMessenger() {
-  if (kEnableValidationLayers) {
+  if (VulkanRendererApi::IsValidationLayersEnabled()) {
     auto func =
         (PFN_vkDestroyDebugUtilsMessengerEXT) vkGetInstanceProcAddr(VulkanRendererApi::GetVkInstance(),
                                                                     "vkDestroyDebugUtilsMessengerEXT");
@@ -15,6 +11,10 @@ VulkanDebugMessenger::~VulkanDebugMessenger() {
       func(VulkanRendererApi::GetVkInstance(), debug_messenger_, nullptr);
     }
   }
+}
+
+void VulkanDebugMessenger::Init() {
+  SetupVulkanDebugMessenger();
 }
 
 std::string VulkanDebugMessenger::GetMessageType(VkDebugUtilsMessageTypeFlagsEXT message_type) {
@@ -28,7 +28,7 @@ std::string VulkanDebugMessenger::GetMessageType(VkDebugUtilsMessageTypeFlagsEXT
     case VK_DEBUG_UTILS_MESSAGE_TYPE_DEVICE_ADDRESS_BINDING_BIT_EXT:
       return "Device Address";
     default:
-      return "Unknown Message Type";
+      return "Unknown message type";
   }
 }
 
@@ -57,8 +57,7 @@ VKAPI_ATTR VkBool32 VKAPI_CALL VulkanDebugMessenger::VulkanLogCallback(
   return VK_FALSE;
 }
 
-void VulkanDebugMessenger::PopulateDebugCreateInfo(VkDebugUtilsMessengerCreateInfoEXT &create_info) const {
-  create_info = {};
+void VulkanDebugMessenger::PopulateDebugCreateInfo(VkDebugUtilsMessengerCreateInfoEXT &create_info) {
   create_info.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
   create_info.messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT |
       VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT |
@@ -82,17 +81,19 @@ VkResult VulkanDebugMessenger::CreateDebugUtilMessengerExt(VkInstance instance,
 }
 
 void VulkanDebugMessenger::SetupVulkanDebugMessenger() {
-  if (!kEnableValidationLayers) {
+  if (!VulkanRendererApi::IsValidationLayersEnabled()) {
     return;
   }
 
   ARIA_CORE_ASSERT(VulkanRendererApi::GetVkInstance() != nullptr,
                    "Did you create VkInstance before setting up debug messenger?")
 
-  VkDebugUtilsMessengerCreateInfoEXT create_info;
-  PopulateDebugCreateInfo(create_info);
+  PopulateDebugCreateInfo(debug_utils_messenger_create_info_ext_);
 
-  if (CreateDebugUtilMessengerExt(VulkanRendererApi::GetVkInstance(), &create_info, nullptr, &debug_messenger_)
+  if (CreateDebugUtilMessengerExt(VulkanRendererApi::GetVkInstance(),
+                                  &debug_utils_messenger_create_info_ext_,
+                                  nullptr,
+                                  &debug_messenger_)
       != VK_SUCCESS) {
     ARIA_CORE_WARN("Cannot setup debug messenger; debug messenger extension not available")
   }

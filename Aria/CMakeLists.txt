@@ -97,6 +97,8 @@ set(src__Platform__Vulkan
         "src/Platform/Vulkan/VulkanRendererApi.h"
         "src/Platform/Vulkan/VulkanShader.cpp"
         "src/Platform/Vulkan/VulkanShader.h"
+        "src/Platform/Vulkan/VulkanSwapChain.cpp"
+        "src/Platform/Vulkan/VulkanSwapChain.h"
         )
 source_group("src\\Platform\\Vulkan" FILES ${src__Platform__Vulkan})
 

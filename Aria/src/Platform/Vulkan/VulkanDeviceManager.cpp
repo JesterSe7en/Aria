@@ -1,4 +1,3 @@
-
 #include "Platform/Vulkan/VulkanDeviceManager.h"
 
 #include "Aria/Core/Log.h"
@@ -12,19 +11,33 @@ namespace aria {
 
 VulkanDeviceManager::VulkanPhysicalDevice vulkanPhysicalDevice{VK_NULL_HANDLE, {}};
 
-VulkanDeviceManager::VulkanDeviceManager() : instance_(VulkanRendererApi::GetVkInstance()) {
+VulkanDeviceManager::VulkanDeviceManager()
+    : vk_instance_(VulkanRendererApi::GetVkInstance()), vk_surface_khr_(VulkanRendererApi::GetVkSurfaceKHR()) {
+  ARIA_CORE_ASSERT(vk_instance_, "Did you initialize vk instance first?")
+  ARIA_CORE_ASSERT(vk_surface_khr_, "Did you initialize presentation layer first?")
+}
+
+VulkanDeviceManager::~VulkanDeviceManager() {
+  vkDestroyDevice(device_, nullptr);
+}
+
+void VulkanDeviceManager::Init() {
   SelectSuitablePhysicalDevice();
   CreateLogicalDevice();
 }
 
+VulkanDeviceManager::PhysicalDeviceSurfaceSwapChainDetails VulkanDeviceManager::GetSwapChainSupportDetails() {
+  return QuerySwapChainSupport(physical_device_.physical_device);
+}
+
 void VulkanDeviceManager::SelectSuitablePhysicalDevice() {
   std::uint32_t device_count = 0;
-  vkEnumeratePhysicalDevices(instance_, &device_count, nullptr);
+  vkEnumeratePhysicalDevices(vk_instance_, &device_count, nullptr);
 
   ARIA_CORE_ASSERT(device_count != 0, "You tried to setup with Vulkan API, but no GPU's found with Vulkan support")
 
   all_physical_devices_.resize(device_count);
-  vkEnumeratePhysicalDevices(instance_, &device_count, all_physical_devices_.data());
+  vkEnumeratePhysicalDevices(vk_instance_, &device_count, all_physical_devices_.data());
 
   for (VkPhysicalDevice physical_device : all_physical_devices_) {
     if (IsSuitableVulkanDevice(physical_device)) {
@@ -36,6 +49,20 @@ void VulkanDeviceManager::SelectSuitablePhysicalDevice() {
 
       ARIA_CORE_INFO("--- Vulkan GUI Device --- ")
       ARIA_CORE_INFO("Name: {0}", properties.deviceName)
+      ARIA_CORE_INFO("Vulkan API version: {0}.{1}.{2}",
+                     VK_API_VERSION_MAJOR(properties.apiVersion),
+                     VK_API_VERSION_MINOR(properties.apiVersion),
+                     VK_API_VERSION_PATCH(properties.apiVersion))
+
+      // This may not work - vkspec v1.3 pg. 116
+      // "The encoding of driverVersion is implementation-defined. It may not use the same
+      // encoding as apiVersion. Applications should follow information from the vendor
+      // on how to extract the version information from driverVersion."
+      // TODO: May need to use this method
+      //  check layers' description for human-readable driver version
+      //  NVIDIA: VK_LAYER_NV_optimus
+      //  AMD: VK_LAYER_AMD_switchable_graphics
+      //  INTEL: VK_LAYER_KHRONOS_validation
       ARIA_CORE_INFO("Driver version: {0}.{1}.{2}", VK_VERSION_MAJOR(properties.driverVersion),
                      VK_VERSION_MINOR(properties.driverVersion), VK_VERSION_PATCH(properties.driverVersion))
       break;
@@ -44,6 +71,16 @@ void VulkanDeviceManager::SelectSuitablePhysicalDevice() {
 
   ARIA_CORE_ASSERT(physical_device_.physical_device != VK_NULL_HANDLE,
                    "Found GPUs with Vulkan support, but no suitable devices for Aria Engine")
+
+
+  // For reference - Vendor IDs:
+  //  case 0x10DE:
+  //    return "NVIDIA";
+  //  case 0x1002:
+  //    return "AMD";
+  //  case 0x8086:
+  //    return "INTEL";
+
 
   // features can include optional capabilities such as geometry shaders, tessellation shaders, multi-viewport
   // rendering, texture compression formats, and more.
@@ -69,12 +106,6 @@ void VulkanDeviceManager::SelectSuitablePhysicalDevice() {
 
   // std::vector<VkLayerProperties> availableLayers(layerCount);
   // vkEnumerateDeviceLayerProperties(sPhysicalDevice, &layerCount, availableLayers.data());
-
-  // TODO: get driver version
-  //  check layers' description for human-readable driver version
-  //  NVIDIA: VK_LAYER_NV_optimus
-  //  AMD: VK_LAYER_AMD_switchable_graphics
-  //  INTEL: VK_LAYER_KHRONOS_validation
 }
 
 void VulkanDeviceManager::CreateLogicalDevice() {
@@ -108,7 +139,7 @@ void VulkanDeviceManager::CreateLogicalDevice() {
     create_info.enabledExtensionCount = 0;
   }
 
-  if (kEnableValidationLayers) {
+  if (VulkanRendererApi::IsValidationLayersEnabled()) {
     create_info.enabledLayerCount = static_cast<std::uint32_t>(VulkanRendererApi::validation_layers_.size());
     create_info.ppEnabledLayerNames = VulkanRendererApi::validation_layers_.data();
   } else {
@@ -120,8 +151,8 @@ void VulkanDeviceManager::CreateLogicalDevice() {
     ARIA_CORE_ERROR("Cannot create logical device - {0}", string_VkResult(result))
   }
 
-  // vkGetDeviceQueue(sDevice, indices.graphicsFamily.value(), 0, &mGraphicsQueue);
-  // vkGetDeviceQueue(sDevice, indices.presentFamily.value(), 0, &mPresentQueue);
+  vkGetDeviceQueue(device_, queue_family_indices_.graphics_family.value(), 0, &graphics_queue_);
+  vkGetDeviceQueue(device_, queue_family_indices_.present_family.value(), 0, &present_queue_);
 }
 
 std::vector<VkQueueFamilyProperties> VulkanDeviceManager::QueryQueueFamilies(VkPhysicalDevice &physical_device) {
@@ -157,7 +188,7 @@ std::vector<VkQueueFamilyProperties> VulkanDeviceManager::QueryQueueFamilies(VkP
 bool VulkanDeviceManager::IsSuitableVulkanDevice(VkPhysicalDevice &physical_device) {
   bool swap_chain_supported = false;
   if (CheckDeviceExtensionsSupport(physical_device)) {
-    SwapChainDetails details = QuerySwapChainSupport(physical_device);
+    PhysicalDeviceSurfaceSwapChainDetails details = QuerySwapChainSupport(physical_device);
     swap_chain_supported = !details.formats.empty() && !details.present_modes.empty();
   }
 
@@ -174,8 +205,8 @@ bool VulkanDeviceManager::IsSuitableVulkanDevice(VkPhysicalDevice &physical_devi
   // return properties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU && features.geometryShader;
 }
 
-VulkanDeviceManager::SwapChainDetails VulkanDeviceManager::QuerySwapChainSupport(VkPhysicalDevice &physical_device) {
-  SwapChainDetails details;
+VulkanDeviceManager::PhysicalDeviceSurfaceSwapChainDetails VulkanDeviceManager::QuerySwapChainSupport(VkPhysicalDevice &physical_device) {
+  PhysicalDeviceSurfaceSwapChainDetails details;
   vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physical_device, surface_, &details.capabilities);
 
   std::uint32_t format_count;
