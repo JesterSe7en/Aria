@@ -73,10 +73,10 @@ void ImGuiLayer::End() const {
   // save/restore it to make it easier to paste this code elsewhere.
 
   if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
-    GLFWwindow *backup_current_context = glfwGetCurrentContext();
+    GLFWwindow *p_current_context = glfwGetCurrentContext();
     ImGui::UpdatePlatformWindows();
     ImGui::RenderPlatformWindowsDefault();
-    glfwMakeContextCurrent(backup_current_context);
+    glfwMakeContextCurrent(p_current_context);
   }
 }
 }  // namespace ARIA
