@@ -54,9 +54,11 @@ void VulkanRendererApi::AddToPipeline(VkShaderModule &shader_module, ShaderType 
   create_info.pNext = nullptr;
 
   switch (type) {
-    case ShaderType::VERTEX:create_info.stage = VK_SHADER_STAGE_VERTEX_BIT;
+    case ShaderType::VERTEX:
+      create_info.stage = VK_SHADER_STAGE_VERTEX_BIT;
       break;
-    case ShaderType::FRAGMENT:create_info.stage = VK_SHADER_STAGE_FRAGMENT_BIT;
+    case ShaderType::FRAGMENT:
+      create_info.stage = VK_SHADER_STAGE_FRAGMENT_BIT;
       break;
     default: ARIA_CORE_ASSERT(false, "Unknown shader type; cannot create VkShaderModule")
       break;
@@ -642,21 +644,25 @@ VKAPI_ATTR VkBool32 VKAPI_CALL VulkanRendererApi::VulkanLogCallback(
     VkDebugUtilsMessageSeverityFlagBitsEXT message_severity, VkDebugUtilsMessageTypeFlagsEXT message_type,
     const VkDebugUtilsMessengerCallbackDataEXT *p_callback_data, void *p_user_data) {
   switch (message_severity) {
-    case VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT:ARIA_CORE_INFO("Vulkan {0} Info: {1}",
-                                                                     GetMessageType(message_type),
-                                                                     p_callback_data->pMessage)
+    case VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT:
+      ARIA_CORE_INFO("Vulkan {0} Info: {1}",
+                     GetMessageType(message_type),
+                     p_callback_data->pMessage)
       break;
-    case VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT:ARIA_CORE_TRACE("Vulkan {0} Trace: {1}",
-                                                                         GetMessageType(message_type),
-                                                                         p_callback_data->pMessage)
+    case VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT:
+      ARIA_CORE_TRACE("Vulkan {0} Trace: {1}",
+                      GetMessageType(message_type),
+                      p_callback_data->pMessage)
       break;
-    case VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT:ARIA_CORE_ERROR("Vulkan {0} Error: {1}",
-                                                                       GetMessageType(message_type),
-                                                                       p_callback_data->pMessage)
+    case VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT:
+      ARIA_CORE_ERROR("Vulkan {0} Error: {1}",
+                      GetMessageType(message_type),
+                      p_callback_data->pMessage)
       break;
-    case VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT:ARIA_CORE_WARN("Vulkan {0} Error: {1}",
-                                                                        GetMessageType(message_type),
-                                                                        p_callback_data->pMessage)
+    case VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT:
+      ARIA_CORE_WARN("Vulkan {0} Error: {1}",
+                     GetMessageType(message_type),
+                     p_callback_data->pMessage)
       break;
     default: ARIA_CORE_ASSERT(false, "Unknown error type")
       break;
@@ -669,11 +675,16 @@ VKAPI_ATTR VkBool32 VKAPI_CALL VulkanRendererApi::VulkanLogCallback(
 
 std::string VulkanRendererApi::GetMessageType(VkDebugUtilsMessageTypeFlagsEXT message_type) {
   switch (message_type) {
-    case VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT:return "General";
-    case VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT:return "Performance";
-    case VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT:return "Validation";
-    case VK_DEBUG_UTILS_MESSAGE_TYPE_DEVICE_ADDRESS_BINDING_BIT_EXT:return "Device Address";
-    default:return "Unknown Message Type";
+    case VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT:
+      return "General";
+    case VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT:
+      return "Performance";
+    case VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT:
+      return "Validation";
+    case VK_DEBUG_UTILS_MESSAGE_TYPE_DEVICE_ADDRESS_BINDING_BIT_EXT:
+      return "Device Address";
+    default:
+      return "Unknown Message Type";
   }
 }
 
@@ -701,10 +712,14 @@ bool VulkanRendererApi::IsSuitableVulkanDevice(VkPhysicalDevice device) {
 
 std::string VulkanRendererApi::GetVendorName(std::uint32_t vendor_id) const {
   switch (vendor_id) {
-    case 0x10DE:return "NVIDIA";
-    case 0x1002:return "AMD";
-    case 0x8086:return "INTEL";
-    default:return "Unknown";
+    case 0x10DE:
+      return "NVIDIA";
+    case 0x1002:
+      return "AMD";
+    case 0x8086:
+      return "INTEL";
+    default:
+      return "Unknown";
   }
 }
 
