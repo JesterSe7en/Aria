@@ -8,10 +8,10 @@ namespace aria {
 
 VulkanGraphicsPipeline::~VulkanGraphicsPipeline() {
   for (auto buffer : vk_frame_buffers_) {
-    vkDestroyFramebuffer(VulkanDeviceManager::GetLogicalDevice(), buffer, nullptr);
+    vkDestroyFramebuffer(VulkanDeviceManager::GetInstance().GetLogicalDevice(), buffer, nullptr);
   }
-  vkDestroyPipeline(VulkanDeviceManager::GetLogicalDevice(), vk_graphics_pipeline_, nullptr);
-  vkDestroyPipelineLayout(VulkanDeviceManager::GetLogicalDevice(), vk_pipeline_layout_, nullptr);
+  vkDestroyPipeline(VulkanDeviceManager::GetInstance().GetLogicalDevice(), vk_graphics_pipeline_, nullptr);
+  vkDestroyPipelineLayout(VulkanDeviceManager::GetInstance().GetLogicalDevice(), vk_pipeline_layout_, nullptr);
 
 }
 
@@ -148,7 +148,7 @@ void VulkanGraphicsPipeline::CreateGraphicsPipeline() {
   pipeline_layout_info.pushConstantRangeCount = 0;
   pipeline_layout_info.pPushConstantRanges = nullptr;
 
-  VkResult result = vkCreatePipelineLayout(VulkanDeviceManager::GetLogicalDevice(),
+  VkResult result = vkCreatePipelineLayout(VulkanDeviceManager::GetInstance().GetLogicalDevice(),
                                            &pipeline_layout_info,
                                            nullptr,
                                            &vk_pipeline_layout_);
@@ -176,7 +176,7 @@ void VulkanGraphicsPipeline::CreateGraphicsPipeline() {
   pipeline_info.basePipelineHandle = VK_NULL_HANDLE;
   pipeline_info.basePipelineIndex = -1;
 
-  result = vkCreateGraphicsPipelines(VulkanDeviceManager::GetLogicalDevice(),
+  result = vkCreateGraphicsPipelines(VulkanDeviceManager::GetInstance().GetLogicalDevice(),
                                      VK_NULL_HANDLE,
                                      1,
                                      &pipeline_info,
@@ -206,7 +206,7 @@ void VulkanGraphicsPipeline::CreateFrameBuffers() {
     frame_buffer_info.height = details.swap_chain_extend_2d.height;
     frame_buffer_info.layers = 1;
 
-    VkResult result = vkCreateFramebuffer(VulkanDeviceManager::GetLogicalDevice(),
+    VkResult result = vkCreateFramebuffer(VulkanDeviceManager::GetInstance().GetLogicalDevice(),
                                           &frame_buffer_info,
                                           nullptr,
                                           &vk_frame_buffers_[i]);

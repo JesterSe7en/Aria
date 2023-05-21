@@ -1,13 +1,10 @@
 #include "VulkanCommandBuffer.h"
 
-#include "Platform/Vulkan/VulkanCommandBuffer.h"
 #include "Platform/Vulkan/VulkanRendererApi.h"
 #include "VulkanSwapChain.h"
 #include "VulkanGraphicsPipeline.h"
-#include "glm/fwd.hpp"
 #include "vulkan/vk_enum_string_helper.h"
 
-#include <cstdint>
 
 namespace aria {
 
@@ -20,7 +17,7 @@ VulkanCommandBuffer::VulkanCommandBuffer() {
   buffer_alloc_info.commandBufferCount = 1;
 
   VkResult
-      result = vkAllocateCommandBuffers(VulkanDeviceManager::GetLogicalDevice(), &buffer_alloc_info, &command_buffer_);
+      result = vkAllocateCommandBuffers(VulkanDeviceManager::GetInstance().GetLogicalDevice(), &buffer_alloc_info, &command_buffer_);
   if (result != VK_SUCCESS) {
     ARIA_CORE_ERROR("Failed to create command buffer - {0}", string_VkResult(result))
   }

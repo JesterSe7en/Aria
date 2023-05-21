@@ -11,9 +11,9 @@ namespace aria {
 
 VulkanSwapChain::~VulkanSwapChain() {
   for (auto view : vulkan_swap_chain_details_.swap_chain_image_views) {
-    vkDestroyImageView(VulkanDeviceManager::GetLogicalDevice(), view, nullptr);
+    vkDestroyImageView(VulkanDeviceManager::GetInstance().GetLogicalDevice(), view, nullptr);
   }
-  vkDestroySwapchainKHR(VulkanDeviceManager::GetLogicalDevice(), vk_swapchain_khr_, nullptr);
+  vkDestroySwapchainKHR(VulkanDeviceManager::GetInstance().GetLogicalDevice(), vk_swapchain_khr_, nullptr);
 }
 
 void VulkanSwapChain::Init() {
@@ -68,14 +68,14 @@ void VulkanSwapChain::CreateSwapChain() {
   create_info.oldSwapchain = VK_NULL_HANDLE;
 
   VkResult
-      result = vkCreateSwapchainKHR(VulkanDeviceManager::GetLogicalDevice(), &create_info, nullptr, &vk_swapchain_khr_);
+      result = vkCreateSwapchainKHR(VulkanDeviceManager::GetInstance().GetLogicalDevice(), &create_info, nullptr, &vk_swapchain_khr_);
   if (result != VK_SUCCESS) {
     ARIA_CORE_ERROR("Failed to create swap chain - {0}", string_VkResult(result))
   }
 
-  vkGetSwapchainImagesKHR(VulkanDeviceManager::GetLogicalDevice(), vk_swapchain_khr_, &image_count, nullptr);
+  vkGetSwapchainImagesKHR(VulkanDeviceManager::GetInstance().GetLogicalDevice(), vk_swapchain_khr_, &image_count, nullptr);
   vulkan_swap_chain_details_.swap_chain_images.resize(image_count);
-  vkGetSwapchainImagesKHR(VulkanDeviceManager::GetLogicalDevice(),
+  vkGetSwapchainImagesKHR(VulkanDeviceManager::GetInstance().GetLogicalDevice(),
                           vk_swapchain_khr_,
                           &image_count,
                           vulkan_swap_chain_details_.swap_chain_images.data());
@@ -104,7 +104,7 @@ void VulkanSwapChain::CreateImageViews() {
     create_info.subresourceRange.baseArrayLayer = 0;
     create_info.subresourceRange.layerCount = 1;
 
-    VkResult result = vkCreateImageView(VulkanDeviceManager::GetLogicalDevice(),
+    VkResult result = vkCreateImageView(VulkanDeviceManager::GetInstance().GetLogicalDevice(),
                                         &create_info,
                                         nullptr,
                                         &vulkan_swap_chain_details_.swap_chain_image_views[idx]);

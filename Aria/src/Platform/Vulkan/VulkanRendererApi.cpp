@@ -21,8 +21,8 @@ VkInstance VulkanRendererApi::p_vk_instance_ = nullptr;
 std::vector<VkPipelineShaderStageCreateInfo> VulkanRendererApi::shader_stages_ = {};
 
 VulkanRendererApi::~VulkanRendererApi() {
-  vkDestroyCommandPool(VulkanDeviceManager::GetLogicalDevice(), command_pool_, nullptr);
-  vkDestroyRenderPass(VulkanDeviceManager::GetLogicalDevice(), vk_render_pass_, nullptr);
+  vkDestroyCommandPool(VulkanDeviceManager::GetInstance().GetLogicalDevice(), command_pool_, nullptr);
+  vkDestroyRenderPass(VulkanDeviceManager::GetInstance().GetLogicalDevice(), vk_render_pass_, nullptr);
   vkDestroySurfaceKHR(p_vk_instance_, surface_, nullptr);
   vkDestroyInstance(p_vk_instance_, nullptr);
 }
@@ -152,7 +152,7 @@ void VulkanRendererApi::CreateCommandPool() {
   cmd_pool_info.queueFamilyIndex = queue_family_indices.graphics_family.value();
 
   VkResult
-      result = vkCreateCommandPool(VulkanDeviceManager::GetLogicalDevice(), &cmd_pool_info, nullptr, &command_pool_);
+      result = vkCreateCommandPool(VulkanDeviceManager::GetInstance().GetLogicalDevice(), &cmd_pool_info, nullptr, &command_pool_);
   if (result != VK_SUCCESS) {
     ARIA_CORE_ERROR("Failed to create command pool - {0}", string_VkResult(result))
   }
@@ -167,7 +167,7 @@ VkCommandBuffer VulkanRendererApi::CreateVkCommandBuffer() {
   buffer_alloc_info.commandBufferCount = 1;
 
   VkResult
-      result = vkAllocateCommandBuffers(VulkanDeviceManager::GetLogicalDevice(), &buffer_alloc_info, &command_buffer_);
+      result = vkAllocateCommandBuffers(VulkanDeviceManager::GetInstance().GetLogicalDevice(), &buffer_alloc_info, &command_buffer_);
   if (result != VK_SUCCESS) {
     ARIA_CORE_ERROR("Failed to create command buffer - {0}", string_VkResult(result))
     return nullptr;
@@ -229,7 +229,7 @@ void VulkanRendererApi::CreateRenderPass() {
 
   VkResult
       result =
-      vkCreateRenderPass(VulkanDeviceManager::GetLogicalDevice(), &render_pass_info, nullptr, &vk_render_pass_);
+      vkCreateRenderPass(VulkanDeviceManager::GetInstance().GetLogicalDevice(), &render_pass_info, nullptr, &vk_render_pass_);
   if (result != VK_SUCCESS) {
     ARIA_CORE_ERROR("Failed to create render pass - {0}", string_VkResult(result))
   }
