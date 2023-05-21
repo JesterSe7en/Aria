@@ -2,6 +2,8 @@
 #include "VulkanRendererApi.h"
 namespace aria {
 
+VkDebugUtilsMessengerCreateInfoEXT VulkanDebugMessenger::debug_utils_messenger_create_info_ext_ = {};
+
 VulkanDebugMessenger::~VulkanDebugMessenger() {
   if (VulkanRendererApi::IsValidationLayersEnabled()) {
     auto func =

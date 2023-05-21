@@ -3,10 +3,10 @@
 #include "Aria/Renderer/Camera.h"
 #include "Aria/Renderer/RendererApi.h"
 #include "Aria/Renderer/Shader.h"
-#include "vulkan/vk_platform.h"
-#include "vulkan/vulkan_core.h"
 #include "VulkanDebugMessenger.h"
 #include "VulkanDeviceManager.h"
+#include "vulkan/vk_platform.h"
+#include "vulkan/vulkan_core.h"
 
 #include <cstdint>
 #include <glm/glm.hpp>
@@ -38,16 +38,18 @@ class VulkanRendererApi : public RendererApi {
   };
 
   VkCommandBuffer CreateVkCommandBuffer();
-  VkCommandBuffer GetVkCommandBuffer() const {return command_buffer_; }  // this is a hack for now, really should not do this.  perhaps create static func to create buffer for layer usage
+  VkCommandBuffer GetVkCommandBuffer() const {
+    return command_buffer_;
+  }// this is a hack for now, really should not do this.  perhaps create static func to create buffer for layer usage
 
-//  static void RecordCommandBuffer(VkCommandBuffer cmd_buffer,
-//                                  std::uint32_t image_idx);  // again a hack, should put this in vulkan layer
+  //  static void RecordCommandBuffer(VkCommandBuffer cmd_buffer,
+  //                                  std::uint32_t image_idx);  // again a hack, should put this in vulkan layer
 
   VkInstance &GetVkInstance() {
     ARIA_CORE_ASSERT(VulkanRendererApi::p_vk_instance_, "Did you initialize a Vulkan instance?")
     return p_vk_instance_;
   }
-  VkCommandPool &GetVkCommandPool()  { return command_pool_; }
+  VkCommandPool &GetVkCommandPool() { return command_pool_; }
   VkSurfaceKHR &GetVkSurfaceKhr() { return surface_; }
   VkRenderPass &GetRenderPass() { return vk_render_pass_; }
 
@@ -78,4 +80,4 @@ class VulkanRendererApi : public RendererApi {
   static bool HasValidationSupport();
   static std::vector<const char *> GetGlfwRequiredExtensions();
 };
-}  // namespace ARIA
+}// namespace aria
