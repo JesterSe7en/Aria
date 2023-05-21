@@ -11,6 +11,25 @@
 
 namespace aria {
 
+uint32_t GetShaderTypeSize(ShaderPrimitiveType type) {
+  switch (type) {
+    case aria::ShaderPrimitiveType::Int:
+    case aria::ShaderPrimitiveType::Float:return 4;
+    case aria::ShaderPrimitiveType::Int2:
+    case aria::ShaderPrimitiveType::Float2:return 4 * 2;
+    case aria::ShaderPrimitiveType::Int3:
+    case aria::ShaderPrimitiveType::Float3:return 4 * 3;
+    case aria::ShaderPrimitiveType::Int4:
+    case aria::ShaderPrimitiveType::Float4:return 4 * 4;
+    case aria::ShaderPrimitiveType::Mat2:return 4 * 2 * 2;
+    case aria::ShaderPrimitiveType::Mat3:return 4 * 3 * 3;
+    case aria::ShaderPrimitiveType::Mat4:return 4 * 4 * 4;
+    case aria::ShaderPrimitiveType::Bool:return 1;
+    default:ARIA_CORE_ASSERT(false, "Unknown shader primitive type")
+      return 0;
+  }
+}
+
 // -------------------------- Vertex Buffer  --------------------------
 
 Ref<VertexBuffer> VertexBuffer::Create(float *vertices, uint32_t size) {
@@ -63,7 +82,9 @@ void BufferLayout::CalculateOffsetAndStride() {
 // -------------------------- Buffer Elements  --------------------------
 
 BufferElement::BufferElement(ShaderPrimitiveType type, const std::string &name, bool normalized)
-    : name_(name), shader_primitive_type_(type), size_(get_shader_type_size(type)), normalized_(normalized) {}
+    : name_(name), shader_primitive_type_(type), normalized_(normalized) {
+  size_ = GetShaderTypeSize(type);
+}
 
 /// <summary>
 /// Returns the number of elements per primitive type e.g. Float3 returns 3 as
@@ -88,4 +109,5 @@ uint32_t BufferElement::GetElementCount() const {
       return 0;
   }
 }
+
 }  // namespace ARIA

@@ -26,24 +26,7 @@ enum class ShaderPrimitiveType {
 /// </summary>
 /// <param name="type">ShaderPrimitiveType type</param>
 /// <returns>uint32_t - number of bytes</returns>
-static uint32_t get_shader_type_size(ShaderPrimitiveType type) {
-  switch (type) {
-    case aria::ShaderPrimitiveType::Int:
-    case aria::ShaderPrimitiveType::Float:return 4;
-    case aria::ShaderPrimitiveType::Int2:
-    case aria::ShaderPrimitiveType::Float2:return 4 * 2;
-    case aria::ShaderPrimitiveType::Int3:
-    case aria::ShaderPrimitiveType::Float3:return 4 * 3;
-    case aria::ShaderPrimitiveType::Int4:
-    case aria::ShaderPrimitiveType::Float4:return 4 * 4;
-    case aria::ShaderPrimitiveType::Mat2:return 4 * 2 * 2;
-    case aria::ShaderPrimitiveType::Mat3:return 4 * 3 * 3;
-    case aria::ShaderPrimitiveType::Mat4:return 4 * 4 * 4;
-    case aria::ShaderPrimitiveType::Bool:return 1;
-    default:ARIA_CORE_ASSERT(false, "Unknown shader primitive type")
-      return 0;
-  }
-}
+static uint32_t GetShaderTypeSize(ShaderPrimitiveType type);
 
 class BufferElement {
  public:

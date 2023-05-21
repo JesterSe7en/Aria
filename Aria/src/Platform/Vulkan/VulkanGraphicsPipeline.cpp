@@ -170,7 +170,7 @@ void VulkanGraphicsPipeline::CreateGraphicsPipeline() {
   pipeline_info.pDynamicState = &dynamic_state;
 
   pipeline_info.layout = vk_pipeline_layout_;
-  pipeline_info.renderPass = VulkanRendererApi::GetRenderPass();
+  pipeline_info.renderPass = VulkanRendererApi::GetInstance().GetRenderPass();
   pipeline_info.subpass = 0;
 
   pipeline_info.basePipelineHandle = VK_NULL_HANDLE;
@@ -199,7 +199,7 @@ void VulkanGraphicsPipeline::CreateFrameBuffers() {
     frame_buffer_info.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
     frame_buffer_info.flags = 0;
     frame_buffer_info.pNext = nullptr;
-    frame_buffer_info.renderPass = VulkanRendererApi::GetRenderPass();
+    frame_buffer_info.renderPass = VulkanRendererApi::GetInstance().GetRenderPass();
     frame_buffer_info.attachmentCount = attachments.size();
     frame_buffer_info.pAttachments = attachments.data();
     frame_buffer_info.width = details.swap_chain_extend_2d.width;

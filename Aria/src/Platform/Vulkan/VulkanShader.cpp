@@ -74,6 +74,6 @@ void VulkanShader::CreateShaderModule(const std::vector<char> &code) {
   }
 }
 
-void VulkanShader::AddToPipeline() { VulkanRendererApi::AddToPipeline(vk_shader_module_, shader_type_); }
+void VulkanShader::AddToPipeline() { VulkanRendererApi::GetInstance().AddToPipeline(vk_shader_module_, shader_type_); }
 
 }  // namespace ARIA

@@ -12,13 +12,9 @@
 #include "VulkanGraphicsPipeline.h"
 
 #include <fileapi.h>
-#include <array>
 #include <vector>
 
 namespace aria {
-
-VkInstance VulkanRendererApi::p_vk_instance_ = nullptr;
-std::vector<VkPipelineShaderStageCreateInfo> VulkanRendererApi::shader_stages_ = {};
 
 VulkanRendererApi::~VulkanRendererApi() {
   vkDestroyCommandPool(VulkanDeviceManager::GetInstance().GetLogicalDevice(), command_pool_, nullptr);
@@ -39,7 +35,6 @@ void VulkanRendererApi::Init() {
 
   CreateRenderPass();
   CreateCommandPool();
-  // create_graphics_pipeline();
 }
 void VulkanRendererApi::Clear() {ARIA_CORE_ASSERT(false, "Not Implemented")}
 

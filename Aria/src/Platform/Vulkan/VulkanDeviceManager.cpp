@@ -12,7 +12,7 @@ namespace aria {
 VulkanDeviceManager::VulkanPhysicalDevice vulkanPhysicalDevice{VK_NULL_HANDLE, {}};
 
 VulkanDeviceManager::VulkanDeviceManager()
-    : vk_instance_(VulkanRendererApi::GetVkInstance()), vk_surface_khr_(VulkanRendererApi::GetVkSurfaceKHR()) {
+    : vk_instance_(VulkanRendererApi::GetInstance().GetVkInstance()), vk_surface_khr_(VulkanRendererApi::GetInstance().GetVkSurfaceKhr()) {
   ARIA_CORE_ASSERT(vk_instance_, "Did you initialize vk instance first?")
   ARIA_CORE_ASSERT(vk_surface_khr_, "Did you initialize presentation layer first?")
 }
@@ -165,7 +165,7 @@ std::vector<VkQueueFamilyProperties> VulkanDeviceManager::QueryQueueFamilies(VkP
   int i = 0;
   // All possible queue families
   // https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkQueueFlagBits.html
-  VkSurfaceKHR surface = VulkanRendererApi::GetVkSurfaceKHR();
+  VkSurfaceKHR surface = VulkanRendererApi::GetInstance().GetVkSurfaceKhr();
 
   for (const auto &kQueueFamily : queue_families) {
     VkBool32 surface_supported = false;
@@ -207,7 +207,7 @@ bool VulkanDeviceManager::IsSuitableVulkanDevice(VkPhysicalDevice &physical_devi
 }
 
 VulkanDeviceManager::PhysicalDeviceSurfaceSwapChainDetails VulkanDeviceManager::QuerySwapChainSupport(VkPhysicalDevice &physical_device) {
-  VkSurfaceKHR surface = VulkanRendererApi::GetVkSurfaceKHR();
+  VkSurfaceKHR surface = VulkanRendererApi::GetInstance().GetVkSurfaceKhr();
   PhysicalDeviceSurfaceSwapChainDetails details;
   vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physical_device, surface, &details.capabilities);
 

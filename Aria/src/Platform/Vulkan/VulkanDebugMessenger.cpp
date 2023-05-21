@@ -5,10 +5,10 @@ namespace aria {
 VulkanDebugMessenger::~VulkanDebugMessenger() {
   if (VulkanRendererApi::IsValidationLayersEnabled()) {
     auto func =
-        (PFN_vkDestroyDebugUtilsMessengerEXT) vkGetInstanceProcAddr(VulkanRendererApi::GetVkInstance(),
+        (PFN_vkDestroyDebugUtilsMessengerEXT) vkGetInstanceProcAddr(VulkanRendererApi::GetInstance().GetVkInstance(),
                                                                     "vkDestroyDebugUtilsMessengerEXT");
     if (func != nullptr) {
-      func(VulkanRendererApi::GetVkInstance(), debug_messenger_, nullptr);
+      func(VulkanRendererApi::GetInstance().GetVkInstance(), debug_messenger_, nullptr);
     }
   }
 }
@@ -85,12 +85,12 @@ void VulkanDebugMessenger::SetupVulkanDebugMessenger() {
     return;
   }
 
-  ARIA_CORE_ASSERT(VulkanRendererApi::GetVkInstance() != nullptr,
+  ARIA_CORE_ASSERT(VulkanRendererApi::GetInstance().GetVkInstance() != nullptr,
                    "Did you create VkInstance before setting up debug messenger?")
 
   PopulateDebugCreateInfo(debug_utils_messenger_create_info_ext_);
 
-  if (CreateDebugUtilMessengerExt(VulkanRendererApi::GetVkInstance(),
+  if (CreateDebugUtilMessengerExt(VulkanRendererApi::GetInstance().GetVkInstance(),
                                   &debug_utils_messenger_create_info_ext_,
                                   nullptr,
                                   &debug_messenger_)

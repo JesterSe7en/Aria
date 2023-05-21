@@ -38,7 +38,7 @@ void VulkanSwapChain::CreateSwapChain() {
   create_info.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
   create_info.pNext = nullptr;
   create_info.flags = 0;
-  create_info.surface = VulkanRendererApi::GetVkSurfaceKHR();
+  create_info.surface = VulkanRendererApi::GetInstance().GetVkSurfaceKhr();
   create_info.minImageCount = image_count;
   create_info.imageFormat = surface_format.format;
   create_info.imageColorSpace = surface_format.colorSpace;

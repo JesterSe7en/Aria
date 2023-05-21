@@ -12,7 +12,7 @@ VulkanCommandBuffer::VulkanCommandBuffer() {
   VkCommandBufferAllocateInfo buffer_alloc_info;
   buffer_alloc_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
   buffer_alloc_info.pNext = nullptr;
-  buffer_alloc_info.commandPool = VulkanRendererApi::GetVkCommandPool();
+  buffer_alloc_info.commandPool = VulkanRendererApi::GetInstance().GetVkCommandPool();
   buffer_alloc_info.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
   buffer_alloc_info.commandBufferCount = 1;
 
@@ -76,7 +76,7 @@ void VulkanCommandBuffer::StartRenderPass(glm::vec4 color) {
   VkRenderPassBeginInfo render_pass_begin;
   render_pass_begin.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
   render_pass_begin.pNext = nullptr;
-  render_pass_begin.renderPass = VulkanRendererApi::GetRenderPass();
+  render_pass_begin.renderPass = VulkanRendererApi::GetInstance().GetRenderPass();
   //  render_pass_begin.framebuffer = frame_buffers[image_idx];
 
   //FIXME: THis should be passing index
