@@ -6,13 +6,12 @@
 #include "Aria/Renderer/Renderer.h"
 #include "Aria/Renderer/Shader.h"
 #include "Platform/Vulkan/VulkanRendererApi.h"
+#include "Platform/Vulkan/VulkanSwapChain.h"
 #include "vulkan/vk_enum_string_helper.h"
-
-#include <stdint.h>
 
 #include <cstdint>
 
-static VkDevice sDevice = aria::VulkanRendererApi::GetVkDevice();
+static VkDevice sDevice = aria::VulkanDeviceManager::GetLogicalDevice();
 
 VulkanLayer::VulkanLayer() : Layer("Vulkan Layer") {
   VkSemaphoreCreateInfo semaphore_info;
@@ -51,7 +50,7 @@ void VulkanLayer::OnUpdate(aria::Timestep delta_time) {
   vkResetFences(sDevice, 1, &mInFlightFence);
 
   std::uint32_t image_idx;
-  VkResult result = vkAcquireNextImageKHR(sDevice, aria::VulkanRendererApi::GetVkSwapChain(), UINT64_MAX,
+  VkResult result = vkAcquireNextImageKHR(sDevice, aria::VulkanSwapChain::GetInstance().GetSwapChain(), UINT64_MAX,
                                           mImageAvailableSemaphore, mInFlightFence, &image_idx);
   if (result != VK_SUCCESS) {
     ARIA_ERROR("Cannot get next image from swap chain - {0}", string_VkResult(result))

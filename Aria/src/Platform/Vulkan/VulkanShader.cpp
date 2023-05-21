@@ -28,7 +28,11 @@ VulkanShader::VulkanShader(const std::string &file_path, ShaderType type) : shad
   AddToPipeline();
 }
 
-VulkanShader::~VulkanShader() { vkDestroyShaderModule(VulkanRendererApi::GetVkDevice(), vk_shader_module_, nullptr); }
+VulkanShader::~VulkanShader() {
+  vkDestroyShaderModule(VulkanDeviceManager::GetLogicalDevice(),
+                        vk_shader_module_,
+                        nullptr);
+}
 
 void VulkanShader::Bind() const {}
 
@@ -64,7 +68,7 @@ void VulkanShader::CreateShaderModule(const std::vector<char> &code) {
   create_info.codeSize = code.size();
   create_info.pCode = reinterpret_cast<const uint32_t *>(code.data());  // TODO: use dynamic cast?
 
-  if (vkCreateShaderModule(VulkanRendererApi::GetVkDevice(), &create_info, nullptr, &vk_shader_module_)
+  if (vkCreateShaderModule(VulkanDeviceManager::GetLogicalDevice(), &create_info, nullptr, &vk_shader_module_)
       != VK_SUCCESS) {
     ARIA_CORE_ERROR("Cannot create shader module for {0}", name_)  // TODO: more useful if file path?
   }

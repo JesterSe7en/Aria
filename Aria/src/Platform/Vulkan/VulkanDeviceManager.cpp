@@ -165,10 +165,11 @@ std::vector<VkQueueFamilyProperties> VulkanDeviceManager::QueryQueueFamilies(VkP
   int i = 0;
   // All possible queue families
   // https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkQueueFlagBits.html
+  VkSurfaceKHR surface = VulkanRendererApi::GetVkSurfaceKHR();
 
   for (const auto &kQueueFamily : queue_families) {
     VkBool32 surface_supported = false;
-    vkGetPhysicalDeviceSurfaceSupportKHR(physical_device, i, mSurface, &surface_supported);
+    vkGetPhysicalDeviceSurfaceSupportKHR(physical_device, i, surface, &surface_supported);
 
     if (surface_supported) {
       queue_family_indices_.present_family = i;
@@ -206,21 +207,22 @@ bool VulkanDeviceManager::IsSuitableVulkanDevice(VkPhysicalDevice &physical_devi
 }
 
 VulkanDeviceManager::PhysicalDeviceSurfaceSwapChainDetails VulkanDeviceManager::QuerySwapChainSupport(VkPhysicalDevice &physical_device) {
+  VkSurfaceKHR surface = VulkanRendererApi::GetVkSurfaceKHR();
   PhysicalDeviceSurfaceSwapChainDetails details;
-  vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physical_device, surface_, &details.capabilities);
+  vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physical_device, surface, &details.capabilities);
 
   std::uint32_t format_count;
-  vkGetPhysicalDeviceSurfaceFormatsKHR(physical_device, surface_, &format_count, nullptr);
+  vkGetPhysicalDeviceSurfaceFormatsKHR(physical_device, surface, &format_count, nullptr);
   if (format_count) {
     details.formats.resize(format_count);
-    vkGetPhysicalDeviceSurfaceFormatsKHR(physical_device, surface_, &format_count, details.formats.data());
+    vkGetPhysicalDeviceSurfaceFormatsKHR(physical_device, surface, &format_count, details.formats.data());
   }
 
   std::uint32_t present_count;
-  vkGetPhysicalDeviceSurfacePresentModesKHR(physical_device, surface_, &present_count, nullptr);
+  vkGetPhysicalDeviceSurfacePresentModesKHR(physical_device, surface, &present_count, nullptr);
   if (present_count) {
     details.present_modes.resize(present_count);
-    vkGetPhysicalDeviceSurfacePresentModesKHR(physical_device, surface_, &present_count, details.present_modes.data());
+    vkGetPhysicalDeviceSurfacePresentModesKHR(physical_device, surface, &present_count, details.present_modes.data());
   }
 
   return details;

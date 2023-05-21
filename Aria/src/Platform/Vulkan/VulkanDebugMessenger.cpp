@@ -1,5 +1,5 @@
 #include "VulkanDebugMessenger.h"
-
+#include "VulkanRendererApi.h"
 namespace aria {
 
 VulkanDebugMessenger::~VulkanDebugMessenger() {

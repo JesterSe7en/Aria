@@ -1,11 +1,25 @@
 #include "VulkanSwapChain.h"
 #include "Aria/Core/Log.h"
+#include "VulkanRendererApi.h"
 #include "vulkan/vk_enum_string_helper.h"
+#include "GLFW/glfw3.h"
+#include "Aria/Core/Application.h"
 
 #include <limits>
-#include <cstdint>
 
 namespace aria {
+
+VulkanSwapChain::~VulkanSwapChain() {
+  for (auto view : vulkan_swap_chain_details_.swap_chain_image_views) {
+    vkDestroyImageView(VulkanDeviceManager::GetLogicalDevice(), view, nullptr);
+  }
+  vkDestroySwapchainKHR(VulkanDeviceManager::GetLogicalDevice(), vk_swapchain_khr_, nullptr);
+}
+
+void VulkanSwapChain::Init() {
+  CreateSwapChain();
+  CreateImageViews();
+}
 
 void VulkanSwapChain::CreateSwapChain() {
   VulkanDeviceManager::PhysicalDeviceSurfaceSwapChainDetails
@@ -24,7 +38,7 @@ void VulkanSwapChain::CreateSwapChain() {
   create_info.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
   create_info.pNext = nullptr;
   create_info.flags = 0;
-  create_info.surface = surface_;
+  create_info.surface = VulkanRendererApi::GetVkSurfaceKHR();
   create_info.minImageCount = image_count;
   create_info.imageFormat = surface_format.format;
   create_info.imageColorSpace = surface_format.colorSpace;
@@ -54,33 +68,32 @@ void VulkanSwapChain::CreateSwapChain() {
   create_info.oldSwapchain = VK_NULL_HANDLE;
 
   VkResult
-      result = vkCreateSwapchainKHR(VulkanDeviceManager::GetLogicalDevice(), &create_info, nullptr, &swapchain_khr_);
+      result = vkCreateSwapchainKHR(VulkanDeviceManager::GetLogicalDevice(), &create_info, nullptr, &vk_swapchain_khr_);
   if (result != VK_SUCCESS) {
     ARIA_CORE_ERROR("Failed to create swap chain - {0}", string_VkResult(result))
   }
 
-  vkGetSwapchainImagesKHR(VulkanDeviceManager::GetLogicalDevice(), swapchain_khr_, &image_count, nullptr);
-  swap_chain_images_.resize(image_count);
+  vkGetSwapchainImagesKHR(VulkanDeviceManager::GetLogicalDevice(), vk_swapchain_khr_, &image_count, nullptr);
+  vulkan_swap_chain_details_.swap_chain_images.resize(image_count);
   vkGetSwapchainImagesKHR(VulkanDeviceManager::GetLogicalDevice(),
-                          swapchain_khr_,
+                          vk_swapchain_khr_,
                           &image_count,
-                          swap_chain_images_.data());
-
-  swap_chain_format_ = surface_format.format;
-  swap_chain_extent_2d_ = extent;
+                          vulkan_swap_chain_details_.swap_chain_images.data());
+  vulkan_swap_chain_details_.swap_chain_format = surface_format.format;
+  vulkan_swap_chain_details_.swap_chain_extend_2d = extent;
 }
 
 void VulkanSwapChain::CreateImageViews() {
-  swap_chain_image_views_.resize(swap_chain_images_.size());
+  vulkan_swap_chain_details_.swap_chain_image_views.resize(vulkan_swap_chain_details_.swap_chain_images.size());
 
-  for (size_t idx = 0; idx < swap_chain_images_.size(); idx++) {
+  for (size_t idx = 0; idx < vulkan_swap_chain_details_.swap_chain_images.size(); idx++) {
     VkImageViewCreateInfo create_info;
     create_info.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
     create_info.pNext = nullptr;
     create_info.flags = 0;
-    create_info.image = swap_chain_images_[idx];
+    create_info.image = vulkan_swap_chain_details_.swap_chain_images[idx];
     create_info.viewType = VK_IMAGE_VIEW_TYPE_2D;
-    create_info.format = swap_chain_format_;
+    create_info.format = vulkan_swap_chain_details_.swap_chain_format;
 
     create_info.components.r = create_info.components.g = create_info.components.b = create_info.components.a =
         VK_COMPONENT_SWIZZLE_IDENTITY;
@@ -94,7 +107,7 @@ void VulkanSwapChain::CreateImageViews() {
     VkResult result = vkCreateImageView(VulkanDeviceManager::GetLogicalDevice(),
                                         &create_info,
                                         nullptr,
-                                        &swap_chain_image_views_[idx]);
+                                        &vulkan_swap_chain_details_.swap_chain_image_views[idx]);
     if (result != VK_SUCCESS) {
       ARIA_CORE_ERROR("Failed to create image views - {0}", string_VkResult(result))
     }

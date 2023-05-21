@@ -26,7 +26,7 @@ void OpenGlVertexBuffer::Unbind() const { glad_glBindBuffer(GL_ARRAY_BUFFER, 0);
 OpenGlIndexBuffer::OpenGlIndexBuffer(std::uint32_t *indices, std::uint32_t count) : count_(count) {
   glad_glCreateBuffers(1, &renderer_id_);
   glad_glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, renderer_id_);
-  glad_glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(std::uint32_t , indices, GL_STATIC_DRAW);
+  glad_glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(std::uint32_t), indices, GL_STATIC_DRAW);
 }
 
 OpenGlIndexBuffer::~OpenGlIndexBuffer() { glad_glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, renderer_id_); }

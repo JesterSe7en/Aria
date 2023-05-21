@@ -2,6 +2,8 @@
 
 #include "Platform/Vulkan/VulkanCommandBuffer.h"
 #include "Platform/Vulkan/VulkanRendererApi.h"
+#include "VulkanSwapChain.h"
+#include "VulkanGraphicsPipeline.h"
 #include "glm/fwd.hpp"
 #include "vulkan/vk_enum_string_helper.h"
 
@@ -17,7 +19,8 @@ VulkanCommandBuffer::VulkanCommandBuffer() {
   buffer_alloc_info.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
   buffer_alloc_info.commandBufferCount = 1;
 
-  VkResult result = vkAllocateCommandBuffers(VulkanRendererApi::GetVkDevice(), &buffer_alloc_info, &command_buffer_);
+  VkResult
+      result = vkAllocateCommandBuffers(VulkanDeviceManager::GetLogicalDevice(), &buffer_alloc_info, &command_buffer_);
   if (result != VK_SUCCESS) {
     ARIA_CORE_ERROR("Failed to create command buffer - {0}", string_VkResult(result))
   }
@@ -27,19 +30,23 @@ VulkanCommandBuffer::VulkanCommandBuffer() {
 }
 
 void VulkanCommandBuffer::SetViewport() {
+  auto details = VulkanSwapChain::GetInstance().GetSwapChainDetails();
+
   VkViewport viewport;
   viewport.x = viewport.y = 0.0f;
-  viewport.width = static_cast<float>(mSwapChainExtent.width);
-  viewport.height = static_cast<float>(mSwapChainExtent.height);
+  viewport.width = static_cast<float>(details.swap_chain_extend_2d.width);
+  viewport.height = static_cast<float>(details.swap_chain_extend_2d.height);
   viewport.minDepth = 0.0f;
   viewport.maxDepth = 1.0f;
   vkCmdSetViewport(command_buffer_, 0, 1, &viewport);
 }
 
 void VulkanCommandBuffer::SetScissor() {
+  auto details = VulkanSwapChain::GetInstance().GetSwapChainDetails();
+
   VkRect2D scissor;
   scissor.offset = {0, 0};
-  scissor.extent = mSwapChainExtent;
+  scissor.extent = details.swap_chain_extend_2d;
   vkCmdSetScissor(command_buffer_, 0, 1, &scissor);
 }
 
@@ -65,13 +72,20 @@ void VulkanCommandBuffer::Draw(std::uint32_t vertex_count, std::uint32_t instanc
 
 void VulkanCommandBuffer::StartRenderPass(glm::vec4 color) {
   // TODO: can we check if begin recording is called first? assert
+
+  auto details = VulkanSwapChain::GetInstance().GetSwapChainDetails();
+  auto frame_buffers = VulkanGraphicsPipeline::GetInstance().GetFrameBuffers();
+
   VkRenderPassBeginInfo render_pass_begin;
   render_pass_begin.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
   render_pass_begin.pNext = nullptr;
-  render_pass_begin.renderPass = mRenderPass;
-  render_pass_begin.framebuffer = mSwapChainFrameBuffers[image_idx];
+  render_pass_begin.renderPass = VulkanRendererApi::GetRenderPass();
+  //  render_pass_begin.framebuffer = frame_buffers[image_idx];
+
+  //FIXME: THis should be passing index
+  render_pass_begin.framebuffer = frame_buffers[0];
   render_pass_begin.renderArea.offset = {0, 0};
-  render_pass_begin.renderArea.extent = mSwapChainExtent;
+  render_pass_begin.renderArea.extent = details.swap_chain_extend_2d;
 
   VkClearValue clear_color = {{{color.r, color.g, color.b, color.a}}};  // black
   render_pass_begin.clearValueCount = 1;
@@ -91,7 +105,9 @@ bool VulkanCommandBuffer::Reset() {
 }
 
 bool VulkanCommandBuffer::Bind() {
-  vkCmdBindPipeline(command_buffer_, VK_PIPELINE_BIND_POINT_GRAPHICS, VulkanRendererApi::GetVkGraphicsPipeline());
+  vkCmdBindPipeline(command_buffer_,
+                    VK_PIPELINE_BIND_POINT_GRAPHICS,
+                    VulkanGraphicsPipeline::GetInstance().GetGraphicsPipeline());
 }
 
 bool VulkanCommandBuffer::EndRecording() {

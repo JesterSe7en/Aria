@@ -13,7 +13,6 @@ class VulkanSwapChain {
     VkExtent2D swap_chain_extend_2d;
     std::vector<VkImage> swap_chain_images;
     std::vector<VkImageView> swap_chain_image_views;
-    std::vector<VkFramebuffer> swap_chain_frame_buffers;
   };
 
   static VulkanSwapChain &GetInstance() {
@@ -21,19 +20,21 @@ class VulkanSwapChain {
     return instance;
   }
 
-  VulkanSwapChainDetails GetSwapChainDetails() { return vulkan_swap_chain_details_; }
-
   ~VulkanSwapChain();
   VulkanSwapChain(const VulkanSwapChain &) = delete;
   VulkanSwapChain &operator=(const VulkanSwapChain &) = delete;
 
- private:
-  VulkanSwapChain();
-
+  void Init();
+  VulkanSwapChainDetails GetSwapChainDetails() { return vulkan_swap_chain_details_; }
+  VkSwapchainKHR GetSwapChain() { return vk_swapchain_khr_; }
   void CreateSwapChain();
   void CreateImageViews();
 
+ private:
+  VulkanSwapChain();
+
   VulkanSwapChainDetails vulkan_swap_chain_details_;
+  VkSwapchainKHR vk_swapchain_khr_;
 
   // ----- For Swap Chain ------
   static VkSurfaceFormatKHR GetSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR> &formats);

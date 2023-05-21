@@ -54,7 +54,7 @@ void WindowsWindow::Init() {
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-  create_window();
+  CreateAriaWindow();
 }
 
 void WindowsWindow::CreateAriaWindow() {
@@ -102,7 +102,8 @@ void WindowsWindow::CreateAriaWindow() {
         data.event_callback_fn(event);
         break;
       }
-      default:ARIA_CORE_WARN("Unhanded action - {0}", focused);
+      default:
+        ARIA_CORE_WARN("Unhanded action - {0}", focused);
         break;
     }
   });
@@ -127,7 +128,8 @@ void WindowsWindow::CreateAriaWindow() {
         data.event_callback_fn(event);
         break;
       }
-      default:ARIA_CORE_WARN("Unhanded action - {0}", action);
+      default:
+        ARIA_CORE_WARN("Unhanded action - {0}", action);
         break;
     }
   });
@@ -146,7 +148,8 @@ void WindowsWindow::CreateAriaWindow() {
         data.event_callback_fn(event);
         break;
       }
-      default:ARIA_CORE_WARN("Unhanded action - {0}", action);
+      default:
+        ARIA_CORE_WARN("Unhanded action - {0}", action);
         break;
     }
   });

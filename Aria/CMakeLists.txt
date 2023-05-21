@@ -93,6 +93,8 @@ set(src__Platform__Vulkan
         "src/Platform/Vulkan/VulkanDebugMessenger.h"
         "src/Platform/Vulkan/VulkanDeviceManager.cpp"
         "src/Platform/Vulkan/VulkanDeviceManager.h"
+        "src/Platform/Vulkan/VulkanGraphicsPipeline.cpp"
+        "src/Platform/Vulkan/VulkanGraphicsPipeline.h"
         "src/Platform/Vulkan/VulkanRendererApi.cpp"
         "src/Platform/Vulkan/VulkanRendererApi.h"
         "src/Platform/Vulkan/VulkanShader.cpp"
