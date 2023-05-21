@@ -25,7 +25,6 @@ class VulkanDeviceManager {
   };
 
  public:
-
   ~VulkanDeviceManager();
   VulkanDeviceManager(const VulkanDeviceManager &) = delete;
   VulkanDeviceManager &operator=(const VulkanDeviceManager &) = delete;
@@ -35,20 +34,20 @@ class VulkanDeviceManager {
     return instance;
   }
 
-  static VkDevice GetLogicalDevice() { return device_; }
-  static VulkanPhysicalDevice GetPhysicalDevice() { return physical_device_; }
+  VkDevice &GetLogicalDevice() { return device_; }
+  VulkanPhysicalDevice &GetPhysicalDevice() { return physical_device_; }
 
   void Init();
   PhysicalDeviceSurfaceSwapChainDetails GetSwapChainSupportDetails();
-  QueueFamilyIndices GetQueueFamilyIndicies() { return queue_family_indices_; }
+  QueueFamilyIndices &GetQueueFamilyIndicies() { return queue_family_indices_; }
 
  private:
   VulkanDeviceManager();
 
   // only one for now...yeah??
-  static VkDevice device_;
-  static VulkanPhysicalDevice physical_device_;
-  static QueueFamilyIndices queue_family_indices_;
+  VkDevice device_;
+  VulkanPhysicalDevice physical_device_;
+  QueueFamilyIndices queue_family_indices_;
 
   const std::vector<const char *> device_extensions_ = {"VK_KHR_swapchain"};
 
