@@ -1,3 +1,4 @@
+#include "ariapch.h"
 #include "VulkanSwapChain.h"
 #include "Aria/Core/Log.h"
 #include "VulkanRendererApi.h"

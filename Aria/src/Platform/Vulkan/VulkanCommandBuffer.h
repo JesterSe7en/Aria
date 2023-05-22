@@ -1,7 +1,5 @@
 #pragma once
 
-#include "vulkan/vulkan_core.h"
-
 #include <glm/glm.hpp>
 
 namespace aria {
@@ -23,7 +21,7 @@ class VulkanCommandBuffer {
   bool EndRecording();
 
  private:
-  VkCommandBuffer command_buffer_ = nullptr;
+  //VkCommandBuffer command_buffer_ = nullptr;
 
   void SetViewport();
   void SetScissor();

@@ -1,3 +1,4 @@
+#include "ariapch.h"
 #include "Platform/Vulkan/VulkanDeviceManager.h"
 
 #include "Aria/Core/Log.h"
@@ -184,6 +185,7 @@ std::vector<VkQueueFamilyProperties> VulkanDeviceManager::QueryQueueFamilies(VkP
     }
     i++;
   }
+  return queue_families;
 }
 
 bool VulkanDeviceManager::IsSuitableVulkanDevice(VkPhysicalDevice &physical_device) {

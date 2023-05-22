@@ -1,3 +1,4 @@
+#include "ariapch.h"
 #include "Camera.h"
 
 #include <glm/matrix.hpp>

@@ -1,3 +1,4 @@
+#include "ariapch.h"
 #include "VulkanCommandBuffer.h"
 
 #include "Platform/Vulkan/VulkanRendererApi.h"
@@ -105,6 +106,7 @@ bool VulkanCommandBuffer::Bind() {
   vkCmdBindPipeline(command_buffer_,
                     VK_PIPELINE_BIND_POINT_GRAPHICS,
                     VulkanGraphicsPipeline::GetInstance().GetGraphicsPipeline());
+  return true;
 }
 
 bool VulkanCommandBuffer::EndRecording() {
