@@ -34,7 +34,7 @@ Application::Application(ApplicationProps &props) {
       break;
     case RendererApi::Api::OPEN_GL:InitOpenGlApp();
       break;
-    default: ARIA_CORE_ASSERT(false, "Aria engine currently only supports Vulkan and OpenGL")
+    default: ARIA_CORE_ASSERT(false, "Aria engine currently only supports Vulkan and OpenGL") break;
   }
 }
 
