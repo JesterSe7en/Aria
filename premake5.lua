@@ -12,6 +12,7 @@ IncludeDir["GLFW"] = "Aria/vendor/GLFW/include"
 IncludeDir["Glad"] = "Aria/vendor/Glad/include"
 IncludeDir["imgui"] = "Aria/vendor/imgui"
 IncludeDir["glm"] = "Aria/vendor/glm"
+IncludeDir["stb_image"] = "Aria/vendor/stb_image"
 
 include("Aria/vendor/GLFW")
 include("Aria/vendor/Glad")
@@ -44,6 +45,7 @@ includedirs({
 	"%{IncludeDir.Glad}",
 	"%{IncludeDir.imgui}",
 	"%{IncludeDir.glm}",
+	"%{IncludeDir.stb_image}",
 })
 
 links({ "GLFW", "Glad", "imgui", "opengl32.lib" })

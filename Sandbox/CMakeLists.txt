@@ -70,6 +70,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES MSVC_RUNTIME_LIBRARY ${MSVC_RUN
 target_include_directories(${PROJECT_NAME} PUBLIC
     "${CMAKE_CURRENT_SOURCE_DIR}/../Aria/vendor/spdlog/include;"
     "${CMAKE_CURRENT_SOURCE_DIR}/../Aria/src;"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../Aria/vendor/Glad/include;"
     "${CMAKE_CURRENT_SOURCE_DIR}/../Aria/vendor/imgui;"
     "${CMAKE_CURRENT_SOURCE_DIR}/../Aria/vendor/glm"
 )
@@ -119,59 +120,27 @@ if(MSVC)
         >
         /std:c++17;
         /W3;
-        ${DEFAULT_CXX_EXCEPTION_HANDLING}
+        ${DEFAULT_CXX_EXCEPTION_HANDLING};
+        /Y-
     )
     target_link_options(${PROJECT_NAME} PRIVATE
-        $<$<CONFIG:Dist>:
-            /OPT:REF;
-            /OPT:ICF
-        >
-        $<$<CONFIG:Release>:
-            /OPT:REF;
-            /OPT:ICF
-        >
-        /SUBSYSTEM:WINDOWS
-    )
-elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-    target_compile_options(${PROJECT_NAME} PRIVATE
         $<$<CONFIG:Debug>:
-            -O0;
-            -g;
-            -Wall;
-            -Wextra;
-            -pedantic;
-            -fno-inline-functions;
-            -fno-omit-frame-pointer            
+            /DEBUG;
+            /INCREMENTAL
         >
         $<$<CONFIG:Dist>:
-            -O2;
-            -DNDEBUG;
-            -fstack-protector-strong;
-            -pie;
-            -fvisibility=hidden;
-            -fdata-sections;
-            -ffunction-sections;
-       >
-        $<$<CONFIG:Release>:
-            -O2;
-            -g;
-            -DNDEBUG;
-            -fvisibility=hidden;
-            -fdata-sections;
-            -ffunction-sections;
-        >
-        -std=c++17;
-        ${DEFAULT_CXX_EXCEPTION_HANDLING}
-    )
-    target_link_options(${PROJECT_NAME} PRIVATE
-        $<$<CONFIG:Dist>:
+            /DEBUG:FULL;
             /OPT:REF;
-            /OPT:ICF
+            /OPT:ICF;
+            /INCREMENTAL:NO
         >
         $<$<CONFIG:Release>:
+            /DEBUG:FULL;
             /OPT:REF;
-            /OPT:ICF
+            /OPT:ICF;
+            /INCREMENTAL:NO
         >
+        /SUBSYSTEM:CONSOLE
     )
 endif()
 

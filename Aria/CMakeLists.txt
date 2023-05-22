@@ -3,12 +3,6 @@ set(PROJECT_NAME Aria)
 ################################################################################
 # Source groups
 ################################################################################
-set(no_group_source_files
-    "vendor/stb_image/stb_image.cpp"
-    "vendor/stb_image/stb_image.h"
-)
-source_group("" FILES ${no_group_source_files})
-
 set(src
     "src/Aria.h"
     "src/ariapch.cpp"
@@ -16,7 +10,7 @@ set(src
 )
 source_group("src" FILES ${src})
 
-set(src__Aria
+set(src__Aria__Core
     "src/Aria/Core/Application.cpp"
     "src/Aria/Core/Application.h"
     "src/Aria/Core/Base.h"
@@ -29,12 +23,8 @@ set(src__Aria
     "src/Aria/Core/LayerStack.h"
     "src/Aria/Core/Log.cpp"
     "src/Aria/Core/Log.h"
-    "src/Aria/Core/Window.h"
-)
-source_group("src\\Aria" FILES ${src__Aria})
-
-set(src__Aria__Core
     "src/Aria/Core/Timestep.h"
+    "src/Aria/Core/Window.h"
 )
 source_group("src\\Aria\\Core" FILES ${src__Aria__Core})
 
@@ -534,9 +524,7 @@ set(vendor__glm__glm__gtx
 source_group("vendor\\glm\\glm\\gtx" FILES ${vendor__glm__glm__gtx})
 
 set(ALL_FILES
-    ${no_group_source_files}
     ${src}
-    ${src__Aria}
     ${src__Aria__Core}
     ${src__Aria__Events}
     ${src__Aria__ImGui}
@@ -618,7 +606,6 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 target_compile_definitions(${PROJECT_NAME} PRIVATE
     "$<$<CONFIG:Debug>:"
         "ARIA_DEBUG"
-        "ARIA_ENABLE_ASSERTS;"
     ">"
     "$<$<CONFIG:Dist>:"
         "ARIA_DIST"
@@ -671,47 +658,6 @@ if(MSVC)
             /OPT:ICF
         >
         /SUBSYSTEM:WINDOWS
-    )
-elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-    target_compile_options(${PROJECT_NAME} PRIVATE
-        $<$<CONFIG:Debug>:
-            -O0;
-            -g;
-            -Wall;
-            -Wextra;
-            -pedantic;
-            -fno-inline-functions;
-            -fno-omit-frame-pointer            
-        >
-        $<$<CONFIG:Dist>:
-            -O2;
-            -DNDEBUG;
-            -fstack-protector-strong;
-            -pie;
-            -fvisibility=hidden;
-            -fdata-sections;
-            -ffunction-sections;
-       >
-        $<$<CONFIG:Release>:
-            -O2;
-            -g;
-            -DNDEBUG;
-            -fvisibility=hidden;
-            -fdata-sections;
-            -ffunction-sections;
-        >
-        -std=c++17;
-        ${DEFAULT_CXX_EXCEPTION_HANDLING}
-    )
-    target_link_options(${PROJECT_NAME} PRIVATE
-        $<$<CONFIG:Dist>:
-            /OPT:REF;
-            /OPT:ICF
-        >
-        $<$<CONFIG:Release>:
-            /OPT:REF;
-            /OPT:ICF
-        >
     )
 endif()
 
