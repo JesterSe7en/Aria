@@ -31,10 +31,12 @@ OpenGlTexture2D::OpenGlTexture2D(const std::string &path) : path_(path) {
   GLenum opengl_format = 0;
   GLenum data_format = 0;
   switch (bpp) {
-    case 3:opengl_format = GL_RGB8;
+    case 3:
+      opengl_format = GL_RGB8;
       data_format = GL_RGB;
       break;
-    case 4:opengl_format = GL_RGBA8;
+    case 4:
+      opengl_format = GL_RGBA8;
       data_format = GL_RGBA;
       break;
     default: ARIA_CORE_ASSERT(false, "Unsupported texture format")

@@ -1,7 +1,7 @@
 #include "VulkanInstance.hpp"
 #include "VulkanError.hpp"
-#include "vulkan/vulkan_core.h"
 #include "vulkan/vk_enum_string_helper.h"
+#include "vulkan/vulkan_core.h"
 
 namespace aria {
 
@@ -11,9 +11,7 @@ uint32_t VulkanInstance::api_version_ = VK_VERSION_1_3;
 
 std::vector<const char *> VulkanInstance::validation_layers_ = {"VK_LAYER_KHRONOS_validation"};
 
-VulkanInstance::~VulkanInstance() {
-  vkDestroyInstance(p_vk_instance_, nullptr);
-}
+VulkanInstance::~VulkanInstance() { vkDestroyInstance(p_vk_instance_, nullptr); }
 
 VulkanInstance::VulkanInstance(VulkanInstance::VulkanInstanceCreateInfo &create_info) {
   EnumerateLayerProperties();
@@ -36,8 +34,7 @@ VulkanInstance::VulkanInstance(VulkanInstance::VulkanInstanceCreateInfo &create_
     vk_instance_create_info.enabledLayerCount = create_info.layer_count + validation_layers_.size();
 
     std::vector<const char *> all_layers(create_info.layer_count + validation_layers_.size());
-    all_layers.insert(create_info.pp_layer_names.begin(),
-                      create_info.pp_layer_names.begin(),
+    all_layers.insert(create_info.pp_layer_names.begin(), create_info.pp_layer_names.begin(),
                       create_info.pp_layer_names.end());
     all_layers.insert(create_info.pp_layer_names.end(), validation_layers_.begin(), validation_layers_.end());
     vk_instance_create_info.ppEnabledLayerNames = all_layers.data();
@@ -62,17 +59,14 @@ Ref<VulkanInstance> VulkanInstance::Create(VulkanInstance::VulkanInstanceCreateI
 
 bool VulkanInstance::IsLayerAvailable(const char *layer_name) {
   for (const auto &kLayerName : available_layers_) {
-    if (strcmp(kLayerName.layerName, layer_name) == 0) {
-      return true;
-    };
+    if (strcmp(kLayerName.layerName, layer_name) == 0) { return true; };
   }
   return false;
 }
 
 bool VulkanInstance::AreLayersAvailable(std::vector<const char *> layer_names) {
-  return std::all_of(layer_names.begin(), layer_names.end(), [this](const char *layer_name) {
-    return IsLayerAvailable(layer_name);
-  });
+  return std::all_of(layer_names.begin(), layer_names.end(),
+                     [this](const char *layer_name) { return IsLayerAvailable(layer_name); });
 }
 
 void VulkanInstance::EnumerateLayerProperties() {
@@ -94,10 +88,10 @@ void VulkanInstance::EnumerateInstanceExtensions() {
 
   if (extension_count != 0) {
     available_extensions_.resize(extension_count);
-    VkResult
-        enum_result = vkEnumerateInstanceExtensionProperties(nullptr, &extension_count, available_extensions_.data());
+    VkResult enum_result =
+        vkEnumerateInstanceExtensionProperties(nullptr, &extension_count, available_extensions_.data());
     ARIA_VK_CHECK_RESULT_AND_ERROR(enum_result, "Failed to enumerate instance extension properties");
   }
 }
 
-}
+}// namespace aria

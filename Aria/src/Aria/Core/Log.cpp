@@ -3,8 +3,8 @@
 #include "spdlog/sinks/stdout_color_sinks.h"
 
 namespace aria {
-Ref <spdlog::logger> Log::p_core_logger_;
-Ref <spdlog::logger> Log::p_client_logger_;
+Ref<spdlog::logger> Log::p_core_logger_;
+Ref<spdlog::logger> Log::p_client_logger_;
 
 void Log::Init() {
   // see wiki https://github.com/gabime/spdlog/wiki/3.-Custom-formatting

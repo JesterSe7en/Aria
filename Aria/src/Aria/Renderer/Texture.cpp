@@ -11,7 +11,8 @@ Ref<Texture2D> Texture2D::Create(const std::string &path) {
   switch (RendererApi::GetApi()) {
     case RendererApi::Api::NONE: ARIA_CORE_ASSERT(false, "No renderer API selected for texture generation")
       return nullptr;
-    case RendererApi::Api::OPEN_GL:return std::make_shared<OpenGlTexture2D>(path);
+    case RendererApi::Api::OPEN_GL:
+      return std::make_shared<OpenGlTexture2D>(path);
     case RendererApi::Api::DIRECT_X:
     case RendererApi::Api::VULKAN: ARIA_CORE_ASSERT(false, "API selected for texture generation is not implemented")
       return nullptr;

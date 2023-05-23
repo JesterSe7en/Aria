@@ -82,7 +82,8 @@ void VulkanWindow::CreateAriaWindow() {
         kData.event_callback(event);
         break;
       }
-      default:ARIA_CORE_WARN("Unhanded action - {0}", focused);
+      default:
+        ARIA_CORE_WARN("Unhanded action - {0}", focused);
         break;
     }
   });
@@ -107,7 +108,8 @@ void VulkanWindow::CreateAriaWindow() {
         kData.event_callback(event);
         break;
       }
-      default:ARIA_CORE_WARN("Unhanded action - {0}", action);
+      default:
+        ARIA_CORE_WARN("Unhanded action - {0}", action);
         break;
     }
   });
@@ -126,7 +128,8 @@ void VulkanWindow::CreateAriaWindow() {
         kData.event_callback(event);
         break;
       }
-      default:ARIA_CORE_WARN("Unhanded action - {0}", action);
+      default:
+        ARIA_CORE_WARN("Unhanded action - {0}", action);
         break;
     }
   });

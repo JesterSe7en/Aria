@@ -13,14 +13,17 @@ static GLenum ShaderPrimitiveToOpenGlPrimitive(ShaderPrimitiveType type) {
     case aria::ShaderPrimitiveType::Float4:
     case aria::ShaderPrimitiveType::Mat2:
     case aria::ShaderPrimitiveType::Mat3:
-    case aria::ShaderPrimitiveType::Mat4:return GL_FLOAT;
+    case aria::ShaderPrimitiveType::Mat4:
+      return GL_FLOAT;
 
     case aria::ShaderPrimitiveType::Int:
     case aria::ShaderPrimitiveType::Int2:
     case aria::ShaderPrimitiveType::Int3:
-    case aria::ShaderPrimitiveType::Int4:return GL_INT;
+    case aria::ShaderPrimitiveType::Int4:
+      return GL_INT;
 
-    case aria::ShaderPrimitiveType::Bool:return GL_BOOL;
+    case aria::ShaderPrimitiveType::Bool:
+      return GL_BOOL;
 
     default: ARIA_CORE_ASSERT(false, "Unknown shader primitive type");
       return 0;
@@ -45,7 +48,8 @@ void OpenGlVertexArray::AddVertexBuffer(const Ref<VertexBuffer> &vertex_buffer) 
       case ShaderPrimitiveType::Float:
       case ShaderPrimitiveType::Float2:
       case ShaderPrimitiveType::Float3:
-      case ShaderPrimitiveType::Float4:glEnableVertexAttribArray(vertex_buffer_index_);
+      case ShaderPrimitiveType::Float4:
+        glEnableVertexAttribArray(vertex_buffer_index_);
         glVertexAttribPointer(vertex_buffer_index_,
                               kElement.GetElementCount(),
                               ShaderPrimitiveToOpenGlPrimitive(kElement.shader_primitive_type_),
@@ -59,7 +63,8 @@ void OpenGlVertexArray::AddVertexBuffer(const Ref<VertexBuffer> &vertex_buffer) 
       case ShaderPrimitiveType::Int2:
       case ShaderPrimitiveType::Int3:
       case ShaderPrimitiveType::Int4:
-      case ShaderPrimitiveType::Bool:glEnableVertexAttribArray(vertex_buffer_index_);
+      case ShaderPrimitiveType::Bool:
+        glEnableVertexAttribArray(vertex_buffer_index_);
         glVertexAttribIPointer(vertex_buffer_index_, kElement.GetElementCount(),
                                ShaderPrimitiveToOpenGlPrimitive(kElement.shader_primitive_type_), layout.GetStride(),
                                (const void *) kElement.offset_);
