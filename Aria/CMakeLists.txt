@@ -96,7 +96,7 @@ set(src__Platform__Vulkan
     "src/Platform/Vulkan/VulkanSwapChain.cpp"
     "src/Platform/Vulkan/VulkanSwapChain.hpp"
     "src/Platform/Vulkan/VulkanError.hpp"
-    )
+    src/Platform/Vulkan/VulkanRenderPass.cpp src/Platform/Vulkan/VulkanRenderPass.hpp)
 source_group("src\\Platform\\Vulkan" FILES ${src__Platform__Vulkan})
 
 set(src__Platform__Windows

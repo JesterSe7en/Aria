@@ -34,16 +34,14 @@ class VulkanInstance {
 
   static std::vector<const char *> validation_layers_;
 
+  VkInstance p_vk_instance_ = VK_NULL_HANDLE;
   bool validation_enabled_ = false;
   std::vector<VkLayerProperties> available_layers_;
   std::vector<VkExtensionProperties> available_extensions_;
 
-
+  explicit VulkanInstance(VulkanInstanceCreateInfo &create_info);
   void EnumerateLayerProperties();
   void EnumerateInstanceExtensions();
 
-
-  explicit VulkanInstance(VulkanInstanceCreateInfo &create_info);
-  VkInstance p_vk_instance_ = VK_NULL_HANDLE;
 };
 }

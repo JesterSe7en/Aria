@@ -1,0 +1,16 @@
+//
+// Created by alyxc on 5/23/2023.
+//
+
+#ifndef ARIA_ARIA_SRC_PLATFORM_VULKAN_VULKANRENDERPASS_HPP_
+#define ARIA_ARIA_SRC_PLATFORM_VULKAN_VULKANRENDERPASS_HPP_
+
+namespace aria {
+
+class VulkanRenderPass {
+
+};
+
+} // aria
+
+#endif //ARIA_ARIA_SRC_PLATFORM_VULKAN_VULKANRENDERPASS_HPP_

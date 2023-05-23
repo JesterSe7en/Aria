@@ -1,12 +1,14 @@
 #include "ariapch.h"
 #include "VulkanDebugMessenger.hpp"
 #include "VulkanRendererApi.hpp"
+#include "VulkanError.hpp"
 
 namespace aria {
 
 VkDebugUtilsMessengerCreateInfoEXT VulkanDebugMessenger::debug_utils_messenger_create_info_ext_ = {};
 
 VulkanDebugMessenger::~VulkanDebugMessenger() {
+  // TODO: change this to use VulkanInstance layer checker
   if (VulkanRendererApi::IsValidationLayersEnabled()) {
     auto func =
         (PFN_vkDestroyDebugUtilsMessengerEXT) vkGetInstanceProcAddr(VulkanRendererApi::GetInstance().GetVkInstance(),
@@ -93,14 +95,15 @@ void VulkanDebugMessenger::SetupVulkanDebugMessenger() {
                    "Did you create VkInstance before setting up debug messenger?")
 
   PopulateDebugCreateInfo(debug_utils_messenger_create_info_ext_);
+  VkResult result = CreateDebugUtilMessengerExt(VulkanRendererApi::GetInstance().GetVkInstance(),
+                                                &debug_utils_messenger_create_info_ext_,
+                                                nullptr,
+                                                &debug_messenger_);
 
-  if (CreateDebugUtilMessengerExt(VulkanRendererApi::GetInstance().GetVkInstance(),
-                                  &debug_utils_messenger_create_info_ext_,
-                                  nullptr,
-                                  &debug_messenger_)
-      != VK_SUCCESS) {
+  if (result == VK_ERROR_EXTENSION_NOT_PRESENT) {
     ARIA_CORE_WARN("Cannot setup debug messenger; debug messenger extension not available")
+  } else {
+    ARIA_VK_CHECK_RESULT_AND_WARN(result, "Failed to setup debug messenger")
   }
 }
-
 } // namespace aria

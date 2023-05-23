@@ -26,13 +26,12 @@ class VulkanSwapChain {
   VulkanSwapChainDetails GetSwapChainDetails() { return vulkan_swap_chain_details_; }
   VkSwapchainKHR GetSwapChain() { return p_vk_swapchain_khr_; }
 
-
  private:
   class PhysicalDeviceSurfaceSwapChainDetails {
    public:
-    VkSurfaceCapabilitiesKHR capabilities;
-    std::vector<VkSurfaceFormatKHR> formats;
-    std::vector<VkPresentModeKHR> present_modes;
+    VkSurfaceCapabilitiesKHR capabilities_;
+    std::vector<VkSurfaceFormatKHR> formats_;
+    std::vector<VkPresentModeKHR> present_modes_;
   };
 
   VkSwapchainKHR p_vk_swapchain_khr_ = VK_NULL_HANDLE;

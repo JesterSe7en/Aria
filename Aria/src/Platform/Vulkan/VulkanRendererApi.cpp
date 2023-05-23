@@ -139,7 +139,7 @@ void VulkanRendererApi::CreatePresentationSurface() {
 void VulkanRendererApi::CreateCommandPool() {
 
   VulkanDeviceManager::QueueFamilyIndices
-      queue_family_indices = VulkanDeviceManager::GetInstance().GetQueueFamilyIndicies();
+      queue_family_indices = VulkanDeviceManager::GetInstance().GetQueueFamilyIndices();
 
   VkCommandPoolCreateInfo cmd_pool_info;
   cmd_pool_info.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
