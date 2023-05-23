@@ -1,8 +1,8 @@
 #include "ariapch.h"
-#include "Window.h"
-#include "Aria/Renderer/RendererApi.h"
-#include "Platform/Windows/WindowsWindow.h"
-#include "Platform/Windows/VulkanWindow.h"
+#include "Window.hpp"
+#include "Aria/Renderer/RendererApi.hpp"
+#include "Platform/Windows/WindowsWindow.hpp"
+#include "Platform/Windows/VulkanWindow.hpp"
 
 namespace aria {
 Window *Window::Create(const WindowProps &props) {

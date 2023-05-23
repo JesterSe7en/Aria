@@ -1,15 +1,15 @@
 #include "ariapch.h"
 
-#include "Aria/Renderer/RendererApi.h"
-#include "Platform/Windows/WindowsWindow.h"
+#include "Aria/Renderer/RendererApi.hpp"
+#include "Platform/Windows/WindowsWindow.hpp"
 
-#include "Aria/Core/Base.h"
-#include "Aria/Core/Log.h"
+#include "Aria/Core/Base.hpp"
+#include "Aria/Core/Log.hpp"
 
-#include "Aria/Events/ApplicationEvent.h"
-#include "Aria/Events/KeyEvent.h"
-#include "Aria/Events/MouseEvent.h"
-#include "Platform/OpenGL/OpenGlContext.h"
+#include "Aria/Events/ApplicationEvent.hpp"
+#include "Aria/Events/KeyEvent.hpp"
+#include "Aria/Events/MouseEvent.hpp"
+#include "Platform/OpenGL/OpenGlContext.hpp"
 
 #include <GLFW/glfw3.h>
 

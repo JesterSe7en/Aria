@@ -1,6 +1,6 @@
 #include "VulkanLayer.h"
 
-#include "Platform/Vulkan/VulkanSwapChain.h"
+#include "Platform/Vulkan/VulkanSwapChain.hpp"
 #include "vulkan/vk_enum_string_helper.h"
 
 #include <cstdint>

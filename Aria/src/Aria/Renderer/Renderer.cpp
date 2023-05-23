@@ -1,11 +1,11 @@
 #include "ariapch.h"
 
-#include "Renderer.h"
+#include "Renderer.hpp"
 
-#include "Aria/Renderer/RenderCommand.h"
-#include "Aria/Renderer/RendererApi.h"
-#include "Platform/OpenGL/OpenGlShader.h"
-#include "Shader.h"
+#include "Aria/Renderer/RenderCommand.hpp"
+#include "Aria/Renderer/RendererApi.hpp"
+#include "Platform/OpenGL/OpenGlShader.hpp"
+#include "Shader.hpp"
 
 namespace aria {
 

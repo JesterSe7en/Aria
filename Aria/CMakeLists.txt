@@ -4,7 +4,7 @@ set(PROJECT_NAME Aria)
 # Source groups
 ################################################################################
 set(src
-    "src/Aria.h"
+    "src/Aria.hpp"
     "src/ariapch.cpp"
     "src/ariapch.h"
     )
@@ -12,100 +12,100 @@ source_group("src" FILES ${src})
 
 set(src__Aria__Core
     "src/Aria/Core/Application.cpp"
-    "src/Aria/Core/Application.h"
-    "src/Aria/Core/Base.h"
-    "src/Aria/Core/EntryPoint.h"
-    "src/Aria/Core/Input.h"
-    "src/Aria/Core/KeyCodes.h"
+    "src/Aria/Core/Application.hpp"
+    "src/Aria/Core/Base.hpp"
+    "src/Aria/Core/EntryPoint.hpp"
+    "src/Aria/Core/Input.hpp"
+    "src/Aria/Core/KeyCodes.hpp"
     "src/Aria/Core/Layer.cpp"
-    "src/Aria/Core/Layer.h"
+    "src/Aria/Core/Layer.hpp"
     "src/Aria/Core/LayerStack.cpp"
-    "src/Aria/Core/LayerStack.h"
+    "src/Aria/Core/LayerStack.hpp"
     "src/Aria/Core/Log.cpp"
-    "src/Aria/Core/Log.h"
-    "src/Aria/Core/Timestep.h"
+    "src/Aria/Core/Log.hpp"
+    "src/Aria/Core/Timestep.hpp"
     "src/Aria/Core/Window.cpp"
-    "src/Aria/Core/Window.h"
+    "src/Aria/Core/Window.hpp"
     )
 source_group("src\\Aria\\Core" FILES ${src__Aria__Core})
 
 set(src__Aria__Events
-    "src/Aria/Events/ApplicationEvent.h"
-    "src/Aria/Events/Event.h"
-    "src/Aria/Events/KeyEvent.h"
-    "src/Aria/Events/MouseEvent.h"
+    "src/Aria/Events/ApplicationEvent.hpp"
+    "src/Aria/Events/Event.hpp"
+    "src/Aria/Events/KeyEvent.hpp"
+    "src/Aria/Events/MouseEvent.hpp"
     )
 source_group("src\\Aria\\Events" FILES ${src__Aria__Events})
 
 set(src__Aria__ImGui
     "src/Aria/ImGui/ImGuiLayer.cpp"
-    "src/Aria/ImGui/ImGuiLayer.h"
+    "src/Aria/ImGui/ImGuiLayer.hpp"
     )
 source_group("src\\Aria\\ImGui" FILES ${src__Aria__ImGui})
 
 set(src__Aria__Renderer
     "src/Aria/Renderer/Buffer.cpp"
-    "src/Aria/Renderer/Buffer.h"
+    "src/Aria/Renderer/Buffer.hpp"
     "src/Aria/Renderer/Camera.cpp"
-    "src/Aria/Renderer/Camera.h"
-    "src/Aria/Renderer/GraphicsContext.h"
+    "src/Aria/Renderer/Camera.hpp"
+    "src/Aria/Renderer/GraphicsContext.hpp"
     "src/Aria/Renderer/RenderCommand.cpp"
-    "src/Aria/Renderer/RenderCommand.h"
+    "src/Aria/Renderer/RenderCommand.hpp"
     "src/Aria/Renderer/Renderer.cpp"
-    "src/Aria/Renderer/Renderer.h"
+    "src/Aria/Renderer/Renderer.hpp"
     "src/Aria/Renderer/RendererApi.cpp"
-    "src/Aria/Renderer/RendererApi.h"
+    "src/Aria/Renderer/RendererApi.hpp"
     "src/Aria/Renderer/Shader.cpp"
-    "src/Aria/Renderer/Shader.h"
+    "src/Aria/Renderer/Shader.hpp"
     "src/Aria/Renderer/Texture.cpp"
-    "src/Aria/Renderer/Texture.h"
+    "src/Aria/Renderer/Texture.hpp"
     "src/Aria/Renderer/VertexArray.cpp"
-    "src/Aria/Renderer/VertexArray.h"
+    "src/Aria/Renderer/VertexArray.hpp"
     )
 source_group("src\\Aria\\Renderer" FILES ${src__Aria__Renderer})
 
 set(src__Platform__OpenGL
     "src/Platform/OpenGL/OpenGlBuffer.cpp"
-    "src/Platform/OpenGL/OpenGlBuffer.h"
+    "src/Platform/OpenGL/OpenGlBuffer.hpp"
     "src/Platform/OpenGL/OpenGlContext.cpp"
-    "src/Platform/OpenGL/OpenGlContext.h"
+    "src/Platform/OpenGL/OpenGlContext.hpp"
     "src/Platform/OpenGL/OpenGlRendererApi.cpp"
-    "src/Platform/OpenGL/OpenGlRendererApi.h"
+    "src/Platform/OpenGL/OpenGlRendererApi.hpp"
     "src/Platform/OpenGL/OpenGlShader.cpp"
-    "src/Platform/OpenGL/OpenGlShader.h"
+    "src/Platform/OpenGL/OpenGlShader.hpp"
     "src/Platform/OpenGL/OpenGlTexture2D.cpp"
-    "src/Platform/OpenGL/OpenGlTexture2D.h"
+    "src/Platform/OpenGL/OpenGlTexture2D.hpp"
     "src/Platform/OpenGL/OpenGlVertexArray.cpp"
-    "src/Platform/OpenGL/OpenGlVertexArray.h"
+    "src/Platform/OpenGL/OpenGlVertexArray.hpp"
     )
 source_group("src\\Platform\\OpenGL" FILES ${src__Platform__OpenGL})
 
 set(src__Platform__Vulkan
     "src/Platform/Vulkan/VulkanDebugMessenger.cpp"
-    "src/Platform/Vulkan/VulkanDebugMessenger.h"
+    "src/Platform/Vulkan/VulkanDebugMessenger.hpp"
     "src/Platform/Vulkan/VulkanDeviceManager.cpp"
-    "src/Platform/Vulkan/VulkanDeviceManager.h"
+    "src/Platform/Vulkan/VulkanDeviceManager.hpp"
     "src/Platform/Vulkan/VulkanGraphicsPipeline.cpp"
-    "src/Platform/Vulkan/VulkanGraphicsPipeline.h"
+    "src/Platform/Vulkan/VulkanGraphicsPipeline.hpp"
     "src/Platform/Vulkan/VulkanInstance.cpp"
-    "src/Platform/Vulkan/VulkanInstance.h"
+    "src/Platform/Vulkan/VulkanInstance.hpp"
     "src/Platform/Vulkan/VulkanRendererApi.cpp"
-    "src/Platform/Vulkan/VulkanRendererApi.h"
+    "src/Platform/Vulkan/VulkanRendererApi.hpp"
     "src/Platform/Vulkan/VulkanShader.cpp"
-    "src/Platform/Vulkan/VulkanShader.h"
+    "src/Platform/Vulkan/VulkanShader.hpp"
     "src/Platform/Vulkan/VulkanSwapChain.cpp"
-    "src/Platform/Vulkan/VulkanSwapChain.h"
+    "src/Platform/Vulkan/VulkanSwapChain.hpp"
     "src/Platform/Vulkan/VulkanError.hpp"
     )
 source_group("src\\Platform\\Vulkan" FILES ${src__Platform__Vulkan})
 
 set(src__Platform__Windows
     "src/Platform/Windows/VulkanWindow.cpp"
-    "src/Platform/Windows/VulkanWindow.h"
+    "src/Platform/Windows/VulkanWindow.hpp"
     "src/Platform/Windows/WindowsInput.cpp"
-    "src/Platform/Windows/WindowsInput.h"
+    "src/Platform/Windows/WindowsInput.hpp"
     "src/Platform/Windows/WindowsWindow.cpp"
-    "src/Platform/Windows/WindowsWindow.h"
+    "src/Platform/Windows/WindowsWindow.hpp"
     )
 source_group("src\\Platform\\Windows" FILES ${src__Platform__Windows})
 

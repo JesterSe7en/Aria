@@ -1,8 +1,8 @@
 #include "ariapch.h"
-#include "ImGuiLayer.h"
+#include "ImGuiLayer.hpp"
 
-#include "Aria/Core/Log.h"
-#include "Aria/Core/Application.h"
+#include "Aria/Core/Log.hpp"
+#include "Aria/Core/Application.hpp"
 
 #include <imgui.h>
 #include <GLFW/glfw3.h>

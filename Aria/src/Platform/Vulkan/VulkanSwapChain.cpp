@@ -1,10 +1,10 @@
 #include "ariapch.h"
-#include "VulkanSwapChain.h"
-#include "Aria/Core/Log.h"
-#include "VulkanRendererApi.h"
+#include "VulkanSwapChain.hpp"
+#include "Aria/Core/Log.hpp"
 #include "vulkan/vk_enum_string_helper.h"
+#include "VulkanRendererApi.hpp"
 #include "GLFW/glfw3.h"
-#include "Aria/Core/Application.h"
+#include "Aria/Core/Application.hpp"
 
 #include <limits>
 

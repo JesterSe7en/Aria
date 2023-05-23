@@ -1,5 +1,5 @@
 #include "ariapch.h"
-#include "Camera.h"
+#include "Camera.hpp"
 
 #include <glm/matrix.hpp>
 #include <glm/ext/matrix_transform.hpp>

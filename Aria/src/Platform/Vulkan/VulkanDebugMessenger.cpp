@@ -1,6 +1,7 @@
 #include "ariapch.h"
-#include "VulkanDebugMessenger.h"
-#include "VulkanRendererApi.h"
+#include "VulkanDebugMessenger.hpp"
+#include "VulkanRendererApi.hpp"
+
 namespace aria {
 
 VkDebugUtilsMessengerCreateInfoEXT VulkanDebugMessenger::debug_utils_messenger_create_info_ext_ = {};

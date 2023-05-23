@@ -1,8 +1,8 @@
 #include "ariapch.h"
-#include "WindowsInput.h"
+#include "WindowsInput.hpp"
 
-#include "Aria/Core/Application.h"
-#include "Aria/Core/Input.h"
+#include "Aria/Core/Application.hpp"
+#include "Aria/Core/Input.hpp"
 
 #include <GLFW/glfw3.h>
 

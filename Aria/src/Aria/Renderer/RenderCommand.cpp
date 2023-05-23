@@ -1,11 +1,11 @@
 #include "ariapch.h"
 
-#include "Aria/Renderer/RenderCommand.h"
+#include "Aria/Renderer/RenderCommand.hpp"
 
-#include "Aria/Core/Base.h"
-#include "Aria/Renderer/RendererApi.h"
-#include "Platform/OpenGL/OpenGlRendererApi.h"
-#include "Platform/Vulkan/VulkanRendererApi.h"
+#include "Aria/Core/Base.hpp"
+#include "Aria/Renderer/RendererApi.hpp"
+#include "Platform/OpenGL/OpenGlRendererApi.hpp"
+#include "Platform/Vulkan/VulkanRendererApi.hpp"
 
 #include <memory>
 

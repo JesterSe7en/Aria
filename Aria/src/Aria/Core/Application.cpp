@@ -1,14 +1,13 @@
 #include "ariapch.h"
 
-#include "Application.h"
+#include "Application.hpp"
 
-#include "Aria/Core/Timestep.h"
-#include "Aria/Events/ApplicationEvent.h"
-#include "Aria/Renderer/Buffer.h"
-#include "Aria/Renderer/Camera.h"
-#include "Aria/Renderer/Renderer.h"
+#include "Aria/Core/Timestep.hpp"
+#include "Aria/Events/ApplicationEvent.hpp"
+#include "Aria/Renderer/Buffer.hpp"
+#include "Aria/Renderer/Renderer.hpp"
 
-#include <GLFW/glfw3.h>  //TODO: abstract it out only delta time use this
+#include <GLFW/glfw3.h>//TODO: abstract it out only delta time use this
 
 #ifdef WIN32
 #include <Windows.h>
@@ -16,7 +15,7 @@ extern "C" {
 __declspec(dllexport) DWORD NvOptimusEnablement = 0x00000001;
 __declspec(dllexport) int AmdPowerXpressRequestHighPerformance = 1;
 }
-#endif  // def WIN32
+#endif// def WIN32
 
 namespace aria {
 
@@ -30,11 +29,14 @@ Application::Application(ApplicationProps &props) {
   RendererApi::SetApi(props.api);
 
   switch (props.api) {
-    case RendererApi::Api::VULKAN:InitVulkanApp();
+    case RendererApi::Api::VULKAN:
+      InitVulkanApp();
       break;
-    case RendererApi::Api::OPEN_GL:InitOpenGlApp();
+    case RendererApi::Api::OPEN_GL:
+      InitOpenGlApp();
       break;
-    default: ARIA_CORE_ASSERT(false, "Aria engine currently only supports Vulkan and OpenGL") break;
+    default: ARIA_CORE_ASSERT(false, "Aria engine currently only supports Vulkan and OpenGL")
+      break;
   }
 }
 
@@ -63,14 +65,12 @@ void Application::InitOpenGlApp() {
 
 void Application::Run() {
   while (running_) {
-    auto time = (float) glfwGetTime();  // Platform::GetTime() should be used.  Somehow grab the time passed from the
+    auto time = (float) glfwGetTime();// Platform::GetTime() should be used.  Somehow grab the time passed from the
     // OS. Windows as QueryPerformanceTimer()
     Timestep delta_time = time - last_frame_time_;
     last_frame_time_ = time;
 
-    for (Layer *layer : layer_stack_) {
-      layer->OnUpdate(delta_time);
-    }
+    for (Layer *layer : layer_stack_) { layer->OnUpdate(delta_time); }
 
     // mImGuiLayer->begin();
     // for (Layer *layer : mLayerStack) {
@@ -121,4 +121,4 @@ bool Application::OnWindowClose(WindowCloseEvent &e) {
   running_ = false;
   return true;
 }
-}  // namespace ARIA
+}// namespace aria

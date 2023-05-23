@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Aria/Renderer/Shader.h"
+#include "Aria/Renderer/Shader.hpp"
 
-#include <Aria.h>
+#include <Aria.hpp>
 
 class ExampleLayer : public aria::Layer {
  public:

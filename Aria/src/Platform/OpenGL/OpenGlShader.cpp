@@ -1,8 +1,8 @@
 #include "ariapch.h"
 
-#include "Aria/Core/Base.h"
-#include "OpenGlShader.h"
-#include "Aria/Core/Log.h"
+#include "Aria/Core/Base.hpp"
+#include "OpenGlShader.hpp"
+#include "Aria/Core/Log.hpp"
 
 #include <glad/gl.h>
 #include <filesystem>

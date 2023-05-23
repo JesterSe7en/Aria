@@ -1,6 +1,6 @@
 #include "ExampleLayer.h"
 
-#include "Platform/OpenGL/OpenGlShader.h"
+#include "Platform/OpenGL/OpenGlShader.hpp"
 
 #include <imgui.h>
 

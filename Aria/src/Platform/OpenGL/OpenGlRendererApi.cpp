@@ -1,8 +1,8 @@
 #include "ariapch.h"
 
-#include "Aria/Renderer/VertexArray.h"
+#include "Aria/Renderer/VertexArray.hpp"
 
-#include "OpenGlRendererApi.h"
+#include "OpenGlRendererApi.hpp"
 
 #include <glad/gl.h>
 

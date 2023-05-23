@@ -1,13 +1,13 @@
 #pragma once
 
-#include "Aria/Core/Timestep.h"
-#include "Aria/Events/Event.h"
-#include "Aria/Renderer/Shader.h"
-#include "Platform/Vulkan/VulkanCommandBuffer.h"  //TODO: Maybe - Refactor so that layers don't require this1
-#include "Platform/Vulkan/VulkanRendererApi.h"
+#include "Aria/Core/Timestep.hpp"
+#include "Aria/Events/Event.hpp"
+#include "Aria/Renderer/Shader.hpp"
+#include "Platform/Vulkan/VulkanCommandBuffer.hpp"  //TODO: Maybe - Refactor so that layers don't require this1
+#include "Platform/Vulkan/VulkanRendererApi.hpp"
 #include "vulkan/vulkan_core.h" // TODO: Refactor so that layers don't require this
 
-#include <Aria.h>
+#include <Aria.hpp>
 
 class VulkanLayer : public aria::Layer {
  public:

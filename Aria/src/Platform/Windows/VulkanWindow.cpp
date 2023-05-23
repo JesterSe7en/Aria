@@ -1,12 +1,12 @@
 #include "ariapch.h"
 
-#include "VulkanWindow.h"
+#include "VulkanWindow.hpp"
 
-#include "Aria/Core/Base.h"
-#include "Aria/Core/Log.h"
-#include "Aria/Events/ApplicationEvent.h"
-#include "Aria/Events/KeyEvent.h"
-#include "Aria/Events/MouseEvent.h"
+#include "Aria/Core/Base.hpp"
+#include "Aria/Core/Log.hpp"
+#include "Aria/Events/ApplicationEvent.hpp"
+#include "Aria/Events/KeyEvent.hpp"
+#include "Aria/Events/MouseEvent.hpp"
 
 namespace aria {
 

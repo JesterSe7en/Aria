@@ -1,5 +1,5 @@
 #include "ariapch.h"
-#include "OpenGlBuffer.h"
+#include "OpenGlBuffer.hpp"
 
 #include <glad/gl.h>
 

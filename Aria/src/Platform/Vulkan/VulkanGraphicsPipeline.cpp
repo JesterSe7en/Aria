@@ -1,8 +1,8 @@
 #include "ariapch.h"
-#include "Aria/Core/Log.h"
-#include "VulkanGraphicsPipeline.h"
-#include "VulkanSwapChain.h"
-#include "VulkanRendererApi.h"
+#include "Aria/Core/Log.hpp"
+#include "VulkanGraphicsPipeline.hpp"
+#include "VulkanSwapChain.hpp"
+#include "VulkanRendererApi.hpp"
 #include "vulkan/vk_enum_string_helper.h"
 
 namespace aria {

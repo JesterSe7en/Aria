@@ -1,16 +1,16 @@
 #include "ariapch.h"
-#include "Platform/Vulkan/VulkanRendererApi.h"
+#include "Platform/Vulkan/VulkanRendererApi.hpp"
 
-#include "Aria/Core/Application.h"
-#include "Aria/Core/Base.h"
-#include "Aria/Core/Log.h"
-#include "Aria/Renderer/Shader.h"
-#include "Aria/Renderer/VertexArray.h"
+#include "Aria/Core/Application.hpp"
+#include "Aria/Core/Base.hpp"
+#include "Aria/Core/Log.hpp"
+#include "Aria/Renderer/Shader.hpp"
+#include "Aria/Renderer/VertexArray.hpp"
 #include "GLFW/glfw3.h"
 #include "vulkan/vk_enum_string_helper.h"
 #include "vulkan/vulkan_core.h"
-#include "VulkanSwapChain.h"
-#include "VulkanGraphicsPipeline.h"
+#include "VulkanSwapChain.hpp"
+#include "VulkanGraphicsPipeline.hpp"
 
 #include <fileapi.h>
 #include <vector>

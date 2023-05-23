@@ -1,9 +1,9 @@
 #include "ariapch.h"
-#include "VulkanCommandBuffer.h"
+#include "VulkanCommandBuffer.hpp"
 
-#include "Platform/Vulkan/VulkanRendererApi.h"
-#include "VulkanSwapChain.h"
-#include "VulkanGraphicsPipeline.h"
+#include "Platform/Vulkan/VulkanRendererApi.hpp"
+#include "VulkanSwapChain.hpp"
+#include "VulkanGraphicsPipeline.hpp"
 #include "vulkan/vk_enum_string_helper.h"
 
 
