@@ -1,7 +1,7 @@
 #include "Aria/Core/Application.hpp"
 #include "Aria/Renderer/RendererApi.hpp"
-#include "ExampleLayer.h"
-#include "VulkanLayer.h"
+#include "ExampleLayer.hpp"
+#include "VulkanLayer.hpp"
 
 #include <Aria.hpp>
 #include <Aria/Core/EntryPoint.hpp>

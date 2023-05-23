@@ -4,8 +4,8 @@ set(PROJECT_NAME Sandbox)
 # Source groups
 ################################################################################
 set(Headers
-        "src/ExampleLayer.h"
-        "src/VulkanLayer.h"
+        "src/ExampleLayer.hpp"
+        "src/VulkanLayer.hpp"
         )
 source_group("Headers" FILES ${Headers})
 

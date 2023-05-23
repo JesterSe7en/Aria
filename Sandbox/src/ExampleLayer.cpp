@@ -1,4 +1,4 @@
-#include "ExampleLayer.h"
+#include "ExampleLayer.hpp"
 
 #include "Platform/OpenGL/OpenGlShader.hpp"
 
