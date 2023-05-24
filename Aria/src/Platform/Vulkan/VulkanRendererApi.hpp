@@ -45,13 +45,11 @@ class VulkanRendererApi : public RendererApi {
   //  static void RecordCommandBuffer(VkCommandBuffer cmd_buffer,
   //                                  std::uint32_t image_idx);  // again a hack, should put this in vulkan layer
 
-  VkInstance &GetVkInstance() {
-    ARIA_CORE_ASSERT(VulkanRendererApi::p_vk_instance_, "Did you initialize a Vulkan instance?")
-    return p_vk_instance_;
-  }
   VkCommandPool &GetVkCommandPool() { return command_pool_; }
   VkSurfaceKHR &GetVkSurfaceKhr() { return surface_; }
   VkRenderPass &GetRenderPass() { return vk_render_pass_; }
+
+  Ref<VulkanInstance> GetVulkanInstance() const { return p_vulkan_instance_; }
 
   void AddToPipeline(VkShaderModule &shader_module, ShaderType type);
   void CreatePipeline() override;
@@ -73,7 +71,6 @@ class VulkanRendererApi : public RendererApi {
   const std::vector<const char *> device_extensions_ = {"VK_KHR_swapchain"};
   const std::vector<VkDynamicState> dynamic_states_ = {VK_DYNAMIC_STATE_VIEWPORT, VK_DYNAMIC_STATE_SCISSOR};
 
-  void CreateInstance();
   Ref<VulkanInstance> p_vulkan_instance_;
   void CreatePresentationSurface();
   //  void CreateRenderPass();

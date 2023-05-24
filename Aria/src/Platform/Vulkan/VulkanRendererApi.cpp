@@ -30,7 +30,6 @@ void VulkanRendererApi::Init() {
   create_info.enable_validation = false;
 #else
   create_info.enable_validation = true;
-
   create_info.debug_messenger_create_info = VulkanDebugMessenger::GetDebugMessengerCreateInfo();
 #endif
   create_info.layer_count = 0;
@@ -40,7 +39,10 @@ void VulkanRendererApi::Init() {
   p_vulkan_instance_ = VulkanInstance::Create(create_info);
 
   vulkan_debug_messenger_.Init();
-  CreateInstance();
+
+  // Need to select devices
+  VulkanDeviceManager::GetInstance().Init();
+
   CreatePresentationSurface();
   vulkan_debug_messenger_.Init();
   VulkanDeviceManager::GetInstance().Init();
@@ -77,59 +79,6 @@ void VulkanRendererApi::AddToPipeline(VkShaderModule &shader_module, ShaderType 
 }
 
 void VulkanRendererApi::CreatePipeline() { VulkanGraphicsPipeline::GetInstance().Init(); }
-
-void VulkanRendererApi::CreateInstance() {
-  if (VulkanRendererApi::IsValidationLayersEnabled() && !HasValidationSupport()) {
-    ARIA_CORE_WARN("Vulkan validation layers requested, but none available")
-  }
-
-  VkApplicationInfo app_info{};
-  app_info.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
-  app_info.pApplicationName = "Aria Vulkan Application";
-  app_info.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
-  app_info.pEngineName = "Aria";
-  app_info.engineVersion = VK_MAKE_VERSION(1, 0, 0);
-  app_info.apiVersion = VK_VERSION_1_3;
-
-  VkInstanceCreateInfo create_info{};
-  create_info.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
-  create_info.pApplicationInfo = &app_info;
-
-  std::vector<const char *> extensions = GetGlfwRequiredExtensions();
-
-  create_info.enabledExtensionCount = extensions.size();
-  create_info.ppEnabledExtensionNames = extensions.data();
-  create_info.enabledLayerCount = 0;
-
-  // setup another create info struct to capture events during creation and destruction of VKInstance
-  // Vulkan 1.3 spec pg. 3921
-  if (VulkanRendererApi::IsValidationLayersEnabled()) {
-    create_info.enabledLayerCount = validation_layers_.size();
-    create_info.ppEnabledLayerNames = validation_layers_.data();
-    create_info.pNext = &VulkanDebugMessenger::GetDebugMessengerCreateInfo();
-  } else {
-    create_info.enabledLayerCount = 0;
-    create_info.pNext = nullptr;
-  }
-
-  // query the supported instance extensions
-  // std::uint32_t numInstanceExtensions = 0;
-  // std::vector<VkExtensionProperties> instanceExtensionProperties;
-  // Query the instance extensions.
-  // vkEnumerateInstanceExtensionProperties(nullptr, &numInstanceExtensions, nullptr);
-
-  // If there are any extensions, query their properties.
-
-  // if (numInstanceExtensions != 0) {
-  // instanceExtensionProperties.resize(numInstanceExtensions);
-  // vkEnumerateInstanceExtensionProperties(nullptr, &numInstanceExtensions, instanceExtensionProperties.data());
-  // }
-  // if instance extensions are enabled, look for function pointers via
-  // vkGetInstanceProcAddr() func
-
-  VkResult result = vkCreateInstance(&create_info, nullptr, &p_vk_instance_);
-  if (result != VK_SUCCESS) { ARIA_CORE_ERROR("Failed to create vulkan instance - {0}", string_VkResult(result)) }
-}
 
 void VulkanRendererApi::CreatePresentationSurface() {
   ARIA_CORE_ASSERT(p_vk_instance_, "Did you create VkInstance first?")

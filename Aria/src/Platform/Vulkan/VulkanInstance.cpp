@@ -29,10 +29,12 @@ VulkanInstance::VulkanInstance(VulkanInstance::VulkanInstanceCreateInfo &create_
   app_info.pEngineName = "Aria";
   app_info.engineVersion = engine_version_;
   app_info.apiVersion = api_version_;
+  app_info.pNext = nullptr;
 
   VkInstanceCreateInfo vk_instance_create_info;
   vk_instance_create_info.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
   vk_instance_create_info.pApplicationInfo = &app_info;
+  vk_instance_create_info.flags = 0;
 
   if (create_info.enable_validation) {
     vk_instance_create_info.enabledLayerCount = create_info.layer_count + validation_layers_.size();

@@ -15,7 +15,7 @@ class VulkanDebugMessenger {
   }
 
  private:
-  VkDebugUtilsMessengerEXT debug_messenger_;
+  VkDebugUtilsMessengerEXT debug_messenger_ = VK_NULL_HANDLE;
   static VkDebugUtilsMessengerCreateInfoEXT debug_utils_messenger_create_info_ext_;
 
   static std::string GetMessageType(VkDebugUtilsMessageTypeFlagsEXT message_type);
