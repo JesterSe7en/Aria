@@ -160,9 +160,7 @@ CheckOptions:
   - key:             readability-identifier-naming.EnumCase
     value:           CamelCase
   - key:             readability-identifier-naming.EnumConstantCase
-    value:           CamelCase
-  - key:             readability-identifier-naming.EnumConstantPrefix
-    value:           k
+    value:           UPPER_CASE
   - key:             readability-identifier-naming.FunctionCase
     value:           CamelCase
   - key:             readability-identifier-naming.GlobalConstantCase
@@ -181,6 +179,8 @@ CheckOptions:
     value:           '^[A-Z]+(_[A-Z]+)*_$'
   - key:             readability-identifier-naming.MemberCase
     value:           lower_case
+  - key:             readability-identifier-naming.MemberSuffix
+    value:           _
   - key:             readability-identifier-naming.PrivateMemberSuffix
     value:           _
   - key:             readability-identifier-naming.PublicMemberSuffix
