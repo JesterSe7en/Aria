@@ -4,7 +4,6 @@
 #include "Aria/Events/ApplicationEvent.hpp"
 #include "Aria/Renderer/Buffer.hpp"
 #include "Aria/Renderer/Renderer.hpp"
-
 #include <GLFW/glfw3.h>//TODO: abstract it out only delta time use this
 
 #ifdef WIN32
@@ -80,6 +79,7 @@ void Application::Run() {
     p_window_->OnUpdate();
   }
 }
+
 void Application::OnEvent(Event &e) {
   EventDispatcher dispatcher(e);
 
@@ -96,6 +96,7 @@ void Application::OnEvent(Event &e) {
     }
   }
 }
+
 void Application::PushLayer(Layer *layer) {
   layer_stack_.PushLayer(layer);
   layer->OnAttach();
