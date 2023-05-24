@@ -1,25 +1,20 @@
 #include "ariapch.h"
-
-#include "Aria/Renderer/RendererApi.hpp"
 #include "Platform/Windows/WindowsWindow.hpp"
-
 #include "Aria/Core/Base.hpp"
 #include "Aria/Core/Log.hpp"
-
 #include "Aria/Events/ApplicationEvent.hpp"
 #include "Aria/Events/KeyEvent.hpp"
 #include "Aria/Events/MouseEvent.hpp"
+#include "Aria/Renderer/RendererApi.hpp"
 #include "Platform/OpenGL/OpenGlContext.hpp"
-
 #include <GLFW/glfw3.h>
 
 namespace aria {
 
 static bool s_GLFWInitialized = false;
 
-static void GlfwErrorCallback(int error_code, const char *description) {
-  ARIA_CORE_ERROR("GLFW Error ({0}) - {1}", error_code, description)
-}
+static void GlfwErrorCallback(int error_code, const char *description){
+    ARIA_CORE_ERROR("GLFW Error ({0}) - {1}", error_code, description)}
 
 WindowsWindow::WindowsWindow(const WindowProps &props) {
   window_data_.title = props.title;
@@ -58,11 +53,8 @@ void WindowsWindow::Init() {
 }
 
 void WindowsWindow::CreateAriaWindow() {
-  p_glfw_window_ = glfwCreateWindow((int) window_data_.width,
-                                    (int) window_data_.height,
-                                    window_data_.title.c_str(),
-                                    nullptr,
-                                    nullptr);
+  p_glfw_window_ = glfwCreateWindow((int) window_data_.width, (int) window_data_.height, window_data_.title.c_str(),
+                                    nullptr, nullptr);
   if (RendererApi::GetApi() == RendererApi::Api::OPEN_GL) {
     p_context_ = new OpenGlContext(p_glfw_window_);
     p_context_->Init();
@@ -176,4 +168,4 @@ void WindowsWindow::Shutdown() {
   glfwDestroyWindow(p_glfw_window_);
 }
 
-}  // namespace ARIA
+}// namespace aria

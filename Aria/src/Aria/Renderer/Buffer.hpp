@@ -89,4 +89,4 @@ class IndexBuffer {
   static Ref<IndexBuffer> Create(uint32_t *indices, uint32_t count);
 };
 
-}  // namespace ARIA
+}// namespace aria

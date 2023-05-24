@@ -3,7 +3,6 @@
 #include "Aria/Core/Window.hpp"
 #include "Aria/Renderer/RendererApi.hpp"
 #include "Platform/Vulkan/VulkanRendererApi.hpp"
-
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 #define GLFW_EXPOSE_NATIVE_WIN32
@@ -46,4 +45,4 @@ class VulkanWindow : public Window {
 
   VulkanWindowData window_data_;
 };
-}  // namespace ARIA
+}// namespace aria

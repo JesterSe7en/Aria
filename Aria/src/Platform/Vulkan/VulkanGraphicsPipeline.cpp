@@ -1,7 +1,7 @@
-#include "ariapch.h"
-#include "Aria/Core/Log.hpp"
-#include "VulkanGraphicsPipeline.hpp"
 #include "VulkanSwapChain.hpp"
+#include "ariapch.h"
+#include "VulkanGraphicsPipeline.hpp"
+#include "Aria/Core/Log.hpp"
 #include "VulkanRendererApi.hpp"
 #include "vulkan/vk_enum_string_helper.h"
 
@@ -13,12 +13,11 @@ VulkanGraphicsPipeline::~VulkanGraphicsPipeline() {
   }
   vkDestroyPipeline(VulkanDeviceManager::GetInstance().GetLogicalDevice(), vk_graphics_pipeline_, nullptr);
   vkDestroyPipelineLayout(VulkanDeviceManager::GetInstance().GetLogicalDevice(), vk_pipeline_layout_, nullptr);
-
 }
 
 void VulkanGraphicsPipeline::Init() {
-//  CreateGraphicsPipeline();
-//  CreateFrameBuffers();
+  //  CreateGraphicsPipeline();
+  //  CreateFrameBuffers();
 }
 
 //void VulkanGraphicsPipeline::CreateGraphicsPipeline() {
@@ -217,11 +216,7 @@ void VulkanGraphicsPipeline::Init() {
 //  }
 //}
 
-VkPipeline VulkanGraphicsPipeline::GetGraphicsPipeline() const {
-  return vk_graphics_pipeline_;
-}
+VkPipeline VulkanGraphicsPipeline::GetGraphicsPipeline() const { return vk_graphics_pipeline_; }
 
-std::vector<VkFramebuffer> VulkanGraphicsPipeline::GetFrameBuffers() const {
-  return vk_frame_buffers_;
-}
-} // aria
+std::vector<VkFramebuffer> VulkanGraphicsPipeline::GetFrameBuffers() const { return vk_frame_buffers_; }
+}// namespace aria

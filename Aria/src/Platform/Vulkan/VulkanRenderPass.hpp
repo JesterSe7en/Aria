@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Aria/Core/Base.hpp"
 #include "VulkanSwapChain.hpp"
+#include "Aria/Core/Base.hpp"
 #include "vulkan/vulkan_core.h"
 
 namespace aria {
@@ -26,4 +26,4 @@ class VulkanRenderPass {
   VulkanRenderPass();
 };
 
-} // aria
+}// namespace aria

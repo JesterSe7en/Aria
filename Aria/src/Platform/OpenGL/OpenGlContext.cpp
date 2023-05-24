@@ -8,12 +8,12 @@
 #include <GLFW/glfw3.h>
 
 namespace aria {
-OpenGlContext::OpenGlContext(GLFWwindow *window_handle) : p_glfw_window(window_handle) {
+OpenGlContext::OpenGlContext(GLFWwindow *window_handle) : p_glfw_window_(window_handle) {
   ARIA_CORE_ASSERT(window_handle, "Window handle is null")
 }
 
 void OpenGlContext::Init() {
-  glfwMakeContextCurrent(p_glfw_window);
+  glfwMakeContextCurrent(p_glfw_window_);
 
   // Load Glad
   int version = gladLoadGL(glfwGetProcAddress);
@@ -32,5 +32,5 @@ void OpenGlContext::Init() {
   ARIA_CORE_INFO("  Version: {0}", (const char *) glGetString(GL_VERSION));
 }
 
-void OpenGlContext::SwapBuffers() { glfwSwapBuffers(p_glfw_window); }
-}  // namespace ARIA
+void OpenGlContext::SwapBuffers() { glfwSwapBuffers(p_glfw_window_); }
+}// namespace aria

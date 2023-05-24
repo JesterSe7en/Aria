@@ -13,6 +13,6 @@ class OpenGlContext : public GraphicsContext {
   void SwapBuffers() override;
 
  private:
-  GLFWwindow *p_glfw_window;
+  GLFWwindow *p_glfw_window_;
 };
-}  // namespace ARIA
+}// namespace aria

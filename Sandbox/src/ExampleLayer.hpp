@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Aria/Renderer/Shader.hpp"
-
 #include <Aria.hpp>
 
 class ExampleLayer : public aria::Layer {

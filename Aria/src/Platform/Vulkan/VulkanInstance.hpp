@@ -22,7 +22,7 @@ class VulkanInstance {
   VulkanInstance &operator=(const VulkanInstance &) = delete;
   VulkanInstance &operator=(VulkanInstance &&) = delete;
 
-  static Ref <VulkanInstance> Create(VulkanInstanceCreateInfo &create_info);
+  static Ref<VulkanInstance> Create(VulkanInstanceCreateInfo &create_info);
 
   VkInstance GetVkInstance() { return p_vk_instance_; }
   bool IsLayerAvailable(const char *layer_name);
@@ -44,6 +44,5 @@ class VulkanInstance {
   explicit VulkanInstance(VulkanInstanceCreateInfo &create_info);
   void EnumerateLayerProperties();
   void EnumerateInstanceExtensions();
-
 };
-}
+}// namespace aria

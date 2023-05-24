@@ -45,4 +45,4 @@ class WindowsWindow : public Window {
 
   WindowData window_data_;
 };
-}  // namespace ARIA
+}// namespace aria

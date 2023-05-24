@@ -19,4 +19,4 @@ class RenderCommand {
  private:
   static std::unique_ptr<RendererApi> p_renderer_api_;
 };
-}  // namespace ARIA
+}// namespace aria

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Aria/Core/Base.hpp"
-
 #include <string>
 #include <unordered_map>
 
@@ -42,4 +41,4 @@ class ShaderLibrary {
  private:
   std::unordered_map<std::string, Ref<Shader>> shaders_;
 };
-}  // namespace ARIA
+}// namespace aria

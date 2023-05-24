@@ -6,21 +6,15 @@ namespace aria {
 
 class ARIA_API Input {
  public:
-  inline static bool IsKeyPressed(int keycode) {
-    return p_instance_->IsKeyPressedImpl(keycode);
-  }
+  inline static bool IsKeyPressed(int keycode) { return p_instance_->IsKeyPressedImpl(keycode); }
 
-  inline static bool IsMouseButtonPressed(int button) {
-    return p_instance_->IsMouseButtonPressedImpl(button);
-  }
+  inline static bool IsMouseButtonPressed(int button) { return p_instance_->IsMouseButtonPressedImpl(button); }
 
   inline static float GetMouseX() { return p_instance_->GetMouseXImpl(); }
 
   inline static float GetMouseY() { return p_instance_->GetMouseYImpl(); }
 
-  inline static std::pair<float, float> GetMousePosition() {
-    return p_instance_->GetMousePositionImpl();
-  }
+  inline static std::pair<float, float> GetMousePosition() { return p_instance_->GetMousePositionImpl(); }
 
   // These will be implemented per platform (Windows, MacOS, etc.)
  protected:
@@ -34,4 +28,4 @@ class ARIA_API Input {
   static Input *p_instance_;
 };
 
-}  // namespace ARIA
+}// namespace aria

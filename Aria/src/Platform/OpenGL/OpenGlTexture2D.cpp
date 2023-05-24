@@ -1,9 +1,7 @@
 #include "ariapch.h"
 #include "OpenGlTexture2D.hpp"
-
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
-
 #include <glad/gl.h>
 #include <filesystem>
 
@@ -39,12 +37,13 @@ OpenGlTexture2D::OpenGlTexture2D(const std::string &path) : path_(path) {
       opengl_format = GL_RGBA8;
       data_format = GL_RGBA;
       break;
-    default: ARIA_CORE_ASSERT(false, "Unsupported texture format")
+    default:
+      ARIA_CORE_ASSERT(false, "Unsupported texture format")
       break;
   }
 
   glad_glCreateTextures(GL_TEXTURE_2D, 1, &renderer_id_);
-  // This is how opengl will store the color data - note the internalformat parameter
+  // This is how opengl will store the color data - note the internal format parameter
   glad_glTextureStorage2D(renderer_id_, 1, opengl_format, width_, height_);
 
   // filtering should be exposed to the API
@@ -58,9 +57,7 @@ OpenGlTexture2D::OpenGlTexture2D(const std::string &path) : path_(path) {
   // GL_RGB/RGBA is the format of the actual data
   glad_glTextureSubImage2D(renderer_id_, 0, 0, 0, width_, height_, data_format, GL_UNSIGNED_BYTE, data);
 
-  if (data) {
-    stbi_image_free(data);
-  }
+  if (data) { stbi_image_free(data); }
 }
 
 OpenGlTexture2D::~OpenGlTexture2D() { glad_glDeleteTextures(1, &renderer_id_); }
@@ -69,4 +66,4 @@ void OpenGlTexture2D::Bind(uint32_t slot) const { glad_glBindTextureUnit(slot, r
 
 void OpenGlTexture2D::Unbind() const { glad_glBindTexture(GL_TEXTURE_2D, 0); }
 
-}  // namespace ARIA
+}// namespace aria

@@ -1,11 +1,11 @@
-#include "ariapch.h"
 #include "VulkanSwapChain.hpp"
-#include "VulkanInstance.hpp"
-#include "VulkanError.hpp"
-#include "Aria/Core/Log.hpp"
-#include "VulkanRendererApi.hpp"
-#include "GLFW/glfw3.h"
+#include "ariapch.h"
 #include "Aria/Core/Application.hpp"
+#include "Aria/Core/Log.hpp"
+#include "GLFW/glfw3.h"
+#include "VulkanError.hpp"
+#include "VulkanInstance.hpp"
+#include "VulkanRendererApi.hpp"
 
 #include <limits>
 
@@ -42,13 +42,13 @@ void VulkanSwapChain::CreateSwapChain() {
   PhysicalDeviceSurfaceSwapChainDetails details = QuerySwapChainSupport();
   VkResult result;
 
-  VkSurfaceFormatKHR surface_format = GetSwapSurfaceFormat(details.formats_);
-  VkPresentModeKHR present_mode = GetPresentMode(details.present_modes_);
-  VkExtent2D extent = GetSwapExtent(details.capabilities_);
+  VkSurfaceFormatKHR surface_format = GetSwapSurfaceFormat(details.formats);
+  VkPresentModeKHR present_mode = GetPresentMode(details.present_modes);
+  VkExtent2D extent = GetSwapExtent(details.capabilities);
 
-  std::uint32_t image_count = details.capabilities_.minImageCount + 1;
-  if (details.capabilities_.maxImageCount > 0 && image_count > details.capabilities_.maxImageCount) {
-    image_count = details.capabilities_.maxImageCount;
+  std::uint32_t image_count = details.capabilities.minImageCount + 1;
+  if (details.capabilities.maxImageCount > 0 && image_count > details.capabilities.maxImageCount) {
+    image_count = details.capabilities.maxImageCount;
   }
 
   VkSwapchainCreateInfoKHR create_info;
@@ -76,7 +76,7 @@ void VulkanSwapChain::CreateSwapChain() {
     create_info.pQueueFamilyIndices = nullptr;
   }
 
-  create_info.preTransform = details.capabilities_.currentTransform;
+  create_info.preTransform = details.capabilities.currentTransform;
   create_info.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
   create_info.presentMode = present_mode;
   create_info.clipped = VK_TRUE;
@@ -84,22 +84,16 @@ void VulkanSwapChain::CreateSwapChain() {
   // as a swap chain is tied to window size
   create_info.oldSwapchain = VK_NULL_HANDLE;
 
-  result = vkCreateSwapchainKHR(VulkanDeviceManager::GetInstance().GetLogicalDevice(),
-                                &create_info,
-                                nullptr,
+  result = vkCreateSwapchainKHR(VulkanDeviceManager::GetInstance().GetLogicalDevice(), &create_info, nullptr,
                                 &p_vk_swapchain_khr_);
   ARIA_VK_CHECK_RESULT_AND_ERROR(result, "Failed to create swap chain")
 
-  result = vkGetSwapchainImagesKHR(VulkanDeviceManager::GetInstance().GetLogicalDevice(),
-                                   p_vk_swapchain_khr_,
-                                   &image_count,
-                                   nullptr);
+  result = vkGetSwapchainImagesKHR(VulkanDeviceManager::GetInstance().GetLogicalDevice(), p_vk_swapchain_khr_,
+                                   &image_count, nullptr);
   ARIA_VK_CHECK_RESULT_AND_ERROR(result, "Failed to get swap chain image count")
   vulkan_swap_chain_details_.swap_chain_images.resize(image_count);
-  result = vkGetSwapchainImagesKHR(VulkanDeviceManager::GetInstance().GetLogicalDevice(),
-                                   p_vk_swapchain_khr_,
-                                   &image_count,
-                                   vulkan_swap_chain_details_.swap_chain_images.data());
+  result = vkGetSwapchainImagesKHR(VulkanDeviceManager::GetInstance().GetLogicalDevice(), p_vk_swapchain_khr_,
+                                   &image_count, vulkan_swap_chain_details_.swap_chain_images.data());
   ARIA_VK_CHECK_RESULT_AND_ERROR(result, "Failed to get swap chain images")
 
   vulkan_swap_chain_details_.swap_chain_format = surface_format.format;
@@ -127,9 +121,7 @@ void VulkanSwapChain::CreateImageViews() {
     create_info.subresourceRange.baseArrayLayer = 0;
     create_info.subresourceRange.layerCount = 1;
 
-    VkResult result = vkCreateImageView(VulkanDeviceManager::GetInstance().GetLogicalDevice(),
-                                        &create_info,
-                                        nullptr,
+    VkResult result = vkCreateImageView(VulkanDeviceManager::GetInstance().GetLogicalDevice(), &create_info, nullptr,
                                         &vulkan_swap_chain_details_.swap_chain_image_views[idx]);
     ARIA_VK_CHECK_RESULT_AND_ERROR(result, "Failed to create image views")
   }
@@ -138,18 +130,16 @@ void VulkanSwapChain::CreateImageViews() {
 VulkanSwapChain::PhysicalDeviceSurfaceSwapChainDetails VulkanSwapChain::QuerySwapChainSupport() {
   PhysicalDeviceSurfaceSwapChainDetails details;
   VkResult result;
-  result = vkGetPhysicalDeviceSurfaceCapabilitiesKHR(p_vk_physical_device_, p_vk_surface_khr_, &details.capabilities_);
+  result = vkGetPhysicalDeviceSurfaceCapabilitiesKHR(p_vk_physical_device_, p_vk_surface_khr_, &details.capabilities);
   ARIA_VK_CHECK_RESULT_AND_ERROR(result, "Failed to query surface capabilities")
 
   std::uint32_t format_count;
   result = vkGetPhysicalDeviceSurfaceFormatsKHR(p_vk_physical_device_, p_vk_surface_khr_, &format_count, nullptr);
   ARIA_VK_CHECK_RESULT_AND_ERROR(result, "Failed to query number of surface formats")
   if (format_count) {
-    details.formats_.resize(format_count);
-    result = vkGetPhysicalDeviceSurfaceFormatsKHR(p_vk_physical_device_,
-                                                  p_vk_surface_khr_,
-                                                  &format_count,
-                                                  details.formats_.data());
+    details.formats.resize(format_count);
+    result = vkGetPhysicalDeviceSurfaceFormatsKHR(p_vk_physical_device_, p_vk_surface_khr_, &format_count,
+                                                  details.formats.data());
     ARIA_VK_CHECK_RESULT_AND_ERROR(result, "Failed to query surface formats")
   }
 
@@ -157,11 +147,9 @@ VulkanSwapChain::PhysicalDeviceSurfaceSwapChainDetails VulkanSwapChain::QuerySwa
   result = vkGetPhysicalDeviceSurfacePresentModesKHR(p_vk_physical_device_, p_vk_surface_khr_, &present_count, nullptr);
   ARIA_VK_CHECK_RESULT_AND_ERROR(result, "Failed to query number of present modes")
   if (present_count) {
-    details.present_modes_.resize(present_count);
-    result = vkGetPhysicalDeviceSurfacePresentModesKHR(p_vk_physical_device_,
-                                                       p_vk_surface_khr_,
-                                                       &present_count,
-                                                       details.present_modes_.data());
+    details.present_modes.resize(present_count);
+    result = vkGetPhysicalDeviceSurfacePresentModesKHR(p_vk_physical_device_, p_vk_surface_khr_, &present_count,
+                                                       details.present_modes.data());
     ARIA_VK_CHECK_RESULT_AND_ERROR(result, "Failed to query present modes")
   }
 
@@ -170,19 +158,17 @@ VulkanSwapChain::PhysicalDeviceSurfaceSwapChainDetails VulkanSwapChain::QuerySwa
 
 // By default, use VK_FORMAT_B8G8R8A8_SRGB and sRGB color space
 VkSurfaceFormatKHR VulkanSwapChain::GetSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR> &formats) {
-  for (const auto &kFormat : formats) {
-    if (kFormat.format == VK_FORMAT_B8G8R8A8_SRGB && kFormat.colorSpace == VK_COLOR_SPACE_SRGB_NONLINEAR_KHR) {
-      return kFormat;
+  for (const auto &k_format : formats) {
+    if (k_format.format == VK_FORMAT_B8G8R8A8_SRGB && k_format.colorSpace == VK_COLOR_SPACE_SRGB_NONLINEAR_KHR) {
+      return k_format;
     }
   }
   return formats[0];
 }
 
 VkPresentModeKHR VulkanSwapChain::GetPresentMode(const std::vector<VkPresentModeKHR> &modes) {
-  for (const auto &kMode : modes) {
-    if (kMode == VK_PRESENT_MODE_MAILBOX_KHR) {
-      return kMode;
-    }
+  for (const auto &k_mode : modes) {
+    if (k_mode == VK_PRESENT_MODE_MAILBOX_KHR) { return k_mode; }
   }
   // Only guaranteed this mode
   // vulkan spec v1.3 pg 2717
@@ -208,4 +194,4 @@ VkExtent2D VulkanSwapChain::GetSwapExtent(const VkSurfaceCapabilitiesKHR &capabi
   }
 }
 
-} // aria
+}// namespace aria

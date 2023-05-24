@@ -2,7 +2,6 @@
 #include "Aria/Renderer/RendererApi.hpp"
 #include "ExampleLayer.hpp"
 #include "VulkanLayer.hpp"
-
 #include <Aria.hpp>
 #include <Aria/Core/EntryPoint.hpp>
 
@@ -15,7 +14,7 @@ class Sandbox : public aria::Application {
     auto vulkan_layer = new VulkanLayer();
     PushLayer(vulkan_layer);
   };
-  ~Sandbox() {};
+  ~Sandbox(){};
 };
 
 aria::Application *aria::CreateApplication() {

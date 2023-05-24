@@ -38,8 +38,7 @@ VulkanInstance::VulkanInstance(VulkanInstance::VulkanInstanceCreateInfo &create_
     vk_instance_create_info.enabledLayerCount = create_info.layer_count + validation_layers_.size();
 
     all_layers = validation_layers_;
-    all_layers.insert(all_layers.end(), create_info.pp_layer_names.begin(),
-                      create_info.pp_layer_names.end());
+    all_layers.insert(all_layers.end(), create_info.pp_layer_names.begin(), create_info.pp_layer_names.end());
     vk_instance_create_info.ppEnabledLayerNames = all_layers.data();
 
     vk_instance_create_info.pNext = &create_info.debug_messenger_create_info;
@@ -62,8 +61,8 @@ Ref<VulkanInstance> VulkanInstance::Create(VulkanInstance::VulkanInstanceCreateI
 }
 
 bool VulkanInstance::IsLayerAvailable(const char *layer_name) {
-  for (const auto &kLayerName : available_layers_) {
-    if (strcmp(kLayerName.layerName, layer_name) == 0) { return true; };
+  for (const auto &k_layer_name : available_layers_) {
+    if (strcmp(k_layer_name.layerName, layer_name) == 0) { return true; };
   }
   return false;
 }

@@ -1,7 +1,7 @@
 #pragma once
-#include <string>
 
 #include "Aria/Core/Base.hpp"
+#include <string>
 
 namespace aria {
 class Texture {
@@ -19,4 +19,4 @@ class Texture2D : public Texture {
  public:
   static Ref<Texture2D> Create(const std::string &path);
 };
-}  // namespace ARIA
+}// namespace aria

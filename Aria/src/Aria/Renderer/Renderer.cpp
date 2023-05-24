@@ -1,7 +1,5 @@
 #include "ariapch.h"
-
 #include "Renderer.hpp"
-
 #include "Aria/Renderer/RenderCommand.hpp"
 #include "Aria/Renderer/RendererApi.hpp"
 #include "Platform/OpenGL/OpenGlShader.hpp"
@@ -25,4 +23,4 @@ void Renderer::Submit(const Ref<Shader> &shader, const Ref<VertexArray> &p_verte
 }
 
 void Renderer::CreatePipeline() { RenderCommand::CreatePipeline(); }
-}  // namespace ARIA
+}// namespace aria

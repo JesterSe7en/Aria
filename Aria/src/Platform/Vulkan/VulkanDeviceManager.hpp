@@ -1,7 +1,6 @@
 #pragma once
 
 #include "vulkan/vulkan_core.h"
-
 #include <cstdint>
 #include <optional>
 #include <vector>
@@ -30,8 +29,8 @@ class VulkanDeviceManager {
   VulkanDeviceManager &operator=(const VulkanDeviceManager &) = delete;
 
   static VulkanDeviceManager &GetInstance() {
-    static VulkanDeviceManager instance;
-    return instance;
+    static VulkanDeviceManager instance_;
+    return instance_;
   }
 
   VkDevice &GetLogicalDevice() { return device_; }

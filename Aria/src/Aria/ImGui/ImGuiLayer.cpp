@@ -1,13 +1,13 @@
 #include "ariapch.h"
 #include "ImGuiLayer.hpp"
 
-#include "Aria/Core/Log.hpp"
 #include "Aria/Core/Application.hpp"
+#include "Aria/Core/Log.hpp"
 
-#include <imgui.h>
 #include <GLFW/glfw3.h>
 #include <backends/imgui_impl_glfw.h>
 #include <backends/imgui_impl_opengl3.h>
+#include <imgui.h>
 
 namespace aria {
 
@@ -23,10 +23,10 @@ void ImGuiLayer::OnAttach() {
 
   ImGui::CreateContext();
   ImGuiIO &io = ImGui::GetIO();
-  (void) io;                                              // to suppress compiler warnings
-  io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;  // Enable Keyboard Controls
-  io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;      // Enable Docking
-  io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;    // Enable Multi-Viewport
+  (void) io;                                           // to suppress compiler warnings
+  io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;// Enable Keyboard Controls
+  io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;    // Enable Docking
+  io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;  // Enable Multi-Viewport
 
   // When viewports are enabled we tweak WindowRounding/WindowBg so platform
   // windows can look identical to regular ones.
@@ -79,4 +79,4 @@ void ImGuiLayer::End() const {
     glfwMakeContextCurrent(p_current_context);
   }
 }
-}  // namespace ARIA
+}// namespace aria

@@ -18,4 +18,4 @@ class VertexArray {
 
   static Ref<VertexArray> Create();
 };
-}  // namespace ARIA
+}// namespace aria

@@ -1,7 +1,5 @@
 #include "ariapch.h"
-
 #include "VulkanWindow.hpp"
-
 #include "Aria/Core/Base.hpp"
 #include "Aria/Core/Log.hpp"
 #include "Aria/Events/ApplicationEvent.hpp"
@@ -10,9 +8,8 @@
 
 namespace aria {
 
-static void GlfwErrorCallback(int error_code, const char *description) {
-  ARIA_CORE_ERROR("GLFW Error ({0}) - {1}", error_code, description)
-}
+static void GlfwErrorCallback(int error_code, const char *description){
+    ARIA_CORE_ERROR("GLFW Error ({0}) - {1}", error_code, description)}
 
 VulkanWindow::VulkanWindow(const WindowProps &props) {
   window_data_.title = props.title;
@@ -41,12 +38,8 @@ void VulkanWindow::Init() {
 }
 
 void VulkanWindow::CreateAriaWindow() {
-  p_glfw_window_ =
-      glfwCreateWindow((int) window_data_.width,
-                       (int) window_data_.height,
-                       window_data_.title.c_str(),
-                       nullptr,
-                       nullptr);
+  p_glfw_window_ = glfwCreateWindow((int) window_data_.width, (int) window_data_.height, window_data_.title.c_str(),
+                                    nullptr, nullptr);
   glfwSetWindowUserPointer(p_glfw_window_, &window_data_);
 
 #pragma region GLFW Callbacks
@@ -151,4 +144,4 @@ void VulkanWindow::CreateAriaWindow() {
 #pragma endregion
 }
 
-}  // namespace ARIA
+}// namespace aria

@@ -1,6 +1,6 @@
 #include "ariapch.h"
-#include "Aria/Core/Log.hpp"
 #include "OpenGlVertexArray.hpp"
+#include "Aria/Core/Log.hpp"
 #include <glad/gl.h>
 
 namespace aria {
@@ -25,7 +25,8 @@ static GLenum ShaderPrimitiveToOpenGlPrimitive(ShaderPrimitiveType type) {
     case aria::ShaderPrimitiveType::Bool:
       return GL_BOOL;
 
-    default: ARIA_CORE_ASSERT(false, "Unknown shader primitive type");
+    default:
+      ARIA_CORE_ASSERT(false, "Unknown shader primitive type");
       return 0;
   }
 }
@@ -50,12 +51,9 @@ void OpenGlVertexArray::AddVertexBuffer(const Ref<VertexBuffer> &vertex_buffer) 
       case ShaderPrimitiveType::Float3:
       case ShaderPrimitiveType::Float4:
         glEnableVertexAttribArray(vertex_buffer_index_);
-        glVertexAttribPointer(vertex_buffer_index_,
-                              kElement.GetElementCount(),
-                              ShaderPrimitiveToOpenGlPrimitive(kElement.shader_primitive_type_),
-                              kElement.normalized_,
-                              layout.GetStride(),
-                              (const void *) kElement.offset_);
+        glVertexAttribPointer(vertex_buffer_index_, kElement.GetElementCount(),
+                              ShaderPrimitiveToOpenGlPrimitive(kElement.shader_primitive_type_), kElement.normalized_,
+                              layout.GetStride(), (const void *) kElement.offset_);
         vertex_buffer_index_++;
         break;
 
@@ -72,10 +70,12 @@ void OpenGlVertexArray::AddVertexBuffer(const Ref<VertexBuffer> &vertex_buffer) 
 
       case ShaderPrimitiveType::Mat2:
       case ShaderPrimitiveType::Mat3:
-      case ShaderPrimitiveType::Mat4: ARIA_CORE_ASSERT(false, "TODO: implement for matrix");
+      case ShaderPrimitiveType::Mat4:
+        ARIA_CORE_ASSERT(false, "TODO: implement for matrix");
         break;
 
-      default: ARIA_CORE_ASSERT(false, "Unknown shader primitive type");
+      default:
+        ARIA_CORE_ASSERT(false, "Unknown shader primitive type");
         break;
     }
   }
@@ -88,4 +88,4 @@ void OpenGlVertexArray::SetIndexBuffer(const Ref<IndexBuffer> &index_buffer) {
   p_index_buffer_ = index_buffer;
 }
 
-};  // namespace ARIA
+};// namespace aria

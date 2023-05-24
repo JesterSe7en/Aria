@@ -42,4 +42,4 @@ class OpenGlShader : public Shader {
   std::unordered_map<std::string, int> uniform_location_cache_;
   std::string name_;
 };
-}  // namespace ARIA
+}// namespace aria

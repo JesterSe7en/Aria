@@ -1,8 +1,8 @@
 #pragma once
 
+#include "Aria/Events/Event.hpp"
 #include "Base.hpp"
 #include "Timestep.hpp"
-#include "Aria/Events/Event.hpp"
 
 namespace aria {
 class ARIA_API Layer {
@@ -22,4 +22,4 @@ class ARIA_API Layer {
  protected:
   std::string debug_name_;
 };
-}  // namespace ARIA
+}// namespace aria

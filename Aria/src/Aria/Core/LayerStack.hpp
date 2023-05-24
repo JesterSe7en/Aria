@@ -24,4 +24,4 @@ class ARIA_API LayerStack {
   std::vector<Layer *> layers_;
   unsigned int layer_insert_index_ = 0;
 };
-}  // namespace ARIA
+}// namespace aria

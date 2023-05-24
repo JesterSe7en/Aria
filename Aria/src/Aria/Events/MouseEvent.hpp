@@ -26,8 +26,7 @@ class ARIA_API MouseMovedEvent : public Event {
 
 class ARIA_API MouseScrolledEvent : public Event {
  public:
-  MouseScrolledEvent(float x_offset, float y_offset)
-      : x_offset_(x_offset), y_offset_(y_offset) {}
+  MouseScrolledEvent(float x_offset, float y_offset) : x_offset_(x_offset), y_offset_(y_offset) {}
 
   inline float GetXOffset() const { return x_offset_; }
   inline float GetYOffset() const { return y_offset_; }
@@ -81,4 +80,4 @@ class ARIA_API MouseButtonReleasedEvent : public MouseButtonEvent {
 
   EVENT_CLASS_TYPE(MOUSE_BUTTON_RELEASED)
 };
-}  // namespace ARIA
+}// namespace aria

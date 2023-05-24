@@ -26,4 +26,4 @@ class VulkanCommandBuffer {
   void SetViewport();
   void SetScissor();
 };
-}  // namespace ARIA
+}// namespace aria

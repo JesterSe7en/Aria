@@ -1,9 +1,6 @@
 #include "ExampleLayer.hpp"
-
 #include "Platform/OpenGL/OpenGlShader.hpp"
-
 #include <imgui.h>
-
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
@@ -33,8 +30,8 @@ ExampleLayer::ExampleLayer() : Layer("Example Layer"), mSquarePosition(0.0f) {
   // --------------- Rendering SQUARE ---------------
   mSquareVA = aria::VertexArray::Create();
 
-  float squareVertices[5 * 4] = {-0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
-                                 0.5f, 0.5f, 0.0f, 1.0f, 1.0f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f};
+  float squareVertices[5 * 4] = {-0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 0.5f,  -0.5f, 0.0f, 1.0f, 0.0f,
+                                 0.5f,  0.5f,  0.0f, 1.0f, 1.0f, -0.5f, 0.5f,  0.0f, 0.0f, 1.0f};
 
   mSquareVB = aria::VertexBuffer::Create(squareVertices, sizeof(squareVertices));
 
@@ -100,13 +97,9 @@ void ExampleLayer::OnUpdate(aria::Timestep delta_time) {
 
   // ----------------------------------------------
 
-  if (aria::Input::IsKeyPressed(ARIA_KEY_LEFT)) {
-    rotation += camera_rotate_speed * delta_time;
-  }
+  if (aria::Input::IsKeyPressed(ARIA_KEY_LEFT)) { rotation += camera_rotate_speed * delta_time; }
 
-  if (aria::Input::IsKeyPressed(ARIA_KEY_RIGHT)) {
-    rotation -= camera_rotate_speed * delta_time;
-  }
+  if (aria::Input::IsKeyPressed(ARIA_KEY_RIGHT)) { rotation -= camera_rotate_speed * delta_time; }
 
   mOrthoCamera.SetPosition(position);
   mOrthoCamera.SetRotation(rotation);

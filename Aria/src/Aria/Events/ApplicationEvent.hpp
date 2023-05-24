@@ -20,8 +20,7 @@ class ARIA_API WindowCloseEvent : public Event {
 
 class ARIA_API WindowResizeEvent : public Event {
  public:
-  WindowResizeEvent(unsigned int width, unsigned int height)
-      : width_(width), height_(height) {}
+  WindowResizeEvent(unsigned int width, unsigned int height) : width_(width), height_(height) {}
 
   inline unsigned int GetWidth() const { return width_; }
   inline unsigned int GetHeight() const { return height_; }
@@ -87,4 +86,4 @@ class ARIA_API AppRenderEvent : public Event {
   EVENT_CLASS_TYPE(APP_RENDER)
   EVENT_CLASS_CATEGORY(EVENT_CATEGORY_APPLICATION)
 };
-}  // namespace ARIA
+}// namespace aria

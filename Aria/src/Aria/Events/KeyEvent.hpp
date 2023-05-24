@@ -46,4 +46,4 @@ class ARIA_API KeyReleasedEvent : public KeyEvent {
 
   EVENT_CLASS_TYPE(KEY_RELEASED)
 };
-}  // namespace ARIA
+}// namespace aria

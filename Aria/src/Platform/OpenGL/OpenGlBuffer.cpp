@@ -1,6 +1,5 @@
 #include "ariapch.h"
 #include "OpenGlBuffer.hpp"
-
 #include <glad/gl.h>
 
 namespace aria {
@@ -35,4 +34,4 @@ void OpenGlIndexBuffer::Bind() const { glad_glBindBuffer(GL_ELEMENT_ARRAY_BUFFER
 
 void OpenGlIndexBuffer::Unbind() const { glad_glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); }
 
-}  // namespace ARIA
+}// namespace aria

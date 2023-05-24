@@ -10,16 +10,19 @@ class VulkanDebugMessenger {
   ~VulkanDebugMessenger();
 
   void Init();
-  static VkDebugUtilsMessengerCreateInfoEXT &GetDebugMessengerCreateInfo() { return debug_utils_messenger_create_info_ext_; }
+  static VkDebugUtilsMessengerCreateInfoEXT &GetDebugMessengerCreateInfo() {
+    return debug_utils_messenger_create_info_ext_;
+  }
 
  private:
   VkDebugUtilsMessengerEXT debug_messenger_;
   static VkDebugUtilsMessengerCreateInfoEXT debug_utils_messenger_create_info_ext_;
 
   static std::string GetMessageType(VkDebugUtilsMessageTypeFlagsEXT message_type);
-  static VKAPI_ATTR VkBool32 VKAPI_CALL VulkanLogCallback(
-      VkDebugUtilsMessageSeverityFlagBitsEXT message_severity, VkDebugUtilsMessageTypeFlagsEXT message_type,
-      const VkDebugUtilsMessengerCallbackDataEXT *p_callback_data, void *p_user_data);
+  static VKAPI_ATTR VkBool32 VKAPI_CALL VulkanLogCallback(VkDebugUtilsMessageSeverityFlagBitsEXT message_severity,
+                                                          VkDebugUtilsMessageTypeFlagsEXT message_type,
+                                                          const VkDebugUtilsMessengerCallbackDataEXT *p_callback_data,
+                                                          void *p_user_data);
   static void PopulateDebugCreateInfo(VkDebugUtilsMessengerCreateInfoEXT &create_info);
 
   static VkResult CreateDebugUtilMessengerExt(VkInstance instance,
@@ -29,5 +32,4 @@ class VulkanDebugMessenger {
   void SetupVulkanDebugMessenger();
 };
 
-} // namespace aria
-
+}// namespace aria

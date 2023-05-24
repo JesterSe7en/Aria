@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Aria/Renderer/VertexArray.hpp"
-
 #include <glm/glm.hpp>
 
 namespace aria {
@@ -30,4 +29,4 @@ class RendererApi {
  private:
   static Api api_;
 };
-}  // namespace ARIA
+}// namespace aria

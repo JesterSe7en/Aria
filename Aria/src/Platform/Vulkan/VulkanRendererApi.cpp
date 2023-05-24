@@ -1,17 +1,15 @@
+#include "VulkanSwapChain.hpp"
 #include "ariapch.h"
 #include "Platform/Vulkan/VulkanRendererApi.hpp"
-
 #include "Aria/Core/Application.hpp"
 #include "Aria/Core/Base.hpp"
 #include "Aria/Core/Log.hpp"
 #include "Aria/Renderer/Shader.hpp"
 #include "Aria/Renderer/VertexArray.hpp"
 #include "GLFW/glfw3.h"
+#include "VulkanGraphicsPipeline.hpp"
 #include "vulkan/vk_enum_string_helper.h"
 #include "vulkan/vulkan_core.h"
-#include "VulkanSwapChain.hpp"
-#include "VulkanGraphicsPipeline.hpp"
-
 #include <fileapi.h>
 #include <vector>
 
@@ -38,16 +36,14 @@ void VulkanRendererApi::Init() {
   CreatePresentationSurface();
   vulkan_debug_messenger_.Init();
   VulkanDeviceManager::GetInstance().Init();
-//  CreateRenderPass();
+  //  CreateRenderPass();
   CreateCommandPool();
 }
-void VulkanRendererApi::Clear() {ARIA_CORE_ASSERT(false, "Not Implemented")}
+void VulkanRendererApi::Clear() { ARIA_CORE_ASSERT(false, "Not Implemented") }
 
-void VulkanRendererApi::SetClearColor(const glm::vec4 color) {ARIA_CORE_ASSERT(false, "Not Implemented")}
+void VulkanRendererApi::SetClearColor(const glm::vec4 color) { ARIA_CORE_ASSERT(false, "Not Implemented") }
 
-void VulkanRendererApi::DrawIndexed(const Ref<VertexArray> &vertex_array) {
-  ARIA_CORE_ASSERT(false, "Not Implemented")
-}
+void VulkanRendererApi::DrawIndexed(const Ref<VertexArray> &vertex_array) { ARIA_CORE_ASSERT(false, "Not Implemented") }
 
 void VulkanRendererApi::AddToPipeline(VkShaderModule &shader_module, ShaderType type) {
   VkPipelineShaderStageCreateInfo create_info;
@@ -62,7 +58,8 @@ void VulkanRendererApi::AddToPipeline(VkShaderModule &shader_module, ShaderType 
     case ShaderType::FRAGMENT:
       create_info.stage = VK_SHADER_STAGE_FRAGMENT_BIT;
       break;
-    default: ARIA_CORE_ASSERT(false, "Unknown shader type; cannot create VkShaderModule")
+    default:
+      ARIA_CORE_ASSERT(false, "Unknown shader type; cannot create VkShaderModule")
       break;
   }
   create_info.module = shader_module;
@@ -71,9 +68,7 @@ void VulkanRendererApi::AddToPipeline(VkShaderModule &shader_module, ShaderType 
   shader_stages_.push_back(create_info);
 }
 
-void VulkanRendererApi::CreatePipeline() {
-  VulkanGraphicsPipeline::GetInstance().Init();
-}
+void VulkanRendererApi::CreatePipeline() { VulkanGraphicsPipeline::GetInstance().Init(); }
 
 void VulkanRendererApi::CreateInstance() {
   if (VulkanRendererApi::IsValidationLayersEnabled() && !HasValidationSupport()) {
@@ -125,9 +120,7 @@ void VulkanRendererApi::CreateInstance() {
   // vkGetInstanceProcAddr() func
 
   VkResult result = vkCreateInstance(&create_info, nullptr, &p_vk_instance_);
-  if (result != VK_SUCCESS) {
-    ARIA_CORE_ERROR("Failed to create vulkan instance - {0}", string_VkResult(result))
-  }
+  if (result != VK_SUCCESS) { ARIA_CORE_ERROR("Failed to create vulkan instance - {0}", string_VkResult(result)) }
 }
 
 void VulkanRendererApi::CreatePresentationSurface() {
@@ -135,15 +128,13 @@ void VulkanRendererApi::CreatePresentationSurface() {
   auto glfw_window = static_cast<GLFWwindow *>(Application::Get().GetWindow().GetNativeWindow());
   ARIA_CORE_ASSERT(glfw_window, "Did you create window first before creating surface?")
   VkResult result = glfwCreateWindowSurface(p_vk_instance_, glfw_window, nullptr, &surface_);
-  if (result != VK_SUCCESS) {
-    ARIA_CORE_ERROR("Cannot create vulkan surface - {0}", string_VkResult(result))
-  }
+  if (result != VK_SUCCESS) { ARIA_CORE_ERROR("Cannot create vulkan surface - {0}", string_VkResult(result)) }
 }
 
 void VulkanRendererApi::CreateCommandPool() {
 
-  VulkanDeviceManager::QueueFamilyIndices
-      queue_family_indices = VulkanDeviceManager::GetInstance().GetQueueFamilyIndices();
+  VulkanDeviceManager::QueueFamilyIndices queue_family_indices =
+      VulkanDeviceManager::GetInstance().GetQueueFamilyIndices();
 
   VkCommandPoolCreateInfo cmd_pool_info;
   cmd_pool_info.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
@@ -151,14 +142,9 @@ void VulkanRendererApi::CreateCommandPool() {
   cmd_pool_info.pNext = nullptr;
   cmd_pool_info.queueFamilyIndex = queue_family_indices.graphics_family.value();
 
-  VkResult
-      result = vkCreateCommandPool(VulkanDeviceManager::GetInstance().GetLogicalDevice(),
-                                   &cmd_pool_info,
-                                   nullptr,
-                                   &command_pool_);
-  if (result != VK_SUCCESS) {
-    ARIA_CORE_ERROR("Failed to create command pool - {0}", string_VkResult(result))
-  }
+  VkResult result = vkCreateCommandPool(VulkanDeviceManager::GetInstance().GetLogicalDevice(), &cmd_pool_info, nullptr,
+                                        &command_pool_);
+  if (result != VK_SUCCESS) { ARIA_CORE_ERROR("Failed to create command pool - {0}", string_VkResult(result)) }
 }
 
 VkCommandBuffer VulkanRendererApi::CreateVkCommandBuffer() {
@@ -169,10 +155,8 @@ VkCommandBuffer VulkanRendererApi::CreateVkCommandBuffer() {
   buffer_alloc_info.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
   buffer_alloc_info.commandBufferCount = 1;
 
-  VkResult
-      result = vkAllocateCommandBuffers(VulkanDeviceManager::GetInstance().GetLogicalDevice(),
-                                        &buffer_alloc_info,
-                                        &command_buffer_);
+  VkResult result = vkAllocateCommandBuffers(VulkanDeviceManager::GetInstance().GetLogicalDevice(), &buffer_alloc_info,
+                                             &command_buffer_);
   if (result != VK_SUCCESS) {
     ARIA_CORE_ERROR("Failed to create command buffer - {0}", string_VkResult(result))
     return nullptr;
@@ -198,9 +182,7 @@ bool VulkanRendererApi::HasValidationSupport() {
       }
     }
 
-    if (!layer_found) {
-      return false;
-    }
+    if (!layer_found) { return false; }
   }
   return true;
 }
@@ -212,9 +194,7 @@ std::vector<const char *> VulkanRendererApi::GetGlfwRequiredExtensions() {
 
   std::vector<const char *> extensions(glfw_extensions, glfw_extensions + glfw_extension_count);
 
-  if (VulkanRendererApi::HasValidationSupport()) {
-    extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
-  }
+  if (VulkanRendererApi::HasValidationSupport()) { extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME); }
   return extensions;
 }
-}  // namespace ARIA
+}// namespace aria

@@ -1,11 +1,9 @@
 #include "ariapch.h"
 #include "VulkanShader.hpp"
-#include "VulkanError.hpp"
-
 #include "Aria/Core/Log.hpp"
 #include "Aria/Renderer/Shader.hpp"
 #include "Platform/Vulkan/VulkanRendererApi.hpp"
-
+#include "VulkanError.hpp"
 #include <filesystem>
 
 namespace aria {
@@ -33,9 +31,7 @@ VulkanShader::VulkanShader(const std::string &file_path, ShaderType type) : shad
 }
 
 VulkanShader::~VulkanShader() {
-  vkDestroyShaderModule(VulkanDeviceManager::GetInstance().GetLogicalDevice(),
-                        vk_shader_module_,
-                        nullptr);
+  vkDestroyShaderModule(VulkanDeviceManager::GetInstance().GetLogicalDevice(), vk_shader_module_, nullptr);
 }
 
 void VulkanShader::Bind() const {}
@@ -50,9 +46,7 @@ void VulkanShader::CreateShader(const std::string &file_path) {
 std::vector<char> VulkanShader::ParseByteCodeFile(const std::string &file_path) const {
   std::ifstream bytecode_file(file_path, std::ios::ate | std::ios::binary);
 
-  if (!bytecode_file.is_open()) {
-    ARIA_CORE_ERROR("Cannot open shader bytecode file: {0}", file_path)
-  }
+  if (!bytecode_file.is_open()) { ARIA_CORE_ERROR("Cannot open shader bytecode file: {0}", file_path) }
 
   auto file_size = bytecode_file.tellg();
   std::vector<char> buffer(file_size);
@@ -70,16 +64,13 @@ void VulkanShader::CreateShaderModule(const std::vector<char> &code) {
   create_info.pNext = nullptr;
   create_info.flags = 0;
   create_info.codeSize = code.size();
-  create_info.pCode = reinterpret_cast<const uint32_t *>(code.data());  // TODO: use dynamic cast?
+  create_info.pCode = reinterpret_cast<const uint32_t *>(code.data());// TODO: use dynamic cast?
 
-  VkResult result = vkCreateShaderModule(VulkanDeviceManager::GetInstance().GetLogicalDevice(),
-                                         &create_info,
-                                         nullptr,
+  VkResult result = vkCreateShaderModule(VulkanDeviceManager::GetInstance().GetLogicalDevice(), &create_info, nullptr,
                                          &vk_shader_module_);
   ARIA_VK_CHECK_RESULT_AND_ERROR(result, "Cannot create shader module for {0}", name_)
-
 }
 
 void VulkanShader::AddToPipeline() { VulkanRendererApi::GetInstance().AddToPipeline(vk_shader_module_, shader_type_); }
 
-}  // namespace ARIA
+}// namespace aria

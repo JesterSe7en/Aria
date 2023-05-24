@@ -36,13 +36,11 @@ enum EventCategory {
   EVENT_CATEGORY_MOUSE = BIT(4)
 };
 
-#define EVENT_CLASS_TYPE(type)                                     \
-  static EventType GetStaticType() { return EventType::type; } \
-  virtual EventType GetEventType() const override {              \
-    return GetStaticType();                                      \
-  }                                                                \
-  virtual const char* GetName() const override { return #type; }
-#define EVENT_CLASS_CATEGORY(category) \
+#define EVENT_CLASS_TYPE(type)                                                                                         \
+  static EventType GetStaticType() { return EventType::type; }                                                         \
+  virtual EventType GetEventType() const override { return GetStaticType(); }                                          \
+  virtual const char *GetName() const override { return #type; }
+#define EVENT_CLASS_CATEGORY(category)                                                                                 \
   virtual int GetCategoryFlags() const override { return category; }
 
 class ARIA_API Event {
@@ -52,9 +50,7 @@ class ARIA_API Event {
   virtual int GetCategoryFlags() const = 0;
   virtual std::string ToString() const { return GetName(); }
 
-  inline bool IsInCategory(EventCategory category) {
-    return GetCategoryFlags() & category;
-  }
+  inline bool IsInCategory(EventCategory category) { return GetCategoryFlags() & category; }
   bool handled_ = false;
 };
 
@@ -78,7 +74,5 @@ class EventDispatcher {
   Event &event_;
 };
 
-inline std::ostream &operator<<(std::ostream &os, const Event &e) {
-  return os << e.ToString();
-}
-}  // namespace ARIA
+inline std::ostream &operator<<(std::ostream &os, const Event &e) { return os << e.ToString(); }
+}// namespace aria

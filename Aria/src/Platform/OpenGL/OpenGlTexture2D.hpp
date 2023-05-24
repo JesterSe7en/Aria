@@ -1,7 +1,7 @@
 #pragma once
 
-#include <cstdint>
 #include "Aria/Renderer/Texture.hpp"
+#include <cstdint>
 
 namespace aria {
 class OpenGlTexture2D : public Texture2D {
@@ -21,4 +21,4 @@ class OpenGlTexture2D : public Texture2D {
   uint32_t height_ = 0;
   std::string path_;
 };
-}  // namespace ARIA
+}// namespace aria

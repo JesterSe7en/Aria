@@ -1,9 +1,6 @@
 #include "ariapch.h"
-
-#include "Aria/Renderer/VertexArray.hpp"
-
 #include "OpenGlRendererApi.hpp"
-
+#include "Aria/Renderer/VertexArray.hpp"
 #include <glad/gl.h>
 
 namespace aria {
@@ -16,4 +13,4 @@ void OpenGlRendererApi::SetClearColor(const glm::vec4 color) { glClearColor(colo
 void OpenGlRendererApi::DrawIndexed(const Ref<VertexArray> &p_vertex_array) {
   glDrawElements(GL_TRIANGLES, p_vertex_array->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
 }
-}  // namespace ARIA
+}// namespace aria

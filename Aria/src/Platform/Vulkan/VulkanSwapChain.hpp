@@ -1,14 +1,13 @@
 #pragma once
 
-#include "vulkan/vulkan_core.h"
-#include "VulkanInstance.hpp"
 #include "VulkanDeviceManager.hpp"
+#include "VulkanInstance.hpp"
+#include "vulkan/vulkan_core.h"
 
 namespace aria {
 
 class VulkanSwapChain {
  public:
-
   struct VulkanSwapChainDetails {
     VkFormat swap_chain_format;
     VkExtent2D swap_chain_extend_2d;
@@ -27,12 +26,13 @@ class VulkanSwapChain {
   VkSwapchainKHR GetSwapChain() { return p_vk_swapchain_khr_; }
 
   VulkanSwapChain();
+
  private:
   class PhysicalDeviceSurfaceSwapChainDetails {
    public:
-    VkSurfaceCapabilitiesKHR capabilities_;
-    std::vector<VkSurfaceFormatKHR> formats_;
-    std::vector<VkPresentModeKHR> present_modes_;
+    VkSurfaceCapabilitiesKHR capabilities;
+    std::vector<VkSurfaceFormatKHR> formats;
+    std::vector<VkPresentModeKHR> present_modes;
   };
 
   VkSwapchainKHR p_vk_swapchain_khr_ = VK_NULL_HANDLE;
@@ -54,6 +54,4 @@ class VulkanSwapChain {
   static VkExtent2D GetSwapExtent(const VkSurfaceCapabilitiesKHR &capabilities);
 };
 
-} // aria
-
-
+}// namespace aria

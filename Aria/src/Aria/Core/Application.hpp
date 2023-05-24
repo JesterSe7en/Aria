@@ -1,19 +1,19 @@
 #pragma once
 
 #include "Aria/Core/Application.hpp"
+#include "Aria/Events/ApplicationEvent.hpp"
+#include "Aria/Events/Event.hpp"
+#include "Aria/Events/KeyEvent.hpp"
+#include "Aria/Events/MouseEvent.hpp"
+#include "Aria/ImGui/ImGuiLayer.hpp"
+#include "Aria/Renderer/Buffer.hpp"
+#include "Aria/Renderer/Camera.hpp"
+#include "Aria/Renderer/RendererApi.hpp"
+#include "Aria/Renderer/Shader.hpp"
+#include "Aria/Renderer/VertexArray.hpp"
 #include "Base.hpp"
 #include "Layer.hpp"
 #include "LayerStack.hpp"
-#include "Aria/ImGui/ImGuiLayer.hpp"
-#include "Aria/Events/Event.hpp"
-#include "Aria/Events/ApplicationEvent.hpp"
-#include "Aria/Events/KeyEvent.hpp"
-#include "Aria/Events/MouseEvent.hpp"
-#include "Aria/Renderer/RendererApi.hpp"
-#include "Aria/Renderer/Camera.hpp"
-#include "Aria/Renderer/Buffer.hpp"
-#include "Aria/Renderer/Shader.hpp"
-#include "Aria/Renderer/VertexArray.hpp"
 #include "Window.hpp"
 
 namespace aria {
@@ -59,4 +59,4 @@ class ARIA_API Application {
 
 // To be defined in CLIENT
 Application *CreateApplication();
-}  // namespace ARIA
+}// namespace aria

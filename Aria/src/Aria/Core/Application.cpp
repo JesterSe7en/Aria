@@ -1,7 +1,5 @@
 #include "ariapch.h"
-
 #include "Application.hpp"
-
 #include "Aria/Core/Timestep.hpp"
 #include "Aria/Events/ApplicationEvent.hpp"
 #include "Aria/Renderer/Buffer.hpp"
@@ -35,7 +33,8 @@ Application::Application(ApplicationProps &props) {
     case RendererApi::Api::OPEN_GL:
       InitOpenGlApp();
       break;
-    default: ARIA_CORE_ASSERT(false, "Aria engine currently only supports Vulkan and OpenGL")
+    default:
+      ARIA_CORE_ASSERT(false, "Aria engine currently only supports Vulkan and OpenGL")
       break;
   }
 }

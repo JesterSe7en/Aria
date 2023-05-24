@@ -2,7 +2,6 @@
 
 #include "Aria/Renderer/Shader.hpp"
 #include "vulkan/vulkan_core.h"
-
 #include <cstdint>
 
 namespace aria {
@@ -28,4 +27,4 @@ class VulkanShader : public Shader {
   void CreateShaderModule(const std::vector<char> &code);
   void AddToPipeline();
 };
-}  // namespace ARIA
+}// namespace aria

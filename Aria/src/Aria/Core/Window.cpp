@@ -1,8 +1,8 @@
 #include "ariapch.h"
 #include "Window.hpp"
 #include "Aria/Renderer/RendererApi.hpp"
-#include "Platform/Windows/WindowsWindow.hpp"
 #include "Platform/Windows/VulkanWindow.hpp"
+#include "Platform/Windows/WindowsWindow.hpp"
 
 namespace aria {
 Window *Window::Create(const WindowProps &props) {
@@ -11,8 +11,9 @@ Window *Window::Create(const WindowProps &props) {
       return new WindowsWindow(props);
     case RendererApi::Api::VULKAN:
       return new VulkanWindow(props);
-    default: ARIA_CORE_ASSERT(false, "Unknown API, cannot create window")
+    default:
+      ARIA_CORE_ASSERT(false, "Unknown API, cannot create window")
       return nullptr;
   }
 }
-}  // namespace ARIA
+}// namespace aria

@@ -42,4 +42,4 @@ class ARIA_API Window {
 
   static Window *Create(const WindowProps &props = WindowProps());
 };
-}  // namespace ARIA
+}// namespace aria

@@ -19,7 +19,7 @@ class Renderer {
                      const glm::mat4 transform = glm::mat4(1.0f));
 
   inline static RendererApi::Api GetApi() { return RendererApi::GetApi(); }
-  static void CreatePipeline();  // This is a hack for now
+  static void CreatePipeline();// This is a hack for now
   static void CreateCommandBuffer();
 
  private:
@@ -28,4 +28,4 @@ class Renderer {
   };
   static SceneData *p_scene_data_;
 };
-}  // namespace ARIA
+}// namespace aria

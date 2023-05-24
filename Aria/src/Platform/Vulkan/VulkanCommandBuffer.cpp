@@ -1,11 +1,9 @@
+#include "VulkanSwapChain.hpp"
 #include "ariapch.h"
 #include "VulkanCommandBuffer.hpp"
-
 #include "Platform/Vulkan/VulkanRendererApi.hpp"
-#include "VulkanSwapChain.hpp"
 #include "VulkanGraphicsPipeline.hpp"
 #include "vulkan/vk_enum_string_helper.h"
-
 
 namespace aria {
 
@@ -17,11 +15,9 @@ VulkanCommandBuffer::VulkanCommandBuffer() {
   buffer_alloc_info.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
   buffer_alloc_info.commandBufferCount = 1;
 
-  VkResult
-      result = vkAllocateCommandBuffers(VulkanDeviceManager::GetInstance().GetLogicalDevice(), &buffer_alloc_info, &command_buffer_);
-  if (result != VK_SUCCESS) {
-    ARIA_CORE_ERROR("Failed to create command buffer - {0}", string_VkResult(result))
-  }
+  VkResult result = vkAllocateCommandBuffers(VulkanDeviceManager::GetInstance().GetLogicalDevice(), &buffer_alloc_info,
+                                             &command_buffer_);
+  if (result != VK_SUCCESS) { ARIA_CORE_ERROR("Failed to create command buffer - {0}", string_VkResult(result)) }
 
   SetViewport();
   SetScissor();
@@ -85,7 +81,7 @@ void VulkanCommandBuffer::StartRenderPass(glm::vec4 color) {
   render_pass_begin.renderArea.offset = {0, 0};
   render_pass_begin.renderArea.extent = details.swap_chain_extend_2d;
 
-  VkClearValue clear_color = {{{color.r, color.g, color.b, color.a}}};  // black
+  VkClearValue clear_color = {{{color.r, color.g, color.b, color.a}}};// black
   render_pass_begin.clearValueCount = 1;
   render_pass_begin.pClearValues = &clear_color;
 
@@ -103,8 +99,7 @@ bool VulkanCommandBuffer::Reset() {
 }
 
 bool VulkanCommandBuffer::Bind() {
-  vkCmdBindPipeline(command_buffer_,
-                    VK_PIPELINE_BIND_POINT_GRAPHICS,
+  vkCmdBindPipeline(command_buffer_, VK_PIPELINE_BIND_POINT_GRAPHICS,
                     VulkanGraphicsPipeline::GetInstance().GetGraphicsPipeline());
   return true;
 }
@@ -117,4 +112,4 @@ bool VulkanCommandBuffer::EndRecording() {
   return result;
 }
 
-}  // namespace ARIA
+}// namespace aria

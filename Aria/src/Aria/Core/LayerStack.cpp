@@ -11,9 +11,7 @@ namespace aria {
 //  potentially better performance for frequent insertions and removals at the beginning."
 
 LayerStack::~LayerStack() {
-  for (Layer *layer : layers_) {
-    delete layer;
-  }
+  for (Layer *layer : layers_) { delete layer; }
 }
 
 void LayerStack::PushLayer(Layer *layer) {
@@ -36,8 +34,6 @@ void LayerStack::PopLayer(Layer *layer) {
 
 void LayerStack::PopOverlay(Layer *overlay) {
   auto it = std::find(layers_.begin(), layers_.end(), overlay);
-  if (it != layers_.end()) {
-    layers_.erase(it);
-  }
+  if (it != layers_.end()) { layers_.erase(it); }
 }
-}  // namespace ARIA
+}// namespace aria

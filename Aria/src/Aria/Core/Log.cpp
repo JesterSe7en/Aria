@@ -16,4 +16,4 @@ void Log::Init() {
   p_client_logger_ = spdlog::stdout_color_mt("APP");
   p_client_logger_->set_level(spdlog::level::trace);
 }
-}  // namespace ARIA
+}// namespace aria

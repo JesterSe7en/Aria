@@ -1,24 +1,20 @@
 #include "ariapch.h"
 #include "Platform/Vulkan/VulkanDeviceManager.hpp"
-
 #include "Aria/Core/Log.hpp"
 #include "Platform/Vulkan/VulkanRendererApi.hpp"
 #include "vulkan/vk_enum_string_helper.h"
-
 #include <cstring>
 #include <set>
 
 namespace aria {
 
-VulkanDeviceManager::VulkanPhysicalDevice vulkanPhysicalDevice{VK_NULL_HANDLE, {}};
-
 VulkanDeviceManager::VulkanDeviceManager()
-    : vk_instance_(VulkanRendererApi::GetInstance().GetVkInstance()), vk_surface_khr_(VulkanRendererApi::GetInstance().GetVkSurfaceKhr()) {
-  ARIA_CORE_ASSERT(vk_instance_, "Did you initialize vk instance first?")
-  ARIA_CORE_ASSERT(vk_surface_khr_, "Did you initialize presentation layer first?")
-}
+    : vk_instance_(VulkanRendererApi::GetInstance().GetVkInstance()),
+      vk_surface_khr_(VulkanRendererApi::GetInstance().GetVkSurfaceKhr()){
+          ARIA_CORE_ASSERT(vk_instance_, "Did you initialize vk instance first?")
+              ARIA_CORE_ASSERT(vk_surface_khr_, "Did you initialize presentation layer first?")}
 
-VulkanDeviceManager::~VulkanDeviceManager() {
+      VulkanDeviceManager::~VulkanDeviceManager() {
   vkDestroyDevice(device_, nullptr);
 }
 
@@ -50,10 +46,8 @@ void VulkanDeviceManager::SelectSuitablePhysicalDevice() {
 
       ARIA_CORE_INFO("--- Vulkan GUI Device --- ")
       ARIA_CORE_INFO("Name: {0}", properties.deviceName)
-      ARIA_CORE_INFO("Vulkan API version: {0}.{1}.{2}",
-                     VK_API_VERSION_MAJOR(properties.apiVersion),
-                     VK_API_VERSION_MINOR(properties.apiVersion),
-                     VK_API_VERSION_PATCH(properties.apiVersion))
+      ARIA_CORE_INFO("Vulkan API version: {0}.{1}.{2}", VK_API_VERSION_MAJOR(properties.apiVersion),
+                     VK_API_VERSION_MINOR(properties.apiVersion), VK_API_VERSION_PATCH(properties.apiVersion))
 
       // This may not work - vkspec v1.3 pg. 116
       // "The encoding of driverVersion is implementation-defined. It may not use the same
@@ -73,7 +67,6 @@ void VulkanDeviceManager::SelectSuitablePhysicalDevice() {
   ARIA_CORE_ASSERT(physical_device_.physical_device != VK_NULL_HANDLE,
                    "Found GPUs with Vulkan support, but no suitable devices for Aria Engine")
 
-
   // For reference - Vendor IDs:
   //  case 0x10DE:
   //    return "NVIDIA";
@@ -81,7 +74,6 @@ void VulkanDeviceManager::SelectSuitablePhysicalDevice() {
   //    return "AMD";
   //  case 0x8086:
   //    return "INTEL";
-
 
   // features can include optional capabilities such as geometry shaders, tessellation shaders, multi-viewport
   // rendering, texture compression formats, and more.
@@ -112,8 +104,8 @@ void VulkanDeviceManager::SelectSuitablePhysicalDevice() {
 void VulkanDeviceManager::CreateLogicalDevice() {
 
   std::vector<VkDeviceQueueCreateInfo> queue_create_infos;
-  std::set<std::uint32_t> unique_queue_families =
-      {queue_family_indices_.graphics_family.value(), queue_family_indices_.present_family.value()};
+  std::set<std::uint32_t> unique_queue_families = {queue_family_indices_.graphics_family.value(),
+                                                   queue_family_indices_.present_family.value()};
 
   float queue_priority = 1.0f;
   for (std::uint32_t queue_family : unique_queue_families) {
@@ -148,9 +140,7 @@ void VulkanDeviceManager::CreateLogicalDevice() {
   }
 
   VkResult result = vkCreateDevice(physical_device_.physical_device, &create_info, nullptr, &device_);
-  if (result != VK_SUCCESS) {
-    ARIA_CORE_ERROR("Cannot create logical device - {0}", string_VkResult(result))
-  }
+  if (result != VK_SUCCESS) { ARIA_CORE_ERROR("Cannot create logical device - {0}", string_VkResult(result)) }
 
   vkGetDeviceQueue(device_, queue_family_indices_.graphics_family.value(), 0, &graphics_queue_);
   vkGetDeviceQueue(device_, queue_family_indices_.present_family.value(), 0, &present_queue_);
@@ -168,21 +158,15 @@ std::vector<VkQueueFamilyProperties> VulkanDeviceManager::QueryQueueFamilies(VkP
   // https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkQueueFlagBits.html
   VkSurfaceKHR surface = VulkanRendererApi::GetInstance().GetVkSurfaceKhr();
 
-  for (const auto &kQueueFamily : queue_families) {
+  for (const auto &k_queue_family : queue_families) {
     VkBool32 surface_supported = false;
     vkGetPhysicalDeviceSurfaceSupportKHR(physical_device, i, surface, &surface_supported);
 
-    if (surface_supported) {
-      queue_family_indices_.present_family = i;
-    }
+    if (surface_supported) { queue_family_indices_.present_family = i; }
 
-    if (kQueueFamily.queueFlags & VK_QUEUE_GRAPHICS_BIT) {
-      queue_family_indices_.graphics_family = i;
-    }
+    if (k_queue_family.queueFlags & VK_QUEUE_GRAPHICS_BIT) { queue_family_indices_.graphics_family = i; }
 
-    if (queue_family_indices_.IsComplete()) {
-      break;
-    }
+    if (queue_family_indices_.IsComplete()) { break; }
     i++;
   }
   return queue_families;
@@ -208,7 +192,8 @@ bool VulkanDeviceManager::IsSuitableVulkanDevice(VkPhysicalDevice &physical_devi
   // return properties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU && features.geometryShader;
 }
 
-VulkanDeviceManager::PhysicalDeviceSurfaceSwapChainDetails VulkanDeviceManager::QuerySwapChainSupport(VkPhysicalDevice &physical_device) {
+VulkanDeviceManager::PhysicalDeviceSurfaceSwapChainDetails
+VulkanDeviceManager::QuerySwapChainSupport(VkPhysicalDevice &physical_device) {
   VkSurfaceKHR surface = VulkanRendererApi::GetInstance().GetVkSurfaceKhr();
   PhysicalDeviceSurfaceSwapChainDetails details;
   vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physical_device, surface, &details.capabilities);
@@ -239,10 +224,8 @@ bool VulkanDeviceManager::CheckDeviceExtensionsSupport(VkPhysicalDevice &physica
 
   std::set<std::string> required_extensions(device_extensions_.begin(), device_extensions_.end());
 
-  for (const auto &kExtension : extensions) {
-    required_extensions.erase(kExtension.extensionName);
-  }
+  for (const auto &kExtension : extensions) { required_extensions.erase(kExtension.extensionName); }
   return required_extensions.empty();
 }
 
-}  // namespace ARIA
+}// namespace aria

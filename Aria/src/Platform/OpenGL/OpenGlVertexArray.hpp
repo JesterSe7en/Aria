@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Aria/Renderer/VertexArray.hpp"
 #include "Aria/Renderer/Buffer.hpp"
+#include "Aria/Renderer/VertexArray.hpp"
 
 namespace aria {
 class OpenGlVertexArray : public VertexArray {
@@ -24,4 +24,4 @@ class OpenGlVertexArray : public VertexArray {
   std::vector<Ref<VertexBuffer>> vertex_buffers_;
   Ref<IndexBuffer> p_index_buffer_;
 };
-}  // namespace ARIA
+}// namespace aria

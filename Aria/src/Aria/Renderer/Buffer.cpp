@@ -1,13 +1,10 @@
 #include "ariapch.h"
-
-#include <memory>
+#include "Buffer.hpp"
 #include "Aria/Core/Base.hpp"
-
 #include "Aria/Core/Log.hpp"
 #include "Platform/OpenGL/OpenGlBuffer.hpp"
-
-#include "Buffer.hpp"
 #include "RendererApi.hpp"
+#include <memory>
 
 namespace aria {
 
@@ -33,7 +30,8 @@ uint32_t GetShaderTypeSize(ShaderPrimitiveType type) {
       return 4 * 4 * 4;
     case aria::ShaderPrimitiveType::Bool:
       return 1;
-    default: ARIA_CORE_ASSERT(false, "Unknown shader primitive type")
+    default:
+      ARIA_CORE_ASSERT(false, "Unknown shader primitive type")
       return 0;
   }
 }
@@ -43,15 +41,17 @@ uint32_t GetShaderTypeSize(ShaderPrimitiveType type) {
 Ref<VertexBuffer> VertexBuffer::Create(float *vertices, uint32_t size) {
   RendererApi::Api api = RendererApi::GetApi();
   switch (api) {
-    case RendererApi::Api::NONE: ARIA_CORE_ASSERT(false, "No renderer API selected for vertex buffer generation")
+    case RendererApi::Api::NONE:
+      ARIA_CORE_ASSERT(false, "No renderer API selected for vertex buffer generation")
       return nullptr;
     case RendererApi::Api::OPEN_GL:
       return std::make_shared<OpenGlVertexBuffer>(vertices, size);
     case RendererApi::Api::DIRECT_X:
-    case RendererApi::Api::VULKAN: ARIA_CORE_ASSERT(false,
-                                                    "API selected for vertex buffer generation is not implemented")
+    case RendererApi::Api::VULKAN:
+      ARIA_CORE_ASSERT(false, "API selected for vertex buffer generation is not implemented")
       return nullptr;
-    default: ARIA_CORE_ASSERT(false, "Unknown API")
+    default:
+      ARIA_CORE_ASSERT(false, "Unknown API")
       return nullptr;
   }
 }
@@ -61,15 +61,17 @@ Ref<VertexBuffer> VertexBuffer::Create(float *vertices, uint32_t size) {
 Ref<IndexBuffer> IndexBuffer::Create(uint32_t *indices, uint32_t count) {
   RendererApi::Api api = RendererApi::GetApi();
   switch (api) {
-    case RendererApi::Api::NONE: ARIA_CORE_ASSERT(false, "No renderer API selected for index buffer generation")
+    case RendererApi::Api::NONE:
+      ARIA_CORE_ASSERT(false, "No renderer API selected for index buffer generation")
       return nullptr;
     case RendererApi::Api::OPEN_GL:
       return std::make_shared<OpenGlIndexBuffer>(indices, count);
     case RendererApi::Api::DIRECT_X:
-    case RendererApi::Api::VULKAN: ARIA_CORE_ASSERT(false,
-                                                    "API selected for index buffer generation is not implemented")
+    case RendererApi::Api::VULKAN:
+      ARIA_CORE_ASSERT(false, "API selected for index buffer generation is not implemented")
       return nullptr;
-    default: ARIA_CORE_ASSERT(false, "Unknown API")
+    default:
+      ARIA_CORE_ASSERT(false, "Unknown API")
       return nullptr;
   }
 }
@@ -127,9 +129,10 @@ uint32_t BufferElement::GetElementCount() const {
       return 4;
     case aria::ShaderPrimitiveType::Bool:
       return 1;
-    default: ARIA_CORE_ASSERT(false, "Unknown shader primitive type")
+    default:
+      ARIA_CORE_ASSERT(false, "Unknown shader primitive type")
       return 0;
   }
 }
 
-}  // namespace ARIA
+}// namespace aria

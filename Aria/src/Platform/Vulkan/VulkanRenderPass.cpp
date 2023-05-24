@@ -3,13 +3,11 @@
 
 namespace aria {
 
-VulkanRenderPass::~VulkanRenderPass() {
-  vkDestroyRenderPass(vk_device_, vk_render_pass_, nullptr);
-}
+VulkanRenderPass::~VulkanRenderPass() { vkDestroyRenderPass(vk_device_, vk_render_pass_, nullptr); }
 
 VulkanRenderPass::VulkanRenderPass() {
   // TODO: Need to get access to swapchain and logical device
-  
+
   VkAttachmentDescription color_attachment;
   VkResult result;
 
@@ -47,4 +45,4 @@ Ref<VulkanRenderPass> VulkanRenderPass::Create() {
   return Ref<VulkanRenderPass>(instance);
 }
 
-} // aria
+}// namespace aria

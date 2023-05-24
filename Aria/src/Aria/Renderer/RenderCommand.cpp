@@ -1,7 +1,5 @@
 #include "ariapch.h"
-
 #include "Aria/Renderer/RenderCommand.hpp"
-
 #include "Aria/Core/Base.hpp"
 #include "Aria/Renderer/RendererApi.hpp"
 #include "Platform/OpenGL/OpenGlRendererApi.hpp"
@@ -21,7 +19,8 @@ void RenderCommand::Init(RendererApi::Api api) {
     case RendererApi::Api::VULKAN:
       p_renderer_api_ = std::make_unique<VulkanRendererApi>();
       break;
-    default: ARIA_CORE_ASSERT(false, "Attempted to initialized unknown API")
+    default:
+      ARIA_CORE_ASSERT(false, "Attempted to initialized unknown API")
       return;
   }
 
@@ -29,4 +28,4 @@ void RenderCommand::Init(RendererApi::Api api) {
 }
 
 void RenderCommand::CreatePipeline() { p_renderer_api_->CreatePipeline(); }
-}  // namespace ARIA
+}// namespace aria

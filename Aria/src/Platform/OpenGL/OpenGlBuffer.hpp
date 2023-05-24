@@ -1,8 +1,7 @@
 #pragma once
 
-#include <cstdint>
-
 #include "Aria/Renderer/Buffer.hpp"
+#include <cstdint>
 
 namespace aria {
 
@@ -37,4 +36,4 @@ class OpenGlIndexBuffer : public IndexBuffer {
   std::uint32_t renderer_id_;
   std::uint32_t count_;
 };
-}  // namespace ARIA
+}// namespace aria

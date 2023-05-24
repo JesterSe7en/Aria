@@ -18,4 +18,4 @@ class ARIA_API ImGuiLayer : public Layer {
  private:
   const char *glsl_version_ = "#version 430 core";
 };
-}  // namespace ARIA
+}// namespace aria
