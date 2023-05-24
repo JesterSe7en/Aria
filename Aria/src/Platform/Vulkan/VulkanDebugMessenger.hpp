@@ -6,7 +6,7 @@ namespace aria {
 
 class VulkanDebugMessenger {
  public:
-  VulkanDebugMessenger() = default;
+  VulkanDebugMessenger();
   ~VulkanDebugMessenger();
 
   void Init();

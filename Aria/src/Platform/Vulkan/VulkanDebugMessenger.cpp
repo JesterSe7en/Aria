@@ -7,6 +7,8 @@ namespace aria {
 
 VkDebugUtilsMessengerCreateInfoEXT VulkanDebugMessenger::debug_utils_messenger_create_info_ext_ = {};
 
+VulkanDebugMessenger::VulkanDebugMessenger() { PopulateDebugCreateInfo(debug_utils_messenger_create_info_ext_); }
+
 VulkanDebugMessenger::~VulkanDebugMessenger() {
   // TODO: change this to use VulkanInstance layer checker
   if (VulkanRendererApi::IsValidationLayersEnabled()) {
@@ -86,7 +88,6 @@ void VulkanDebugMessenger::SetupVulkanDebugMessenger() {
   ARIA_CORE_ASSERT(VulkanRendererApi::GetInstance().GetVkInstance() != nullptr,
                    "Did you create VkInstance before setting up debug messenger?")
 
-  PopulateDebugCreateInfo(debug_utils_messenger_create_info_ext_);
   VkResult result = CreateDebugUtilMessengerExt(VulkanRendererApi::GetInstance().GetVkInstance(),
                                                 &debug_utils_messenger_create_info_ext_, nullptr, &debug_messenger_);
 

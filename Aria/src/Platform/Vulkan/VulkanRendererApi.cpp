@@ -7,6 +7,7 @@
 #include "Aria/Renderer/Shader.hpp"
 #include "Aria/Renderer/VertexArray.hpp"
 #include "GLFW/glfw3.h"
+#include "VulkanDebugMessenger.hpp"
 #include "VulkanGraphicsPipeline.hpp"
 #include "vulkan/vk_enum_string_helper.h"
 #include "vulkan/vulkan_core.h"
@@ -23,15 +24,22 @@ VulkanRendererApi::~VulkanRendererApi() {
 }
 
 void VulkanRendererApi::Init() {
-
   VulkanInstance::VulkanInstanceCreateInfo create_info;
+
+#ifdef NDEBUG
+  create_info.enable_validation = false;
+#else
   create_info.enable_validation = true;
+
+  create_info.debug_messenger_create_info = VulkanDebugMessenger::GetDebugMessengerCreateInfo();
+#endif
   create_info.layer_count = 0;
   std::vector<const char *> required_extensions = GetGlfwRequiredExtensions();
   create_info.extension_count = required_extensions.size();
   create_info.pp_extension_names = required_extensions;
-  VulkanInstance::Create(create_info);
+  p_vulkan_instance_ = VulkanInstance::Create(create_info);
 
+  vulkan_debug_messenger_.Init();
   CreateInstance();
   CreatePresentationSurface();
   vulkan_debug_messenger_.Init();
