@@ -25,16 +25,20 @@ VulkanRendererApi::~VulkanRendererApi() {
 }
 
 void VulkanRendererApi::Init() {
+
+  VulkanInstance::VulkanInstanceCreateInfo create_info;
+  create_info.enable_validation = true;
+  create_info.layer_count = 0;
+  std::vector<const char *> required_extensions = GetGlfwRequiredExtensions();
+  create_info.extension_count = required_extensions.size();
+  create_info.pp_extension_names = required_extensions;
+  VulkanInstance::Create(create_info);
+
   CreateInstance();
   CreatePresentationSurface();
-
   vulkan_debug_messenger_.Init();
   VulkanDeviceManager::GetInstance().Init();
-
-  VulkanSwapChain::GetInstance().CreateSwapChain();
-  VulkanSwapChain::GetInstance().CreateImageViews();
-
-  CreateRenderPass();
+//  CreateRenderPass();
   CreateCommandPool();
 }
 void VulkanRendererApi::Clear() {ARIA_CORE_ASSERT(false, "Not Implemented")}
@@ -148,7 +152,10 @@ void VulkanRendererApi::CreateCommandPool() {
   cmd_pool_info.queueFamilyIndex = queue_family_indices.graphics_family.value();
 
   VkResult
-      result = vkCreateCommandPool(VulkanDeviceManager::GetInstance().GetLogicalDevice(), &cmd_pool_info, nullptr, &command_pool_);
+      result = vkCreateCommandPool(VulkanDeviceManager::GetInstance().GetLogicalDevice(),
+                                   &cmd_pool_info,
+                                   nullptr,
+                                   &command_pool_);
   if (result != VK_SUCCESS) {
     ARIA_CORE_ERROR("Failed to create command pool - {0}", string_VkResult(result))
   }
@@ -163,7 +170,9 @@ VkCommandBuffer VulkanRendererApi::CreateVkCommandBuffer() {
   buffer_alloc_info.commandBufferCount = 1;
 
   VkResult
-      result = vkAllocateCommandBuffers(VulkanDeviceManager::GetInstance().GetLogicalDevice(), &buffer_alloc_info, &command_buffer_);
+      result = vkAllocateCommandBuffers(VulkanDeviceManager::GetInstance().GetLogicalDevice(),
+                                        &buffer_alloc_info,
+                                        &command_buffer_);
   if (result != VK_SUCCESS) {
     ARIA_CORE_ERROR("Failed to create command buffer - {0}", string_VkResult(result))
     return nullptr;
@@ -196,41 +205,6 @@ bool VulkanRendererApi::HasValidationSupport() {
   return true;
 }
 
-void VulkanRendererApi::CreateRenderPass() {
-  VkAttachmentDescription color_attachment;
-  color_attachment.format = VulkanSwapChain::GetInstance().GetSwapChainDetails().swap_chain_format;
-  color_attachment.samples = VK_SAMPLE_COUNT_1_BIT;
-  color_attachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
-  color_attachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
-  color_attachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
-  color_attachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-  color_attachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-  color_attachment.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
-
-  VkAttachmentReference color_attachment_ref;
-  color_attachment_ref.attachment = 0;
-  color_attachment_ref.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
-
-  VkSubpassDescription subpass;
-  subpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
-  subpass.colorAttachmentCount = 1;
-  subpass.pColorAttachments = &color_attachment_ref;
-
-  VkRenderPassCreateInfo render_pass_info;
-  render_pass_info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
-  render_pass_info.attachmentCount = 1;
-  render_pass_info.pAttachments = &color_attachment;
-  render_pass_info.subpassCount = 1;
-  render_pass_info.pSubpasses = &subpass;
-
-  VkResult
-      result =
-      vkCreateRenderPass(VulkanDeviceManager::GetInstance().GetLogicalDevice(), &render_pass_info, nullptr, &vk_render_pass_);
-  if (result != VK_SUCCESS) {
-    ARIA_CORE_ERROR("Failed to create render pass - {0}", string_VkResult(result))
-  }
-}
-
 std::vector<const char *> VulkanRendererApi::GetGlfwRequiredExtensions() {
   std::uint32_t glfw_extension_count = 0;
   const char **glfw_extensions;
@@ -241,7 +215,6 @@ std::vector<const char *> VulkanRendererApi::GetGlfwRequiredExtensions() {
   if (VulkanRendererApi::HasValidationSupport()) {
     extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
   }
-
   return extensions;
 }
 }  // namespace ARIA

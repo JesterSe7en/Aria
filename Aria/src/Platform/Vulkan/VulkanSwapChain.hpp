@@ -26,6 +26,7 @@ class VulkanSwapChain {
   VulkanSwapChainDetails GetSwapChainDetails() { return vulkan_swap_chain_details_; }
   VkSwapchainKHR GetSwapChain() { return p_vk_swapchain_khr_; }
 
+  VulkanSwapChain();
  private:
   class PhysicalDeviceSurfaceSwapChainDetails {
    public:
@@ -41,7 +42,6 @@ class VulkanSwapChain {
   VkDevice p_vk_device_;
   VulkanSwapChainDetails vulkan_swap_chain_details_;
 
-  VulkanSwapChain();
   void CreatePresentationSurface();
   void CreateSwapChain();
   void CreateImageViews();

@@ -17,8 +17,8 @@ class VulkanGraphicsPipeline {
   VulkanGraphicsPipeline &operator=(const VulkanGraphicsPipeline &) = delete;
 
   void Init();
-  void CreateGraphicsPipeline();
-  void CreateFrameBuffers();
+//  void CreateGraphicsPipeline();
+//  void CreateFrameBuffers();
   VkPipeline GetGraphicsPipeline() const;
   std::vector<VkFramebuffer> GetFrameBuffers() const;
 

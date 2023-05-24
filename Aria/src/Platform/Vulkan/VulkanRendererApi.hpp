@@ -3,6 +3,7 @@
 #include "Aria/Renderer/Camera.hpp"
 #include "Aria/Renderer/RendererApi.hpp"
 #include "Aria/Renderer/Shader.hpp"
+#include "VulkanInstance.hpp"
 #include "VulkanDebugMessenger.hpp"
 #include "VulkanDeviceManager.hpp"
 #include "vulkan/vk_platform.h"
@@ -74,8 +75,9 @@ class VulkanRendererApi : public RendererApi {
   const std::vector<VkDynamicState> dynamic_states_ = {VK_DYNAMIC_STATE_VIEWPORT, VK_DYNAMIC_STATE_SCISSOR};
 
   void CreateInstance();
+  Ref<VulkanInstance> p_vulkan_instance_;
   void CreatePresentationSurface();
-  void CreateRenderPass();
+//  void CreateRenderPass();
   void CreateCommandPool();
   static bool HasValidationSupport();
   static std::vector<const char *> GetGlfwRequiredExtensions();

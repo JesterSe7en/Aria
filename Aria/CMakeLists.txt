@@ -91,12 +91,14 @@ set(src__Platform__Vulkan
     "src/Platform/Vulkan/VulkanInstance.hpp"
     "src/Platform/Vulkan/VulkanRendererApi.cpp"
     "src/Platform/Vulkan/VulkanRendererApi.hpp"
+    "src/Platform/Vulkan/VulkanRenderPass.cpp"
+    "src/Platform/Vulkan/VulkanRenderPass.hpp"
     "src/Platform/Vulkan/VulkanShader.cpp"
     "src/Platform/Vulkan/VulkanShader.hpp"
     "src/Platform/Vulkan/VulkanSwapChain.cpp"
     "src/Platform/Vulkan/VulkanSwapChain.hpp"
     "src/Platform/Vulkan/VulkanError.hpp"
-    src/Platform/Vulkan/VulkanRenderPass.cpp src/Platform/Vulkan/VulkanRenderPass.hpp)
+    )
 source_group("src\\Platform\\Vulkan" FILES ${src__Platform__Vulkan})
 
 set(src__Platform__Windows

@@ -17,6 +17,11 @@ VulkanInstance::VulkanInstance(VulkanInstance::VulkanInstanceCreateInfo &create_
   EnumerateLayerProperties();
   EnumerateInstanceExtensions();
 
+  if (create_info.enable_validation && !AreLayersAvailable(validation_layers_)) {
+    ARIA_CORE_WARN("Validation layers requested but not available!");
+  }
+
+  std::vector<const char *> all_layers;
   VkApplicationInfo app_info;
   app_info.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
   app_info.pApplicationName = "Aria Vulkan Application";
@@ -27,16 +32,14 @@ VulkanInstance::VulkanInstance(VulkanInstance::VulkanInstanceCreateInfo &create_
 
   VkInstanceCreateInfo vk_instance_create_info;
   vk_instance_create_info.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
-  vk_instance_create_info.flags = 0;
   vk_instance_create_info.pApplicationInfo = &app_info;
 
-  if (create_info.enable_validation && AreLayersAvailable(validation_layers_)) {
+  if (create_info.enable_validation) {
     vk_instance_create_info.enabledLayerCount = create_info.layer_count + validation_layers_.size();
 
-    std::vector<const char *> all_layers(create_info.layer_count + validation_layers_.size());
-    all_layers.insert(create_info.pp_layer_names.begin(), create_info.pp_layer_names.begin(),
+    all_layers = validation_layers_;
+    all_layers.insert(all_layers.end(), create_info.pp_layer_names.begin(),
                       create_info.pp_layer_names.end());
-    all_layers.insert(create_info.pp_layer_names.end(), validation_layers_.begin(), validation_layers_.end());
     vk_instance_create_info.ppEnabledLayerNames = all_layers.data();
 
     vk_instance_create_info.pNext = &create_info.debug_messenger_create_info;
@@ -45,6 +48,7 @@ VulkanInstance::VulkanInstance(VulkanInstance::VulkanInstanceCreateInfo &create_
     vk_instance_create_info.enabledLayerCount = 0;
     vk_instance_create_info.pNext = nullptr;
   }
+
   vk_instance_create_info.enabledExtensionCount = create_info.extension_count;
   vk_instance_create_info.ppEnabledExtensionNames = create_info.pp_extension_names.data();
 

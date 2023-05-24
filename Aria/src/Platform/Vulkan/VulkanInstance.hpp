@@ -18,13 +18,15 @@ class VulkanInstance {
 
   ~VulkanInstance();
   VulkanInstance(const VulkanInstance &) = delete;
+  VulkanInstance(VulkanInstance &&) = delete;
   VulkanInstance &operator=(const VulkanInstance &) = delete;
+  VulkanInstance &operator=(VulkanInstance &&) = delete;
 
-  static Ref<VulkanInstance> Create(VulkanInstanceCreateInfo &create_info);
+  static Ref <VulkanInstance> Create(VulkanInstanceCreateInfo &create_info);
 
   VkInstance GetVkInstance() { return p_vk_instance_; }
-  bool IsLayerAvailable(const char* layer_name);
-  bool AreLayersAvailable(std::vector<const char*> layer_names);
+  bool IsLayerAvailable(const char *layer_name);
+  bool AreLayersAvailable(std::vector<const char *> layer_names);
   bool AreValidationLayersEnabled() const { return validation_enabled_; }
 
  private:
