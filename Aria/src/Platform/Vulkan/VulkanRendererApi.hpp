@@ -17,44 +17,34 @@ namespace aria {
 
 class VulkanRendererApi : public RendererApi {
  public:
-  ~VulkanRendererApi();
-
-  static VulkanRendererApi GetInstance() {
-    static VulkanRendererApi instance;
-    return instance;
-  }
-
   void Init() override;
   void Clear() override;
   void SetClearColor(const glm::vec4 color) override;
   void DrawIndexed(const Ref<VertexArray> &vertex_array) override;
 
-  static bool IsValidationLayersEnabled() {
-#ifdef ARIA_DEBUG
-    return true;
-#else
-    return false;
-#endif
-  };
+  VulkanRendererApi (const VulkanRendererApi &) = delete; // copy constructor
+  VulkanRendererApi &operator=(const VulkanRendererApi &) = delete; // copy assignment
+  VulkanRendererApi (VulkanRendererApi &&) = delete; //move constructor
+  VulkanRendererApi &operator=(VulkanRendererApi &&) = delete; //move assignment
 
-  VkCommandBuffer CreateVkCommandBuffer();
-  VkCommandBuffer GetVkCommandBuffer() const {
-    return command_buffer_;
-  }// this is a hack for now, really should not do this.  perhaps create static func to create buffer for layer usage
+  static VulkanRendererApi& GetInstance() {
+    static VulkanRendererApi instance_;
+    return instance_;
+  }
 
-  //  static void RecordCommandBuffer(VkCommandBuffer cmd_buffer,
-  //                                  std::uint32_t image_idx);  // again a hack, should put this in vulkan layer
-
-  VkCommandPool &GetVkCommandPool() { return command_pool_; }
   VkSurfaceKHR &GetVkSurfaceKhr() { return surface_; }
-  VkRenderPass &GetRenderPass() { return vk_render_pass_; }
-
   Ref<VulkanInstance> GetVulkanInstance() const { return p_vulkan_instance_; }
 
   void AddToPipeline(VkShaderModule &shader_module, ShaderType type);
   void CreatePipeline() override;
 
-  constexpr static const std::array<const char *, 1> validation_layers_ = {"VK_LAYER_KHRONOS_validation"};
+  constexpr static const std::array<const char *, 1> kValidationLayers = {"VK_LAYER_KHRONOS_validation"};
+
+ private:
+  VulkanRendererApi();
+  ~VulkanRendererApi();
+
+  Ref<VulkanInstance> p_vulkan_instance_;
 
   VkInstance p_vk_instance_;
   VkSurfaceKHR surface_;
@@ -71,7 +61,6 @@ class VulkanRendererApi : public RendererApi {
   const std::vector<const char *> device_extensions_ = {"VK_KHR_swapchain"};
   const std::vector<VkDynamicState> dynamic_states_ = {VK_DYNAMIC_STATE_VIEWPORT, VK_DYNAMIC_STATE_SCISSOR};
 
-  Ref<VulkanInstance> p_vulkan_instance_;
   void CreatePresentationSurface();
   //  void CreateRenderPass();
   void CreateCommandPool();

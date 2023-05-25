@@ -1,5 +1,6 @@
 #pragma once
 
+#include "VulkanRendererApi.hpp"
 #include "vulkan/vulkan_core.h"
 #include <cstdint>
 #include <optional>
@@ -50,8 +51,8 @@ class VulkanDeviceManager {
 
   const std::vector<const char *> device_extensions_ = {"VK_KHR_swapchain"};
 
-  VkInstance &vk_instance_;
-  VkSurfaceKHR &vk_surface_khr_;
+  VkInstance vk_instance_;
+  VkSurfaceKHR vk_surface_khr_;
 
   std::vector<VkPhysicalDevice> all_physical_devices_;
   VkQueue present_queue_;

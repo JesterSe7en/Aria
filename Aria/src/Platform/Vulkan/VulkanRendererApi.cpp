@@ -15,15 +15,9 @@
 #include <vector>
 
 namespace aria {
+VulkanRendererApi* VulkanRendererApi::instance_ = nullptr;
 
-VulkanRendererApi::~VulkanRendererApi() {
-  vkDestroyCommandPool(VulkanDeviceManager::GetInstance().GetLogicalDevice(), command_pool_, nullptr);
-  vkDestroyRenderPass(VulkanDeviceManager::GetInstance().GetLogicalDevice(), vk_render_pass_, nullptr);
-  vkDestroySurfaceKHR(p_vk_instance_, surface_, nullptr);
-  vkDestroyInstance(p_vk_instance_, nullptr);
-}
-
-void VulkanRendererApi::Init() {
+VulkanRendererApi::VulkanRendererApi() {
   VulkanInstance::VulkanInstanceCreateInfo create_info;
 
 #ifdef NDEBUG
@@ -48,6 +42,19 @@ void VulkanRendererApi::Init() {
   VulkanDeviceManager::GetInstance().Init();
   //  CreateRenderPass();
   CreateCommandPool();
+}
+
+VulkanRendererApi::~VulkanRendererApi() {
+  vkDestroyCommandPool(VulkanDeviceManager::GetInstance().GetLogicalDevice(), command_pool_, nullptr);
+  vkDestroyRenderPass(VulkanDeviceManager::GetInstance().GetLogicalDevice(), vk_render_pass_, nullptr);
+  vkDestroySurfaceKHR(p_vk_instance_, surface_, nullptr);
+  vkDestroyInstance(p_vk_instance_, nullptr);
+}
+
+void VulkanRendererApi::Init() {
+  if (instance_ == nullptr) {
+    instance_ = new VulkanRendererApi();
+  }
 }
 void VulkanRendererApi::Clear() { ARIA_CORE_ASSERT(false, "Not Implemented") }
 
@@ -129,7 +136,7 @@ bool VulkanRendererApi::HasValidationSupport() {
   std::vector<VkLayerProperties> available_layers(layer_count);
   vkEnumerateInstanceLayerProperties(&layer_count, available_layers.data());
 
-  for (const char *layer_name : validation_layers_) {
+  for (const char *layer_name : kValidationLayers) {
     bool layer_found = false;
 
     for (const auto &kLayerProperties : available_layers) {
@@ -154,4 +161,5 @@ std::vector<const char *> VulkanRendererApi::GetGlfwRequiredExtensions() {
   if (VulkanRendererApi::HasValidationSupport()) { extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME); }
   return extensions;
 }
+
 }// namespace aria

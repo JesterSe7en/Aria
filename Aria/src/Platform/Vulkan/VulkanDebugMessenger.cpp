@@ -10,11 +10,13 @@ VkDebugUtilsMessengerCreateInfoEXT VulkanDebugMessenger::debug_utils_messenger_c
 VulkanDebugMessenger::VulkanDebugMessenger() { PopulateDebugCreateInfo(debug_utils_messenger_create_info_ext_); }
 
 VulkanDebugMessenger::~VulkanDebugMessenger() {
-  // TODO: change this to use VulkanInstance layer checker
-  if (VulkanRendererApi::IsValidationLayersEnabled()) {
-    auto func = (PFN_vkDestroyDebugUtilsMessengerEXT) vkGetInstanceProcAddr(
-        VulkanRendererApi::GetInstance().GetVkInstance(), "vkDestroyDebugUtilsMessengerEXT");
-    if (func != nullptr) { func(VulkanRendererApi::GetInstance().GetVkInstance(), debug_messenger_, nullptr); }
+  p_vulkan_instance_ = VulkanRendererApi::GetInstance()->GetVulkanInstance();
+  if (p_vulkan_instance_->AreValidationLayersEnabled()) {
+    auto func = (PFN_vkDestroyDebugUtilsMessengerEXT) vkGetInstanceProcAddr(p_vulkan_instance_->GetVkInstance(),
+                                                                            "vkDestroyDebugUtilsMessengerEXT");
+    if (func != nullptr) {
+      func(VulkanRendererApi::GetInstance()->GetVulkanInstance()->GetVkInstance(), debug_messenger_, nullptr);
+    }
   }
 }
 
@@ -83,12 +85,12 @@ VkResult VulkanDebugMessenger::CreateDebugUtilMessengerExt(VkInstance instance,
 }
 
 void VulkanDebugMessenger::SetupVulkanDebugMessenger() {
-  if (!VulkanRendererApi::IsValidationLayersEnabled()) { return; }
+  if (!p_vulkan_instance_->AreValidationLayersEnabled()) { return; }
 
-  ARIA_CORE_ASSERT(VulkanRendererApi::GetInstance().GetVkInstance() != nullptr,
+  ARIA_CORE_ASSERT(p_vulkan_instance_->GetVkInstance() != nullptr,
                    "Did you create VkInstance before setting up debug messenger?")
 
-  VkResult result = CreateDebugUtilMessengerExt(VulkanRendererApi::GetInstance().GetVkInstance(),
+  VkResult result = CreateDebugUtilMessengerExt(p_vulkan_instance_->GetVkInstance(),
                                                 &debug_utils_messenger_create_info_ext_, nullptr, &debug_messenger_);
 
   if (result == VK_ERROR_EXTENSION_NOT_PRESENT) {

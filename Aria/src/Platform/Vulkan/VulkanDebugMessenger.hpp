@@ -1,6 +1,7 @@
 #pragma once
 
 #include "vulkan/vulkan_core.h"
+#include "VulkanInstance.hpp"
 
 namespace aria {
 
@@ -15,6 +16,7 @@ class VulkanDebugMessenger {
   }
 
  private:
+  Ref<VulkanInstance> p_vulkan_instance_;
   VkDebugUtilsMessengerEXT debug_messenger_ = VK_NULL_HANDLE;
   static VkDebugUtilsMessengerCreateInfoEXT debug_utils_messenger_create_info_ext_;
 

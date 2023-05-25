@@ -9,12 +9,13 @@
 namespace aria {
 
 VulkanDeviceManager::VulkanDeviceManager()
-    : vk_instance_(VulkanRendererApi::GetInstance().GetVkInstance()),
-      vk_surface_khr_(VulkanRendererApi::GetInstance().GetVkSurfaceKhr()){
+    : vk_instance_(VulkanRendererApi::GetInstance()->GetVulkanInstance()->GetVkInstance()),
+      vk_surface_khr_(VulkanRendererApi::GetInstance()->GetVkSurfaceKhr()){
           ARIA_CORE_ASSERT(vk_instance_, "Did you initialize vk instance first?")
-              ARIA_CORE_ASSERT(vk_surface_khr_, "Did you initialize presentation layer first?")}
+              ARIA_CORE_ASSERT(vk_surface_khr_, "Did you initialize presentation layer first?")
+      }
 
-      VulkanDeviceManager::~VulkanDeviceManager() {
+VulkanDeviceManager::~VulkanDeviceManager() {
   vkDestroyDevice(device_, nullptr);
 }
 
@@ -132,9 +133,9 @@ void VulkanDeviceManager::CreateLogicalDevice() {
     create_info.enabledExtensionCount = 0;
   }
 
-  if (VulkanRendererApi::IsValidationLayersEnabled()) {
-    create_info.enabledLayerCount = static_cast<std::uint32_t>(VulkanRendererApi::validation_layers_.size());
-    create_info.ppEnabledLayerNames = VulkanRendererApi::validation_layers_.data();
+  if (VulkanRendererApi::GetInstance()->GetVulkanInstance()->AreValidationLayersEnabled()) {
+    create_info.enabledLayerCount = static_cast<std::uint32_t>(VulkanRendererApi::kValidationLayers.size());
+    create_info.ppEnabledLayerNames = VulkanRendererApi::kValidationLayers.data();
   } else {
     create_info.enabledLayerCount = 0;
   }
