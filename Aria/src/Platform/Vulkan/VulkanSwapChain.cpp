@@ -1,11 +1,11 @@
-#include "VulkanSwapChain.hpp"
+#include "VulkanSwapChain.h"
 #include "ariapch.h"
-#include "Aria/Core/Application.hpp"
-#include "Aria/Core/Log.hpp"
+#include "Aria/Core/Application.h"
+#include "Aria/Core/Log.h"
 #include "GLFW/glfw3.h"
-#include "VulkanError.hpp"
-#include "VulkanInstance.hpp"
-#include "VulkanRendererApi.hpp"
+#include "VulkanError.h"
+#include "VulkanInstance.h"
+#include "VulkanRendererApi.h"
 
 #include <limits>
 

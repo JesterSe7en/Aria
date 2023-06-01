@@ -1,9 +1,9 @@
 #include "ariapch.h"
-#include "Application.hpp"
-#include "Aria/Core/Timestep.hpp"
-#include "Aria/Events/ApplicationEvent.hpp"
-#include "Aria/Renderer/Buffer.hpp"
-#include "Aria/Renderer/Renderer.hpp"
+#include "Application.h"
+#include "Aria/Core/Timestep.h"
+#include "Aria/Events/ApplicationEvent.h"
+#include "Aria/Renderer/Buffer.h"
+#include "Aria/Renderer/Renderer.h"
 #include <GLFW/glfw3.h>//TODO: abstract it out only delta time use this
 
 #ifdef WIN32

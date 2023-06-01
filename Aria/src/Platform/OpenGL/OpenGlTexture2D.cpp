@@ -1,5 +1,5 @@
 #include "ariapch.h"
-#include "OpenGlTexture2D.hpp"
+#include "OpenGlTexture2D.h"
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 #include <glad/gl.h>

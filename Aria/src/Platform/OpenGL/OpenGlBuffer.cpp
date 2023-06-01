@@ -1,5 +1,5 @@
 #include "ariapch.h"
-#include "OpenGlBuffer.hpp"
+#include "OpenGlBuffer.h"
 #include <glad/gl.h>
 
 namespace aria {

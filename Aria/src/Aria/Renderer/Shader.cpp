@@ -1,9 +1,9 @@
 #include "ariapch.h"
-#include "Shader.hpp"
-#include "Aria/Core/Base.hpp"
-#include "Aria/Renderer/Renderer.hpp"
-#include "Platform/OpenGL/OpenGlShader.hpp"
-#include "Platform/Vulkan/VulkanShader.hpp"
+#include "Shader.h"
+#include "Aria/Core/Base.h"
+#include "Aria/Renderer/Renderer.h"
+#include "Platform/OpenGL/OpenGlShader.h"
+#include "Platform/Vulkan/VulkanShader.h"
 #include <memory>
 #include <string_view>
 

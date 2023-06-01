@@ -1,12 +1,12 @@
 #include "ariapch.h"
-#include "Platform/Windows/WindowsWindow.hpp"
-#include "Aria/Core/Base.hpp"
-#include "Aria/Core/Log.hpp"
-#include "Aria/Events/ApplicationEvent.hpp"
-#include "Aria/Events/KeyEvent.hpp"
-#include "Aria/Events/MouseEvent.hpp"
-#include "Aria/Renderer/RendererApi.hpp"
-#include "Platform/OpenGL/OpenGlContext.hpp"
+#include "Platform/Windows/WindowsWindow.h"
+#include "Aria/Core/Base.h"
+#include "Aria/Core/Log.h"
+#include "Aria/Events/ApplicationEvent.h"
+#include "Aria/Events/KeyEvent.h"
+#include "Aria/Events/MouseEvent.h"
+#include "Aria/Renderer/RendererApi.h"
+#include "Platform/OpenGL/OpenGlContext.h"
 #include <GLFW/glfw3.h>
 
 namespace aria {

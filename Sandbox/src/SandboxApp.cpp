@@ -1,9 +1,9 @@
-#include "Aria/Core/Application.hpp"
-#include "Aria/Renderer/RendererApi.hpp"
-#include "ExampleLayer.hpp"
-#include "VulkanLayer.hpp"
-#include <Aria.hpp>
-#include <Aria/Core/EntryPoint.hpp>
+#include "Aria/Core/Application.h"
+#include "Aria/Renderer/RendererApi.h"
+#include "ExampleLayer.h"
+#include "VulkanLayer.h"
+#include <Aria.h>
+#include <Aria/Core/EntryPoint.h>
 
 class Sandbox : public aria::Application {
  public:

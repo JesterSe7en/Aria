@@ -1,8 +1,8 @@
 #include "ariapch.h"
 
-#include "Aria/Core/Log.hpp"
+#include "Aria/Core/Log.h"
 
-#include "OpenGlContext.hpp"
+#include "OpenGlContext.h"
 
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>

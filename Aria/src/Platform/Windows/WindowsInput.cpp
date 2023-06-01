@@ -1,7 +1,7 @@
 #include "ariapch.h"
-#include "WindowsInput.hpp"
-#include "Aria/Core/Application.hpp"
-#include "Aria/Core/Input.hpp"
+#include "WindowsInput.h"
+#include "Aria/Core/Application.h"
+#include "Aria/Core/Input.h"
 #include <GLFW/glfw3.h>
 
 namespace aria {

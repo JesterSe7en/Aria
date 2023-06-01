@@ -1,5 +1,5 @@
-#include "Platform/Vulkan/VulkanSwapChain.hpp"
-#include "VulkanLayer.hpp"
+#include "Platform/Vulkan/VulkanSwapChain.h"
+#include "VulkanLayer.h"
 
 VulkanLayer::VulkanLayer() : Layer("Vulkan Layer") {
   auto vk_device = aria::VulkanDeviceManager::GetInstance().GetLogicalDevice();

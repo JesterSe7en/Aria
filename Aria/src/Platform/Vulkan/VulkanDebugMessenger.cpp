@@ -1,7 +1,7 @@
 #include "ariapch.h"
-#include "VulkanDebugMessenger.hpp"
-#include "VulkanError.hpp"
-#include "VulkanRendererApi.hpp"
+#include "VulkanDebugMessenger.h"
+#include "VulkanError.h"
+#include "VulkanRendererApi.h"
 
 namespace aria {
 

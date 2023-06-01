@@ -1,5 +1,5 @@
-#include "VulkanRenderPass.hpp"
-#include "VulkanError.hpp"
+#include "VulkanRenderPass.h"
+#include "VulkanError.h"
 
 namespace aria {
 

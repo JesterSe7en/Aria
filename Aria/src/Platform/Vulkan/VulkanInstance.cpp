@@ -1,5 +1,5 @@
-#include "VulkanInstance.hpp"
-#include "VulkanError.hpp"
+#include "VulkanInstance.h"
+#include "VulkanError.h"
 #include "vulkan/vk_enum_string_helper.h"
 #include "vulkan/vulkan_core.h"
 

@@ -1,6 +1,6 @@
 #include "ariapch.h"
-#include "Aria/Renderer/RendererApi.hpp"
-#include "RendererApi.hpp"
+#include "Aria/Renderer/RendererApi.h"
+#include "RendererApi.h"
 
 namespace aria {
 RendererApi::Api RendererApi::api_ = RendererApi::Api::NONE;

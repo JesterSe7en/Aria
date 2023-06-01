@@ -1,9 +1,9 @@
 #include "ariapch.h"
-#include "Buffer.hpp"
-#include "Aria/Core/Base.hpp"
-#include "Aria/Core/Log.hpp"
-#include "Platform/OpenGL/OpenGlBuffer.hpp"
-#include "RendererApi.hpp"
+#include "Buffer.h"
+#include "Aria/Core/Base.h"
+#include "Aria/Core/Log.h"
+#include "Platform/OpenGL/OpenGlBuffer.h"
+#include "RendererApi.h"
 #include <memory>
 
 namespace aria {

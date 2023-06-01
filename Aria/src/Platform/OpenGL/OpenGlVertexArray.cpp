@@ -1,6 +1,6 @@
 #include "ariapch.h"
-#include "OpenGlVertexArray.hpp"
-#include "Aria/Core/Log.hpp"
+#include "OpenGlVertexArray.h"
+#include "Aria/Core/Log.h"
 #include <glad/gl.h>
 
 namespace aria {

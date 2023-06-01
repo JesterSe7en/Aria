@@ -1,9 +1,9 @@
 #include "ariapch.h"
-#include "VulkanShader.hpp"
-#include "Aria/Core/Log.hpp"
-#include "Aria/Renderer/Shader.hpp"
-#include "Platform/Vulkan/VulkanRendererApi.hpp"
-#include "VulkanError.hpp"
+#include "VulkanShader.h"
+#include "Aria/Core/Log.h"
+#include "Aria/Renderer/Shader.h"
+#include "Platform/Vulkan/VulkanRendererApi.h"
+#include "VulkanError.h"
 #include <filesystem>
 
 namespace aria {

@@ -1,7 +1,7 @@
 #include "ariapch.h"
-#include "Platform/Vulkan/VulkanDeviceManager.hpp"
-#include "Aria/Core/Log.hpp"
-#include "Platform/Vulkan/VulkanRendererApi.hpp"
+#include "Platform/Vulkan/VulkanDeviceManager.h"
+#include "Aria/Core/Log.h"
+#include "Platform/Vulkan/VulkanRendererApi.h"
 #include "vulkan/vk_enum_string_helper.h"
 #include <cstring>
 #include <set>
