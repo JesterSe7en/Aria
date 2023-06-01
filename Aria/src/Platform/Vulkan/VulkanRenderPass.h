@@ -2,6 +2,7 @@
 
 #include "VulkanSwapChain.h"
 #include "Aria/Core/Base.h"
+#include "VulkanLib.h"
 #include "vulkan/vulkan_core.h"
 
 namespace aria {
@@ -19,8 +20,7 @@ class VulkanRenderPass {
   VkRenderPass GetRenderPass() { return vk_render_pass_; }
 
  private:
-  VkDevice vk_device_ = VK_NULL_HANDLE;
-  VulkanSwapChain vulkan_swap_chain_;
+  VulkanLib vklib_;
   VkRenderPass vk_render_pass_ = VK_NULL_HANDLE;
 
   VulkanRenderPass();

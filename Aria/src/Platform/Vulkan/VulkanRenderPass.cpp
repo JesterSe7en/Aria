@@ -1,17 +1,22 @@
 #include "VulkanRenderPass.h"
+#include "VulkanDeviceManager.h"
 #include "VulkanError.h"
 
 namespace aria {
 
-VulkanRenderPass::~VulkanRenderPass() { vkDestroyRenderPass(vk_device_, vk_render_pass_, nullptr); }
+VulkanRenderPass::~VulkanRenderPass() {
+  vklib_.ptr_vk_destroy_render_pass_(VulkanDeviceManager::GetInstance().GetLogicalDevice(), vk_render_pass_, nullptr);
+}
 
 VulkanRenderPass::VulkanRenderPass() {
+  vklib_ = VulkanLib::GetInstance();
   // TODO: Need to get access to swapchain and logical device
 
   VkAttachmentDescription color_attachment;
   VkResult result;
+  vkb::Swapchain swapchain = VulkanDeviceManager::GetInstance().GetSwapChain();
 
-  color_attachment.format = vulkan_swap_chain_.GetSwapChainDetails().swap_chain_format;
+  color_attachment.format = swapchain.image_format;
   color_attachment.samples = VK_SAMPLE_COUNT_1_BIT;
   color_attachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
   color_attachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
@@ -36,8 +41,10 @@ VulkanRenderPass::VulkanRenderPass() {
   render_pass_info.subpassCount = 1;
   render_pass_info.pSubpasses = &subpass;
 
-  result = vkCreateRenderPass(vk_device_, &render_pass_info, nullptr, &vk_render_pass_);
+  result = vklib_.ptr_vk_create_render_pass_(VulkanDeviceManager::GetInstance().GetLogicalDevice(), &render_pass_info,
+                                             nullptr, &vk_render_pass_);
   ARIA_VK_CHECK_RESULT_AND_ERROR(result, "Failed to create render pass");
+  if (result == VK_SUCCESS) { ARIA_CORE_INFO("Successfully created render pass"); }
 }
 
 Ref<VulkanRenderPass> VulkanRenderPass::Create() {

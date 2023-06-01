@@ -1,18 +1,13 @@
 #include "VulkanSwapChain.h"
 #include "ariapch.h"
-#include "Platform/Vulkan/VulkanRendererApi.h"
-#include "Aria/Core/Application.h"
+#include "VulkanRendererApi.h"
 #include "Aria/Core/Base.h"
 #include "Aria/Core/Log.h"
-#include "Aria/Renderer/Shader.h"
 #include "Aria/Renderer/VertexArray.h"
 #include "GLFW/glfw3.h"
 #include "VulkanDebugMessenger.h"
 #include "VulkanGraphicsPipeline.h"
-#include "VulkanLib.h"
-#include "vulkan/vk_enum_string_helper.h"
 #include "vulkan/vulkan_core.h"
-#include <fileapi.h>
 #include <vector>
 
 namespace aria {
@@ -20,27 +15,28 @@ namespace aria {
 VulkanRendererApi::VulkanRendererApi() {
   p_vulkan_instance_ = nullptr;
   surface_ = VK_NULL_HANDLE;
-  //  vk_render_pass_ = VK_NULL_HANDLE;
-  //  command_pool_ = VK_NULL_HANDLE;
-  //  command_buffer_ = VK_NULL_HANDLE;
   p_vk_instance_ = nullptr;
 
-  //  std::vector<const char *> required_extensions = GetGlfwRequiredExtensions();
-  //  create_info.extension_count = required_extensions.size();
-  //  create_info.pp_extension_names = required_extensions;
   VulkanInstance::VulkanInstanceCreateInfo create_info;
 #ifdef NDEBUG
   create_info.enable_validation = false;
 #else
   create_info.enable_validation = true;
 #endif
-  create_info.layer_count = 0;
+
+  std::uint32_t glfw_extension_count = 0;
+  const char **glfw_extensions;
+  glfw_extensions = glfwGetRequiredInstanceExtensions(&glfw_extension_count);
+  std::vector<const char *> extensions(glfw_extensions, glfw_extensions + glfw_extension_count);
+  if (create_info.enable_validation) { extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME); }
+
+  create_info.pp_extension_names = extensions;
 
   p_vulkan_instance_ = VulkanInstance::Create(create_info);
   p_vk_instance_ = p_vulkan_instance_->GetVKBInstance().instance;
   VulkanDeviceManager::GetInstance().Init(p_vulkan_instance_);
 
-  //  VulkanGraphicsPipeline::GetInstance().Init();
+  VulkanGraphicsPipeline::GetInstance().Init();
 }
 
 VulkanRendererApi::~VulkanRendererApi() {
@@ -83,14 +79,6 @@ void VulkanRendererApi::CreatePipeline() { ARIA_CORE_ASSERT(false, "Not Implemen
 //}
 
 //void VulkanRendererApi::CreatePipeline() { VulkanGraphicsPipeline::GetInstance().Init(); }
-
-void VulkanRendererApi::CreatePresentationSurface() {
-  ARIA_CORE_ASSERT(p_vk_instance_, "Did you create VkInstance first?")
-  auto glfw_window = static_cast<GLFWwindow *>(Application::Get().GetWindow().GetNativeWindow());
-  ARIA_CORE_ASSERT(glfw_window, "Did you create window first before creating surface?")
-  VkResult result = glfwCreateWindowSurface(p_vk_instance_, glfw_window, nullptr, &surface_);
-  if (result != VK_SUCCESS) { ARIA_CORE_ERROR("Cannot create vulkan surface - {0}", string_VkResult(result)) }
-}
 
 //void VulkanRendererApi::CreateCommandPool() {
 //
@@ -148,15 +136,5 @@ void VulkanRendererApi::CreatePresentationSurface() {
 //  return true;
 //}
 //
-//std::vector<const char *> VulkanRendererApi::GetGlfwRequiredExtensions() {
-//  std::uint32_t glfw_extension_count = 0;
-//  const char **glfw_extensions;
-//  glfw_extensions = glfwGetRequiredInstanceExtensions(&glfw_extension_count);
-//
-//  std::vector<const char *> extensions(glfw_extensions, glfw_extensions + glfw_extension_count);
-//
-//  if (VulkanRendererApi::HasValidationSupport()) { extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME); }
-//  return extensions;
-//}
 
 }// namespace aria

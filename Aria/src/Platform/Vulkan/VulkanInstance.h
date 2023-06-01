@@ -10,13 +10,11 @@ class VulkanInstance {
  public:
   struct VulkanInstanceCreateInfo {
     bool enable_validation;
-    uint32_t layer_count;
     std::vector<const char *> pp_layer_names;
-    uint32_t extension_count;
     std::vector<const char *> pp_extension_names;
   };
 
-  ~VulkanInstance();
+  ~VulkanInstance() = default;
   VulkanInstance(const VulkanInstance &) = delete;
   VulkanInstance(VulkanInstance &&) = delete;
   VulkanInstance &operator=(const VulkanInstance &) = delete;
@@ -26,9 +24,6 @@ class VulkanInstance {
 
   vkb::Instance GetVKBInstance() { return vkb_instance_; }
   VkSurfaceKHR GetVkSurface() { return vk_surface_; }
-  //  bool IsLayerAvailable(const char *layer_name);
-  //  bool AreLayersAvailable(std::vector<const char *> layer_names);
-  //  bool AreValidationLayersEnabled() const { return validation_enabled_; }
 
  private:
   static uint32_t app_version_;
@@ -44,7 +39,5 @@ class VulkanInstance {
 
   explicit VulkanInstance(VulkanInstanceCreateInfo &create_info);
   void CreateWindowSurface();
-  //  void EnumerateLayerProperties();
-  //  void EnumerateInstanceExtensions();
 };
 }// namespace aria

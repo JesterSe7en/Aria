@@ -64,6 +64,7 @@ void VulkanLib::LoadFunc(T &func_dest, const char *func_name) {
 void VulkanLib::Init() {
   if (!LoadVulkanLib()) return;
   LoadFunc(ptr_vk_get_instance_proc_addr_, "vkGetInstanceProcAddr");
+  LoadFunc(ptr_vk_get_device_proc_addr_, "vkGetDeviceProcAddr");
 
   ptr_vk_create_instance_ =
       reinterpret_cast<PFN_vkCreateInstance>(ptr_vk_get_instance_proc_addr_(VK_NULL_HANDLE, "vkCreateInstance"));
@@ -74,6 +75,17 @@ void VulkanLib::InitInstanceFunctions(VkInstance instance) {
       reinterpret_cast<PFN_vkCreateRenderPass>(ptr_vk_get_instance_proc_addr_(instance, "vkCreateRenderPass"));
   ptr_vk_destroy_render_pass_ =
       reinterpret_cast<PFN_vkDestroyRenderPass>(ptr_vk_get_instance_proc_addr_(instance, "vkDestroyRenderPass"));
+}
+
+void VulkanLib::InitDeviceFunctions(VkDevice device) {
+  ptr_vk_create_pipeline_layout_ =
+      reinterpret_cast<PFN_vkCreatePipelineLayout>(ptr_vk_get_device_proc_addr_(device, "vkCreatePipelineLayout"));
+  ptr_vk_destroy_pipeline_layout_ =
+      reinterpret_cast<PFN_vkDestroyPipelineLayout>(ptr_vk_get_device_proc_addr_(device, "vkDestroyPipelineLayout"));
+  ptr_vk_create_render_pass_ =
+      reinterpret_cast<PFN_vkCreateRenderPass>(ptr_vk_get_device_proc_addr_(device, "vkCreateRenderPass"));
+  ptr_vk_destroy_render_pass_ =
+      reinterpret_cast<PFN_vkDestroyRenderPass>(ptr_vk_get_device_proc_addr_(device, "vkDestroyRenderPass"));
 }
 
 void VulkanLib::Cleanup() {

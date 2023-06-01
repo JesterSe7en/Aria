@@ -3,7 +3,6 @@
 #include "Aria/Core/Log.h"
 #include "VkBootstrap.h"
 #include "VulkanError.h"
-#include "vulkan/vk_enum_string_helper.h"
 
 namespace aria {
 
@@ -112,12 +111,14 @@ void VulkanDeviceManager::CreateLogicalDevice() {
   ARIA_VKB_CHECK_RESULT_AND_ERROR(device_ret, "Failed to create logical device")
   if (device_ret.has_value()) {
     logical_device_ = device_ret.value();
-    ARIA_CORE_INFO("Successfully created logical device");
+    ARIA_CORE_INFO("Successfully created logical device")
   }
 }
 
 void VulkanDeviceManager::CreateSwapchain() {
   vkb::SwapchainBuilder swapchain_builder{logical_device_};
+  
+  // from vkb documentation...
   //  By default, the swapchain will use the VK_FORMAT_B8G8R8A8_SRGB or VK_FORMAT_R8G8B8A8_SRGB image format with the
   //  color space VK_COLOR_SPACE_SRGB_NONLINEAR_KHR. The present mode will default to VK_PRESENT_MODE_MAILBOX_KHR if
   //  available and fallback to VK_PRESENT_MODE_FIFO_KHR. The image usage
