@@ -19,7 +19,7 @@ VulkanSwapChain::VulkanSwapChain() {
 }
 
 VulkanSwapChain::~VulkanSwapChain() {
-  vkDestroySurfaceKHR(p_vk_instance_->GetVkInstance(), p_vk_surface_khr_, nullptr);
+  vkDestroySurfaceKHR(p_vk_instance_->GetVKBInstance(), p_vk_surface_khr_, nullptr);
   for (auto view : vulkan_swap_chain_details_.swap_chain_image_views) {
     vkDestroyImageView(p_vk_device_, view, nullptr);
   }
@@ -34,7 +34,7 @@ Ref<VulkanSwapChain> VulkanSwapChain::Create() {
 void VulkanSwapChain::CreatePresentationSurface() {
   auto glfw_window = static_cast<GLFWwindow *>(Application::Get().GetWindow().GetNativeWindow());
   ARIA_CORE_ASSERT(glfw_window, "Did you create window first before creating surface?")
-  VkResult result = glfwCreateWindowSurface(p_vk_instance_->GetVkInstance(), glfw_window, nullptr, &p_vk_surface_khr_);
+  VkResult result = glfwCreateWindowSurface(p_vk_instance_->GetVKBInstance(), glfw_window, nullptr, &p_vk_surface_khr_);
   ARIA_VK_CHECK_RESULT_AND_ERROR(result, "Failed to create vulkan surface")
 }
 

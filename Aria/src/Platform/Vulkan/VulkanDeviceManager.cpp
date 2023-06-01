@@ -8,16 +8,7 @@
 
 namespace aria {
 
-VulkanDeviceManager::VulkanDeviceManager()
-    : vk_instance_(VulkanRendererApi::GetInstance()->GetVulkanInstance()->GetVkInstance()),
-      vk_surface_khr_(VulkanRendererApi::GetInstance()->GetVkSurfaceKhr()){
-          ARIA_CORE_ASSERT(vk_instance_, "Did you initialize vk instance first?")
-              ARIA_CORE_ASSERT(vk_surface_khr_, "Did you initialize presentation layer first?")
-      }
-
-VulkanDeviceManager::~VulkanDeviceManager() {
-  vkDestroyDevice(device_, nullptr);
-}
+VulkanDeviceManager::~VulkanDeviceManager() { vkDestroyDevice(device_, nullptr); }
 
 void VulkanDeviceManager::Init() {
   SelectSuitablePhysicalDevice();

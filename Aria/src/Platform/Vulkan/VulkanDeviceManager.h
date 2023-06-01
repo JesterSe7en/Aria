@@ -42,7 +42,7 @@ class VulkanDeviceManager {
   QueueFamilyIndices &GetQueueFamilyIndices() { return queue_family_indices_; }
 
  private:
-  VulkanDeviceManager();
+  VulkanDeviceManager() = default;
 
   // only one for now...yeah??
   VkDevice device_;

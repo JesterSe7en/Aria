@@ -3,7 +3,7 @@
 #include "Aria/Core/Base.h"
 #include "Aria/Renderer/Renderer.h"
 #include "Platform/OpenGL/OpenGlShader.h"
-#include "Platform/Vulkan/VulkanShader.h"
+//#include "Platform/Vulkan/VulkanShader.h"
 #include <memory>
 #include <string_view>
 
@@ -37,7 +37,8 @@ Ref<Shader> Shader::Create(const std::string &file_path) {
       ARIA_CORE_ASSERT(false, "API selected for shader generation is not implemented")
       return nullptr;
     case RendererApi::Api::VULKAN:
-      return std::make_shared<VulkanShader>(file_path);
+      return nullptr;
+      //      return std::make_shared<VulkanShader>(file_path);
     default:
       ARIA_CORE_ASSERT(false, "Unknown API")
       return nullptr;
@@ -47,7 +48,8 @@ Ref<Shader> Shader::Create(const std::string &file_path) {
 Ref<Shader> Shader::Create(const std::string &file_path, ShaderType type) {
   switch (RendererApi::GetApi()) {
     case RendererApi::Api::VULKAN:
-      return std::make_shared<VulkanShader>(file_path, type);
+      return nullptr;
+      //      return std::make_shared<VulkanShader>(file_path, type);
     default:
       ARIA_CORE_ASSERT(false, "Should not be calling this other than for vulkan... for now")
       return nullptr;

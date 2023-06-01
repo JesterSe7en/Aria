@@ -181,7 +181,7 @@ void OpenGlShader::SetUniformMat4F(const std::string &name, const glm::mat4 &mat
 
 #pragma region Shader Compilation
 
-GLenum OpenGlShader::GetShaderType(const std::string_view type) const {
+GLenum OpenGlShader::GetShaderType(const std::string &type) const {
   // All possible types in OpenGl
   // GL_COMPUTE_SHADER, GL_VERTEX_SHADER, GL_TESS_CONTROL_SHADER, GL_TESS_EVALUATION_SHADER, GL_GEOMETRY_SHADER, or
   // GL_FRAGMENT_SHADER.

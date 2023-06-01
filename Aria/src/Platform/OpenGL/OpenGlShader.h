@@ -30,7 +30,7 @@ class OpenGlShader : public Shader {
   void SetUniformMat4F(const std::string &name, const glm::mat4 &matrix);
 
  private:
-  GLenum GetShaderType(const std::string_view type) const;
+  GLenum GetShaderType(const std::string &type) const;
   std::unordered_map<GLenum, const std::string> ParseShaderFile(const std::string &file_path) const;
   uint32_t CompileShader(unsigned int type, const std::string &source) const;
   uint32_t CreateShaders(const std::unordered_map<GLenum, const std::string> &shaders) const;

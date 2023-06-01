@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Aria/Core/Base.h"
+#include "VkBootstrap.h"
 #include "vulkan/vulkan_core.h"
 
 namespace aria {
@@ -13,7 +14,6 @@ class VulkanInstance {
     std::vector<const char *> pp_layer_names;
     uint32_t extension_count;
     std::vector<const char *> pp_extension_names;
-    VkDebugUtilsMessengerCreateInfoEXT debug_messenger_create_info;
   };
 
   ~VulkanInstance();
@@ -24,10 +24,10 @@ class VulkanInstance {
 
   static Ref<VulkanInstance> Create(VulkanInstanceCreateInfo &create_info);
 
-  VkInstance GetVkInstance() { return p_vk_instance_; }
-  bool IsLayerAvailable(const char *layer_name);
-  bool AreLayersAvailable(std::vector<const char *> layer_names);
-  bool AreValidationLayersEnabled() const { return validation_enabled_; }
+  vkb::Instance GetVKBInstance() { return vkb_instance_; }
+  //  bool IsLayerAvailable(const char *layer_name);
+  //  bool AreLayersAvailable(std::vector<const char *> layer_names);
+  //  bool AreValidationLayersEnabled() const { return validation_enabled_; }
 
  private:
   static uint32_t app_version_;
@@ -36,13 +36,13 @@ class VulkanInstance {
 
   static std::vector<const char *> validation_layers_;
 
-  VkInstance p_vk_instance_ = VK_NULL_HANDLE;
+  vkb::Instance vkb_instance_;
   bool validation_enabled_ = false;
   std::vector<VkLayerProperties> available_layers_;
   std::vector<VkExtensionProperties> available_extensions_;
 
   explicit VulkanInstance(VulkanInstanceCreateInfo &create_info);
-  void EnumerateLayerProperties();
-  void EnumerateInstanceExtensions();
+  //  void EnumerateLayerProperties();
+  //  void EnumerateInstanceExtensions();
 };
 }// namespace aria
