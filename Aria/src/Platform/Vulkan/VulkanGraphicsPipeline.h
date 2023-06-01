@@ -1,6 +1,7 @@
 #pragma once
 
 #include "vulkan/vulkan_core.h"
+#include "VulkanRenderPass.h"
 
 namespace aria {
 
@@ -27,10 +28,11 @@ class VulkanGraphicsPipeline {
   constexpr static const std::array<VkDynamicState, 2> dynamic_states_ = {VK_DYNAMIC_STATE_VIEWPORT,
                                                                           VK_DYNAMIC_STATE_SCISSOR};
 
+  Ref<VulkanRenderPass> vk_render_pass_;
   std::vector<VkFramebuffer> vk_frame_buffers_;
   VkPipelineLayout vk_pipeline_layout_;
   VkPipeline vk_graphics_pipeline_;
-  static std::vector<VkPipelineShaderStageCreateInfo> shader_stages_;
+//  static std::vector<VkPipelineShaderStageCreateInfo> shader_stages_;
 };
 
 }// namespace aria

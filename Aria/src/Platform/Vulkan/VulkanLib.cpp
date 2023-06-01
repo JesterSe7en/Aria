@@ -86,6 +86,8 @@ void VulkanLib::InitDeviceFunctions(VkDevice device) {
       reinterpret_cast<PFN_vkCreateRenderPass>(ptr_vk_get_device_proc_addr_(device, "vkCreateRenderPass"));
   ptr_vk_destroy_render_pass_ =
       reinterpret_cast<PFN_vkDestroyRenderPass>(ptr_vk_get_device_proc_addr_(device, "vkDestroyRenderPass"));
+  ptr_vk_create_graphics_pipelines_ = reinterpret_cast<PFN_vkCreateGraphicsPipelines>(
+      ptr_vk_get_device_proc_addr_(device, "vkCreateGraphicsPipelines"));
 }
 
 void VulkanLib::Cleanup() {

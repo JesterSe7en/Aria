@@ -34,6 +34,7 @@ class VulkanLib {
   PFN_vkDestroyPipelineLayout ptr_vk_destroy_pipeline_layout_ = nullptr;
   PFN_vkCreateRenderPass ptr_vk_create_render_pass_ = nullptr;
   PFN_vkDestroyRenderPass ptr_vk_destroy_render_pass_ = nullptr;
+  PFN_vkCreateGraphicsPipelines ptr_vk_create_graphics_pipelines_ = nullptr;
 
  private:
   void Init();

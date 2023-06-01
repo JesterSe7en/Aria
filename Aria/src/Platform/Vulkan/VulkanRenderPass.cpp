@@ -10,7 +10,6 @@ VulkanRenderPass::~VulkanRenderPass() {
 
 VulkanRenderPass::VulkanRenderPass() {
   vklib_ = VulkanLib::GetInstance();
-  // TODO: Need to get access to swapchain and logical device
 
   VkAttachmentDescription color_attachment;
   VkResult result;

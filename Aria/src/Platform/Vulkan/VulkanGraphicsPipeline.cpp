@@ -16,6 +16,7 @@ VulkanGraphicsPipeline::~VulkanGraphicsPipeline() {
 }
 
 void VulkanGraphicsPipeline::Init() {
+  vk_render_pass_ = VulkanRenderPass::Create();
   CreateGraphicsPipeline();
   //  CreateFrameBuffers();
 }
@@ -161,8 +162,10 @@ void VulkanGraphicsPipeline::CreateGraphicsPipeline() {
 
   VkGraphicsPipelineCreateInfo pipeline_info{};
   pipeline_info.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
-  pipeline_info.stageCount = static_cast<std::uint32_t>(shader_stages_.size());
-  pipeline_info.pStages = shader_stages_.data();
+  pipeline_info.stageCount = 0;
+  pipeline_info.pStages = nullptr;
+//  pipeline_info.stageCount = static_cast<std::uint32_t>(shader_stages_.size());
+//  pipeline_info.pStages = shader_stages_.data();
   pipeline_info.pVertexInputState = &vertex_input_state;
   pipeline_info.pInputAssemblyState = &input_assembly_state;
   pipeline_info.pViewportState = &viewport_state;
@@ -173,15 +176,20 @@ void VulkanGraphicsPipeline::CreateGraphicsPipeline() {
   pipeline_info.pDynamicState = &dynamic_state;
 
   pipeline_info.layout = vk_pipeline_layout_;
-  pipeline_info.renderPass = VulkanRendererApi::GetInstance().GetRenderPass();
+  pipeline_info.renderPass = vk_render_pass_->GetRenderPass();
   pipeline_info.subpass = 0;
 
   pipeline_info.basePipelineHandle = VK_NULL_HANDLE;
   pipeline_info.basePipelineIndex = -1;
 
-  result = vkCreateGraphicsPipelines(VulkanDeviceManager::GetInstance().GetLogicalDevice(), VK_NULL_HANDLE, 1,
-                                     &pipeline_info, nullptr, &vk_graphics_pipeline_);
-  if (result != VK_SUCCESS) { ARIA_CORE_ERROR("Failed to create graphics pipeline - {0}", string_VkResult(result)) }
+  result = VulkanLib::GetInstance().ptr_vk_create_graphics_pipelines_(
+      VulkanDeviceManager::GetInstance().GetLogicalDevice(), VK_NULL_HANDLE, 1, &pipeline_info, nullptr,
+      &vk_graphics_pipeline_);
+  if (result != VK_SUCCESS) {
+    ARIA_CORE_ERROR("Failed to create graphics pipeline - {0}", string_VkResult(result))
+  } else {
+    ARIA_CORE_INFO("Successfully created graphics pipeline");
+  }
 }
 
 //void VulkanGraphicsPipeline::CreateFrameBuffers() {
