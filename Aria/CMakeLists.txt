@@ -81,27 +81,27 @@ set(src__Platform__OpenGL
 source_group("src\\Platform\\OpenGL" FILES ${src__Platform__OpenGL})
 
 set(src__Platform__Vulkan
-    "src/Platform/Vulkan/VulkanCommandBuffer.cpp"
-    "src/Platform/Vulkan/VulkanCommandBuffer.h"
+    #    "src/Platform/Vulkan/VulkanCommandBuffer.cpp"
+    #    "src/Platform/Vulkan/VulkanCommandBuffer.h"
     "src/Platform/Vulkan/VulkanDebugMessenger.cpp"
     "src/Platform/Vulkan/VulkanDebugMessenger.h"
-    "src/Platform/Vulkan/VulkanDeviceManager.cpp"
-    "src/Platform/Vulkan/VulkanDeviceManager.h"
+    #    "src/Platform/Vulkan/VulkanDeviceManager.cpp"
+    #    "src/Platform/Vulkan/VulkanDeviceManager.h"
     "src/Platform/Vulkan/VulkanError.h"
-    "src/Platform/Vulkan/VulkanFunction.cpp"
-    "src/Platform/Vulkan/VulkanFunction.h"
-    "src/Platform/Vulkan/VulkanGraphicsPipeline.cpp"
-    "src/Platform/Vulkan/VulkanGraphicsPipeline.h"
+    #    "src/Platform/Vulkan/VulkanGraphicsPipeline.cpp"
+    #    "src/Platform/Vulkan/VulkanGraphicsPipeline.h"
     "src/Platform/Vulkan/VulkanInstance.cpp"
     "src/Platform/Vulkan/VulkanInstance.h"
+    "src/Platform/Vulkan/VulkanLib.cpp"
+    "src/Platform/Vulkan/VulkanLib.h"
     "src/Platform/Vulkan/VulkanRendererApi.cpp"
     "src/Platform/Vulkan/VulkanRendererApi.h"
-    "src/Platform/Vulkan/VulkanRenderPass.cpp"
-    "src/Platform/Vulkan/VulkanRenderPass.h"
-    "src/Platform/Vulkan/VulkanShader.cpp"
-    "src/Platform/Vulkan/VulkanShader.h"
-    "src/Platform/Vulkan/VulkanSwapChain.cpp"
-    "src/Platform/Vulkan/VulkanSwapChain.h"
+    #    "src/Platform/Vulkan/VulkanRenderPass.cpp"
+    #    "src/Platform/Vulkan/VulkanRenderPass.h"
+    #    "src/Platform/Vulkan/VulkanShader.cpp"
+    #    "src/Platform/Vulkan/VulkanShader.h"
+    #    "src/Platform/Vulkan/VulkanSwapChain.cpp"
+    #    "src/Platform/Vulkan/VulkanSwapChain.h"
     )
 source_group("src\\Platform\\Vulkan" FILES ${src__Platform__Vulkan})
 
@@ -551,6 +551,13 @@ set(vendor__glm__glm__gtx
     )
 source_group("vendor\\glm\\glm\\gtx" FILES ${vendor__glm__glm__gtx})
 
+set(vendor__vkBootstrap__src
+    "vendor/vkBootstrap/src/VkBootstrap.cpp"
+    "vendor/vkBootstrap/src/VkBootstrap.h"
+    "vendor/vkBootstrap/src/VkBootstrapDispatch.h"
+    )
+source_group("vendor\\vkBootstrap\\src" FILES ${vendor__vkBootstrap__src})
+
 set(ALL_FILES
     ${src}
     ${src__Aria__Core}
@@ -565,6 +572,7 @@ set(ALL_FILES
     ${vendor__glm__glm__ext}
     ${vendor__glm__glm__gtc}
     ${vendor__glm__glm__gtx}
+    ${vendor__vkBootstrap__src}
     )
 
 ################################################################################
@@ -641,7 +649,8 @@ endif ()
 ################################################################################
 target_compile_definitions(${PROJECT_NAME} PRIVATE
     "$<$<CONFIG:Debug>:"
-    "ARIA_DEBUG"
+    "ARIA_DEBUG;"
+    "ARIA_ENABLE_ASSERTS"
     ">"
     "$<$<CONFIG:Dist>:"
     "ARIA_DIST"
@@ -694,6 +703,40 @@ if (MSVC)
       /OPT:ICF
       >
       /SUBSYSTEM:WINDOWS
+      )
+elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+  target_compile_options(${PROJECT_NAME} PRIVATE
+      $<$<CONFIG:Debug>:
+      -g
+      -O0
+      ${DEFAULT_CXX_DEBUG_INFORMATION_FORMAT}
+      >
+
+      $<$<CONFIG:Dist>:
+      -O2
+      -ffunction-sections
+      -fdata-sections
+      ${DEFAULT_CXX_DEBUG_INFORMATION_FORMAT}
+      >
+
+      $<$<CONFIG:Release>:
+      -O2
+      -ffunction-sections
+      -fdata-sections
+      ${DEFAULT_CXX_EXCEPTION_HANDLING}
+      >
+
+      -Wall
+      -Wextra
+      -std=c++17
+      )
+  target_link_options(${PROJECT_NAME} PRIVATE
+      $<$<CONFIG:Release>:
+      -Wl, --gc-sections -Wl, --icf=safe
+      >
+      $<$<CONFIG:Dist>:
+      -Wl, --gc-sections -Wl, --icf=safe
+      >
       )
 endif ()
 
