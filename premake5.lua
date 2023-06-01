@@ -13,6 +13,7 @@ IncludeDir["Glad"] = "Aria/vendor/Glad/include"
 IncludeDir["imgui"] = "Aria/vendor/imgui"
 IncludeDir["glm"] = "Aria/vendor/glm"
 IncludeDir["stb_image"] = "Aria/vendor/stb_image"
+IncludeDir["vkBootstrap"] = "Aria/vendor/vkBootstrap/src"
 
 include("Aria/vendor/GLFW")
 include("Aria/vendor/Glad")
@@ -46,6 +47,7 @@ includedirs({
 	"%{IncludeDir.imgui}",
 	"%{IncludeDir.glm}",
 	"%{IncludeDir.stb_image}",
+	"%{IncludeDir.vkBootstrap}",
 })
 
 links({ "GLFW", "Glad", "imgui", "opengl32.lib" })
@@ -85,7 +87,13 @@ objdir("bin-int/" .. outputdir .. "/%{prj.name}")
 
 files({ "%{prj.name}/src/**.h", "%{prj.name}/src/**.cpp" })
 
-includedirs({ "Aria/vendor/spdlog/include", "Aria/src", "%{IncludeDir.glm}" })
+includedirs({
+	"Aria/vendor/spdlog/include",
+	"Aria/src",
+	"%{IncludeDir.glm}",
+	"%{IncludeDir.Glad}",
+	"%{IncludeDir.imgui}",
+})
 
 links({ "Aria" })
 

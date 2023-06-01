@@ -10,3 +10,6 @@
 [submodule "Aria/vendor/glm"]
 	path = Aria/vendor/glm
 	url = https://github.com/g-truc/glm
+[submodule "Aria/vendor/vkBootstrap"]
+	path = Aria/vendor/vkBootstrap
+	url = https://github.com/charles-lunarg/vk-bootstrap.git
