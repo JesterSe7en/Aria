@@ -7,7 +7,7 @@ set(src
     "src/Aria.h"
     "src/ariapch.cpp"
     "src/ariapch.h"
-)
+    )
 source_group("src" FILES ${src})
 
 set(src__Aria__Core
@@ -26,7 +26,7 @@ set(src__Aria__Core
     "src/Aria/Core/Timestep.h"
     "src/Aria/Core/Window.cpp"
     "src/Aria/Core/Window.h"
-)
+    )
 source_group("src\\Aria\\Core" FILES ${src__Aria__Core})
 
 set(src__Aria__Events
@@ -34,13 +34,13 @@ set(src__Aria__Events
     "src/Aria/Events/Event.h"
     "src/Aria/Events/KeyEvent.h"
     "src/Aria/Events/MouseEvent.h"
-)
+    )
 source_group("src\\Aria\\Events" FILES ${src__Aria__Events})
 
 set(src__Aria__ImGui
     "src/Aria/ImGui/ImGuiLayer.cpp"
     "src/Aria/ImGui/ImGuiLayer.h"
-)
+    )
 source_group("src\\Aria\\ImGui" FILES ${src__Aria__ImGui})
 
 set(src__Aria__Renderer
@@ -61,7 +61,7 @@ set(src__Aria__Renderer
     "src/Aria/Renderer/Texture.h"
     "src/Aria/Renderer/VertexArray.cpp"
     "src/Aria/Renderer/VertexArray.h"
-)
+    )
 source_group("src\\Aria\\Renderer" FILES ${src__Aria__Renderer})
 
 set(src__Platform__OpenGL
@@ -77,7 +77,7 @@ set(src__Platform__OpenGL
     "src/Platform/OpenGL/OpenGlTexture2D.h"
     "src/Platform/OpenGL/OpenGlVertexArray.cpp"
     "src/Platform/OpenGL/OpenGlVertexArray.h"
-)
+    )
 source_group("src\\Platform\\OpenGL" FILES ${src__Platform__OpenGL})
 
 set(src__Platform__Vulkan
@@ -102,7 +102,7 @@ set(src__Platform__Vulkan
     "src/Platform/Vulkan/VulkanShader.h"
     "src/Platform/Vulkan/VulkanSwapChain.cpp"
     "src/Platform/Vulkan/VulkanSwapChain.h"
-)
+    )
 source_group("src\\Platform\\Vulkan" FILES ${src__Platform__Vulkan})
 
 set(src__Platform__Windows
@@ -112,7 +112,7 @@ set(src__Platform__Windows
     "src/Platform/Windows/WindowsInput.h"
     "src/Platform/Windows/WindowsWindow.cpp"
     "src/Platform/Windows/WindowsWindow.h"
-)
+    )
 source_group("src\\Platform\\Windows" FILES ${src__Platform__Windows})
 
 set(vendor__glm__glm
@@ -139,7 +139,7 @@ set(vendor__glm__glm
     "vendor/glm/glm/vec3.hpp"
     "vendor/glm/glm/vec4.hpp"
     "vendor/glm/glm/vector_relational.hpp"
-)
+    )
 source_group("vendor\\glm\\glm" FILES ${vendor__glm__glm})
 
 set(vendor__glm__glm__detail
@@ -203,7 +203,7 @@ set(vendor__glm__glm__detail
     "vendor/glm/glm/detail/type_vec4.hpp"
     "vendor/glm/glm/detail/type_vec4.inl"
     "vendor/glm/glm/detail/type_vec4_simd.inl"
-)
+    )
 source_group("vendor\\glm\\glm\\detail" FILES ${vendor__glm__glm__detail})
 
 set(vendor__glm__glm__ext
@@ -377,7 +377,7 @@ set(vendor__glm__glm__ext
     "vendor/glm/glm/ext/vector_uint4_sized.hpp"
     "vendor/glm/glm/ext/vector_ulp.hpp"
     "vendor/glm/glm/ext/vector_ulp.inl"
-)
+    )
 source_group("vendor\\glm\\glm\\ext" FILES ${vendor__glm__glm__ext})
 
 set(vendor__glm__glm__gtc
@@ -418,7 +418,7 @@ set(vendor__glm__glm__gtc
     "vendor/glm/glm/gtc/ulp.hpp"
     "vendor/glm/glm/gtc/ulp.inl"
     "vendor/glm/glm/gtc/vec1.hpp"
-)
+    )
 source_group("vendor\\glm\\glm\\gtc" FILES ${vendor__glm__glm__gtc})
 
 set(vendor__glm__glm__gtx
@@ -548,7 +548,7 @@ set(vendor__glm__glm__gtx
     "vendor/glm/glm/gtx/vector_query.inl"
     "vendor/glm/glm/gtx/wrap.hpp"
     "vendor/glm/glm/gtx/wrap.inl"
-)
+    )
 source_group("vendor\\glm\\glm\\gtx" FILES ${vendor__glm__glm__gtx})
 
 set(ALL_FILES
@@ -565,7 +565,7 @@ set(ALL_FILES
     ${vendor__glm__glm__ext}
     ${vendor__glm__glm__gtc}
     ${vendor__glm__glm__gtx}
-)
+    )
 
 ################################################################################
 # Target
@@ -574,46 +574,46 @@ add_library(${PROJECT_NAME} STATIC ${ALL_FILES})
 
 target_precompile_headers(${PROJECT_NAME} PRIVATE
     "$<$<COMPILE_LANGUAGE:CXX>:${CMAKE_CURRENT_SOURCE_DIR}/src/ariapch.h>"
-)
+    )
 
 use_props(${PROJECT_NAME} "${CMAKE_CONFIGURATION_TYPES}" "${DEFAULT_CXX_PROPS}")
 set(ROOT_NAMESPACE Aria)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
     VS_GLOBAL_KEYWORD "Win32Proj"
-)
+    )
 ################################################################################
 # Target name
 ################################################################################
 set_target_properties(${PROJECT_NAME} PROPERTIES
-    TARGET_NAME_DEBUG   "Aria"
-    TARGET_NAME_DIST    "Aria"
+    TARGET_NAME_DEBUG "Aria"
+    TARGET_NAME_DIST "Aria"
     TARGET_NAME_RELEASE "Aria"
-)
+    )
 ################################################################################
 # Output directory
 ################################################################################
 set_target_properties(${PROJECT_NAME} PROPERTIES
-    OUTPUT_DIRECTORY_DEBUG   "${CMAKE_CURRENT_SOURCE_DIR}/../bin/Debug-windows-x86_64/Aria/"
-    OUTPUT_DIRECTORY_DIST    "${CMAKE_CURRENT_SOURCE_DIR}/../bin/Dist-windows-x86_64/Aria/"
+    OUTPUT_DIRECTORY_DEBUG "${CMAKE_CURRENT_SOURCE_DIR}/../bin/Debug-windows-x86_64/Aria/"
+    OUTPUT_DIRECTORY_DIST "${CMAKE_CURRENT_SOURCE_DIR}/../bin/Dist-windows-x86_64/Aria/"
     OUTPUT_DIRECTORY_RELEASE "${CMAKE_CURRENT_SOURCE_DIR}/../bin/Release-windows-x86_64/Aria/"
-)
+    )
 ################################################################################
 # MSVC runtime library
 ################################################################################
 get_property(MSVC_RUNTIME_LIBRARY_DEFAULT TARGET ${PROJECT_NAME} PROPERTY MSVC_RUNTIME_LIBRARY)
 string(CONCAT "MSVC_RUNTIME_LIBRARY_STR"
     $<$<CONFIG:Debug>:
-        MultiThreadedDebug
+    MultiThreadedDebug
     >
     $<$<CONFIG:Dist>:
-        MultiThreaded
+    MultiThreaded
     >
     $<$<CONFIG:Release>:
-        MultiThreaded
+    MultiThreaded
     >
     $<$<NOT:$<OR:$<CONFIG:Debug>,$<CONFIG:Dist>,$<CONFIG:Release>>>:${MSVC_RUNTIME_LIBRARY_DEFAULT}>
-)
+    )
 set_target_properties(${PROJECT_NAME} PROPERTIES MSVC_RUNTIME_LIBRARY ${MSVC_RUNTIME_LIBRARY_STR})
 
 ################################################################################
@@ -628,69 +628,74 @@ target_include_directories(${PROJECT_NAME} PUBLIC
     "${CMAKE_CURRENT_SOURCE_DIR}/vendor/glm;"
     "${CMAKE_CURRENT_SOURCE_DIR}/vendor/stb_image;"
     "${CMAKE_CURRENT_SOURCE_DIR}/vendor/vkBootstrap/src;"
-    "${CMAKE_CURRENT_SOURCE_DIR}/../../../../../ProgramData/scoop/apps/vulkan/current/Include"
-)
+    )
+
+if (DEFINED ENV{VULKAN_SDK})
+  target_include_directories(${PROJECT_NAME} PUBLIC "$ENV{VULKAN_SDK}/Include")
+else ()
+  target_include_directories(${PROJECT_NAME} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../../../../../ProgramData/scoop/apps/vulkan/current/Include")
+endif ()
 
 ################################################################################
 # Compile definitions
 ################################################################################
 target_compile_definitions(${PROJECT_NAME} PRIVATE
     "$<$<CONFIG:Debug>:"
-        "ARIA_DEBUG"
+    "ARIA_DEBUG"
     ">"
     "$<$<CONFIG:Dist>:"
-        "ARIA_DIST"
+    "ARIA_DIST"
     ">"
     "$<$<CONFIG:Release>:"
-        "ARIA_RELEASE"
+    "ARIA_RELEASE"
     ">"
     "ARIA_PLATFORM_WINDOWS;"
     "ARIA_BUILD_DLL;"
     "UNICODE;"
     "_UNICODE"
-)
+    )
 
 ################################################################################
 # Compile and link options
 ################################################################################
-if(MSVC)
-    target_compile_options(${PROJECT_NAME} PRIVATE
-        $<$<CONFIG:Debug>:
-            /Od;
-            /ZI
-        >
-        $<$<CONFIG:Dist>:
-            /Gm-;
-            /Ox;
-            /Oi;
-            /GF;
-            /Gy;
-            ${DEFAULT_CXX_DEBUG_INFORMATION_FORMAT}
-        >
-        $<$<CONFIG:Release>:
-            /Gm-;
-            /Ox;
-            /Oi;
-            /GF;
-            /Gy;
-            ${DEFAULT_CXX_DEBUG_INFORMATION_FORMAT}
-        >
-        /std:c++17;
-        /W3;
-        ${DEFAULT_CXX_EXCEPTION_HANDLING}
-    )
-    target_link_options(${PROJECT_NAME} PRIVATE
-        $<$<CONFIG:Dist>:
-            /OPT:REF;
-            /OPT:ICF
-        >
-        $<$<CONFIG:Release>:
-            /OPT:REF;
-            /OPT:ICF
-        >
-        /SUBSYSTEM:WINDOWS
-    )
-endif()
+if (MSVC)
+  target_compile_options(${PROJECT_NAME} PRIVATE
+      $<$<CONFIG:Debug>:
+      /Od;
+      /ZI
+      >
+      $<$<CONFIG:Dist>:
+      /Gm-;
+      /Ox;
+      /Oi;
+      /GF;
+      /Gy;
+      ${DEFAULT_CXX_DEBUG_INFORMATION_FORMAT}
+      >
+      $<$<CONFIG:Release>:
+      /Gm-;
+      /Ox;
+      /Oi;
+      /GF;
+      /Gy;
+      ${DEFAULT_CXX_DEBUG_INFORMATION_FORMAT}
+      >
+      /std:c++17;
+      /W3;
+      ${DEFAULT_CXX_EXCEPTION_HANDLING}
+      )
+  target_link_options(${PROJECT_NAME} PRIVATE
+      $<$<CONFIG:Dist>:
+      /OPT:REF;
+      /OPT:ICF
+      >
+      $<$<CONFIG:Release>:
+      /OPT:REF;
+      /OPT:ICF
+      >
+      /SUBSYSTEM:WINDOWS
+      )
+endif ()
 
 ################################################################################
 # Dependencies
@@ -700,10 +705,10 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
     GLFW
     Glad
     imgui
-)
+    )
 
 set(ADDITIONAL_LIBRARY_DEPENDENCIES
     "opengl32"
-)
+    )
 target_link_libraries(${PROJECT_NAME} PUBLIC "${ADDITIONAL_LIBRARY_DEPENDENCIES}")
 
