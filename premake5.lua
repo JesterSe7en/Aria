@@ -14,6 +14,7 @@ IncludeDir["imgui"] = "Aria/vendor/imgui"
 IncludeDir["glm"] = "Aria/vendor/glm"
 IncludeDir["stb_image"] = "Aria/vendor/stb_image"
 IncludeDir["vkBootstrap"] = "Aria/vendor/vkBootstrap/src"
+IncludeDir["vulkanSDK"] = "C:/ProgramData/scoop/apps/vulkan/current/Include"
 
 include("Aria/vendor/GLFW")
 include("Aria/vendor/Glad")
@@ -48,6 +49,7 @@ includedirs({
 	"%{IncludeDir.glm}",
 	"%{IncludeDir.stb_image}",
 	"%{IncludeDir.vkBootstrap}",
+	"%{IncludeDir.vulkanSDK}",
 })
 
 links({ "GLFW", "Glad", "imgui", "opengl32.lib" })
