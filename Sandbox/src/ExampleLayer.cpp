@@ -1,8 +1,8 @@
 #include "ExampleLayer.h"
 #include "Platform/OpenGL/OpenGlShader.h"
 #include <imgui.h>
-#include <glm/gtc/matrix_transform.h>
-#include <glm/gtc/type_ptr.h>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 ExampleLayer::ExampleLayer() : Layer("Example Layer"), mSquarePosition(0.0f) {
   // // --------------- Rendering TRIANGLE ---------------
