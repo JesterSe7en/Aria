@@ -1,4 +1,6 @@
 #include "VulkanInstance.h"
+#include "Aria/Core/Application.h"
+#include "GLFW/glfw3.h"
 #include "VulkanDebugMessenger.h"
 #include "VulkanError.h"
 #include "VulkanLib.h"
@@ -59,8 +61,15 @@ VulkanInstance::VulkanInstance(VulkanInstance::VulkanInstanceCreateInfo &create_
 
 Ref<VulkanInstance> VulkanInstance::Create(VulkanInstance::VulkanInstanceCreateInfo &create_info) {
   auto instance = new VulkanInstance(create_info);
+  instance->CreateWindowSurface();
   VulkanLib::GetInstance().InitInstanceFunctions(instance->vkb_instance_);
   return Ref<VulkanInstance>(instance);
+}
+
+void VulkanInstance::CreateWindowSurface() {
+  auto *window = (GLFWwindow *) Application::Get().GetWindow().GetNativeWindow();
+  VkResult result = glfwCreateWindowSurface(vkb_instance_.instance, window, nullptr, &vk_surface_);
+  ARIA_VK_CHECK_RESULT_AND_ERROR(result, "Failed to create window surface")
 }
 
 //bool VulkanInstance::IsLayerAvailable(const char *layer_name) {

@@ -29,7 +29,6 @@ bool VulkanLib::LoadVulkanLib() {
 
   if (!library_) {
 #if ARIA_DEBUG
-    //TODO: Test this by misspelling the library
     DWORD error_code = GetLastError();
     LPSTR message_buffer = nullptr;
     DWORD message_size = FormatMessageA(
@@ -40,7 +39,7 @@ bool VulkanLib::LoadVulkanLib() {
 
     LocalFree(message_buffer);
 
-    ARIA_CORE_ASSERT(false, "Failed to load vulkan runtime library - {0}", error_message);
+    ARIA_CORE_ASSERT(false, "Failed to load vulkan runtime library - " + error_message);
     return false;
 #else
     ARIA_CORE_ASSERT(false, "Failed to load vulkan runtime library")

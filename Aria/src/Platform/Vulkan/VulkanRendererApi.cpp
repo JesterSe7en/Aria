@@ -25,25 +25,22 @@ VulkanRendererApi::VulkanRendererApi() {
   //  command_buffer_ = VK_NULL_HANDLE;
   p_vk_instance_ = nullptr;
 
+  //  std::vector<const char *> required_extensions = GetGlfwRequiredExtensions();
+  //  create_info.extension_count = required_extensions.size();
+  //  create_info.pp_extension_names = required_extensions;
   VulkanInstance::VulkanInstanceCreateInfo create_info;
-
 #ifdef NDEBUG
   create_info.enable_validation = false;
 #else
   create_info.enable_validation = true;
 #endif
   create_info.layer_count = 0;
-  //  std::vector<const char *> required_extensions = GetGlfwRequiredExtensions();
-  //  create_info.extension_count = required_extensions.size();
-  //  create_info.pp_extension_names = required_extensions;
+
   p_vulkan_instance_ = VulkanInstance::Create(create_info);
+  p_vk_instance_ = p_vulkan_instance_->GetVKBInstance().instance;
+  VulkanDeviceManager::GetInstance().Init(p_vulkan_instance_);
 
-  // Need to select devices
-  //  VulkanDeviceManager::GetInstance().Init();
-
-  //  CreatePresentationSurface();
-  //  VulkanDeviceManager::GetInstance().Init();
-  //  CreateRenderPass();
+  //  VulkanGraphicsPipeline::GetInstance().Init();
 }
 
 VulkanRendererApi::~VulkanRendererApi() {
@@ -87,13 +84,13 @@ void VulkanRendererApi::CreatePipeline() { ARIA_CORE_ASSERT(false, "Not Implemen
 
 //void VulkanRendererApi::CreatePipeline() { VulkanGraphicsPipeline::GetInstance().Init(); }
 
-//void VulkanRendererApi::CreatePresentationSurface() {
-//  ARIA_CORE_ASSERT(p_vk_instance_, "Did you create VkInstance first?")
-//  auto glfw_window = static_cast<GLFWwindow *>(Application::Get().GetWindow().GetNativeWindow());
-//  ARIA_CORE_ASSERT(glfw_window, "Did you create window first before creating surface?")
-//  VkResult result = glfwCreateWindowSurface(p_vk_instance_, glfw_window, nullptr, &surface_);
-//  if (result != VK_SUCCESS) { ARIA_CORE_ERROR("Cannot create vulkan surface - {0}", string_VkResult(result)) }
-//}
+void VulkanRendererApi::CreatePresentationSurface() {
+  ARIA_CORE_ASSERT(p_vk_instance_, "Did you create VkInstance first?")
+  auto glfw_window = static_cast<GLFWwindow *>(Application::Get().GetWindow().GetNativeWindow());
+  ARIA_CORE_ASSERT(glfw_window, "Did you create window first before creating surface?")
+  VkResult result = glfwCreateWindowSurface(p_vk_instance_, glfw_window, nullptr, &surface_);
+  if (result != VK_SUCCESS) { ARIA_CORE_ERROR("Cannot create vulkan surface - {0}", string_VkResult(result)) }
+}
 
 //void VulkanRendererApi::CreateCommandPool() {
 //

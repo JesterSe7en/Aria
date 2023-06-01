@@ -25,6 +25,7 @@ class VulkanInstance {
   static Ref<VulkanInstance> Create(VulkanInstanceCreateInfo &create_info);
 
   vkb::Instance GetVKBInstance() { return vkb_instance_; }
+  VkSurfaceKHR GetVkSurface() { return vk_surface_; }
   //  bool IsLayerAvailable(const char *layer_name);
   //  bool AreLayersAvailable(std::vector<const char *> layer_names);
   //  bool AreValidationLayersEnabled() const { return validation_enabled_; }
@@ -37,11 +38,12 @@ class VulkanInstance {
   static std::vector<const char *> validation_layers_;
 
   vkb::Instance vkb_instance_;
-  bool validation_enabled_ = false;
+  VkSurfaceKHR vk_surface_;
   std::vector<VkLayerProperties> available_layers_;
   std::vector<VkExtensionProperties> available_extensions_;
 
   explicit VulkanInstance(VulkanInstanceCreateInfo &create_info);
+  void CreateWindowSurface();
   //  void EnumerateLayerProperties();
   //  void EnumerateInstanceExtensions();
 };

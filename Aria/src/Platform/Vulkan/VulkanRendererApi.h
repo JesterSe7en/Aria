@@ -63,7 +63,7 @@ class VulkanRendererApi : public RendererApi {
   const std::vector<const char *> device_extensions_ = {"VK_KHR_swapchain"};
   const std::vector<VkDynamicState> dynamic_states_ = {VK_DYNAMIC_STATE_VIEWPORT, VK_DYNAMIC_STATE_SCISSOR};
 
-  //  void CreatePresentationSurface();
+  void CreatePresentationSurface();
   //  void CreateRenderPass();
   //  void CreateCommandPool();
   //  static bool HasValidationSupport();
