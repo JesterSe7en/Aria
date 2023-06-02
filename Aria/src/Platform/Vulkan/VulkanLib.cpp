@@ -63,53 +63,57 @@ void VulkanLib::LoadFunc(T &func_dest, const char *func_name) {
 /// Initialize functions that don't require a vkInstance
 void VulkanLib::Init() {
   if (!LoadVulkanLib()) return;
-  LoadFunc(ptr_vk_get_instance_proc_addr_, "vkGetInstanceProcAddr");
-  LoadFunc(ptr_vk_get_device_proc_addr_, "vkGetDeviceProcAddr");
+  LoadFunc(ptr_vk_get_instance_proc_addr, "vkGetInstanceProcAddr");
+  LoadFunc(ptr_vk_get_device_proc_addr, "vkGetDeviceProcAddr");
 
   ptr_vk_create_instance_ =
-      reinterpret_cast<PFN_vkCreateInstance>(ptr_vk_get_instance_proc_addr_(VK_NULL_HANDLE, "vkCreateInstance"));
+      reinterpret_cast<PFN_vkCreateInstance>(ptr_vk_get_instance_proc_addr(VK_NULL_HANDLE, "vkCreateInstance"));
 }
 
 void VulkanLib::InitInstanceFunctions(VkInstance instance) {
   ptr_vk_create_render_pass_ =
-      reinterpret_cast<PFN_vkCreateRenderPass>(ptr_vk_get_instance_proc_addr_(instance, "vkCreateRenderPass"));
+      reinterpret_cast<PFN_vkCreateRenderPass>(ptr_vk_get_instance_proc_addr(instance, "vkCreateRenderPass"));
   ptr_vk_destroy_render_pass_ =
-      reinterpret_cast<PFN_vkDestroyRenderPass>(ptr_vk_get_instance_proc_addr_(instance, "vkDestroyRenderPass"));
+      reinterpret_cast<PFN_vkDestroyRenderPass>(ptr_vk_get_instance_proc_addr(instance, "vkDestroyRenderPass"));
 }
 
 void VulkanLib::InitDeviceFunctions(VkDevice device) {
   ptr_vk_create_pipeline_layout_ =
-      reinterpret_cast<PFN_vkCreatePipelineLayout>(ptr_vk_get_device_proc_addr_(device, "vkCreatePipelineLayout"));
+      reinterpret_cast<PFN_vkCreatePipelineLayout>(ptr_vk_get_device_proc_addr(device, "vkCreatePipelineLayout"));
   ptr_vk_destroy_pipeline_layout_ =
-      reinterpret_cast<PFN_vkDestroyPipelineLayout>(ptr_vk_get_device_proc_addr_(device, "vkDestroyPipelineLayout"));
+      reinterpret_cast<PFN_vkDestroyPipelineLayout>(ptr_vk_get_device_proc_addr(device, "vkDestroyPipelineLayout"));
   ptr_vk_create_render_pass_ =
-      reinterpret_cast<PFN_vkCreateRenderPass>(ptr_vk_get_device_proc_addr_(device, "vkCreateRenderPass"));
+      reinterpret_cast<PFN_vkCreateRenderPass>(ptr_vk_get_device_proc_addr(device, "vkCreateRenderPass"));
   ptr_vk_destroy_render_pass_ =
-      reinterpret_cast<PFN_vkDestroyRenderPass>(ptr_vk_get_device_proc_addr_(device, "vkDestroyRenderPass"));
-  ptr_vk_create_graphics_pipelines_ = reinterpret_cast<PFN_vkCreateGraphicsPipelines>(
-      ptr_vk_get_device_proc_addr_(device, "vkCreateGraphicsPipelines"));
+      reinterpret_cast<PFN_vkDestroyRenderPass>(ptr_vk_get_device_proc_addr(device, "vkDestroyRenderPass"));
+  ptr_vk_create_graphics_pipelines_ =
+      reinterpret_cast<PFN_vkCreateGraphicsPipelines>(ptr_vk_get_device_proc_addr(device, "vkCreateGraphicsPipelines"));
   ptr_vk_destroy_pipeline_ =
-      reinterpret_cast<PFN_vkDestroyPipeline>(ptr_vk_get_device_proc_addr_(device, "vkDestroyPipeline"));
+      reinterpret_cast<PFN_vkDestroyPipeline>(ptr_vk_get_device_proc_addr(device, "vkDestroyPipeline"));
   ptr_vk_create_framebuffer_ =
-      reinterpret_cast<PFN_vkCreateFramebuffer>(ptr_vk_get_device_proc_addr_(device, "vkCreateFramebuffer"));
+      reinterpret_cast<PFN_vkCreateFramebuffer>(ptr_vk_get_device_proc_addr(device, "vkCreateFramebuffer"));
   ptr_vk_destroy_framebuffer_ =
-      reinterpret_cast<PFN_vkDestroyFramebuffer>(ptr_vk_get_device_proc_addr_(device, "vkDestroyFramebuffer"));
+      reinterpret_cast<PFN_vkDestroyFramebuffer>(ptr_vk_get_device_proc_addr(device, "vkDestroyFramebuffer"));
   ptr_vk_create_command_pool_ =
-      reinterpret_cast<PFN_vkCreateCommandPool>(ptr_vk_get_device_proc_addr_(device, "vkCreateCommandPool"));
+      reinterpret_cast<PFN_vkCreateCommandPool>(ptr_vk_get_device_proc_addr(device, "vkCreateCommandPool"));
   ptr_vk_destroy_command_pool_ =
-      reinterpret_cast<PFN_vkDestroyCommandPool>(ptr_vk_get_device_proc_addr_(device, "vkDestroyCommandPool"));
+      reinterpret_cast<PFN_vkDestroyCommandPool>(ptr_vk_get_device_proc_addr(device, "vkDestroyCommandPool"));
   ptr_vk_allocate_command_buffers_ =
-      reinterpret_cast<PFN_vkAllocateCommandBuffers>(ptr_vk_get_device_proc_addr_(device, "vkAllocateCommandBuffers"));
+      reinterpret_cast<PFN_vkAllocateCommandBuffers>(ptr_vk_get_device_proc_addr(device, "vkAllocateCommandBuffers"));
   ptr_vk_create_shader_module_ =
-      reinterpret_cast<PFN_vkCreateShaderModule>(ptr_vk_get_device_proc_addr_(device, "vkCreateShaderModule"));
+      reinterpret_cast<PFN_vkCreateShaderModule>(ptr_vk_get_device_proc_addr(device, "vkCreateShaderModule"));
   ptr_vk_destroy_shader_module_ =
-      reinterpret_cast<PFN_vkDestroyShaderModule>(ptr_vk_get_device_proc_addr_(device, "vkDestroyShaderModule"));
+      reinterpret_cast<PFN_vkDestroyShaderModule>(ptr_vk_get_device_proc_addr(device, "vkDestroyShaderModule"));
   ptr_vk_create_semaphore_ =
-      reinterpret_cast<PFN_vkCreateSemaphore>(ptr_vk_get_device_proc_addr_(device, "vkCreateSemaphore"));
+      reinterpret_cast<PFN_vkCreateSemaphore>(ptr_vk_get_device_proc_addr(device, "vkCreateSemaphore"));
   ptr_vk_destroy_semaphore_ =
-      reinterpret_cast<PFN_vkDestroySemaphore>(ptr_vk_get_device_proc_addr_(device, "vkDestroySemaphore"));
-  ptr_vk_create_fence_ = reinterpret_cast<PFN_vkCreateFence>(ptr_vk_get_device_proc_addr_(device, "vkCreateFence"));
-  ptr_vk_destroy_fence_ = reinterpret_cast<PFN_vkDestroyFence>(ptr_vk_get_device_proc_addr_(device, "vkDestroyFence"));
+      reinterpret_cast<PFN_vkDestroySemaphore>(ptr_vk_get_device_proc_addr(device, "vkDestroySemaphore"));
+  ptr_vk_create_fence_ = reinterpret_cast<PFN_vkCreateFence>(ptr_vk_get_device_proc_addr(device, "vkCreateFence"));
+  ptr_vk_destroy_fence_ = reinterpret_cast<PFN_vkDestroyFence>(ptr_vk_get_device_proc_addr(device, "vkDestroyFence"));
+  ptr_vk_create_pipeline_cache_ =
+      reinterpret_cast<PFN_vkCreatePipelineCache>(ptr_vk_get_device_proc_addr(device, "vkCreatePipelineCache"));
+  ptr_vk_destroy_pipeline_cache_ =
+      reinterpret_cast<PFN_vkDestroyPipelineCache>(ptr_vk_get_device_proc_addr(device, "vkDestroyPipelineCache"));
 }
 
 void VulkanLib::Cleanup() {

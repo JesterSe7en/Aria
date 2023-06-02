@@ -23,8 +23,8 @@ class VulkanLib {
   void LoadFunc(T &func_dest, const char *func_name);
 
   // Non vkInstance function pointers
-  PFN_vkGetInstanceProcAddr ptr_vk_get_instance_proc_addr_ = nullptr;
-  PFN_vkGetDeviceProcAddr ptr_vk_get_device_proc_addr_ = nullptr;
+  PFN_vkGetInstanceProcAddr ptr_vk_get_instance_proc_addr = nullptr;
+  PFN_vkGetDeviceProcAddr ptr_vk_get_device_proc_addr = nullptr;
 
   // vkInstance function pointers
   PFN_vkCreateInstance ptr_vk_create_instance_ = nullptr;
@@ -47,6 +47,8 @@ class VulkanLib {
   PFN_vkDestroySemaphore ptr_vk_destroy_semaphore_ = nullptr;
   PFN_vkCreateFence ptr_vk_create_fence_ = nullptr;
   PFN_vkDestroyFence ptr_vk_destroy_fence_ = nullptr;
+  PFN_vkCreatePipelineCache ptr_vk_create_pipeline_cache_ = nullptr;
+  PFN_vkDestroyPipelineCache ptr_vk_destroy_pipeline_cache_ = nullptr;
 
  private:
   void Init();

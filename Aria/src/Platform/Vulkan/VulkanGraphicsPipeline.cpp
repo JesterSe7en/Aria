@@ -216,6 +216,7 @@ void VulkanGraphicsPipeline::CreateFrameBuffers() {
     ARIA_VK_CHECK_RESULT_AND_ERROR(result, "Failed to create frame buffer")
   }
 }
+
 void VulkanGraphicsPipeline::AddToShaderStages(VkShaderModule &shader_module, ShaderType type) {
   VkPipelineShaderStageCreateInfo create_info;
   create_info.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
@@ -238,7 +239,9 @@ void VulkanGraphicsPipeline::AddToShaderStages(VkShaderModule &shader_module, Sh
   create_info.pSpecializationInfo = nullptr;
 
   shader_stages_.push_back(create_info);
-  //TODO: create an observer pattern here to monitor addition/removal of shader stages
+  UpdatePipeline();
 }
+
+void VulkanGraphicsPipeline::UpdatePipeline() {}
 
 }// namespace aria
