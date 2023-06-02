@@ -41,6 +41,8 @@ class VulkanLib {
   PFN_vkCreateCommandPool ptr_vk_create_command_pool_ = nullptr;
   PFN_vkDestroyCommandPool ptr_vk_destroy_command_pool_ = nullptr;
   PFN_vkAllocateCommandBuffers ptr_vk_allocate_command_buffers_ = nullptr;
+  PFN_vkCreateShaderModule ptr_vk_create_shader_module_ = nullptr;
+  PFN_vkDestroyShaderModule ptr_vk_destroy_shader_module_ = nullptr;
 
  private:
   void Init();

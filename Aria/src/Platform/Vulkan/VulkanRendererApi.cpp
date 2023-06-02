@@ -69,28 +69,9 @@ void VulkanRendererApi::DrawIndexed(const Ref<VertexArray> &vertex_array) { ARIA
 
 void VulkanRendererApi::CreatePipeline() { ARIA_CORE_ASSERT(false, "Not Implemented") }
 
-//void VulkanRendererApi::AddToPipeline(VkShaderModule &shader_module, ShaderType type) {
-//  VkPipelineShaderStageCreateInfo create_info;
-//  create_info.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
-//  create_info.flags = 0;
-//  create_info.pNext = nullptr;
-//
-//  switch (type) {
-//    case ShaderType::VERTEX:
-//      create_info.stage = VK_SHADER_STAGE_VERTEX_BIT;
-//      break;
-//    case ShaderType::FRAGMENT:
-//      create_info.stage = VK_SHADER_STAGE_FRAGMENT_BIT;
-//      break;
-//    default:
-//      ARIA_CORE_ASSERT(false, "Unknown shader type; cannot create VkShaderModule")
-//      break;
-//  }
-//  create_info.module = shader_module;
-//  create_info.pName = "main";
-//  create_info.pSpecializationInfo = nullptr;
-//  shader_stages_.push_back(create_info);
-//}
+void VulkanRendererApi::AddToPipeline(VkShaderModule &shader_module, ShaderType type) {
+  VulkanGraphicsPipeline::GetInstance().AddToShaderStages(shader_module, type);
+}
 
 //void VulkanRendererApi::CreatePipeline() { VulkanGraphicsPipeline::GetInstance().Init(); }
 

@@ -48,5 +48,6 @@ class VulkanRendererApi : public RendererApi {
 
   void CreateCommandPool();
   void CreateCommandBuffer();
+  void AddToPipeline(VkShaderModule &shader_module, ShaderType type);
 };
 }// namespace aria

@@ -100,6 +100,10 @@ void VulkanLib::InitDeviceFunctions(VkDevice device) {
       reinterpret_cast<PFN_vkDestroyCommandPool>(ptr_vk_get_device_proc_addr_(device, "vkDestroyCommandPool"));
   ptr_vk_allocate_command_buffers_ =
       reinterpret_cast<PFN_vkAllocateCommandBuffers>(ptr_vk_get_device_proc_addr_(device, "vkAllocateCommandBuffers"));
+  ptr_vk_create_shader_module_ =
+      reinterpret_cast<PFN_vkCreateShaderModule>(ptr_vk_get_device_proc_addr_(device, "vkCreateShaderModule"));
+  ptr_vk_destroy_shader_module_ =
+      reinterpret_cast<PFN_vkDestroyShaderModule>(ptr_vk_get_device_proc_addr_(device, "vkDestroyShaderModule"));
 }
 
 void VulkanLib::Cleanup() {
