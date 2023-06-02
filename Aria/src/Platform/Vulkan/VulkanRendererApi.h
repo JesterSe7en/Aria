@@ -31,6 +31,13 @@ class VulkanRendererApi : public RendererApi {
 
   void CreatePipeline() override;
 
+  static VulkanRendererApi &GetInstance() {
+    static VulkanRendererApi instance;
+    return instance;
+  }
+
+  void AddToPipeline(VkShaderModule &shader_module, ShaderType type);
+
  private:
   Ref<VulkanInstance> p_vulkan_instance_;
 
@@ -48,6 +55,5 @@ class VulkanRendererApi : public RendererApi {
 
   void CreateCommandPool();
   void CreateCommandBuffer();
-  void AddToPipeline(VkShaderModule &shader_module, ShaderType type);
 };
 }// namespace aria
