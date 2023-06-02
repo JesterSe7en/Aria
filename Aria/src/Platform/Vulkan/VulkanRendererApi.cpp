@@ -125,46 +125,4 @@ void VulkanRendererApi::CreateCommandBuffer() {
       VulkanDeviceManager::GetInstance().GetLogicalDevice(), &buffer_alloc_info, command_buffers_.data());
   ARIA_VK_CHECK_RESULT_AND_ERROR(result, "Failed to allocate command buffers")
 }
-//
-//VkCommandBuffer VulkanRendererApi::CreateVkCommandBuffer() {
-//  VkCommandBufferAllocateInfo buffer_alloc_info;
-//  buffer_alloc_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-//  buffer_alloc_info.pNext = nullptr;
-//  buffer_alloc_info.commandPool = command_pool_;
-//  buffer_alloc_info.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-//  buffer_alloc_info.commandBufferCount = 1;
-//
-//  VkResult result = vkAllocateCommandBuffers(VulkanDeviceManager::GetInstance().GetLogicalDevice(), &buffer_alloc_info,
-//                                             &command_buffer_);
-//  if (result != VK_SUCCESS) {
-//    ARIA_CORE_ERROR("Failed to create command buffer - {0}", string_VkResult(result))
-//    return nullptr;
-//  }
-//  return command_buffer_;
-//}
-//
-//bool VulkanRendererApi::HasValidationSupport() {
-//  // how many instance layers can the vulkan system support?
-//  std::uint32_t layer_count;
-//  vkEnumerateInstanceLayerProperties(&layer_count, nullptr);
-//
-//  std::vector<VkLayerProperties> available_layers(layer_count);
-//  vkEnumerateInstanceLayerProperties(&layer_count, available_layers.data());
-//
-//  for (const char *layer_name : kValidationLayers) {
-//    bool layer_found = false;
-//
-//    for (const auto &kLayerProperties : available_layers) {
-//      if (strcmp(layer_name, kLayerProperties.layerName) == 0) {
-//        layer_found = true;
-//        break;
-//      }
-//    }
-//
-//    if (!layer_found) { return false; }
-//  }
-//  return true;
-//}
-//
-
 }// namespace aria

@@ -13,7 +13,7 @@ uint32_t VulkanInstance::app_version_ = VK_MAKE_VERSION(1, 0, 0);
 uint32_t VulkanInstance::engine_version_ = VK_MAKE_VERSION(1, 0, 0);
 uint32_t VulkanInstance::api_version_ = VK_VERSION_1_3;
 
-std::vector<const char *> VulkanInstance::validation_layers_ = {"VK_LAYER_KHRONOS_validation"};
+const std::vector<const char *> VulkanInstance::kValidationLayers = {"VK_LAYER_KHRONOS_validation"};
 
 VulkanInstance::VulkanInstance(VulkanInstance::VulkanInstanceCreateInfo &create_info) : vk_surface_(VK_NULL_HANDLE) {
 
@@ -33,7 +33,7 @@ VulkanInstance::VulkanInstance(VulkanInstance::VulkanInstanceCreateInfo &create_
 
   if (create_info.enable_validation) {
     instance_builder.enable_validation_layers(create_info.enable_validation);
-    for (const char *layer_name : validation_layers_) {
+    for (const char *layer_name : kValidationLayers) {
       if (sys_info.is_layer_available(layer_name)) { instance_builder.enable_layer(layer_name); }
     }
 

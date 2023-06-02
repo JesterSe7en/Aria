@@ -31,25 +31,11 @@ class VulkanRendererApi : public RendererApi {
 
   void CreatePipeline() override;
 
-  //  static VulkanRendererApi &GetInstance() {
-  //    static VulkanRendererApi instance_;
-  //    return instance_;
-  //  }
-
-  //  VkSurfaceKHR &GetVkSurfaceKhr() { return surface_; }
-  //  Ref<VulkanInstance> GetVulkanInstance() const { return p_vulkan_instance_; }
-
-  //  void AddToPipeline(VkShaderModule &shader_module, ShaderType type);
-  //  void CreatePipeline() override;
-
-  constexpr static const std::array<const char *, 1> kValidationLayers = {"VK_LAYER_KHRONOS_validation"};
-
  private:
   Ref<VulkanInstance> p_vulkan_instance_;
 
   VkInstance p_vk_instance_;
   VkSurfaceKHR surface_;
-  //  VkRenderPass vk_render_pass_;
   VkCommandPool command_pool_;
   std::vector<VkCommandBuffer> command_buffers_;
   std::vector<VkPipelineShaderStageCreateInfo> shader_stages_;
@@ -57,14 +43,10 @@ class VulkanRendererApi : public RendererApi {
   VkQueue present_queue_;
   VkQueue graphics_queue_;
 
-  //  VulkanDebugMessenger vulkan_debug_messenger_;
-
   const std::vector<const char *> device_extensions_ = {"VK_KHR_swapchain"};
   const std::vector<VkDynamicState> dynamic_states_ = {VK_DYNAMIC_STATE_VIEWPORT, VK_DYNAMIC_STATE_SCISSOR};
 
-  //  void CreateRenderPass();
   void CreateCommandPool();
   void CreateCommandBuffer();
-  //  static bool HasValidationSupport();
 };
 }// namespace aria

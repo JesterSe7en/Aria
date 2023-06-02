@@ -30,7 +30,7 @@ class VulkanInstance {
   static uint32_t engine_version_;
   static uint32_t api_version_;
 
-  static std::vector<const char *> validation_layers_;
+  static const std::vector<const char *> kValidationLayers;
 
   vkb::Instance vkb_instance_;
   VkSurfaceKHR vk_surface_;
