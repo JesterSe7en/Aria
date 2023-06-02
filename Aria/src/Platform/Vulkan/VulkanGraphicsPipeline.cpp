@@ -2,6 +2,7 @@
 #include "VulkanGraphicsPipeline.h"
 #include "Aria/Core/Log.h"
 #include "VulkanDeviceManager.h"
+#include "VulkanError.h"
 #include "VulkanLib.h"
 #include "vulkan/vk_enum_string_helper.h"
 
@@ -159,11 +160,7 @@ void VulkanGraphicsPipeline::CreateGraphicsPipeline() {
 
   VkResult result = VulkanLib::GetInstance().ptr_vk_create_pipeline_layout_(
       VulkanDeviceManager::GetInstance().GetLogicalDevice(), &pipeline_layout_info, nullptr, &vk_pipeline_layout_);
-  if (result != VK_SUCCESS) {
-    ARIA_CORE_ERROR("Failed to create pipeline layout - {0}", string_VkResult(result))
-  } else {
-    ARIA_CORE_INFO("Successfully created pipeline layout");
-  }
+  ARIA_VK_CHECK_RESULT_AND_ASSERT(result, "Failed to create pipeline layout")
 
   VkGraphicsPipelineCreateInfo pipeline_info{};
   pipeline_info.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
@@ -190,11 +187,7 @@ void VulkanGraphicsPipeline::CreateGraphicsPipeline() {
   result = VulkanLib::GetInstance().ptr_vk_create_graphics_pipelines_(
       VulkanDeviceManager::GetInstance().GetLogicalDevice(), VK_NULL_HANDLE, 1, &pipeline_info, nullptr,
       &vk_graphics_pipeline_);
-  if (result != VK_SUCCESS) {
-    ARIA_CORE_ERROR("Failed to create graphics pipeline - {0}", string_VkResult(result))
-  } else {
-    ARIA_CORE_INFO("Successfully created graphics pipeline");
-  }
+  ARIA_VK_CHECK_RESULT_AND_ERROR(result, "Failed to create graphics pipeline - {0}", string_VkResult(result))
 }
 
 void VulkanGraphicsPipeline::CreateFrameBuffers() {
@@ -221,11 +214,7 @@ void VulkanGraphicsPipeline::CreateFrameBuffers() {
 
     VkResult result = VulkanLib::GetInstance().ptr_vk_create_framebuffer_(
         VulkanDeviceManager::GetInstance().GetLogicalDevice(), &frame_buffer_info, nullptr, &vk_frame_buffers_[i]);
-    if (result != VK_SUCCESS) {
-      ARIA_CORE_ERROR("Failed to create frame buffer - {0}", string_VkResult(result))
-    } else {
-      ARIA_CORE_INFO("Successfully created frame buffer");
-    }
+    if (result != VK_SUCCESS) { ARIA_CORE_ERROR("Failed to create frame buffer - {0}", string_VkResult(result)) }
   }
 }
 }// namespace aria

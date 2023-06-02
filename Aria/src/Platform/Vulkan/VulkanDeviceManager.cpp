@@ -112,10 +112,7 @@ void VulkanDeviceManager::CreateLogicalDevice() {
   vkb::DeviceBuilder device_builder(physical_device_);
   auto device_ret = device_builder.build();
   ARIA_VKB_CHECK_RESULT_AND_ERROR(device_ret, "Failed to create logical device")
-  if (device_ret.has_value()) {
-    logical_device_ = device_ret.value();
-    ARIA_CORE_INFO("Successfully created logical device")
-  }
+  if (device_ret.has_value()) { logical_device_ = device_ret.value(); }
 }
 
 void VulkanDeviceManager::CreateSwapchain() {
@@ -128,10 +125,7 @@ void VulkanDeviceManager::CreateSwapchain() {
   //  default flag is VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT.
   auto swapchain_ret = swapchain_builder.build();
   ARIA_VKB_CHECK_RESULT_AND_ERROR(swapchain_ret, "Failed to create swapchain")
-  if (swapchain_ret.has_value()) {
-    swapchain_ = swapchain_ret.value();
-    ARIA_CORE_INFO("Successfully created swapchain");
-  }
+  if (swapchain_ret.has_value()) { swapchain_ = swapchain_ret.value(); }
 }
 
 }// namespace aria

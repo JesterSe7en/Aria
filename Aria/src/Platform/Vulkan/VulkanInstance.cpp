@@ -66,7 +66,6 @@ void VulkanInstance::CreateWindowSurface() {
   auto *window = (GLFWwindow *) Application::Get().GetWindow().GetNativeWindow();
   VkResult result = glfwCreateWindowSurface(vkb_instance_.instance, window, nullptr, &vk_surface_);
   ARIA_VK_CHECK_RESULT_AND_ERROR(result, "Failed to create window surface")
-  if (result == VK_SUCCESS) { ARIA_CORE_INFO("Successfully created window surface"); }
 }
 
 }// namespace aria
