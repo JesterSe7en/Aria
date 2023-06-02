@@ -3,6 +3,7 @@
 #include "Aria/Core/Log.h"
 #include "VkBootstrap.h"
 #include "VulkanError.h"
+#include "VulkanLib.h"
 
 namespace aria {
 
@@ -112,7 +113,10 @@ void VulkanDeviceManager::CreateLogicalDevice() {
   vkb::DeviceBuilder device_builder(physical_device_);
   auto device_ret = device_builder.build();
   ARIA_VKB_CHECK_RESULT_AND_ERROR(device_ret, "Failed to create logical device")
-  if (device_ret.has_value()) { logical_device_ = device_ret.value(); }
+  if (device_ret.has_value()) {
+    logical_device_ = device_ret.value();
+    VulkanLib::GetInstance().InitDeviceFunctions(VulkanDeviceManager::GetInstance().GetLogicalDevice());
+  }
 }
 
 void VulkanDeviceManager::CreateSwapchain() {

@@ -45,8 +45,6 @@ void VulkanGraphicsPipeline::CreateGraphicsPipeline() {
 
   // std::array<VkPipelineShaderStageCreateInfo, 2> shader_stages = {vertex_shader_stage_info, frag_shader_stage_info};
 
-  VulkanLib::GetInstance().InitDeviceFunctions(VulkanDeviceManager::GetInstance().GetLogicalDevice());
-
   vkb::Swapchain swapchain = VulkanDeviceManager::GetInstance().GetSwapChain();
 
   // ======================== Dynamic Create Info ========================
