@@ -25,11 +25,11 @@ class VulkanGraphicsPipeline {
   std::vector<VkFramebuffer> GetFrameBuffers() const { return vk_frame_buffers_; }
 
  private:
-  VulkanGraphicsPipeline() = default;
+  VulkanGraphicsPipeline();
 
-  constexpr static const std::array<VkDynamicState, 2> dynamic_states_ = {VK_DYNAMIC_STATE_VIEWPORT,
-                                                                          VK_DYNAMIC_STATE_SCISSOR};
-  void InitPipelineCache();
+  constexpr static const std::array<VkDynamicState, 2> kDynamicStates = {VK_DYNAMIC_STATE_VIEWPORT,
+                                                                         VK_DYNAMIC_STATE_SCISSOR};
+  //  void InitPipelineCache();
   //  void UpdatePipeline();
   void DestroyPipeline();
   static bool IsAllModulesSet();
@@ -38,7 +38,7 @@ class VulkanGraphicsPipeline {
   std::vector<VkFramebuffer> vk_frame_buffers_;
   VkPipelineLayout vk_pipeline_layout_;
   VkPipeline vk_graphics_pipeline_;
-  VkPipelineCache vk_pipeline_cache_;
+  //  VkPipelineCache vk_pipeline_cache_;
   static std::vector<VkPipelineShaderStageCreateInfo> shader_stages_;
 };
 

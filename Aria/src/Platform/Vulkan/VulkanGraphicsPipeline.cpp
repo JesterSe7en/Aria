@@ -16,8 +16,8 @@ VulkanGraphicsPipeline::~VulkanGraphicsPipeline() {
     vklib.ptr_vk_destroy_framebuffer(VulkanDeviceManager::GetInstance().GetLogicalDevice(), buffer, nullptr);
   }
 
-  vklib.ptr_vk_destroy_pipeline_cache(VulkanDeviceManager::GetInstance().GetLogicalDevice(), vk_pipeline_cache_,
-                                      nullptr);
+  //  vklib.ptr_vk_destroy_pipeline_cache(VulkanDeviceManager::GetInstance().GetLogicalDevice(), vk_pipeline_cache_,
+  //                                      nullptr);
   vklib.ptr_vk_destroy_pipeline(VulkanDeviceManager::GetInstance().GetLogicalDevice(), vk_graphics_pipeline_, nullptr);
   vklib.ptr_vk_destroy_pipeline_layout(VulkanDeviceManager::GetInstance().GetLogicalDevice(), vk_pipeline_layout_,
                                        nullptr);
@@ -39,8 +39,8 @@ void VulkanGraphicsPipeline::CreateGraphicsPipeline() {
 
   VkPipelineDynamicStateCreateInfo dynamic_state{};
   dynamic_state.sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
-  dynamic_state.dynamicStateCount = static_cast<uint32_t>(dynamic_states_.size());
-  dynamic_state.pDynamicStates = dynamic_states_.data();
+  dynamic_state.dynamicStateCount = static_cast<uint32_t>(kDynamicStates.size());
+  dynamic_state.pDynamicStates = kDynamicStates.data();
 
   // ======================== Vertex Input Create Info ========================
   VkPipelineVertexInputStateCreateInfo vertex_input_state{};
@@ -235,14 +235,22 @@ void VulkanGraphicsPipeline::AddToShaderStages(VkShaderModule &shader_module, Sh
   }
 }
 
-void VulkanGraphicsPipeline::InitPipelineCache() {
-  VkPipelineCacheCreateInfo pipeline_cache_info = {};
-  pipeline_cache_info.sType = VK_STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO;
-
-  VkResult result = VulkanLib::GetInstance().ptr_vk_create_pipeline_cache(
-      VulkanDeviceManager::GetInstance().GetLogicalDevice(), &pipeline_cache_info, nullptr, &vk_pipeline_cache_);
-  ARIA_VK_CHECK_RESULT_AND_ERROR(result, "Failed to create pipeline cache")
+VulkanGraphicsPipeline::VulkanGraphicsPipeline() {
+  vk_graphics_pipeline_ = nullptr;
+  //  vk_pipeline_cache_ = nullptr;
+  vk_pipeline_layout_ = nullptr;
+  vk_render_pass_ = nullptr;
+  vk_frame_buffers_ = {};
 }
+
+//void VulkanGraphicsPipeline::InitPipelineCache() {
+//  VkPipelineCacheCreateInfo pipeline_cache_info = {};
+//  pipeline_cache_info.sType = VK_STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO;
+//
+//  VkResult result = VulkanLib::GetInstance().ptr_vk_create_pipeline_cache(
+//      VulkanDeviceManager::GetInstance().GetLogicalDevice(), &pipeline_cache_info, nullptr, &vk_pipeline_cache_);
+//  ARIA_VK_CHECK_RESULT_AND_ERROR(result, "Failed to create pipeline cache")
+//}
 
 void VulkanGraphicsPipeline::DestroyPipeline() {
   VulkanLib::GetInstance().ptr_vk_destroy_pipeline(VulkanDeviceManager::GetInstance().GetLogicalDevice(),
