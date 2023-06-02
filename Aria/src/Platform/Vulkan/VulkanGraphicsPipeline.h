@@ -30,7 +30,8 @@ class VulkanGraphicsPipeline {
   constexpr static const std::array<VkDynamicState, 2> dynamic_states_ = {VK_DYNAMIC_STATE_VIEWPORT,
                                                                           VK_DYNAMIC_STATE_SCISSOR};
   void InitPipelineCache();
-  void UpdatePipeline();
+  //  void UpdatePipeline();
+  void DestroyPipeline();
   static bool IsAllModulesSet();
 
   Ref<VulkanRenderPass> vk_render_pass_;

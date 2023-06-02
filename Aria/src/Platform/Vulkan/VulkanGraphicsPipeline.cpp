@@ -25,7 +25,7 @@ VulkanGraphicsPipeline::~VulkanGraphicsPipeline() {
 
 void VulkanGraphicsPipeline::Init() {
   vk_render_pass_ = VulkanRenderPass::Create();
-  InitPipelineCache();
+  //  InitPipelineCache();
   // Check if shader stages have their modules set
   if (IsAllModulesSet()) { CreateGraphicsPipeline(); }
   CreateFrameBuffers();
@@ -89,6 +89,7 @@ void VulkanGraphicsPipeline::CreateGraphicsPipeline() {
   rasterizer.pNext = nullptr;
   rasterizer.flags = 0;
   rasterizer.depthClampEnable = VK_FALSE;
+  rasterizer.rasterizerDiscardEnable = VK_FALSE;
   rasterizer.polygonMode = VK_POLYGON_MODE_FILL;
   rasterizer.lineWidth = 1.0f;
   rasterizer.cullMode = VK_CULL_MODE_BACK_BIT;
@@ -227,7 +228,9 @@ void VulkanGraphicsPipeline::AddToShaderStages(VkShaderModule &shader_module, Sh
     if (vk_graphics_pipeline_ == nullptr) {
       CreateGraphicsPipeline();
     } else {
-      UpdatePipeline();
+      DestroyPipeline();
+      CreateGraphicsPipeline();
+      // UpdatePipeline();
     }
   }
 }
@@ -241,22 +244,27 @@ void VulkanGraphicsPipeline::InitPipelineCache() {
   ARIA_VK_CHECK_RESULT_AND_ERROR(result, "Failed to create pipeline cache")
 }
 
-void VulkanGraphicsPipeline::UpdatePipeline() {
-  VkGraphicsPipelineCreateInfo pipeline_info{};
-  pipeline_info.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
-  pipeline_info.flags = VK_PIPELINE_CREATE_DERIVATIVE_BIT;
-  pipeline_info.pNext = nullptr;
-  pipeline_info.basePipelineHandle = vk_graphics_pipeline_;
-  pipeline_info.basePipelineIndex = -1;
-
-  pipeline_info.stageCount = static_cast<std::uint32_t>(shader_stages_.size());
-  pipeline_info.pStages = shader_stages_.data();
-
-  VkResult result = VulkanLib::GetInstance().ptr_vk_create_graphics_pipelines(
-      VulkanDeviceManager::GetInstance().GetLogicalDevice(), vk_pipeline_cache_, 1, &pipeline_info, nullptr,
-      &vk_graphics_pipeline_);
-  ARIA_VK_CHECK_RESULT_AND_ERROR(result, "Failed to update graphics pipeline")
+void VulkanGraphicsPipeline::DestroyPipeline() {
+  VulkanLib::GetInstance().ptr_vk_destroy_pipeline(VulkanDeviceManager::GetInstance().GetLogicalDevice(),
+                                                   vk_graphics_pipeline_, nullptr);
 }
+
+//void VulkanGraphicsPipeline::UpdatePipeline() {
+//  VkGraphicsPipelineCreateInfo pipeline_info{};
+//  pipeline_info.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
+//  pipeline_info.flags = VK_PIPELINE_CREATE_DERIVATIVE_BIT;
+//  pipeline_info.pNext = nullptr;
+//  pipeline_info.basePipelineHandle = vk_graphics_pipeline_;
+//  pipeline_info.basePipelineIndex = -1;
+//
+//  pipeline_info.stageCount = static_cast<std::uint32_t>(shader_stages_.size());
+//  pipeline_info.pStages = shader_stages_.data();
+//
+//  VkResult result = VulkanLib::GetInstance().ptr_vk_create_graphics_pipelines(
+//      VulkanDeviceManager::GetInstance().GetLogicalDevice(), vk_pipeline_cache_, 1, &pipeline_info, nullptr,
+//      &vk_graphics_pipeline_);
+//  ARIA_VK_CHECK_RESULT_AND_ERROR(result, "Failed to update graphics pipeline")
+//}
 
 bool VulkanGraphicsPipeline::IsAllModulesSet() {
   if (shader_stages_.empty()) { return false; }

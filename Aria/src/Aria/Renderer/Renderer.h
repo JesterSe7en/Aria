@@ -19,7 +19,6 @@ class Renderer {
                      const glm::mat4 transform = glm::mat4(1.0f));
 
   inline static RendererApi::Api GetApi() { return RendererApi::GetApi(); }
-  static void CreateCommandBuffer();
 
  private:
   struct SceneData {

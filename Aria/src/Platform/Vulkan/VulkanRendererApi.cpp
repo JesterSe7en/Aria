@@ -82,8 +82,6 @@ void VulkanRendererApi::AddToPipeline(VkShaderModule &shader_module, ShaderType 
   VulkanGraphicsPipeline::GetInstance().AddToShaderStages(shader_module, type);
 }
 
-//void VulkanRendererApi::CreatePipeline() { VulkanGraphicsPipeline::GetInstance().Init(); }
-
 void VulkanRendererApi::CreateCommandPool() {
   VkCommandPoolCreateInfo cmd_pool_info;
   cmd_pool_info.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
