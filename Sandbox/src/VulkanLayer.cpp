@@ -1,4 +1,3 @@
-//#include "Platform/Vulkan/VulkanSwapChain.h"
 #include "VulkanLayer.h"
 
 VulkanLayer::VulkanLayer() : Layer("Vulkan Layer") {
@@ -21,11 +20,11 @@ VulkanLayer::VulkanLayer() : Layer("Vulkan Layer") {
   //    ARIA_ERROR("Cannot create semaphores - {0}", string_VkResult(static_cast<VkResult>(result)))
   //  }
 
-  //  vertex_shader_ =
-  //      shader_library_.Load("C:/Users/alyxc/Workspace/Aria/Sandbox/assets/shaders/vert.spv", aria::ShaderType::VERTEX);
-  //  frag_shader_ =
-  //      shader_library_.Load("C:/Users/alyxc/Workspace/Aria/Sandbox/assets/shaders/frag.spv", aria::ShaderType::FRAGMENT);
-  //  aria::Renderer::CreatePipeline();
+  vertex_shader_ =
+      shader_library_.Load("C:/Users/alyxc/Workspace/Aria/Sandbox/assets/shaders/vert.spv", aria::ShaderType::VERTEX);
+  frag_shader_ =
+      shader_library_.Load("C:/Users/alyxc/Workspace/Aria/Sandbox/assets/shaders/frag.spv", aria::ShaderType::FRAGMENT);
+  aria::Renderer::CreatePipeline();
 }
 
 VulkanLayer::~VulkanLayer() {
