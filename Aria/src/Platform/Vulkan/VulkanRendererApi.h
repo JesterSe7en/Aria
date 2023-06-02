@@ -32,8 +32,8 @@ class VulkanRendererApi : public RendererApi {
   void CreatePipeline() override;
 
   static VulkanRendererApi &GetInstance() {
-    static VulkanRendererApi instance;
-    return instance;
+    static VulkanRendererApi instance_;
+    return instance_;
   }
 
   void AddToPipeline(VkShaderModule &shader_module, ShaderType type);
@@ -50,10 +50,20 @@ class VulkanRendererApi : public RendererApi {
   VkQueue present_queue_;
   VkQueue graphics_queue_;
 
+  // sync objects
+  std::vector<VkSemaphore> available_semaphores;
+  std::vector<VkSemaphore> finished_semaphore;
+  std::vector<VkFence> in_flight_fences;
+  std::vector<VkFence> image_in_flight;
+
+  const int max_frames_in_flight_ = 2;
+
   const std::vector<const char *> device_extensions_ = {"VK_KHR_swapchain"};
   const std::vector<VkDynamicState> dynamic_states_ = {VK_DYNAMIC_STATE_VIEWPORT, VK_DYNAMIC_STATE_SCISSOR};
 
   void CreateCommandPool();
   void CreateCommandBuffer();
+  void CreateSyncObjects();
+  void GetQueues();
 };
 }// namespace aria

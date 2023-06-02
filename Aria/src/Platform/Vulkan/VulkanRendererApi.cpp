@@ -20,6 +20,22 @@ VulkanRendererApi::VulkanRendererApi() {
 VulkanRendererApi::~VulkanRendererApi() {
   auto vklib = VulkanLib::GetInstance();
   vklib.ptr_vk_destroy_command_pool_(VulkanDeviceManager::GetInstance().GetLogicalDevice(), command_pool_, nullptr);
+
+  for (auto semaphore : available_semaphores) {
+    vklib.ptr_vk_destroy_semaphore_(VulkanDeviceManager::GetInstance().GetLogicalDevice(), semaphore, nullptr);
+  }
+  for (auto semaphore : finished_semaphore) {
+    vklib.ptr_vk_destroy_semaphore_(VulkanDeviceManager::GetInstance().GetLogicalDevice(), semaphore, nullptr);
+  }
+
+  for (auto fence : in_flight_fences) {
+    vklib.ptr_vk_destroy_fence_(VulkanDeviceManager::GetInstance().GetLogicalDevice(), fence, nullptr);
+  }
+
+  for (auto fence : image_in_flight) {
+    vklib.ptr_vk_destroy_fence_(VulkanDeviceManager::GetInstance().GetLogicalDevice(), fence, nullptr);
+  }
+
   //  vkDestroyRenderPass(VulkanDeviceManager::GetInstance().GetLogicalDevice(), vk_render_pass_, nullptr);
   //  vkDestroySurfaceKHR(p_vk_instance_, surface_, nullptr);
   //  vkDestroyInstance(p_vk_instance_, nullptr);
@@ -43,24 +59,18 @@ void VulkanRendererApi::Init() {
 
   p_vulkan_instance_ = VulkanInstance::Create(create_info);
   p_vk_instance_ = p_vulkan_instance_->GetVKBInstance().instance;
+
   VulkanDeviceManager::GetInstance().Init(p_vulkan_instance_);
 
-  // Get Queues
-  auto vk_device = VulkanDeviceManager::GetInstance().GetLogicalDevice();
-
-  auto graphics_queue_ret = vk_device.get_queue(vkb::QueueType::graphics);
-  ARIA_VKB_CHECK_RESULT_AND_ERROR(graphics_queue_ret, "Failed to get graphics queue");
-  graphics_queue_ = graphics_queue_ret.value();
-
-  auto present_queue_ret = vk_device.get_queue(vkb::QueueType::present);
-  ARIA_VKB_CHECK_RESULT_AND_ERROR(present_queue_ret, "Failed to get present queue");
-  present_queue_ = present_queue_ret.value();
+  GetQueues();
 
   VulkanGraphicsPipeline::GetInstance().Init();
 
   CreateCommandPool();
   CreateCommandBuffer();
+  CreateSyncObjects();
 }
+
 void VulkanRendererApi::Clear() { ARIA_CORE_ASSERT(false, "Not Implemented") }
 
 void VulkanRendererApi::SetClearColor(const glm::vec4 color) { ARIA_CORE_ASSERT(false, "Not Implemented") }
@@ -105,5 +115,48 @@ void VulkanRendererApi::CreateCommandBuffer() {
   VkResult result = VulkanLib::GetInstance().ptr_vk_allocate_command_buffers_(
       VulkanDeviceManager::GetInstance().GetLogicalDevice(), &buffer_alloc_info, command_buffers_.data());
   ARIA_VK_CHECK_RESULT_AND_ERROR(result, "Failed to allocate command buffers")
+}
+
+void VulkanRendererApi::CreateSyncObjects() {
+  available_semaphores.resize(max_frames_in_flight_);
+  finished_semaphore.resize(max_frames_in_flight_);
+  in_flight_fences.resize(max_frames_in_flight_);
+  image_in_flight.resize(VulkanDeviceManager::GetInstance().GetSwapChain().image_count);
+
+  VkSemaphoreCreateInfo semaphore_info;
+  semaphore_info.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
+  semaphore_info.pNext = nullptr;
+  semaphore_info.flags = 0;
+
+  VkFenceCreateInfo fence_info;
+  fence_info.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
+  fence_info.pNext = nullptr;
+  fence_info.flags = VK_FENCE_CREATE_SIGNALED_BIT;
+
+  for (int i = 0; i < max_frames_in_flight_; ++i) {
+    VkResult result = VulkanLib::GetInstance().ptr_vk_create_semaphore_(
+        VulkanDeviceManager::GetInstance().GetLogicalDevice(), &semaphore_info, nullptr, &available_semaphores[i]);
+    ARIA_VK_CHECK_RESULT_AND_ERROR(result, "Failed to create semaphore")
+    result = VulkanLib::GetInstance().ptr_vk_create_semaphore_(VulkanDeviceManager::GetInstance().GetLogicalDevice(),
+                                                               &semaphore_info, nullptr, &finished_semaphore[i]);
+    ARIA_VK_CHECK_RESULT_AND_ERROR(result, "Failed to create semaphore")
+
+    result = VulkanLib::GetInstance().ptr_vk_create_fence_(VulkanDeviceManager::GetInstance().GetLogicalDevice(),
+                                                           &fence_info, nullptr, &in_flight_fences[i]);
+    ARIA_VK_CHECK_RESULT_AND_ERROR(result, "Failed to create fence")
+  }
+}
+
+void VulkanRendererApi::GetQueues() {
+  // Get Queues
+  auto vk_device = VulkanDeviceManager::GetInstance().GetLogicalDevice();
+
+  auto graphics_queue_ret = vk_device.get_queue(vkb::QueueType::graphics);
+  ARIA_VKB_CHECK_RESULT_AND_ERROR(graphics_queue_ret, "Failed to get graphics queue");
+  graphics_queue_ = graphics_queue_ret.value();
+
+  auto present_queue_ret = vk_device.get_queue(vkb::QueueType::present);
+  ARIA_VKB_CHECK_RESULT_AND_ERROR(present_queue_ret, "Failed to get present queue");
+  present_queue_ = present_queue_ret.value();
 }
 }// namespace aria

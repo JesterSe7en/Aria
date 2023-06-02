@@ -1,25 +1,6 @@
 #include "VulkanLayer.h"
 
 VulkanLayer::VulkanLayer() : Layer("Vulkan Layer") {
-  //  auto vk_device = aria::VulkanDeviceManager::GetInstance().GetLogicalDevice();
-  //  VkSemaphoreCreateInfo semaphore_info;
-  //  semaphore_info.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
-  //  semaphore_info.flags = 0;
-  //  semaphore_info.pNext = nullptr;
-  //
-  //  VkFenceCreateInfo fence_info;
-  //  fence_info.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
-  //  fence_info.flags =
-  //      VK_FENCE_CREATE_SIGNALED_BIT;  // to avoid hangup on first frame - we are waiting on fences in on_update()
-  //  fence_info.pNext = nullptr;
-  //
-  //  bool result = vkCreateSemaphore(vk_device, &semaphore_info, nullptr, &image_available_semaphore_) &&
-  //      vkCreateSemaphore(vk_device, &semaphore_info, nullptr, &render_finished_semaphore_) &&
-  //      vkCreateFence(vk_device, &fence_info, nullptr, &in_flight_fence_);
-  //  if (result != VK_SUCCESS) {
-  //    ARIA_ERROR("Cannot create semaphores - {0}", string_VkResult(static_cast<VkResult>(result)))
-  //  }
-
   vertex_shader_ =
       shader_library_.Load("C:/Users/alyxc/Workspace/Aria/Sandbox/assets/shaders/vert.spv", aria::ShaderType::VERTEX);
   frag_shader_ =

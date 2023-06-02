@@ -19,9 +19,4 @@ class VulkanLayer : public aria::Layer {
   aria::Ref<aria::Shader> vertex_shader_;
   aria::Ref<aria::Shader> frag_shader_;
   aria::ShaderLibrary shader_library_;
-  //  aria::VulkanCommandBuffer command_buffer_;
-
-  //  VkSemaphore image_available_semaphore_;
-  //  VkSemaphore render_finished_semaphore_;
-  //  VkFence in_flight_fence_;
 };

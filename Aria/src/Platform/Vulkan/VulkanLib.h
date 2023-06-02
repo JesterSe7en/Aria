@@ -43,6 +43,10 @@ class VulkanLib {
   PFN_vkAllocateCommandBuffers ptr_vk_allocate_command_buffers_ = nullptr;
   PFN_vkCreateShaderModule ptr_vk_create_shader_module_ = nullptr;
   PFN_vkDestroyShaderModule ptr_vk_destroy_shader_module_ = nullptr;
+  PFN_vkCreateSemaphore ptr_vk_create_semaphore_ = nullptr;
+  PFN_vkDestroySemaphore ptr_vk_destroy_semaphore_ = nullptr;
+  PFN_vkCreateFence ptr_vk_create_fence_ = nullptr;
+  PFN_vkDestroyFence ptr_vk_destroy_fence_ = nullptr;
 
  private:
   void Init();

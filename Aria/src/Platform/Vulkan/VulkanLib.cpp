@@ -104,6 +104,12 @@ void VulkanLib::InitDeviceFunctions(VkDevice device) {
       reinterpret_cast<PFN_vkCreateShaderModule>(ptr_vk_get_device_proc_addr_(device, "vkCreateShaderModule"));
   ptr_vk_destroy_shader_module_ =
       reinterpret_cast<PFN_vkDestroyShaderModule>(ptr_vk_get_device_proc_addr_(device, "vkDestroyShaderModule"));
+  ptr_vk_create_semaphore_ =
+      reinterpret_cast<PFN_vkCreateSemaphore>(ptr_vk_get_device_proc_addr_(device, "vkCreateSemaphore"));
+  ptr_vk_destroy_semaphore_ =
+      reinterpret_cast<PFN_vkDestroySemaphore>(ptr_vk_get_device_proc_addr_(device, "vkDestroySemaphore"));
+  ptr_vk_create_fence_ = reinterpret_cast<PFN_vkCreateFence>(ptr_vk_get_device_proc_addr_(device, "vkCreateFence"));
+  ptr_vk_destroy_fence_ = reinterpret_cast<PFN_vkDestroyFence>(ptr_vk_get_device_proc_addr_(device, "vkDestroyFence"));
 }
 
 void VulkanLib::Cleanup() {
