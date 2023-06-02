@@ -18,10 +18,7 @@ const std::vector<const char *> VulkanInstance::kValidationLayers = {"VK_LAYER_K
 VulkanInstance::VulkanInstance(VulkanInstance::VulkanInstanceCreateInfo &create_info) : vk_surface_(VK_NULL_HANDLE) {
 
   auto sys_info_ret = vkb::SystemInfo::get_system_info();
-  if (!sys_info_ret) {
-    ARIA_CORE_ERROR("Failed to get system info - {0}", sys_info_ret.error().message());
-    return;
-  }
+  ARIA_VKB_CHECK_RESULT_AND_ASSERT(sys_info_ret, "Failed to get system info");
   vkb::SystemInfo &sys_info = sys_info_ret.value();
 
   vkb::InstanceBuilder instance_builder;
@@ -51,7 +48,7 @@ VulkanInstance::VulkanInstance(VulkanInstance::VulkanInstanceCreateInfo &create_
   }
 
   auto instance_ret = instance_builder.build();
-  if (!instance_ret) { ARIA_CORE_ERROR("Failed to create Vulkan instance - {0}", instance_ret.error().message()); }
+  ARIA_VKB_CHECK_RESULT_AND_ERROR(instance_ret, "Failed to create Vulkan instance")
   vkb_instance_ = instance_ret.value();
 }
 

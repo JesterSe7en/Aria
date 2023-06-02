@@ -53,7 +53,6 @@ VulkanRenderPass::VulkanRenderPass() {
   result = vklib_.ptr_vk_create_render_pass_(VulkanDeviceManager::GetInstance().GetLogicalDevice(), &render_pass_info,
                                              nullptr, &vk_render_pass_);
   ARIA_VK_CHECK_RESULT_AND_ERROR(result, "Failed to create render pass")
-  if (result == VK_SUCCESS) { ARIA_CORE_INFO("Successfully created render pass") }
 }
 
 Ref<VulkanRenderPass> VulkanRenderPass::Create() {

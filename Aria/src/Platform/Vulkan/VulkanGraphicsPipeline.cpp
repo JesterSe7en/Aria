@@ -160,7 +160,7 @@ void VulkanGraphicsPipeline::CreateGraphicsPipeline() {
 
   VkResult result = VulkanLib::GetInstance().ptr_vk_create_pipeline_layout_(
       VulkanDeviceManager::GetInstance().GetLogicalDevice(), &pipeline_layout_info, nullptr, &vk_pipeline_layout_);
-  ARIA_VK_CHECK_RESULT_AND_ASSERT(result, "Failed to create pipeline layout")
+  ARIA_VK_CHECK_RESULT_AND_ERROR(result, "Failed to create pipeline layout")
 
   VkGraphicsPipelineCreateInfo pipeline_info{};
   pipeline_info.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
@@ -187,15 +187,14 @@ void VulkanGraphicsPipeline::CreateGraphicsPipeline() {
   result = VulkanLib::GetInstance().ptr_vk_create_graphics_pipelines_(
       VulkanDeviceManager::GetInstance().GetLogicalDevice(), VK_NULL_HANDLE, 1, &pipeline_info, nullptr,
       &vk_graphics_pipeline_);
-  ARIA_VK_CHECK_RESULT_AND_ERROR(result, "Failed to create graphics pipeline - {0}", string_VkResult(result))
+  ARIA_VK_CHECK_RESULT_AND_ERROR(result, "Failed to create graphics pipeline")
 }
 
 void VulkanGraphicsPipeline::CreateFrameBuffers() {
   auto swapchain = VulkanDeviceManager::GetInstance().GetSwapChain();
 
   auto image_views_ret = swapchain.get_image_views();
-  ARIA_CORE_ASSERT(image_views_ret.has_value(), "Failed to get image views");
-
+  ARIA_VKB_CHECK_RESULT_AND_ASSERT(image_views_ret, "Failed to get image views");
   vk_frame_buffers_.resize(swapchain.image_count);
 
   for (size_t i = 0; i < swapchain.image_count; i++) {
@@ -214,7 +213,7 @@ void VulkanGraphicsPipeline::CreateFrameBuffers() {
 
     VkResult result = VulkanLib::GetInstance().ptr_vk_create_framebuffer_(
         VulkanDeviceManager::GetInstance().GetLogicalDevice(), &frame_buffer_info, nullptr, &vk_frame_buffers_[i]);
-    if (result != VK_SUCCESS) { ARIA_CORE_ERROR("Failed to create frame buffer - {0}", string_VkResult(result)) }
+    ARIA_VK_CHECK_RESULT_AND_ERROR(result, "Failed to create frame buffer")
   }
 }
 }// namespace aria
