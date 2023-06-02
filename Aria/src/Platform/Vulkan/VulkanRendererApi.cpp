@@ -38,10 +38,6 @@ VulkanRendererApi::~VulkanRendererApi() {
   for (auto fence : image_in_flight_) {
     vklib.ptr_vk_destroy_fence(VulkanDeviceManager::GetInstance().GetLogicalDevice(), fence, nullptr);
   }
-
-  //  vkDestroyRenderPass(VulkanDeviceManager::GetInstance().GetLogicalDevice(), vk_render_pass_, nullptr);
-  //  vkDestroySurfaceKHR(p_vk_instance_, surface_, nullptr);
-  //  vkDestroyInstance(p_vk_instance_, nullptr);
 }
 
 void VulkanRendererApi::Init() {

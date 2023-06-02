@@ -125,5 +125,4 @@ void VulkanLib::Cleanup() {
 #endif
   library_ = nullptr;
 }
-
 }// namespace aria

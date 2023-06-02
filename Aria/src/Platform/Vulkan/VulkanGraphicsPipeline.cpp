@@ -16,6 +16,8 @@ VulkanGraphicsPipeline::~VulkanGraphicsPipeline() {
     vklib.ptr_vk_destroy_framebuffer(VulkanDeviceManager::GetInstance().GetLogicalDevice(), buffer, nullptr);
   }
 
+  vklib.ptr_vk_destroy_pipeline_cache(VulkanDeviceManager::GetInstance().GetLogicalDevice(), vk_pipeline_cache_,
+                                      nullptr);
   vklib.ptr_vk_destroy_pipeline(VulkanDeviceManager::GetInstance().GetLogicalDevice(), vk_graphics_pipeline_, nullptr);
   vklib.ptr_vk_destroy_pipeline_layout(VulkanDeviceManager::GetInstance().GetLogicalDevice(), vk_pipeline_layout_,
                                        nullptr);
@@ -23,27 +25,13 @@ VulkanGraphicsPipeline::~VulkanGraphicsPipeline() {
 
 void VulkanGraphicsPipeline::Init() {
   vk_render_pass_ = VulkanRenderPass::Create();
-  CreateGraphicsPipeline();
+  InitPipelineCache();
+  // Check if shader stages have their modules set
+  if (IsAllModulesSet()) { CreateGraphicsPipeline(); }
   CreateFrameBuffers();
 }
 
 void VulkanGraphicsPipeline::CreateGraphicsPipeline() {
-  //
-
-  // ======================== Shader Create Info ========================
-  // VkPipelineShaderStageCreateInfo vertex_shader_stage_info;
-  // vertex_shader_stage_info.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
-  // vertex_shader_stage_info.stage = VK_SHADER_STAGE_VERTEX_BIT;
-  // // TODO: vertex_shader_stage_info.module = Need to grab vertex shader from ShaderLibrary in VulkanLayer
-  // vertex_shader_stage_info.pName = "main";
-
-  // VkPipelineShaderStageCreateInfo frag_shader_stage_info;
-  // frag_shader_stage_info.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
-  // frag_shader_stage_info.stage = VK_SHADER_STAGE_FRAGMENT_BIT;
-  // // TODO: frag_shader_stage_info.module = Need to grab frag shader from ShaderLibrary in VulkanLayer
-  // frag_shader_stage_info.pName = "main";
-
-  // std::array<VkPipelineShaderStageCreateInfo, 2> shader_stages = {vertex_shader_stage_info, frag_shader_stage_info};
 
   vkb::Swapchain swapchain = VulkanDeviceManager::GetInstance().GetSwapChain();
 
@@ -55,7 +43,7 @@ void VulkanGraphicsPipeline::CreateGraphicsPipeline() {
   dynamic_state.pDynamicStates = dynamic_states_.data();
 
   // ======================== Vertex Input Create Info ========================
-  VkPipelineVertexInputStateCreateInfo vertex_input_state;
+  VkPipelineVertexInputStateCreateInfo vertex_input_state{};
   vertex_input_state.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
   vertex_input_state.pNext = nullptr;
   vertex_input_state.flags = 0;
@@ -65,7 +53,7 @@ void VulkanGraphicsPipeline::CreateGraphicsPipeline() {
   vertex_input_state.pVertexAttributeDescriptions = nullptr;
 
   // ======================== Input Assembly Create Info ========================
-  VkPipelineInputAssemblyStateCreateInfo input_assembly_state;
+  VkPipelineInputAssemblyStateCreateInfo input_assembly_state{};
   input_assembly_state.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
   input_assembly_state.pNext = nullptr;
   input_assembly_state.flags = 0;
@@ -86,7 +74,7 @@ void VulkanGraphicsPipeline::CreateGraphicsPipeline() {
   scissor.extent = swapchain.extent;
 
   // ======================== Viewport State Create Info ========================
-  VkPipelineViewportStateCreateInfo viewport_state;
+  VkPipelineViewportStateCreateInfo viewport_state{};
   viewport_state.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
   viewport_state.pNext = nullptr;
   viewport_state.flags = 0;
@@ -96,7 +84,7 @@ void VulkanGraphicsPipeline::CreateGraphicsPipeline() {
   viewport_state.pScissors = &scissor;
 
   // ======================== Rasterizer Create Info ========================
-  VkPipelineRasterizationStateCreateInfo rasterizer;
+  VkPipelineRasterizationStateCreateInfo rasterizer{};
   rasterizer.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
   rasterizer.pNext = nullptr;
   rasterizer.flags = 0;
@@ -111,7 +99,7 @@ void VulkanGraphicsPipeline::CreateGraphicsPipeline() {
   rasterizer.depthBiasSlopeFactor = 0.0f;
 
   // ======================== Multisampling Create Info ========================
-  VkPipelineMultisampleStateCreateInfo multisample_state_info;
+  VkPipelineMultisampleStateCreateInfo multisample_state_info{};
   multisample_state_info.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
   multisample_state_info.pNext = nullptr;
   multisample_state_info.flags = 0;
@@ -123,15 +111,13 @@ void VulkanGraphicsPipeline::CreateGraphicsPipeline() {
   multisample_state_info.alphaToOneEnable = VK_FALSE;
 
   // ======================== Color Blending ========================
-  VkPipelineColorBlendAttachmentState color_blend_attachment;
+  VkPipelineColorBlendAttachmentState color_blend_attachment{};
   color_blend_attachment.blendEnable = VK_FALSE;
   color_blend_attachment.srcColorBlendFactor = VK_BLEND_FACTOR_ONE;
   color_blend_attachment.dstColorBlendFactor = VK_BLEND_FACTOR_ZERO;
   color_blend_attachment.colorBlendOp = VK_BLEND_OP_ADD;
   color_blend_attachment.srcAlphaBlendFactor = VK_BLEND_FACTOR_ONE;
   color_blend_attachment.dstAlphaBlendFactor = VK_BLEND_FACTOR_ZERO;
-  color_blend_attachment.alphaBlendOp = VK_BLEND_OP_ADD;
-
   // ======================== Color Blending ========================
   VkPipelineColorBlendStateCreateInfo color_blending{};
   color_blending.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
@@ -147,7 +133,7 @@ void VulkanGraphicsPipeline::CreateGraphicsPipeline() {
   color_blending.blendConstants[3] = 0.0f;
 
   // ======================== Pipeline Layout Create Info ========================
-  VkPipelineLayoutCreateInfo pipeline_layout_info;
+  VkPipelineLayoutCreateInfo pipeline_layout_info{};
   pipeline_layout_info.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
   pipeline_layout_info.pNext = nullptr;
   pipeline_layout_info.flags = 0;
@@ -162,8 +148,7 @@ void VulkanGraphicsPipeline::CreateGraphicsPipeline() {
 
   VkGraphicsPipelineCreateInfo pipeline_info{};
   pipeline_info.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
-  pipeline_info.stageCount = 0;
-  pipeline_info.pStages = nullptr;
+  pipeline_info.flags = VK_PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT;
   pipeline_info.stageCount = static_cast<std::uint32_t>(shader_stages_.size());
   pipeline_info.pStages = shader_stages_.data();
   pipeline_info.pVertexInputState = &vertex_input_state;
@@ -198,7 +183,7 @@ void VulkanGraphicsPipeline::CreateFrameBuffers() {
   for (size_t i = 0; i < swapchain.image_count; i++) {
     std::array<VkImageView, 1> attachments = {image_views_ret.value()[i]};
 
-    VkFramebufferCreateInfo frame_buffer_info;
+    VkFramebufferCreateInfo frame_buffer_info{};
     frame_buffer_info.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
     frame_buffer_info.flags = 0;
     frame_buffer_info.pNext = nullptr;
@@ -216,7 +201,7 @@ void VulkanGraphicsPipeline::CreateFrameBuffers() {
 }
 
 void VulkanGraphicsPipeline::AddToShaderStages(VkShaderModule &shader_module, ShaderType type) {
-  VkPipelineShaderStageCreateInfo create_info;
+  VkPipelineShaderStageCreateInfo create_info{};
   create_info.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
   create_info.flags = 0;
   create_info.pNext = nullptr;
@@ -237,9 +222,46 @@ void VulkanGraphicsPipeline::AddToShaderStages(VkShaderModule &shader_module, Sh
   create_info.pSpecializationInfo = nullptr;
 
   shader_stages_.push_back(create_info);
-  UpdatePipeline();
+
+  if (IsAllModulesSet()) {
+    if (vk_graphics_pipeline_ == nullptr) {
+      CreateGraphicsPipeline();
+    } else {
+      UpdatePipeline();
+    }
+  }
 }
 
-void VulkanGraphicsPipeline::UpdatePipeline() {}
+void VulkanGraphicsPipeline::InitPipelineCache() {
+  VkPipelineCacheCreateInfo pipeline_cache_info = {};
+  pipeline_cache_info.sType = VK_STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO;
 
+  VkResult result = VulkanLib::GetInstance().ptr_vk_create_pipeline_cache(
+      VulkanDeviceManager::GetInstance().GetLogicalDevice(), &pipeline_cache_info, nullptr, &vk_pipeline_cache_);
+  ARIA_VK_CHECK_RESULT_AND_ERROR(result, "Failed to create pipeline cache")
+}
+
+void VulkanGraphicsPipeline::UpdatePipeline() {
+  VkGraphicsPipelineCreateInfo pipeline_info{};
+  pipeline_info.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
+  pipeline_info.flags = VK_PIPELINE_CREATE_DERIVATIVE_BIT;
+  pipeline_info.pNext = nullptr;
+  pipeline_info.basePipelineHandle = vk_graphics_pipeline_;
+  pipeline_info.basePipelineIndex = -1;
+
+  pipeline_info.stageCount = static_cast<std::uint32_t>(shader_stages_.size());
+  pipeline_info.pStages = shader_stages_.data();
+
+  VkResult result = VulkanLib::GetInstance().ptr_vk_create_graphics_pipelines(
+      VulkanDeviceManager::GetInstance().GetLogicalDevice(), vk_pipeline_cache_, 1, &pipeline_info, nullptr,
+      &vk_graphics_pipeline_);
+  ARIA_VK_CHECK_RESULT_AND_ERROR(result, "Failed to update graphics pipeline")
+}
+
+bool VulkanGraphicsPipeline::IsAllModulesSet() {
+  if (shader_stages_.empty()) { return false; }
+
+  return std::all_of(shader_stages_.begin(), shader_stages_.end(),
+                     [](const VkPipelineShaderStageCreateInfo &stage) { return stage.module != VK_NULL_HANDLE; });
+}
 }// namespace aria
