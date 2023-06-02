@@ -24,7 +24,6 @@ VulkanLayer::VulkanLayer() : Layer("Vulkan Layer") {
       shader_library_.Load("C:/Users/alyxc/Workspace/Aria/Sandbox/assets/shaders/vert.spv", aria::ShaderType::VERTEX);
   frag_shader_ =
       shader_library_.Load("C:/Users/alyxc/Workspace/Aria/Sandbox/assets/shaders/frag.spv", aria::ShaderType::FRAGMENT);
-  aria::Renderer::CreatePipeline();
 }
 
 VulkanLayer::~VulkanLayer() {

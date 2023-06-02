@@ -22,5 +22,4 @@ void Renderer::Submit(const Ref<Shader> &shader, const Ref<VertexArray> &p_verte
   RenderCommand::DrawIndexed(p_vertex_array);
 }
 
-void Renderer::CreatePipeline() { RenderCommand::CreatePipeline(); }
 }// namespace aria
