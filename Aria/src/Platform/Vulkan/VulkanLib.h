@@ -38,6 +38,9 @@ class VulkanLib {
   PFN_vkDestroyPipeline ptr_vk_destroy_pipeline_ = nullptr;
   PFN_vkCreateFramebuffer ptr_vk_create_framebuffer_ = nullptr;
   PFN_vkDestroyFramebuffer ptr_vk_destroy_framebuffer_ = nullptr;
+  PFN_vkCreateCommandPool ptr_vk_create_command_pool_ = nullptr;
+  PFN_vkDestroyCommandPool ptr_vk_destroy_command_pool_ = nullptr;
+  PFN_vkAllocateCommandBuffers ptr_vk_allocate_command_buffers_ = nullptr;
 
  private:
   void Init();

@@ -6,8 +6,7 @@
 #include "VulkanDebugMessenger.h"
 #include "VulkanDeviceManager.h"
 #include "VulkanInstance.h"
-#include "vulkan/vk_platform.h"
-#include "vulkan/vulkan_core.h"
+#include "vulkan/vulkan.h"
 #include <cstdint>
 #include <glm/glm.hpp>
 #include <optional>
@@ -51,8 +50,8 @@ class VulkanRendererApi : public RendererApi {
   VkInstance p_vk_instance_;
   VkSurfaceKHR surface_;
   //  VkRenderPass vk_render_pass_;
-  //  VkCommandPool command_pool_;
-  //  VkCommandBuffer command_buffer_;
+  VkCommandPool command_pool_;
+  std::vector<VkCommandBuffer> command_buffers_;
   std::vector<VkPipelineShaderStageCreateInfo> shader_stages_;
 
   VkQueue present_queue_;
@@ -64,7 +63,8 @@ class VulkanRendererApi : public RendererApi {
   const std::vector<VkDynamicState> dynamic_states_ = {VK_DYNAMIC_STATE_VIEWPORT, VK_DYNAMIC_STATE_SCISSOR};
 
   //  void CreateRenderPass();
-  //  void CreateCommandPool();
+  void CreateCommandPool();
+  void CreateCommandBuffer();
   //  static bool HasValidationSupport();
 };
 }// namespace aria

@@ -7,7 +7,6 @@
 #include "VulkanDebugMessenger.h"
 #include "VulkanError.h"
 #include "VulkanGraphicsPipeline.h"
-#include "vulkan/vulkan_core.h"
 #include <vector>
 
 namespace aria {
@@ -48,10 +47,14 @@ VulkanRendererApi::VulkanRendererApi() {
   present_queue_ = present_queue_ret.value();
 
   VulkanGraphicsPipeline::GetInstance().Init();
+
+  CreateCommandPool();
+  CreateCommandBuffer();
 }
 
 VulkanRendererApi::~VulkanRendererApi() {
-  //  vkDestroyCommandPool(VulkanDeviceManager::GetInstance().GetLogicalDevice(), command_pool_, nullptr);
+  auto vklib = VulkanLib::GetInstance();
+  vklib.ptr_vk_destroy_command_pool_(VulkanDeviceManager::GetInstance().GetLogicalDevice(), command_pool_, nullptr);
   //  vkDestroyRenderPass(VulkanDeviceManager::GetInstance().GetLogicalDevice(), vk_render_pass_, nullptr);
   //  vkDestroySurfaceKHR(p_vk_instance_, surface_, nullptr);
   //  vkDestroyInstance(p_vk_instance_, nullptr);
@@ -91,21 +94,37 @@ void VulkanRendererApi::CreatePipeline() { ARIA_CORE_ASSERT(false, "Not Implemen
 
 //void VulkanRendererApi::CreatePipeline() { VulkanGraphicsPipeline::GetInstance().Init(); }
 
-//void VulkanRendererApi::CreateCommandPool() {
-//
-//  VulkanDeviceManager::QueueFamilyIndices queue_family_indices =
-//      VulkanDeviceManager::GetInstance().GetQueueFamilyIndices();
-//
-//  VkCommandPoolCreateInfo cmd_pool_info;
-//  cmd_pool_info.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
-//  cmd_pool_info.flags = 0;
-//  cmd_pool_info.pNext = nullptr;
-//  cmd_pool_info.queueFamilyIndex = queue_family_indices.graphics_family.value();
-//
-//  VkResult result = vkCreateCommandPool(VulkanDeviceManager::GetInstance().GetLogicalDevice(), &cmd_pool_info, nullptr,
-//                                        &command_pool_);
-//  if (result != VK_SUCCESS) { ARIA_CORE_ERROR("Failed to create command pool - {0}", string_VkResult(result)) }
-//}
+void VulkanRendererApi::CreateCommandPool() {
+  VkCommandPoolCreateInfo cmd_pool_info;
+  cmd_pool_info.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
+  cmd_pool_info.flags = 0;
+  cmd_pool_info.pNext = nullptr;
+
+  auto graphics_queue_index_ret =
+      VulkanDeviceManager::GetInstance().GetLogicalDevice().get_queue_index(vkb::QueueType::graphics);
+  ARIA_VKB_CHECK_RESULT_AND_ASSERT(graphics_queue_index_ret, "Failed to get graphics queue index")
+
+  cmd_pool_info.queueFamilyIndex = graphics_queue_index_ret.value();
+
+  VkResult result = VulkanLib::GetInstance().ptr_vk_create_command_pool_(
+      VulkanDeviceManager::GetInstance().GetLogicalDevice(), &cmd_pool_info, nullptr, &command_pool_);
+  ARIA_VK_CHECK_RESULT_AND_ERROR(result, "Failed to create command pool")
+}
+
+void VulkanRendererApi::CreateCommandBuffer() {
+  command_buffers_ = std::vector<VkCommandBuffer>(VulkanGraphicsPipeline::GetInstance().GetFrameBuffers().size());
+
+  VkCommandBufferAllocateInfo buffer_alloc_info;
+  buffer_alloc_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+  buffer_alloc_info.pNext = nullptr;
+  buffer_alloc_info.commandPool = command_pool_;
+  buffer_alloc_info.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+  buffer_alloc_info.commandBufferCount = (uint32_t) command_buffers_.size();
+
+  VkResult result = VulkanLib::GetInstance().ptr_vk_allocate_command_buffers_(
+      VulkanDeviceManager::GetInstance().GetLogicalDevice(), &buffer_alloc_info, command_buffers_.data());
+  ARIA_VK_CHECK_RESULT_AND_ERROR(result, "Failed to allocate command buffers")
+}
 //
 //VkCommandBuffer VulkanRendererApi::CreateVkCommandBuffer() {
 //  VkCommandBufferAllocateInfo buffer_alloc_info;

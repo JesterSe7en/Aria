@@ -19,8 +19,8 @@ class VulkanGraphicsPipeline {
   void Init();
   void CreateGraphicsPipeline();
   void CreateFrameBuffers();
-  VkPipeline GetGraphicsPipeline() const;
-  std::vector<VkFramebuffer> GetFrameBuffers() const;
+  VkPipeline GetGraphicsPipeline() const { return vk_graphics_pipeline_; }
+  std::vector<VkFramebuffer> GetFrameBuffers() const { return vk_frame_buffers_; }
 
  private:
   VulkanGraphicsPipeline() = default;

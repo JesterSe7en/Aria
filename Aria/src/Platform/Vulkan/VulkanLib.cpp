@@ -94,6 +94,12 @@ void VulkanLib::InitDeviceFunctions(VkDevice device) {
       reinterpret_cast<PFN_vkCreateFramebuffer>(ptr_vk_get_device_proc_addr_(device, "vkCreateFramebuffer"));
   ptr_vk_destroy_framebuffer_ =
       reinterpret_cast<PFN_vkDestroyFramebuffer>(ptr_vk_get_device_proc_addr_(device, "vkDestroyFramebuffer"));
+  ptr_vk_create_command_pool_ =
+      reinterpret_cast<PFN_vkCreateCommandPool>(ptr_vk_get_device_proc_addr_(device, "vkCreateCommandPool"));
+  ptr_vk_destroy_command_pool_ =
+      reinterpret_cast<PFN_vkDestroyCommandPool>(ptr_vk_get_device_proc_addr_(device, "vkDestroyCommandPool"));
+  ptr_vk_allocate_command_buffers_ =
+      reinterpret_cast<PFN_vkAllocateCommandBuffers>(ptr_vk_get_device_proc_addr_(device, "vkAllocateCommandBuffers"));
 }
 
 void VulkanLib::Cleanup() {

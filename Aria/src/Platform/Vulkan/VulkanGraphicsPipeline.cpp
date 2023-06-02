@@ -228,8 +228,4 @@ void VulkanGraphicsPipeline::CreateFrameBuffers() {
     }
   }
 }
-
-VkPipeline VulkanGraphicsPipeline::GetGraphicsPipeline() const { return vk_graphics_pipeline_; }
-
-std::vector<VkFramebuffer> VulkanGraphicsPipeline::GetFrameBuffers() const { return vk_frame_buffers_; }
 }// namespace aria
