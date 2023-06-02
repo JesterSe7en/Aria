@@ -13,27 +13,30 @@ namespace aria {
 
 VulkanRendererApi::VulkanRendererApi() {
   p_vulkan_instance_ = nullptr;
-  surface_ = VK_NULL_HANDLE;
   p_vk_instance_ = nullptr;
+  surface_ = VK_NULL_HANDLE;
+  command_pool_ = VK_NULL_HANDLE;
+  present_queue_ = VK_NULL_HANDLE;
+  graphics_queue_ = VK_NULL_HANDLE;
 }
 
 VulkanRendererApi::~VulkanRendererApi() {
   auto vklib = VulkanLib::GetInstance();
-  vklib.ptr_vk_destroy_command_pool_(VulkanDeviceManager::GetInstance().GetLogicalDevice(), command_pool_, nullptr);
+  vklib.ptr_vk_destroy_command_pool(VulkanDeviceManager::GetInstance().GetLogicalDevice(), command_pool_, nullptr);
 
-  for (auto semaphore : available_semaphores) {
-    vklib.ptr_vk_destroy_semaphore_(VulkanDeviceManager::GetInstance().GetLogicalDevice(), semaphore, nullptr);
+  for (auto semaphore : available_semaphores_) {
+    vklib.ptr_vk_destroy_semaphore(VulkanDeviceManager::GetInstance().GetLogicalDevice(), semaphore, nullptr);
   }
-  for (auto semaphore : finished_semaphore) {
-    vklib.ptr_vk_destroy_semaphore_(VulkanDeviceManager::GetInstance().GetLogicalDevice(), semaphore, nullptr);
-  }
-
-  for (auto fence : in_flight_fences) {
-    vklib.ptr_vk_destroy_fence_(VulkanDeviceManager::GetInstance().GetLogicalDevice(), fence, nullptr);
+  for (auto semaphore : finished_semaphore_) {
+    vklib.ptr_vk_destroy_semaphore(VulkanDeviceManager::GetInstance().GetLogicalDevice(), semaphore, nullptr);
   }
 
-  for (auto fence : image_in_flight) {
-    vklib.ptr_vk_destroy_fence_(VulkanDeviceManager::GetInstance().GetLogicalDevice(), fence, nullptr);
+  for (auto fence : in_flight_fences_) {
+    vklib.ptr_vk_destroy_fence(VulkanDeviceManager::GetInstance().GetLogicalDevice(), fence, nullptr);
+  }
+
+  for (auto fence : image_in_flight_) {
+    vklib.ptr_vk_destroy_fence(VulkanDeviceManager::GetInstance().GetLogicalDevice(), fence, nullptr);
   }
 
   //  vkDestroyRenderPass(VulkanDeviceManager::GetInstance().GetLogicalDevice(), vk_render_pass_, nullptr);
@@ -97,7 +100,7 @@ void VulkanRendererApi::CreateCommandPool() {
 
   cmd_pool_info.queueFamilyIndex = graphics_queue_index_ret.value();
 
-  VkResult result = VulkanLib::GetInstance().ptr_vk_create_command_pool_(
+  VkResult result = VulkanLib::GetInstance().ptr_vk_create_command_pool(
       VulkanDeviceManager::GetInstance().GetLogicalDevice(), &cmd_pool_info, nullptr, &command_pool_);
   ARIA_VK_CHECK_RESULT_AND_ERROR(result, "Failed to create command pool")
 }
@@ -112,16 +115,16 @@ void VulkanRendererApi::CreateCommandBuffer() {
   buffer_alloc_info.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
   buffer_alloc_info.commandBufferCount = (uint32_t) command_buffers_.size();
 
-  VkResult result = VulkanLib::GetInstance().ptr_vk_allocate_command_buffers_(
+  VkResult result = VulkanLib::GetInstance().ptr_vk_allocate_command_buffers(
       VulkanDeviceManager::GetInstance().GetLogicalDevice(), &buffer_alloc_info, command_buffers_.data());
   ARIA_VK_CHECK_RESULT_AND_ERROR(result, "Failed to allocate command buffers")
 }
 
 void VulkanRendererApi::CreateSyncObjects() {
-  available_semaphores.resize(max_frames_in_flight_);
-  finished_semaphore.resize(max_frames_in_flight_);
-  in_flight_fences.resize(max_frames_in_flight_);
-  image_in_flight.resize(VulkanDeviceManager::GetInstance().GetSwapChain().image_count);
+  available_semaphores_.resize(max_frames_in_flight_);
+  finished_semaphore_.resize(max_frames_in_flight_);
+  in_flight_fences_.resize(max_frames_in_flight_);
+  image_in_flight_.resize(VulkanDeviceManager::GetInstance().GetSwapChain().image_count);
 
   VkSemaphoreCreateInfo semaphore_info;
   semaphore_info.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
@@ -134,15 +137,15 @@ void VulkanRendererApi::CreateSyncObjects() {
   fence_info.flags = VK_FENCE_CREATE_SIGNALED_BIT;
 
   for (int i = 0; i < max_frames_in_flight_; ++i) {
-    VkResult result = VulkanLib::GetInstance().ptr_vk_create_semaphore_(
-        VulkanDeviceManager::GetInstance().GetLogicalDevice(), &semaphore_info, nullptr, &available_semaphores[i]);
+    VkResult result = VulkanLib::GetInstance().ptr_vk_create_semaphore(
+        VulkanDeviceManager::GetInstance().GetLogicalDevice(), &semaphore_info, nullptr, &available_semaphores_[i]);
     ARIA_VK_CHECK_RESULT_AND_ERROR(result, "Failed to create semaphore")
-    result = VulkanLib::GetInstance().ptr_vk_create_semaphore_(VulkanDeviceManager::GetInstance().GetLogicalDevice(),
-                                                               &semaphore_info, nullptr, &finished_semaphore[i]);
+    result = VulkanLib::GetInstance().ptr_vk_create_semaphore(VulkanDeviceManager::GetInstance().GetLogicalDevice(),
+                                                              &semaphore_info, nullptr, &finished_semaphore_[i]);
     ARIA_VK_CHECK_RESULT_AND_ERROR(result, "Failed to create semaphore")
 
-    result = VulkanLib::GetInstance().ptr_vk_create_fence_(VulkanDeviceManager::GetInstance().GetLogicalDevice(),
-                                                           &fence_info, nullptr, &in_flight_fences[i]);
+    result = VulkanLib::GetInstance().ptr_vk_create_fence(VulkanDeviceManager::GetInstance().GetLogicalDevice(),
+                                                          &fence_info, nullptr, &in_flight_fences_[i]);
     ARIA_VK_CHECK_RESULT_AND_ERROR(result, "Failed to create fence")
   }
 }

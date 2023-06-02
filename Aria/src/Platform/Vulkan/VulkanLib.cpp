@@ -66,53 +66,53 @@ void VulkanLib::Init() {
   LoadFunc(ptr_vk_get_instance_proc_addr, "vkGetInstanceProcAddr");
   LoadFunc(ptr_vk_get_device_proc_addr, "vkGetDeviceProcAddr");
 
-  ptr_vk_create_instance_ =
+  ptr_vk_create_instance =
       reinterpret_cast<PFN_vkCreateInstance>(ptr_vk_get_instance_proc_addr(VK_NULL_HANDLE, "vkCreateInstance"));
 }
 
 void VulkanLib::InitInstanceFunctions(VkInstance instance) {
-  ptr_vk_create_render_pass_ =
+  ptr_vk_create_render_pass =
       reinterpret_cast<PFN_vkCreateRenderPass>(ptr_vk_get_instance_proc_addr(instance, "vkCreateRenderPass"));
-  ptr_vk_destroy_render_pass_ =
+  ptr_vk_destroy_render_pass =
       reinterpret_cast<PFN_vkDestroyRenderPass>(ptr_vk_get_instance_proc_addr(instance, "vkDestroyRenderPass"));
 }
 
 void VulkanLib::InitDeviceFunctions(VkDevice device) {
-  ptr_vk_create_pipeline_layout_ =
+  ptr_vk_create_pipeline_layout =
       reinterpret_cast<PFN_vkCreatePipelineLayout>(ptr_vk_get_device_proc_addr(device, "vkCreatePipelineLayout"));
-  ptr_vk_destroy_pipeline_layout_ =
+  ptr_vk_destroy_pipeline_layout =
       reinterpret_cast<PFN_vkDestroyPipelineLayout>(ptr_vk_get_device_proc_addr(device, "vkDestroyPipelineLayout"));
-  ptr_vk_create_render_pass_ =
+  ptr_vk_create_render_pass =
       reinterpret_cast<PFN_vkCreateRenderPass>(ptr_vk_get_device_proc_addr(device, "vkCreateRenderPass"));
-  ptr_vk_destroy_render_pass_ =
+  ptr_vk_destroy_render_pass =
       reinterpret_cast<PFN_vkDestroyRenderPass>(ptr_vk_get_device_proc_addr(device, "vkDestroyRenderPass"));
-  ptr_vk_create_graphics_pipelines_ =
+  ptr_vk_create_graphics_pipelines =
       reinterpret_cast<PFN_vkCreateGraphicsPipelines>(ptr_vk_get_device_proc_addr(device, "vkCreateGraphicsPipelines"));
-  ptr_vk_destroy_pipeline_ =
+  ptr_vk_destroy_pipeline =
       reinterpret_cast<PFN_vkDestroyPipeline>(ptr_vk_get_device_proc_addr(device, "vkDestroyPipeline"));
-  ptr_vk_create_framebuffer_ =
+  ptr_vk_create_framebuffer =
       reinterpret_cast<PFN_vkCreateFramebuffer>(ptr_vk_get_device_proc_addr(device, "vkCreateFramebuffer"));
-  ptr_vk_destroy_framebuffer_ =
+  ptr_vk_destroy_framebuffer =
       reinterpret_cast<PFN_vkDestroyFramebuffer>(ptr_vk_get_device_proc_addr(device, "vkDestroyFramebuffer"));
-  ptr_vk_create_command_pool_ =
+  ptr_vk_create_command_pool =
       reinterpret_cast<PFN_vkCreateCommandPool>(ptr_vk_get_device_proc_addr(device, "vkCreateCommandPool"));
-  ptr_vk_destroy_command_pool_ =
+  ptr_vk_destroy_command_pool =
       reinterpret_cast<PFN_vkDestroyCommandPool>(ptr_vk_get_device_proc_addr(device, "vkDestroyCommandPool"));
-  ptr_vk_allocate_command_buffers_ =
+  ptr_vk_allocate_command_buffers =
       reinterpret_cast<PFN_vkAllocateCommandBuffers>(ptr_vk_get_device_proc_addr(device, "vkAllocateCommandBuffers"));
-  ptr_vk_create_shader_module_ =
+  ptr_vk_create_shader_module =
       reinterpret_cast<PFN_vkCreateShaderModule>(ptr_vk_get_device_proc_addr(device, "vkCreateShaderModule"));
-  ptr_vk_destroy_shader_module_ =
+  ptr_vk_destroy_shader_module =
       reinterpret_cast<PFN_vkDestroyShaderModule>(ptr_vk_get_device_proc_addr(device, "vkDestroyShaderModule"));
-  ptr_vk_create_semaphore_ =
+  ptr_vk_create_semaphore =
       reinterpret_cast<PFN_vkCreateSemaphore>(ptr_vk_get_device_proc_addr(device, "vkCreateSemaphore"));
-  ptr_vk_destroy_semaphore_ =
+  ptr_vk_destroy_semaphore =
       reinterpret_cast<PFN_vkDestroySemaphore>(ptr_vk_get_device_proc_addr(device, "vkDestroySemaphore"));
-  ptr_vk_create_fence_ = reinterpret_cast<PFN_vkCreateFence>(ptr_vk_get_device_proc_addr(device, "vkCreateFence"));
-  ptr_vk_destroy_fence_ = reinterpret_cast<PFN_vkDestroyFence>(ptr_vk_get_device_proc_addr(device, "vkDestroyFence"));
-  ptr_vk_create_pipeline_cache_ =
+  ptr_vk_create_fence = reinterpret_cast<PFN_vkCreateFence>(ptr_vk_get_device_proc_addr(device, "vkCreateFence"));
+  ptr_vk_destroy_fence = reinterpret_cast<PFN_vkDestroyFence>(ptr_vk_get_device_proc_addr(device, "vkDestroyFence"));
+  ptr_vk_create_pipeline_cache =
       reinterpret_cast<PFN_vkCreatePipelineCache>(ptr_vk_get_device_proc_addr(device, "vkCreatePipelineCache"));
-  ptr_vk_destroy_pipeline_cache_ =
+  ptr_vk_destroy_pipeline_cache =
       reinterpret_cast<PFN_vkDestroyPipelineCache>(ptr_vk_get_device_proc_addr(device, "vkDestroyPipelineCache"));
 }
 

@@ -5,7 +5,7 @@
 namespace aria {
 
 VulkanRenderPass::~VulkanRenderPass() {
-  vklib_.ptr_vk_destroy_render_pass_(VulkanDeviceManager::GetInstance().GetLogicalDevice(), vk_render_pass_, nullptr);
+  vklib_.ptr_vk_destroy_render_pass(VulkanDeviceManager::GetInstance().GetLogicalDevice(), vk_render_pass_, nullptr);
 }
 
 VulkanRenderPass::VulkanRenderPass() {
@@ -50,8 +50,8 @@ VulkanRenderPass::VulkanRenderPass() {
   render_pass_info.dependencyCount = 1;
   render_pass_info.pDependencies = &dependency;
 
-  result = vklib_.ptr_vk_create_render_pass_(VulkanDeviceManager::GetInstance().GetLogicalDevice(), &render_pass_info,
-                                             nullptr, &vk_render_pass_);
+  result = vklib_.ptr_vk_create_render_pass(VulkanDeviceManager::GetInstance().GetLogicalDevice(), &render_pass_info,
+                                            nullptr, &vk_render_pass_);
   ARIA_VK_CHECK_RESULT_AND_ERROR(result, "Failed to create render pass")
 }
 

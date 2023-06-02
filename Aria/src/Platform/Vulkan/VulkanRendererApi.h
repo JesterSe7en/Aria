@@ -51,10 +51,10 @@ class VulkanRendererApi : public RendererApi {
   VkQueue graphics_queue_;
 
   // sync objects
-  std::vector<VkSemaphore> available_semaphores;
-  std::vector<VkSemaphore> finished_semaphore;
-  std::vector<VkFence> in_flight_fences;
-  std::vector<VkFence> image_in_flight;
+  std::vector<VkSemaphore> available_semaphores_;
+  std::vector<VkSemaphore> finished_semaphore_;
+  std::vector<VkFence> in_flight_fences_;
+  std::vector<VkFence> image_in_flight_;
 
   const int max_frames_in_flight_ = 2;
 

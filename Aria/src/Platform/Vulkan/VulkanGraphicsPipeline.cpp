@@ -13,12 +13,12 @@ std::vector<VkPipelineShaderStageCreateInfo> VulkanGraphicsPipeline::shader_stag
 VulkanGraphicsPipeline::~VulkanGraphicsPipeline() {
   auto vklib = VulkanLib::GetInstance();
   for (auto buffer : vk_frame_buffers_) {
-    vklib.ptr_vk_destroy_framebuffer_(VulkanDeviceManager::GetInstance().GetLogicalDevice(), buffer, nullptr);
+    vklib.ptr_vk_destroy_framebuffer(VulkanDeviceManager::GetInstance().GetLogicalDevice(), buffer, nullptr);
   }
 
-  vklib.ptr_vk_destroy_pipeline_(VulkanDeviceManager::GetInstance().GetLogicalDevice(), vk_graphics_pipeline_, nullptr);
-  vklib.ptr_vk_destroy_pipeline_layout_(VulkanDeviceManager::GetInstance().GetLogicalDevice(), vk_pipeline_layout_,
-                                        nullptr);
+  vklib.ptr_vk_destroy_pipeline(VulkanDeviceManager::GetInstance().GetLogicalDevice(), vk_graphics_pipeline_, nullptr);
+  vklib.ptr_vk_destroy_pipeline_layout(VulkanDeviceManager::GetInstance().GetLogicalDevice(), vk_pipeline_layout_,
+                                       nullptr);
 }
 
 void VulkanGraphicsPipeline::Init() {
@@ -158,7 +158,7 @@ void VulkanGraphicsPipeline::CreateGraphicsPipeline() {
   pipeline_layout_info.pushConstantRangeCount = 0;
   pipeline_layout_info.pPushConstantRanges = nullptr;
 
-  VkResult result = VulkanLib::GetInstance().ptr_vk_create_pipeline_layout_(
+  VkResult result = VulkanLib::GetInstance().ptr_vk_create_pipeline_layout(
       VulkanDeviceManager::GetInstance().GetLogicalDevice(), &pipeline_layout_info, nullptr, &vk_pipeline_layout_);
   ARIA_VK_CHECK_RESULT_AND_ERROR(result, "Failed to create pipeline layout")
 
@@ -184,7 +184,7 @@ void VulkanGraphicsPipeline::CreateGraphicsPipeline() {
   pipeline_info.basePipelineHandle = VK_NULL_HANDLE;
   pipeline_info.basePipelineIndex = -1;
 
-  result = VulkanLib::GetInstance().ptr_vk_create_graphics_pipelines_(
+  result = VulkanLib::GetInstance().ptr_vk_create_graphics_pipelines(
       VulkanDeviceManager::GetInstance().GetLogicalDevice(), VK_NULL_HANDLE, 1, &pipeline_info, nullptr,
       &vk_graphics_pipeline_);
   ARIA_VK_CHECK_RESULT_AND_ERROR(result, "Failed to create graphics pipeline")
@@ -211,7 +211,7 @@ void VulkanGraphicsPipeline::CreateFrameBuffers() {
     frame_buffer_info.height = swapchain.extent.height;
     frame_buffer_info.layers = 1;
 
-    VkResult result = VulkanLib::GetInstance().ptr_vk_create_framebuffer_(
+    VkResult result = VulkanLib::GetInstance().ptr_vk_create_framebuffer(
         VulkanDeviceManager::GetInstance().GetLogicalDevice(), &frame_buffer_info, nullptr, &vk_frame_buffers_[i]);
     ARIA_VK_CHECK_RESULT_AND_ERROR(result, "Failed to create frame buffer")
   }
