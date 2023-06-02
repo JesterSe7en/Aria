@@ -81,8 +81,6 @@ set(src__Platform__OpenGL
 source_group("src\\Platform\\OpenGL" FILES ${src__Platform__OpenGL})
 
 set(src__Platform__Vulkan
-    #    "src/Platform/Vulkan/VulkanCommandBuffer.cpp"
-    #    "src/Platform/Vulkan/VulkanCommandBuffer.h"
     "src/Platform/Vulkan/VulkanDebugMessenger.cpp"
     "src/Platform/Vulkan/VulkanDebugMessenger.h"
     "src/Platform/Vulkan/VulkanDeviceManager.cpp"
@@ -98,10 +96,8 @@ set(src__Platform__Vulkan
     "src/Platform/Vulkan/VulkanRendererApi.h"
     "src/Platform/Vulkan/VulkanRenderPass.cpp"
     "src/Platform/Vulkan/VulkanRenderPass.h"
-    #    "src/Platform/Vulkan/VulkanShader.cpp"
-    #    "src/Platform/Vulkan/VulkanShader.h"
-    #    "src/Platform/Vulkan/VulkanSwapChain.cpp"
-    #    "src/Platform/Vulkan/VulkanSwapChain.h"
+    "src/Platform/Vulkan/VulkanShader.cpp"
+    "src/Platform/Vulkan/VulkanShader.h"
     )
 source_group("src\\Platform\\Vulkan" FILES ${src__Platform__Vulkan})
 

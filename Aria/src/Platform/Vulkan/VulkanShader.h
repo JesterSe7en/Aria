@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Aria/Renderer/Shader.h"
-#include "vulkan/vulkan_core.h"
+#include "vulkan/vulkan.h"
 #include <cstdint>
 
 namespace aria {
