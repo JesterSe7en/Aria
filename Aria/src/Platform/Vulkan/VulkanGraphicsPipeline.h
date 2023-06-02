@@ -1,7 +1,7 @@
 #pragma once
 
-#include "vulkan/vulkan_core.h"
 #include "VulkanRenderPass.h"
+#include "vulkan/vulkan_core.h"
 
 namespace aria {
 
@@ -18,7 +18,7 @@ class VulkanGraphicsPipeline {
 
   void Init();
   void CreateGraphicsPipeline();
-  //  void CreateFrameBuffers();
+  void CreateFrameBuffers();
   VkPipeline GetGraphicsPipeline() const;
   std::vector<VkFramebuffer> GetFrameBuffers() const;
 
@@ -32,7 +32,7 @@ class VulkanGraphicsPipeline {
   std::vector<VkFramebuffer> vk_frame_buffers_;
   VkPipelineLayout vk_pipeline_layout_;
   VkPipeline vk_graphics_pipeline_;
-//  static std::vector<VkPipelineShaderStageCreateInfo> shader_stages_;
+  static std::vector<VkPipelineShaderStageCreateInfo> shader_stages_;
 };
 
 }// namespace aria

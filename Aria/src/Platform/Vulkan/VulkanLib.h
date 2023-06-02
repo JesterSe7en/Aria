@@ -28,13 +28,16 @@ class VulkanLib {
 
   // vkInstance function pointers
   PFN_vkCreateInstance ptr_vk_create_instance_ = nullptr;
-  
+
   // vkDevice function pointers
   PFN_vkCreatePipelineLayout ptr_vk_create_pipeline_layout_ = nullptr;
   PFN_vkDestroyPipelineLayout ptr_vk_destroy_pipeline_layout_ = nullptr;
   PFN_vkCreateRenderPass ptr_vk_create_render_pass_ = nullptr;
   PFN_vkDestroyRenderPass ptr_vk_destroy_render_pass_ = nullptr;
   PFN_vkCreateGraphicsPipelines ptr_vk_create_graphics_pipelines_ = nullptr;
+  PFN_vkDestroyPipeline ptr_vk_destroy_pipeline_ = nullptr;
+  PFN_vkCreateFramebuffer ptr_vk_create_framebuffer_ = nullptr;
+  PFN_vkDestroyFramebuffer ptr_vk_destroy_framebuffer_ = nullptr;
 
  private:
   void Init();

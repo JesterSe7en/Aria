@@ -1,6 +1,5 @@
 #pragma once
 
-#include "VulkanSwapChain.h"
 #include "Aria/Core/Base.h"
 #include "VulkanLib.h"
 #include "vulkan/vulkan_core.h"

@@ -1,4 +1,3 @@
-#include "VulkanSwapChain.h"
 #include "ariapch.h"
 #include "VulkanRendererApi.h"
 #include "Aria/Core/Base.h"
@@ -6,6 +5,7 @@
 #include "Aria/Renderer/VertexArray.h"
 #include "GLFW/glfw3.h"
 #include "VulkanDebugMessenger.h"
+#include "VulkanError.h"
 #include "VulkanGraphicsPipeline.h"
 #include "vulkan/vulkan_core.h"
 #include <vector>
@@ -35,6 +35,17 @@ VulkanRendererApi::VulkanRendererApi() {
   p_vulkan_instance_ = VulkanInstance::Create(create_info);
   p_vk_instance_ = p_vulkan_instance_->GetVKBInstance().instance;
   VulkanDeviceManager::GetInstance().Init(p_vulkan_instance_);
+
+  // Get Queues
+  auto vk_device = VulkanDeviceManager::GetInstance().GetLogicalDevice();
+
+  auto graphics_queue_ret = vk_device.get_queue(vkb::QueueType::graphics);
+  ARIA_VKB_CHECK_RESULT_AND_ERROR(graphics_queue_ret, "Failed to get graphics queue");
+  graphics_queue_ = graphics_queue_ret.value();
+
+  auto present_queue_ret = vk_device.get_queue(vkb::QueueType::present);
+  ARIA_VKB_CHECK_RESULT_AND_ERROR(present_queue_ret, "Failed to get present queue");
+  present_queue_ = present_queue_ret.value();
 
   VulkanGraphicsPipeline::GetInstance().Init();
 }

@@ -1,24 +1,29 @@
-#include "VulkanSwapChain.h"
 #include "ariapch.h"
 #include "VulkanGraphicsPipeline.h"
 #include "Aria/Core/Log.h"
+#include "VulkanDeviceManager.h"
 #include "VulkanLib.h"
 #include "vulkan/vk_enum_string_helper.h"
 
 namespace aria {
 
+std::vector<VkPipelineShaderStageCreateInfo> VulkanGraphicsPipeline::shader_stages_ = {};
+
 VulkanGraphicsPipeline::~VulkanGraphicsPipeline() {
-  //  for (auto buffer : vk_frame_buffers_) {
-  //    vkDestroyFramebuffer(VulkanDeviceManager::GetInstance().GetLogicalDevice(), buffer, nullptr);
-  //  }
-  //  vkDestroyPipeline(VulkanDeviceManager::GetInstance().GetLogicalDevice(), vk_graphics_pipeline_, nullptr);
-  //  vkDestroyPipelineLayout(VulkanDeviceManager::GetInstance().GetLogicalDevice(), vk_pipeline_layout_, nullptr);
+  auto vklib = VulkanLib::GetInstance();
+  for (auto buffer : vk_frame_buffers_) {
+    vklib.ptr_vk_destroy_framebuffer_(VulkanDeviceManager::GetInstance().GetLogicalDevice(), buffer, nullptr);
+  }
+
+  vklib.ptr_vk_destroy_pipeline_(VulkanDeviceManager::GetInstance().GetLogicalDevice(), vk_graphics_pipeline_, nullptr);
+  vklib.ptr_vk_destroy_pipeline_layout_(VulkanDeviceManager::GetInstance().GetLogicalDevice(), vk_pipeline_layout_,
+                                        nullptr);
 }
 
 void VulkanGraphicsPipeline::Init() {
   vk_render_pass_ = VulkanRenderPass::Create();
   CreateGraphicsPipeline();
-  //  CreateFrameBuffers();
+  CreateFrameBuffers();
 }
 
 void VulkanGraphicsPipeline::CreateGraphicsPipeline() {
@@ -41,7 +46,7 @@ void VulkanGraphicsPipeline::CreateGraphicsPipeline() {
 
   VulkanLib::GetInstance().InitDeviceFunctions(VulkanDeviceManager::GetInstance().GetLogicalDevice());
 
-  auto swapchain = VulkanDeviceManager::GetInstance().GetSwapChain();
+  vkb::Swapchain swapchain = VulkanDeviceManager::GetInstance().GetSwapChain();
 
   // ======================== Dynamic Create Info ========================
 
@@ -164,8 +169,8 @@ void VulkanGraphicsPipeline::CreateGraphicsPipeline() {
   pipeline_info.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
   pipeline_info.stageCount = 0;
   pipeline_info.pStages = nullptr;
-//  pipeline_info.stageCount = static_cast<std::uint32_t>(shader_stages_.size());
-//  pipeline_info.pStages = shader_stages_.data();
+  pipeline_info.stageCount = static_cast<std::uint32_t>(shader_stages_.size());
+  pipeline_info.pStages = shader_stages_.data();
   pipeline_info.pVertexInputState = &vertex_input_state;
   pipeline_info.pInputAssemblyState = &input_assembly_state;
   pipeline_info.pViewportState = &viewport_state;
@@ -192,30 +197,37 @@ void VulkanGraphicsPipeline::CreateGraphicsPipeline() {
   }
 }
 
-//void VulkanGraphicsPipeline::CreateFrameBuffers() {
-//  VulkanSwapChain::VulkanSwapChainDetails details = VulkanSwapChain::GetInstance().GetSwapChainDetails();
-//
-//  vk_frame_buffers_.resize(details.swap_chain_images.size());
-//
-//  for (size_t i = 0; i < details.swap_chain_image_views.size(); i++) {
-//    std::array<VkImageView, 1> attachments = {details.swap_chain_image_views[i]};
-//
-//    VkFramebufferCreateInfo frame_buffer_info;
-//    frame_buffer_info.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
-//    frame_buffer_info.flags = 0;
-//    frame_buffer_info.pNext = nullptr;
-//    frame_buffer_info.renderPass = VulkanRendererApi::GetInstance().GetRenderPass();
-//    frame_buffer_info.attachmentCount = attachments.size();
-//    frame_buffer_info.pAttachments = attachments.data();
-//    frame_buffer_info.width = details.swap_chain_extend_2d.width;
-//    frame_buffer_info.height = details.swap_chain_extend_2d.height;
-//    frame_buffer_info.layers = 1;
-//
-//    VkResult result = vkCreateFramebuffer(VulkanDeviceManager::GetInstance().GetLogicalDevice(), &frame_buffer_info,
-//                                          nullptr, &vk_frame_buffers_[i]);
-//    if (result != VK_SUCCESS) { ARIA_CORE_ERROR("Failed to create frame buffer - {0}", string_VkResult(result)) }
-//  }
-//}
+void VulkanGraphicsPipeline::CreateFrameBuffers() {
+  auto swapchain = VulkanDeviceManager::GetInstance().GetSwapChain();
+
+  auto image_views_ret = swapchain.get_image_views();
+  ARIA_CORE_ASSERT(image_views_ret.has_value(), "Failed to get image views");
+
+  vk_frame_buffers_.resize(swapchain.image_count);
+
+  for (size_t i = 0; i < swapchain.image_count; i++) {
+    std::array<VkImageView, 1> attachments = {image_views_ret.value()[i]};
+
+    VkFramebufferCreateInfo frame_buffer_info;
+    frame_buffer_info.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
+    frame_buffer_info.flags = 0;
+    frame_buffer_info.pNext = nullptr;
+    frame_buffer_info.renderPass = vk_render_pass_->GetRenderPass();
+    frame_buffer_info.attachmentCount = attachments.size();
+    frame_buffer_info.pAttachments = attachments.data();
+    frame_buffer_info.width = swapchain.extent.width;
+    frame_buffer_info.height = swapchain.extent.height;
+    frame_buffer_info.layers = 1;
+
+    VkResult result = VulkanLib::GetInstance().ptr_vk_create_framebuffer_(
+        VulkanDeviceManager::GetInstance().GetLogicalDevice(), &frame_buffer_info, nullptr, &vk_frame_buffers_[i]);
+    if (result != VK_SUCCESS) {
+      ARIA_CORE_ERROR("Failed to create frame buffer - {0}", string_VkResult(result))
+    } else {
+      ARIA_CORE_INFO("Successfully created frame buffer");
+    }
+  }
+}
 
 VkPipeline VulkanGraphicsPipeline::GetGraphicsPipeline() const { return vk_graphics_pipeline_; }
 

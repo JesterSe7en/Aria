@@ -55,8 +55,8 @@ class VulkanRendererApi : public RendererApi {
   //  VkCommandBuffer command_buffer_;
   std::vector<VkPipelineShaderStageCreateInfo> shader_stages_;
 
-  //  VkQueue present_queue_;
-  //  VkQueue graphics_queue_;
+  VkQueue present_queue_;
+  VkQueue graphics_queue_;
 
   //  VulkanDebugMessenger vulkan_debug_messenger_;
 
