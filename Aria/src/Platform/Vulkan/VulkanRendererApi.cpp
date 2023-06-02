@@ -15,7 +15,17 @@ VulkanRendererApi::VulkanRendererApi() {
   p_vulkan_instance_ = nullptr;
   surface_ = VK_NULL_HANDLE;
   p_vk_instance_ = nullptr;
+}
 
+VulkanRendererApi::~VulkanRendererApi() {
+  auto vklib = VulkanLib::GetInstance();
+  vklib.ptr_vk_destroy_command_pool_(VulkanDeviceManager::GetInstance().GetLogicalDevice(), command_pool_, nullptr);
+  //  vkDestroyRenderPass(VulkanDeviceManager::GetInstance().GetLogicalDevice(), vk_render_pass_, nullptr);
+  //  vkDestroySurfaceKHR(p_vk_instance_, surface_, nullptr);
+  //  vkDestroyInstance(p_vk_instance_, nullptr);
+}
+
+void VulkanRendererApi::Init() {
   VulkanInstance::VulkanInstanceCreateInfo create_info;
 #ifdef NDEBUG
   create_info.enable_validation = false;
@@ -51,16 +61,6 @@ VulkanRendererApi::VulkanRendererApi() {
   CreateCommandPool();
   CreateCommandBuffer();
 }
-
-VulkanRendererApi::~VulkanRendererApi() {
-  auto vklib = VulkanLib::GetInstance();
-  vklib.ptr_vk_destroy_command_pool_(VulkanDeviceManager::GetInstance().GetLogicalDevice(), command_pool_, nullptr);
-  //  vkDestroyRenderPass(VulkanDeviceManager::GetInstance().GetLogicalDevice(), vk_render_pass_, nullptr);
-  //  vkDestroySurfaceKHR(p_vk_instance_, surface_, nullptr);
-  //  vkDestroyInstance(p_vk_instance_, nullptr);
-}
-
-void VulkanRendererApi::Init() { auto instance = new VulkanRendererApi(); }
 void VulkanRendererApi::Clear() { ARIA_CORE_ASSERT(false, "Not Implemented") }
 
 void VulkanRendererApi::SetClearColor(const glm::vec4 color) { ARIA_CORE_ASSERT(false, "Not Implemented") }
