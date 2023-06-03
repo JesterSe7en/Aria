@@ -169,6 +169,7 @@ elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
 
       -Wall
       -Wextra
+      -Wpedantic
       -std=c++17
       )
   target_link_options(${PROJECT_NAME} PRIVATE
