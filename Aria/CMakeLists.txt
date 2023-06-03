@@ -659,7 +659,42 @@ if(MSVC)
         >
         /SUBSYSTEM:WINDOWS
     )
-endif()
+elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+  target_compile_options(${PROJECT_NAME} PRIVATE
+      $<$<CONFIG:Debug>:
+      -g
+      -O0
+      ${DEFAULT_CXX_DEBUG_INFORMATION_FORMAT}
+      >
+
+      $<$<CONFIG:Dist>:
+      -O2
+      -ffunction-sections
+      -fdata-sections
+      ${DEFAULT_CXX_DEBUG_INFORMATION_FORMAT}
+      >
+
+      $<$<CONFIG:Release>:
+      -O2
+      -ffunction-sections
+      -fdata-sections
+      ${DEFAULT_CXX_EXCEPTION_HANDLING}
+      >
+
+      -Wall
+      -Wextra
+      -Wpedantic
+      -std=c++17
+      )
+  target_link_options(${PROJECT_NAME} PRIVATE
+      $<$<CONFIG:Release>:
+      -Wl, --gc-sections -Wl, --icf=safe
+      >
+      $<$<CONFIG:Dist>:
+      -Wl, --gc-sections -Wl, --icf=safe
+      >
+      )
+endif ()
 
 ################################################################################
 # Dependencies
