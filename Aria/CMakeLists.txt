@@ -686,7 +686,7 @@ if (MSVC)
       ${DEFAULT_CXX_DEBUG_INFORMATION_FORMAT}
       >
       /std:c++17;
-      /W3;
+      /W4;
       ${DEFAULT_CXX_EXCEPTION_HANDLING}
       )
   target_link_options(${PROJECT_NAME} PRIVATE
@@ -729,10 +729,17 @@ elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
       )
   target_link_options(${PROJECT_NAME} PRIVATE
       $<$<CONFIG:Release>:
-      -Wl, --gc-sections -Wl, --icf=safe
+      -flto
+      -Wl,--gc-sections
+      -Wl,--icf=safe
+      -Wl,--strip-all
+      -Wl,--plugin-opt=eliminate-unused-dwarf-types
       >
       $<$<CONFIG:Dist>:
-      -Wl, --gc-sections -Wl, --icf=safe
+      -flto
+      -Wl,--gc-sections
+      -Wl,--icf=safe
+      -Wl,--strip-all
       >
       )
 endif ()
