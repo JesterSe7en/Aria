@@ -16,3 +16,5 @@ Utilizes the following third-party libraries
 - imgui: for easy ui creation for debugging purposes
 - spdlog: provides logging
 - stb_image: image processor
+
+Ongoing developement to integrate Vulkan on vulkan branch
