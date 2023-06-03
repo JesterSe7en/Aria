@@ -24,12 +24,13 @@ class VulkanRendererApi : public RendererApi {
   void SetClearColor(const glm::vec4 color) override;
   void DrawIndexed(const Ref<VertexArray> &vertex_array) override;
 
+  void BeginRecording() override;
+  void EndRecording() override;
+
   VulkanRendererApi(const VulkanRendererApi &) = delete;           // copy constructor
   VulkanRendererApi &operator=(const VulkanRendererApi &) = delete;// copy assignment
   VulkanRendererApi(VulkanRendererApi &&) = delete;                //move constructor
   VulkanRendererApi &operator=(VulkanRendererApi &&) = delete;     //move assignment
-
-  void CreatePipeline() override;
 
   static VulkanRendererApi &GetInstance() {
     static VulkanRendererApi instance_;

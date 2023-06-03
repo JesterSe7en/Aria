@@ -27,5 +27,4 @@ void RenderCommand::Init(RendererApi::Api api) {
   p_renderer_api_->Init();
 }
 
-void RenderCommand::CreatePipeline() { p_renderer_api_->CreatePipeline(); }
 }// namespace aria

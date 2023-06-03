@@ -9,6 +9,5 @@ class OpenGlRendererApi : public RendererApi {
   void Clear() override;
   void SetClearColor(const glm::vec4 color) override;
   void DrawIndexed(const Ref<VertexArray> &p_vertex_array) override;
-  void CreatePipeline() override {}
 };
 }// namespace aria

@@ -76,7 +76,12 @@ void VulkanRendererApi::SetClearColor(const glm::vec4 color) { ARIA_CORE_ASSERT(
 
 void VulkanRendererApi::DrawIndexed(const Ref<VertexArray> &vertex_array) { ARIA_CORE_ASSERT(false, "Not Implemented") }
 
-void VulkanRendererApi::CreatePipeline() { ARIA_CORE_ASSERT(false, "Not Implemented") }
+void VulkanRendererApi::BeginRecording() {
+  ARIA_CORE_INFO("Begin recording");
+}
+void VulkanRendererApi::EndRecording() {
+  ARIA_CORE_INFO("End recording");
+}
 
 void VulkanRendererApi::AddToPipeline(VkShaderModule &shader_module, ShaderType type) {
   VulkanGraphicsPipeline::GetInstance().AddToShaderStages(shader_module, type);
