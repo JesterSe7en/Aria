@@ -37,7 +37,7 @@ class ARIA_API MouseScrolledEvent : public Event {
     return ss.str();
   }
 
-  EVENT_CLASS_TYPE(MouseScrolled)
+  EVENT_CLASS_TYPE(MOUSE_SCROLLED)
   EVENT_CLASS_CATEGORY(EVENT_CATEGORY_MOUSE | EVENT_CATEGORY_INPUT)
 
  private:

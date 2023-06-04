@@ -70,11 +70,9 @@ void Application::Run() {
 
     for (Layer *layer : layer_stack_) { layer->OnUpdate(delta_time); }
 
-    // mImGuiLayer->begin();
-    // for (Layer *layer : mLayerStack) {
-    //   layer->on_imgui_render();
-    // }
-    // mImGuiLayer->end();
+    p_im_gui_layer_->Begin();
+    for (Layer *layer : layer_stack_) { layer->OnImGuiRender(); }
+    p_im_gui_layer_->End();
 
     p_window_->OnUpdate();
   }
