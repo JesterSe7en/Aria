@@ -1,22 +1,18 @@
 #pragma once
 
 #include "Aria/Core/Layer.h"
+#include "ImGuiLayerOpenGL.h"
 
 namespace aria {
-class ARIA_API ImGuiLayer : public Layer {
+
+class ImGuiLayer : public Layer {
  public:
-  ImGuiLayer();
-  ~ImGuiLayer() override = default;
+  explicit ImGuiLayer(const std::string &name);
 
-  void OnAttach() override;
-  void OnDetach() override;
-  void OnEvent(Event &event) override;
-  void OnUpdate(Timestep delta_time) override;
-  void OnImGuiRender() override;
-  void Begin() const;
-  void End() const;
+  virtual void Begin() const = 0;
+  virtual void End() const = 0;
 
- private:
-  const char *glsl_version_ = "#version 430 core";
+  static Scope<ImGuiLayer> Create();
 };
+
 }// namespace aria

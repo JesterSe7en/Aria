@@ -2,8 +2,10 @@
 #include "Application.h"
 #include "Aria/Core/Timestep.h"
 #include "Aria/Events/ApplicationEvent.h"
+#include "Aria/ImGui/ImGuiLayer.h"
 #include "Aria/Renderer/Buffer.h"
 #include "Aria/Renderer/Renderer.h"
+#include "Aria/Renderer/RendererApi.h"
 #include <GLFW/glfw3.h>//TODO: abstract it out only delta time use this
 
 #ifdef WIN32
@@ -39,15 +41,15 @@ Application::Application(ApplicationProps &props) {
 }
 
 void Application::InitVulkanApp() {
-  // TODO: ordering for creating window and initializing renderer is different than opengl for vulkan
   p_window_ = std::unique_ptr<Window>(Window::Create());
   p_window_->SetVSync(false);
   p_window_->SetEventCallback(ARIA_BIND_EVENT_FN(Application::OnEvent));
+
   Renderer::Init();
 
-  // TODO: this imgui uses opengl to load
-  //  mImGuiLayer = new ImGuiLayer();
-  //  push_overlay(mImGuiLayer);
+  // TODO: still need to fix imgui for vulkan.  More involved
+  //  p_im_gui_layer_ = ImGuiLayer::Create();
+  //  PushOverlay(p_im_gui_layer_.get());
 }
 
 void Application::InitOpenGlApp() {
@@ -57,8 +59,8 @@ void Application::InitOpenGlApp() {
 
   Renderer::Init();
 
-  p_im_gui_layer_ = new ImGuiLayer();
-  PushOverlay(p_im_gui_layer_);
+  p_im_gui_layer_ = ImGuiLayer::Create();
+  PushOverlay(p_im_gui_layer_.get());
 }
 
 void Application::Run() {
@@ -70,11 +72,16 @@ void Application::Run() {
 
     for (Layer *layer : layer_stack_) { layer->OnUpdate(delta_time); }
 
-    p_im_gui_layer_->Begin();
-    for (Layer *layer : layer_stack_) { layer->OnImGuiRender(); }
-    p_im_gui_layer_->End();
+    auto api_used = RendererApi::GetApi();
+    if (api_used == RendererApi::Api::VULKAN) {
+      p_window_->OnUpdate();
+    } else {
+      p_im_gui_layer_->Begin();
+      for (Layer *layer : layer_stack_) { layer->OnImGuiRender(); }
+      p_im_gui_layer_->End();
 
-    p_window_->OnUpdate();
+      p_window_->OnUpdate();
+    }
   }
 }
 

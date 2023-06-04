@@ -8,17 +8,17 @@
 class Sandbox : public aria::Application {
  public:
   Sandbox(aria::ApplicationProps &props) : aria::Application(props) {
-    auto example_layer = new ExampleLayer();
-    PushLayer(example_layer);
+    //    auto example_layer = new ExampleLayer();
+    //    PushLayer(example_layer);
 
-    // auto vulkan_layer = new VulkanLayer();
-    // PushLayer(vulkan_layer);
+    auto vulkan_layer = new VulkanLayer();
+    PushLayer(vulkan_layer);
   };
   ~Sandbox(){};
 };
 
 aria::Application *aria::CreateApplication() {
-  // ApplicationProps props = {RendererApi::Api::VULKAN};
-  ApplicationProps props = {RendererApi::Api::OPEN_GL};
+  ApplicationProps props = {RendererApi::Api::VULKAN};
+  //  ApplicationProps props = {RendererApi::Api::OPEN_GL};
   return new Sandbox(props);
 }

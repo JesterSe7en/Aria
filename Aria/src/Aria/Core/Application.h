@@ -54,7 +54,7 @@ class ARIA_API Application {
 
  private:
   static Application *p_application_;
-  ImGuiLayer *p_im_gui_layer_;
+  Scope<ImGuiLayer> p_im_gui_layer_;
 };
 
 // To be defined in CLIENT

@@ -38,8 +38,12 @@ set(src__Aria__Events
 source_group("src\\Aria\\Events" FILES ${src__Aria__Events})
 
 set(src__Aria__ImGui
+    "src/Aria/ImGui/ImGuiLayerOpenGL.cpp"
+    "src/Aria/ImGui/ImGuiLayerOpenGL.h"
     "src/Aria/ImGui/ImGuiLayer.cpp"
     "src/Aria/ImGui/ImGuiLayer.h"
+    "src/Aria/ImGui/ImGuiLayerVulkan.cpp"
+    "src/Aria/ImGui/ImGuiLayerVulkan.h"
     )
 source_group("src\\Aria\\ImGui" FILES ${src__Aria__ImGui})
 

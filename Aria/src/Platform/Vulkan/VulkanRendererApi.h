@@ -45,6 +45,10 @@ class VulkanRendererApi : public RendererApi {
     return instance_;
   }
 
+  Ref<VulkanInstance> GetVkInstance() { return p_vulkan_instance_; }
+  VkQueue &GetPresentQueue() { return present_queue_; }
+  VkQueue &GetGraphicsQueue() { return graphics_queue_; }
+  std::vector<VkCommandBuffer> &GetCommandBuffers() { return command_buffers_; }
   void AddToPipeline(VkShaderModule &shader_module, ShaderType type);
 
  private:

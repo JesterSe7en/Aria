@@ -132,4 +132,10 @@ void VulkanDeviceManager::CreateSwapchain() {
   if (swapchain_ret.has_value()) { swapchain_ = swapchain_ret.value(); }
 }
 
+unsigned int VulkanDeviceManager::GetQueueFamilyIndex() {
+  auto res = logical_device_.get_queue_index(vkb::QueueType::graphics);
+  ARIA_VKB_CHECK_RESULT_AND_ASSERT(res, "Failed to get queue family index")
+  return res.has_value() ? res.value() : 0;
+}
+
 }// namespace aria

@@ -23,6 +23,7 @@ class VulkanDeviceManager {
   vkb::Device &GetLogicalDevice() { return logical_device_; }
   vkb::PhysicalDevice &GetPhysicalDevice() { return physical_device_; }
   vkb::Swapchain &GetSwapChain() { return swapchain_; }
+  unsigned int GetQueueFamilyIndex();
 
  private:
   VulkanDeviceManager() = default;
