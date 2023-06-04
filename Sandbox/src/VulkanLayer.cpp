@@ -9,14 +9,6 @@ VulkanLayer::VulkanLayer() : Layer("Vulkan Layer") {
   aria::RenderCommand::BeginRecording();
 }
 
-VulkanLayer::~VulkanLayer() {
-  //  auto vk_device = aria::VulkanDeviceManager::GetInstance().GetLogicalDevice();
-  //
-  //  vkDestroySemaphore(vk_device, image_available_semaphore_, nullptr);
-  //  vkDestroySemaphore(vk_device, render_finished_semaphore_, nullptr);
-  //  vkDestroyFence(vk_device, in_flight_fence_, nullptr);
-}
-
 void VulkanLayer::OnAttach() {}
 
 void VulkanLayer::OnDetach() {}

@@ -26,6 +26,8 @@ class VulkanRendererApi : public RendererApi {
 
   void BeginRecording() override;
   void EndRecording() override;
+  void BeginRenderPass() override;
+  void EndRenderPass() override;
 
   VulkanRendererApi(const VulkanRendererApi &) = delete;           // copy constructor
   VulkanRendererApi &operator=(const VulkanRendererApi &) = delete;// copy assignment

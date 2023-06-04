@@ -114,6 +114,14 @@ void VulkanLib::InitDeviceFunctions(VkDevice device) {
       reinterpret_cast<PFN_vkCreatePipelineCache>(ptr_vk_get_device_proc_addr(device, "vkCreatePipelineCache"));
   ptr_vk_destroy_pipeline_cache =
       reinterpret_cast<PFN_vkDestroyPipelineCache>(ptr_vk_get_device_proc_addr(device, "vkDestroyPipelineCache"));
+  ptr_vk_begin_command_buffer =
+      reinterpret_cast<PFN_vkBeginCommandBuffer>(ptr_vk_get_device_proc_addr(device, "vkBeginCommandBuffer"));
+  ptr_vk_end_command_buffer =
+      reinterpret_cast<PFN_vkEndCommandBuffer>(ptr_vk_get_device_proc_addr(device, "vkEndCommandBuffer"));
+  ptr_vk_cmd_begin_render_pass =
+      reinterpret_cast<PFN_vkCmdBeginRenderPass>(ptr_vk_get_device_proc_addr(device, "vkCmdBeginRenderPass"));
+  ptr_vk_cmd_end_render_pass =
+      reinterpret_cast<PFN_vkCmdEndRenderPass>(ptr_vk_get_device_proc_addr(device, "vkCmdEndRenderPass"));
 }
 
 void VulkanLib::Cleanup() {

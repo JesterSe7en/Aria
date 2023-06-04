@@ -8,7 +8,7 @@
 class VulkanLayer : public aria::Layer {
  public:
   VulkanLayer();
-  ~VulkanLayer() override;
+  ~VulkanLayer() override = default;
 
   void OnAttach() override;
   void OnDetach() override;

@@ -1,12 +1,15 @@
 #include "ariapch.h"
-#include "VulkanRendererApi.h"
+#include "Platform/Vulkan/VulkanRendererApi.h"
 #include "Aria/Core/Base.h"
 #include "Aria/Core/Log.h"
 #include "Aria/Renderer/VertexArray.h"
 #include "GLFW/glfw3.h"
+#include "Platform/Vulkan/VulkanError.h"
+#include "Platform/Vulkan/VulkanLib.h"
 #include "VulkanDebugMessenger.h"
 #include "VulkanError.h"
 #include "VulkanGraphicsPipeline.h"
+#include "VulkanRendererApi.h"
 #include <vector>
 
 namespace aria {
@@ -78,9 +81,73 @@ void VulkanRendererApi::DrawIndexed(const Ref<VertexArray> &vertex_array) { ARIA
 
 void VulkanRendererApi::BeginRecording() {
   ARIA_CORE_INFO("Begin recording");
+  VkCommandBufferBeginInfo begin_info{};
+  begin_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+  begin_info.pInheritanceInfo = nullptr;
+  VkResult result = VulkanLib::GetInstance().ptr_vk_begin_command_buffer(command_buffers_[0], &begin_info);
+  ARIA_VK_CHECK_RESULT_AND_ERROR(result, "Failed to begin recording command buffer")
 }
+
 void VulkanRendererApi::EndRecording() {
   ARIA_CORE_INFO("End recording");
+  if (command_buffers_[0] != nullptr) {
+    VkResult result = VulkanLib::GetInstance().ptr_vk_end_command_buffer(command_buffers_[0]);
+    ARIA_VK_CHECK_RESULT_AND_ERROR(result, "Failed to end recording command buffer")
+  }
+}
+
+void VulkanRendererApi::BeginRenderPass() {
+
+
+
+  //  VkCommandBufferBeginInfo beginInfo{};
+  //         beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+
+  //         if (vkBeginCommandBuffer(commandBuffer, &beginInfo) != VK_SUCCESS) {
+  //             throw std::runtime_error("failed to begin recording command buffer!");
+  //         }
+
+  //         VkRenderPassBeginInfo renderPassInfo{};
+  //         renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+  //         renderPassInfo.renderPass = renderPass;
+  //         renderPassInfo.framebuffer = swapChainFramebuffers[imageIndex];
+  //         renderPassInfo.renderArea.offset = {0, 0};
+  //         renderPassInfo.renderArea.extent = swapChainExtent;
+
+  //         VkClearValue clearColor = {{{0.0f, 0.0f, 0.0f, 1.0f}}};
+  //         renderPassInfo.clearValueCount = 1;
+  //         renderPassInfo.pClearValues = &clearColor;
+
+  //         vkCmdBeginRenderPass(commandBuffer, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
+
+  //             vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
+
+  //             VkViewport viewport{};
+  //             viewport.x = 0.0f;
+  //             viewport.y = 0.0f;
+  //             viewport.width = (float) swapChainExtent.width;
+  //             viewport.height = (float) swapChainExtent.height;
+  //             viewport.minDepth = 0.0f;
+  //             viewport.maxDepth = 1.0f;
+  //             vkCmdSetViewport(commandBuffer, 0, 1, &viewport);
+
+  //             VkRect2D scissor{};
+  //             scissor.offset = {0, 0};
+  //             scissor.extent = swapChainExtent;
+  //             vkCmdSetScissor(commandBuffer, 0, 1, &scissor);
+
+  //             vkCmdDraw(commandBuffer, 3, 1, 0, 0);
+
+  //         vkCmdEndRenderPass(commandBuffer);
+
+  //         if (vkEndCommandBuffer(commandBuffer) != VK_SUCCESS) {
+  //             throw std::runtime_error("failed to record command buffer!");
+  //         }
+  //fei
+}
+
+void VulkanRendererApi::EndRenderPass() {
+  //feijo
 }
 
 void VulkanRendererApi::AddToPipeline(VkShaderModule &shader_module, ShaderType type) {

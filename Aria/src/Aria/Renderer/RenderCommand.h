@@ -16,6 +16,8 @@ class RenderCommand {
 
   static void BeginRecording() { p_renderer_api_->BeginRecording(); }
   static void EndRecording() { p_renderer_api_->EndRecording(); }
+  static void BeginRenderPass() { p_renderer_api_->BeginRenderPass(); }
+  static void EndRenderPass() { p_renderer_api_->EndRenderPass(); }
 
 
  private:

@@ -24,8 +24,10 @@ class RendererApi {
   static void SetApi(Api api);
   static Api Create();
 
-  virtual void BeginRecording() {};
-  virtual void EndRecording() {};
+  virtual void BeginRecording(){};
+  virtual void EndRecording(){};
+  virtual void BeginRenderPass(){};
+  virtual void EndRenderPass(){};
 
  private:
   static Api api_;
