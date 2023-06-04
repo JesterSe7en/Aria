@@ -26,7 +26,7 @@ class OrthographicCamera {
  private:
   glm::mat4 view_matrix_ = glm::mat4(1.0f);
   glm::mat4 projection_matrix_;
-  glm::mat4 vp_matrix_;  // for caching purposes - view projection matrix
+  glm::mat4 vp_matrix_;// for caching purposes - view projection matrix
 
   glm::vec3 position_ = {0.0f, 0.0f, 0.0f};
 
@@ -41,10 +41,10 @@ class PerspectiveCamera {
  private:
   glm::mat4 view_matrix_;
   glm::mat4 projection_matrix_;
-  glm::mat4 vp_matrix_;  // for caching purposes
+  glm::mat4 vp_matrix_;// for caching purposes
 
   glm::vec3 position_;
 
   // need a quaternion here to track rotation
 };
-}  // namespace ARIA
+}// namespace aria

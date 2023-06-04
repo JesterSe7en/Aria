@@ -1,14 +1,14 @@
 #pragma once
 
-#include "Base.h"
 #include "Application.h"
+#include "Base.h"
 #include "Log.h"
 
 #ifdef ARIA_PLATFORM_WINDOWS
 
-extern aria::Application* aria::CreateApplication();
+extern aria::Application *aria::CreateApplication();
 
-int main(int argc, char** argv) {
+int main(int argc, char **argv) {
   aria::Log::Init();
 
   ARIA_CORE_WARN("Initialized log!")

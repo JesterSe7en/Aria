@@ -1,6 +1,5 @@
 #include "ExampleLayer.h"
 #include "Platform/OpenGL/OpenGlShader.h"
-
 #include <imgui.h>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -59,6 +58,10 @@ ExampleLayer::ExampleLayer() : Layer("Example Layer"), mSquarePosition(0.0f) {
   mOrthoCamera.SetPosition({0.0f, 0.0f, 0.0f});
 }
 
+void ExampleLayer::OnAttach() {}
+
+void ExampleLayer::OnDetach() {}
+
 void ExampleLayer::OnUpdate(aria::Timestep delta_time) {
 #pragma region Camera Control
   auto position = mOrthoCamera.GetPosition();
@@ -98,13 +101,9 @@ void ExampleLayer::OnUpdate(aria::Timestep delta_time) {
 
   // ----------------------------------------------
 
-  if (aria::Input::IsKeyPressed(ARIA_KEY_LEFT)) {
-    rotation += camera_rotate_speed * delta_time;
-  }
+  if (aria::Input::IsKeyPressed(ARIA_KEY_LEFT)) { rotation += camera_rotate_speed * delta_time; }
 
-  if (aria::Input::IsKeyPressed(ARIA_KEY_RIGHT)) {
-    rotation -= camera_rotate_speed * delta_time;
-  }
+  if (aria::Input::IsKeyPressed(ARIA_KEY_RIGHT)) { rotation -= camera_rotate_speed * delta_time; }
 
   mOrthoCamera.SetPosition(position);
   mOrthoCamera.SetRotation(rotation);
@@ -118,7 +117,7 @@ void ExampleLayer::OnUpdate(aria::Timestep delta_time) {
   aria::Renderer::BeginScene(mOrthoCamera);
 
   // renders tiles (not ideally how to do this, just example)
-  glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm ::vec3(0.1f));
+  glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
 
   for (int y = 0; y < 20; y++) {
     for (int x = 0; x < 20; x++) {
@@ -135,10 +134,10 @@ void ExampleLayer::OnUpdate(aria::Timestep delta_time) {
   // Render a square 1.5x time the size
   // ARIA::Renderer::submit(mFlatColorShader, mSquareVA, glm::scale(glm::mat4(1.0f), glm ::vec3(1.5f)));
   mTexture2D->Bind();
-  aria::Renderer::Submit(mShaderLibrary.Get("texture"), mSquareVA, glm::scale(glm::mat4(1.0f), glm ::vec3(1.5f)));
+  aria::Renderer::Submit(mShaderLibrary.Get("texture"), mSquareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
 
   mCatTexture2D->Bind();
-  aria::Renderer::Submit(mShaderLibrary.Get("texture"), mSquareVA, glm::scale(glm::mat4(1.0f), glm ::vec3(1.5f)));
+  aria::Renderer::Submit(mShaderLibrary.Get("texture"), mSquareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
 
   // ARIA::Renderer::submit(mTriangleShader, mTriangleVA);
 

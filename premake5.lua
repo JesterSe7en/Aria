@@ -13,7 +13,6 @@ IncludeDir["Glad"] = "Aria/vendor/Glad/include"
 IncludeDir["imgui"] = "Aria/vendor/imgui"
 IncludeDir["glm"] = "Aria/vendor/glm"
 IncludeDir["stb_image"] = "Aria/vendor/stb_image"
-IncludeDir["vkBootstrap"] = "Aria/vendor/vkBootstrap/src"
 IncludeDir["vulkanSDK"] = "C:/ProgramData/scoop/apps/vulkan/current/Include"
 
 include("Aria/vendor/GLFW")
@@ -38,6 +37,8 @@ files({
 	"%{prj.name}/src/**.cpp",
 	"%{prj.name}/vendor/glm/glm/**.hpp",
 	"%{prj.name}/vendor/glm/glm/**.inl",
+	"%{prj.name}/vendor/vkBootstrap/src/**.h",
+	"%{prj.name}/vendor/vkBootstrap/src/**.cpp",
 })
 
 includedirs({
@@ -48,7 +49,6 @@ includedirs({
 	"%{IncludeDir.imgui}",
 	"%{IncludeDir.glm}",
 	"%{IncludeDir.stb_image}",
-	"%{IncludeDir.vkBootstrap}",
 	"%{IncludeDir.vulkanSDK}",
 })
 

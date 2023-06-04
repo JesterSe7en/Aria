@@ -1,13 +1,14 @@
 #include "ariapch.h"
+#include "Aria/ImGui/ImGuiLayer.h"
 #include "ImGuiLayer.h"
 
-#include "Aria/Core/Log.h"
 #include "Aria/Core/Application.h"
+#include "Aria/Core/Log.h"
 
-#include <imgui.h>
 #include <GLFW/glfw3.h>
 #include <backends/imgui_impl_glfw.h>
 #include <backends/imgui_impl_opengl3.h>
+#include <imgui.h>
 
 namespace aria {
 
@@ -19,28 +20,28 @@ void ImGuiLayer::OnAttach() {
   ARIA_CORE_ASSERT(success, "Failed to initialize Dear ImGui")
   ARIA_CORE_INFO("Loaded Dear ImGui {0}", IMGUI_VERSION)
 
-  Application& app = Application::Get();
+  Application &app = Application::Get();
 
   ImGui::CreateContext();
-  ImGuiIO& io = ImGui::GetIO();
-  (void)io;                                              // to suppress compiler warnings
-  io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;  // Enable Keyboard Controls
-  io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;      // Enable Docking
-  io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;    // Enable Multi-Viewport
+  ImGuiIO &io = ImGui::GetIO();
+  (void) io;                                           // to suppress compiler warnings
+  io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;// Enable Keyboard Controls
+  io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;    // Enable Docking
+  io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;  // Enable Multi-Viewport
 
   // When viewports are enabled we tweak WindowRounding/WindowBg so platform
   // windows can look identical to regular ones.
-  ImGuiStyle& style = ImGui::GetStyle();
+  ImGuiStyle &style = ImGui::GetStyle();
   if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
     style.WindowRounding = 0.0f;
     style.Colors[ImGuiCol_WindowBg].w = 1.0f;
   }
 
-  io.DisplaySize = ImVec2((float)app.GetWindow().GetWidth(), (float)app.GetWindow().GetHeight());
+  io.DisplaySize = ImVec2((float) app.GetWindow().GetWidth(), (float) app.GetWindow().GetHeight());
 
   ImGui::StyleColorsDark();
 
-  GLFWwindow* window = static_cast<GLFWwindow*>(app.GetWindow().GetNativeWindow());
+  auto *window = static_cast<GLFWwindow *>(app.GetWindow().GetNativeWindow());
 
   // Setup Platform/Renderer bindings
   ImGui_ImplGlfw_InitForOpenGL(window, true);
@@ -53,7 +54,11 @@ void ImGuiLayer::OnDetach() {
   ImGui::DestroyContext();
 }
 
-void ImGuiLayer::OnEvent(Event& event) {}
+void ImGuiLayer::OnEvent(Event &event) {}
+
+void ImGuiLayer::OnUpdate(Timestep delta_time) {}
+
+void ImGuiLayer::OnImGuiRender() {}
 
 void ImGuiLayer::Begin() const {
   ImGui_ImplOpenGL3_NewFrame();
@@ -73,10 +78,10 @@ void ImGuiLayer::End() const {
   // save/restore it to make it easier to paste this code elsewhere.
 
   if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
-    GLFWwindow* backup_current_context = glfwGetCurrentContext();
+    GLFWwindow *p_current_context = glfwGetCurrentContext();
     ImGui::UpdatePlatformWindows();
     ImGui::RenderPlatformWindowsDefault();
-    glfwMakeContextCurrent(backup_current_context);
+    glfwMakeContextCurrent(p_current_context);
   }
 }
-}  // namespace ARIA
+}// namespace aria

@@ -14,4 +14,4 @@ class Timestep {
   float time_ = 0.0f;
 };
 
-}  // namespace ARIA
+}// namespace aria

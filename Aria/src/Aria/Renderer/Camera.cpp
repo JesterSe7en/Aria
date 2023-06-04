@@ -1,9 +1,8 @@
 #include "ariapch.h"
 #include "Camera.h"
-
-#include <glm/matrix.hpp>
 #include <glm/ext/matrix_transform.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/matrix.hpp>
 
 namespace aria {
 
@@ -22,12 +21,12 @@ void OrthographicCamera::SetRotation(float rotation) {
 }
 
 void OrthographicCamera::RecalculateViewMatrix() {
-  glm::mat4 transform = glm::translate(glm::mat4(1.0f), position_) *
-                        glm::rotate(glm::mat4(1.0f), glm::radians(rotation_), glm::vec3(0, 0, 1));
+  glm::mat4 transform = glm::translate(glm::mat4(1.0f), position_)
+      * glm::rotate(glm::mat4(1.0f), glm::radians(rotation_), glm::vec3(0, 0, 1));
 
   view_matrix_ = glm::inverse(transform);
 
   // this order matters as OpenGL is column major
   vp_matrix_ = projection_matrix_ * view_matrix_;
 }
-}  // namespace ARIA
+}// namespace aria

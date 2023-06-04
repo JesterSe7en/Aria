@@ -1,15 +1,24 @@
+#include "Aria/Core/Application.h"
+#include "Aria/Renderer/RendererApi.h"
+#include "ExampleLayer.h"
+#include "VulkanLayer.h"
 #include <Aria.h>
 #include <Aria/Core/EntryPoint.h>
 
-#include "ExampleLayer.h"
-
 class Sandbox : public aria::Application {
  public:
-  Sandbox() {
-    auto example_layer = new ExampleLayer();
-    PushLayer(example_layer);
+  Sandbox(aria::ApplicationProps &props) : aria::Application(props) {
+    // auto example_layer = new ExampleLayer();
+    // push_layer(example_layer);
+
+    auto vulkan_layer = new VulkanLayer();
+    PushLayer(vulkan_layer);
   };
   ~Sandbox(){};
 };
 
-aria::Application* aria::CreateApplication() { return new Sandbox(); }
+aria::Application *aria::CreateApplication() {
+  ApplicationProps props = {RendererApi::Api::VULKAN};
+  // ApplicationProps props = {RendererAPI::API::OpenGL};
+  return new Sandbox(props);
+}

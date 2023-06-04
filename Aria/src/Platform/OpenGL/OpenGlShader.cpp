@@ -1,8 +1,7 @@
-#include "Aria/Core/Base.h"
 #include "ariapch.h"
 #include "OpenGlShader.h"
+#include "Aria/Core/Base.h"
 #include "Aria/Core/Log.h"
-
 #include <glad/gl.h>
 #include <filesystem>
 #include <string_view>
@@ -98,8 +97,8 @@ OpenGlShader::OpenGlShader(const std::string &name, const std::string &vertex_sr
     glad_glGetProgramiv(renderer_id_, GL_INFO_LOG_LENGTH, &max_length);
 
     // The max_length includes the NULL character
-    std::vector<char> infoLog(max_length);
-    glad_glGetProgramInfoLog(renderer_id_, max_length, &max_length, &infoLog[0]);
+    std::vector<char> info_log(max_length);
+    glad_glGetProgramInfoLog(renderer_id_, max_length, &max_length, &info_log[0]);
 
     // We don't need the program anymore.
     glad_glDeleteProgram(renderer_id_);
@@ -108,7 +107,7 @@ OpenGlShader::OpenGlShader(const std::string &name, const std::string &vertex_sr
     glad_glDeleteShader(fragment_shader);
 
     // Use the info_log as you see fit.
-    ARIA_CORE_ERROR("Shader linking error: {0}", infoLog.data())
+    ARIA_CORE_ERROR("Shader linking error: {0}", info_log.data())
     ARIA_CORE_ASSERT(false, "Shader linking error")
     // In this simple program, we'll just leave
     return;
@@ -142,9 +141,7 @@ void OpenGlShader::SetUniform1I(const std::string &name, int value) {
   glad_glUniform1i(GetUniformLocation(name), value);
 }
 
-void OpenGlShader::SetUniform1F(const std::string &name, float v0) {
-  glad_glUniform1f(GetUniformLocation(name), v0);
-}
+void OpenGlShader::SetUniform1F(const std::string &name, float v0) { glad_glUniform1f(GetUniformLocation(name), v0); }
 
 void OpenGlShader::SetUniform1F(const std::string &name, const glm::vec1 &value) {
   glad_glUniform1f(GetUniformLocation(name), value.x);
@@ -184,7 +181,7 @@ void OpenGlShader::SetUniformMat4F(const std::string &name, const glm::mat4 &mat
 
 #pragma region Shader Compilation
 
-GLenum OpenGlShader::GetShaderType(const std::string_view type) const {
+GLenum OpenGlShader::GetShaderType(const std::string &type) const {
   // All possible types in OpenGl
   // GL_COMPUTE_SHADER, GL_VERTEX_SHADER, GL_TESS_CONTROL_SHADER, GL_TESS_EVALUATION_SHADER, GL_GEOMETRY_SHADER, or
   // GL_FRAGMENT_SHADER.
@@ -227,9 +224,7 @@ std::unordered_map<GLenum, const std::string> OpenGlShader::ParseShaderFile(cons
     }
   }
 
-  if (shader_type != 0) {
-    shaders.emplace(shader_type, ss[0].str());
-  }
+  if (shader_type != 0) { shaders.emplace(shader_type, ss[0].str()); }
 
   ARIA_CORE_ASSERT(shaders.size() != 0, "Parser did not find any valid shader code")
   return shaders;
@@ -271,16 +266,14 @@ uint32_t OpenGlShader::CompileShader(unsigned int type, const std::string &sourc
 }
 
 uint32_t OpenGlShader::CreateShaders(const std::unordered_map<GLenum, const std::string> &shaders) const {
-  if (shaders.empty()) {
-    return 0;
-  }
+  if (shaders.empty()) { return 0; }
 
   uint32_t id = glad_glCreateProgram();
   ARIA_CORE_ASSERT(shaders.size() <= 2, "Only supports two shaders at the moment")
   std::array<GLenum, 2> shader_ids;
   int idx_shader = 0;
-  for (const auto &[kType, kSource] : shaders) {
-    uint32_t compiled = CompileShader(kType, kSource);
+  for (const auto &[type, source] : shaders) {
+    uint32_t compiled = CompileShader(type, source);
     shader_ids[idx_shader] = compiled;
     idx_shader++;
     glad_glAttachShader(id, compiled);
@@ -303,9 +296,7 @@ uint32_t OpenGlShader::CreateShaders(const std::unordered_map<GLenum, const std:
     // We don't need the program anymore.
     glad_glDeleteProgram(id);
     // Don't leak shaders either.
-    for (auto const &kShaderId : shader_ids) {
-      glad_glDeleteShader(kShaderId);
-    }
+    for (auto const &kShaderId : shader_ids) { glad_glDeleteShader(kShaderId); }
 
     // Use the info_log as you see fit.
     ARIA_CORE_ERROR("Shader linking error: {0}", info_log.data())
@@ -314,9 +305,7 @@ uint32_t OpenGlShader::CreateShaders(const std::unordered_map<GLenum, const std:
     return 0;
   }
 
-  for (auto const &kShaderId : shader_ids) {
-    glad_glDetachShader(id, kShaderId);
-  }
+  for (auto const &kShaderId : shader_ids) { glad_glDetachShader(id, kShaderId); }
 
   return id;
 }
@@ -333,4 +322,4 @@ int OpenGlShader::GetUniformLocation(const std::string &name) {
   return location;
 }
 
-}  // namespace ARIA
+}// namespace aria

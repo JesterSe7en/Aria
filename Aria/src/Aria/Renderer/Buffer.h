@@ -26,46 +26,20 @@ enum class ShaderPrimitiveType {
 /// </summary>
 /// <param name="type">ShaderPrimitiveType type</param>
 /// <returns>uint32_t - number of bytes</returns>
-static uint32_t get_shader_type_size(ShaderPrimitiveType type) {
-  switch (type) {
-    case aria::ShaderPrimitiveType::Int:
-    case aria::ShaderPrimitiveType::Float:
-      return 4;
-    case aria::ShaderPrimitiveType::Int2:
-    case aria::ShaderPrimitiveType::Float2:
-      return 4 * 2;
-    case aria::ShaderPrimitiveType::Int3:
-    case aria::ShaderPrimitiveType::Float3:
-      return 4 * 3;
-    case aria::ShaderPrimitiveType::Int4:
-    case aria::ShaderPrimitiveType::Float4:
-      return 4 * 4;
-    case aria::ShaderPrimitiveType::Mat2:
-      return 4 * 2 * 2;
-    case aria::ShaderPrimitiveType::Mat3:
-      return 4 * 3 * 3;
-    case aria::ShaderPrimitiveType::Mat4:
-      return 4 * 4 * 4;
-    case aria::ShaderPrimitiveType::Bool:
-      return 1;
-    default:
-      ARIA_CORE_ASSERT(false, "Unknown shader primitive type")
-      return 0;
-  }
-}
+static uint32_t GetShaderTypeSize(ShaderPrimitiveType type);
 
 class BufferElement {
  public:
   std::string name_;
-  ShaderPrimitiveType shader_primitive_type_ = ShaderPrimitiveType::None;
+  ShaderPrimitiveType shader_primitive_type_;
   size_t offset_ = 0;
-  uint32_t size_ = 0;
-  bool normalized_ = false;
+  uint32_t size_;
+  bool normalized_;
 
   BufferElement() = default;
 
   // offset and stride is calculated after it is added to the buffer layout
-  BufferElement(ShaderPrimitiveType type, const std::string& name, bool normalized = false);
+  BufferElement(ShaderPrimitiveType type, const std::string &name, bool normalized = false);
 
   uint32_t GetElementCount() const;
 };
@@ -94,13 +68,13 @@ class VertexBuffer {
  public:
   virtual ~VertexBuffer() = default;
 
-  virtual const BufferLayout& GetLayout() const = 0;
-  virtual void SetLayout(const BufferLayout& layout) = 0;
+  virtual const BufferLayout &GetLayout() const = 0;
+  virtual void SetLayout(const BufferLayout &layout) = 0;
 
   virtual void Bind() const = 0;
   virtual void Unbind() const = 0;
 
-  static Ref<VertexBuffer> Create(float* vertices, uint32_t size);
+  static Ref<VertexBuffer> Create(float *vertices, uint32_t size);
 };
 
 class IndexBuffer {
@@ -112,7 +86,7 @@ class IndexBuffer {
 
   virtual uint32_t GetCount() const = 0;
 
-  static Ref<IndexBuffer> Create(uint32_t* indices, uint32_t count);
+  static Ref<IndexBuffer> Create(uint32_t *indices, uint32_t count);
 };
 
-}  // namespace ARIA
+}// namespace aria

@@ -1,14 +1,10 @@
 #include "ariapch.h"
 #include "Application.h"
-
-#include <GLFW/glfw3.h>
-
+#include "Aria/Core/Timestep.h"
 #include "Aria/Events/ApplicationEvent.h"
-#include "Aria/Events/KeyEvent.h"
 #include "Aria/Renderer/Buffer.h"
 #include "Aria/Renderer/Renderer.h"
-#include "Aria/Renderer/Camera.h"
-#include "Aria/Core/Timestep.h"
+#include <GLFW/glfw3.h>//TODO: abstract it out only delta time use this
 
 #ifdef WIN32
 #include <Windows.h>
@@ -16,51 +12,78 @@ extern "C" {
 __declspec(dllexport) DWORD NvOptimusEnablement = 0x00000001;
 __declspec(dllexport) int AmdPowerXpressRequestHighPerformance = 1;
 }
-#endif  // def WIN32
+#endif// def WIN32
 
 namespace aria {
 
 Application *Application::p_application_ = nullptr;
 
-// ortho params are actually what is given to us to use by defualt from OpenGL
-Application::Application() {
+// ortho params are actually what is given to us to use by default from OpenGL
+Application::Application(ApplicationProps &props) {
   ARIA_CORE_ASSERT(!p_application_, "Application already exists.")
   p_application_ = this;
 
-  window_ = std::unique_ptr<Window>(Window::Create());
-  window_->SetVSync(false);
-  window_->SetEventCallback(ARIA_BIND_EVENT_FN(Application::OnEvent));
+  RendererApi::SetApi(props.api);
+
+  switch (props.api) {
+    case RendererApi::Api::VULKAN:
+      InitVulkanApp();
+      break;
+    case RendererApi::Api::OPEN_GL:
+      InitOpenGlApp();
+      break;
+    default:
+      ARIA_CORE_ASSERT(false, "Aria engine currently only supports Vulkan and OpenGL")
+      break;
+  }
+}
+
+void Application::InitVulkanApp() {
+  // TODO: ordering for creating window and initializing renderer is different than opengl for vulkan
+  p_window_ = std::unique_ptr<Window>(Window::Create());
+  p_window_->SetVSync(false);
+  p_window_->SetEventCallback(ARIA_BIND_EVENT_FN(Application::OnEvent));
+  Renderer::Init();
+
+  // TODO: this imgui uses opengl to load
+  //  mImGuiLayer = new ImGuiLayer();
+  //  push_overlay(mImGuiLayer);
+}
+
+void Application::InitOpenGlApp() {
+  p_window_ = std::unique_ptr<Window>(Window::Create());
+  p_window_->SetVSync(false);
+  p_window_->SetEventCallback(ARIA_BIND_EVENT_FN(Application::OnEvent));
 
   Renderer::Init();
 
-  im_gui_layer_ = new ImGuiLayer();
-  PushOverlay(im_gui_layer_);
+  p_im_gui_layer_ = new ImGuiLayer();
+  PushOverlay(p_im_gui_layer_);
 }
 
 void Application::Run() {
   while (running_) {
-    float time = (float)glfwGetTime();  // Platform::GetTime() should be used.  Somehow grab the time passed from the
-                                        // OS. Windows as QueryPerformaceTimer()
-    Timestep timestep = time - last_frame_time_;
+    auto time = (float) glfwGetTime();// Platform::GetTime() should be used.  Somehow grab the time passed from the
+    // OS. Windows as QueryPerformanceTimer()
+    Timestep delta_time = time - last_frame_time_;
     last_frame_time_ = time;
 
-    for (Layer *layer : layer_stack_) {
-      layer->OnUpdate(timestep);
-    }
+    for (Layer *layer : layer_stack_) { layer->OnUpdate(delta_time); }
 
-    im_gui_layer_->Begin();
-    for (Layer *layer : layer_stack_) {
-      layer->OnImGuiRender();
-    }
-    im_gui_layer_->End();
+    // mImGuiLayer->begin();
+    // for (Layer *layer : mLayerStack) {
+    //   layer->on_imgui_render();
+    // }
+    // mImGuiLayer->end();
 
-    window_->OnUpdate();
+    p_window_->OnUpdate();
   }
 }
+
 void Application::OnEvent(Event &e) {
   EventDispatcher dispatcher(e);
 
-  dispatcher.Dispatch<WindowCloseEvent>(ARIA_BIND_EVENT_FN(Application::OnWindowClose));
+  dispatcher.dispatch<WindowCloseEvent>(ARIA_BIND_EVENT_FN(Application::OnWindowClose));
 
   // Go through the Layer Stack (backwards) and fire off events
 
@@ -73,6 +96,7 @@ void Application::OnEvent(Event &e) {
     }
   }
 }
+
 void Application::PushLayer(Layer *layer) {
   layer_stack_.PushLayer(layer);
   layer->OnAttach();
@@ -97,4 +121,4 @@ bool Application::OnWindowClose(WindowCloseEvent &e) {
   running_ = false;
   return true;
 }
-}  // namespace ARIA
+}// namespace aria

@@ -9,7 +9,7 @@ namespace aria {
 
 class WindowsWindow : public Window {
  public:
-  WindowsWindow(const WindowProps& props);
+  WindowsWindow(const WindowProps &props);
   virtual ~WindowsWindow();
 
   void OnUpdate() override;
@@ -18,26 +18,26 @@ class WindowsWindow : public Window {
   inline unsigned int GetHeight() const override { return window_data_.height; }
 
   // Window attributes
-  inline void SetEventCallback(const EventCallbackFn& callback) override {
-    window_data_.event_callback_fn = callback;
-  }
+  inline void SetEventCallback(const EventCallbackFn &callback) override { window_data_.event_callback_fn = callback; }
 
   void SetVSync(bool enabled) override;
-  bool IsVSync() const override;
+  inline bool IsVSync() const override { return window_data_.v_sync; }
 
-  virtual void* GetNativeWindow() const override { return p_glfw_window_; }
-
- private:
-  virtual void Init(const WindowProps& props);
-  virtual void Shutdown();
+  void CreateAriaWindow() override;
+  void *GetNativeWindow() const override { return p_glfw_window_; }
 
  private:
-  GLFWwindow* p_glfw_window_;
-  GraphicsContext* p_graphics_context_;
+  void Init();
+  void Shutdown();
+
+ private:
+  GLFWwindow *p_glfw_window_;
+  GraphicsContext *p_context_;
 
   struct WindowData {
     std::string title;
-    unsigned int width, height;
+    unsigned int width;
+    unsigned int height;
     bool v_sync;
 
     EventCallbackFn event_callback_fn;
@@ -45,4 +45,4 @@ class WindowsWindow : public Window {
 
   WindowData window_data_;
 };
-}  // namespace ARIA
+}// namespace aria

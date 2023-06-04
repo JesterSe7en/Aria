@@ -1,12 +1,12 @@
 #pragma once
 
-#include <cstdint>
 #include "Aria/Renderer/Texture.h"
+#include <cstdint>
 
 namespace aria {
 class OpenGlTexture2D : public Texture2D {
  public:
-  explicit OpenGlTexture2D(const std::string& path);
+  explicit OpenGlTexture2D(const std::string &path);
   ~OpenGlTexture2D() override;
 
   std::uint32_t GetWidth() const override { return width_; }
@@ -21,4 +21,4 @@ class OpenGlTexture2D : public Texture2D {
   uint32_t height_ = 0;
   std::string path_;
 };
-}  // namespace ARIA
+}// namespace aria

@@ -1,25 +1,51 @@
-#include <memory>
-#include "Aria/Core/Base.h"
 #include "ariapch.h"
-
+#include "Buffer.h"
+#include "Aria/Core/Base.h"
 #include "Aria/Core/Log.h"
 #include "Platform/OpenGL/OpenGlBuffer.h"
-
-#include "Buffer.h"
 #include "RendererApi.h"
+#include <memory>
 
 namespace aria {
 
+uint32_t GetShaderTypeSize(ShaderPrimitiveType type) {
+  switch (type) {
+    case aria::ShaderPrimitiveType::Int:
+    case aria::ShaderPrimitiveType::Float:
+      return 4;
+    case aria::ShaderPrimitiveType::Int2:
+    case aria::ShaderPrimitiveType::Float2:
+      return 4 * 2;
+    case aria::ShaderPrimitiveType::Int3:
+    case aria::ShaderPrimitiveType::Float3:
+      return 4 * 3;
+    case aria::ShaderPrimitiveType::Int4:
+    case aria::ShaderPrimitiveType::Float4:
+      return 4 * 4;
+    case aria::ShaderPrimitiveType::Mat2:
+      return 4 * 2 * 2;
+    case aria::ShaderPrimitiveType::Mat3:
+      return 4 * 3 * 3;
+    case aria::ShaderPrimitiveType::Mat4:
+      return 4 * 4 * 4;
+    case aria::ShaderPrimitiveType::Bool:
+      return 1;
+    default:
+      ARIA_CORE_ASSERT(false, "Unknown shader primitive type")
+      return 0;
+  }
+}
+
 // -------------------------- Vertex Buffer  --------------------------
 
-Ref<VertexBuffer> VertexBuffer::Create(float* verticies, uint32_t size) {
+Ref<VertexBuffer> VertexBuffer::Create(float *vertices, uint32_t size) {
   RendererApi::Api api = RendererApi::GetApi();
   switch (api) {
     case RendererApi::Api::NONE:
       ARIA_CORE_ASSERT(false, "No renderer API selected for vertex buffer generation")
       return nullptr;
     case RendererApi::Api::OPEN_GL:
-      return std::make_shared<OpenGlVertexBuffer>(verticies, size);
+      return std::make_shared<OpenGlVertexBuffer>(vertices, size);
     case RendererApi::Api::DIRECT_X:
     case RendererApi::Api::VULKAN:
       ARIA_CORE_ASSERT(false, "API selected for vertex buffer generation is not implemented")
@@ -32,7 +58,7 @@ Ref<VertexBuffer> VertexBuffer::Create(float* verticies, uint32_t size) {
 
 // -------------------------- Index Buffer --------------------------
 
-Ref<IndexBuffer> IndexBuffer::Create(uint32_t* indices, uint32_t count) {
+Ref<IndexBuffer> IndexBuffer::Create(uint32_t *indices, uint32_t count) {
   RendererApi::Api api = RendererApi::GetApi();
   switch (api) {
     case RendererApi::Api::NONE:
@@ -58,7 +84,7 @@ BufferLayout::BufferLayout(std::initializer_list<BufferElement> elements) : elem
 
 void BufferLayout::CalculateOffsetAndStride() {
   size_t offset = 0;
-  for (BufferElement& element : elements_) {
+  for (BufferElement &element : elements_) {
     element.offset_ = offset;
     offset += element.size_;
     stride_ += element.size_;
@@ -67,8 +93,10 @@ void BufferLayout::CalculateOffsetAndStride() {
 
 // -------------------------- Buffer Elements  --------------------------
 
-BufferElement::BufferElement(ShaderPrimitiveType type, const std::string& name, bool normalized)
-    : name_(name), shader_primitive_type_(type), size_(get_shader_type_size(type)), normalized_(normalized) {}
+BufferElement::BufferElement(ShaderPrimitiveType type, const std::string &name, bool normalized)
+    : name_(name), shader_primitive_type_(type), normalized_(normalized) {
+  size_ = GetShaderTypeSize(type);
+}
 
 /// <summary>
 /// Returns the number of elements per primitive type e.g. Float3 returns 3 as
@@ -106,4 +134,5 @@ uint32_t BufferElement::GetElementCount() const {
       return 0;
   }
 }
-}  // namespace ARIA
+
+}// namespace aria

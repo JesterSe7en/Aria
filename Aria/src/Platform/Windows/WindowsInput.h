@@ -12,4 +12,4 @@ class WindowsInput : public Input {
   float GetMouseYImpl() override;
   std::pair<float, float> GetMousePositionImpl() override;
 };
-}  // namespace ARIA
+}// namespace aria

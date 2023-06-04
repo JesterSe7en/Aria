@@ -1,13 +1,11 @@
 #include "ariapch.h"
-
-#include "Platform/OpenGL/OpenGlTexture2D.h"
-
 #include "Texture.h"
+#include "Platform/OpenGL/OpenGlTexture2D.h"
 #include "RendererApi.h"
 
 namespace aria {
 // OpenGL requires textures to be loaded from bottom left to top right
-Ref<Texture2D> Texture2D::Create(const std::string& path) {
+Ref<Texture2D> Texture2D::Create(const std::string &path) {
   switch (RendererApi::GetApi()) {
     case RendererApi::Api::NONE:
       ARIA_CORE_ASSERT(false, "No renderer API selected for texture generation")
@@ -23,4 +21,4 @@ Ref<Texture2D> Texture2D::Create(const std::string& path) {
       return nullptr;
   }
 }
-}  // namespace ARIA
+}// namespace aria

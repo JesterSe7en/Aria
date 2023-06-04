@@ -1,8 +1,6 @@
 #include "ariapch.h"
-
-#include "Platform/OpenGL/OpenGlVertexArray.h"
-
 #include "VertexArray.h"
+#include "Platform/OpenGL/OpenGlVertexArray.h"
 #include "RendererApi.h"
 
 namespace aria {
@@ -19,8 +17,8 @@ Ref<VertexArray> VertexArray::Create() {
       ARIA_CORE_ASSERT(false, "API selected for vertex array generation is not implemented")
       return nullptr;
     default:
-      ARIA_CORE_ASSERT(false, "Unknown API") return nullptr;
+      ARIA_CORE_ASSERT(false, "Unknown API")
       return nullptr;
   }
 }
-}  // namespace ARIA
+}// namespace aria
