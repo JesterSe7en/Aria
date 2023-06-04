@@ -1,4 +1,5 @@
 #include "VulkanLayer.h"
+#include "Aria/Renderer/RenderCommand.h"
 
 VulkanLayer::VulkanLayer() : Layer("Vulkan Layer") {
   vertex_shader_ =
@@ -6,7 +7,15 @@ VulkanLayer::VulkanLayer() : Layer("Vulkan Layer") {
   frag_shader_ =
       shader_library_.Load("C:/Users/alyxc/Workspace/Aria/Sandbox/assets/shaders/frag.spv", aria::ShaderType::FRAGMENT);
 
+  //TODO: see if we can limit the funciton calls here specificaly the sets and binding
   aria::RenderCommand::BeginRecording();
+  aria::RenderCommand::BeginRenderPass();
+  aria::RenderCommand::BindToGraphicsPipeline();
+  aria::RenderCommand::SetViewport();
+  aria::RenderCommand::SetScissor();
+  aria::RenderCommand::Draw();
+  aria::RenderCommand::EndRenderPass();
+  aria::RenderCommand::EndRecording();
 }
 
 void VulkanLayer::OnAttach() {}

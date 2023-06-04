@@ -4,8 +4,11 @@
 #include "Aria/Core/Log.h"
 #include "Aria/Renderer/VertexArray.h"
 #include "GLFW/glfw3.h"
+#include "Platform/Vulkan/VulkanDeviceManager.h"
 #include "Platform/Vulkan/VulkanError.h"
+#include "Platform/Vulkan/VulkanGraphicsPipeline.h"
 #include "Platform/Vulkan/VulkanLib.h"
+#include "VkBootstrap.h"
 #include "VulkanDebugMessenger.h"
 #include "VulkanError.h"
 #include "VulkanGraphicsPipeline.h"
@@ -98,57 +101,52 @@ void VulkanRendererApi::EndRecording() {
 
 void VulkanRendererApi::BeginRenderPass() {
 
+  VkRenderPassBeginInfo renderPassInfo{};
+  renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+  renderPassInfo.renderPass = VulkanGraphicsPipeline::GetInstance().GetRenderPass()->GetRenderPass();
+  renderPassInfo.framebuffer =
+      VulkanGraphicsPipeline::GetInstance().GetFrameBuffers()[0];//TODO: Need to grab actual index
+  renderPassInfo.renderArea.offset = {0, 0};
+  renderPassInfo.renderArea.extent = VulkanDeviceManager::GetInstance().GetSwapChain().extent;
 
+  VkClearValue clearColor = {{{0.0f, 0.0f, 0.0f, 1.0f}}};
+  renderPassInfo.clearValueCount = 1;
+  renderPassInfo.pClearValues = &clearColor;
 
-  //  VkCommandBufferBeginInfo beginInfo{};
-  //         beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-
-  //         if (vkBeginCommandBuffer(commandBuffer, &beginInfo) != VK_SUCCESS) {
-  //             throw std::runtime_error("failed to begin recording command buffer!");
-  //         }
-
-  //         VkRenderPassBeginInfo renderPassInfo{};
-  //         renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-  //         renderPassInfo.renderPass = renderPass;
-  //         renderPassInfo.framebuffer = swapChainFramebuffers[imageIndex];
-  //         renderPassInfo.renderArea.offset = {0, 0};
-  //         renderPassInfo.renderArea.extent = swapChainExtent;
-
-  //         VkClearValue clearColor = {{{0.0f, 0.0f, 0.0f, 1.0f}}};
-  //         renderPassInfo.clearValueCount = 1;
-  //         renderPassInfo.pClearValues = &clearColor;
-
-  //         vkCmdBeginRenderPass(commandBuffer, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
-
-  //             vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
-
-  //             VkViewport viewport{};
-  //             viewport.x = 0.0f;
-  //             viewport.y = 0.0f;
-  //             viewport.width = (float) swapChainExtent.width;
-  //             viewport.height = (float) swapChainExtent.height;
-  //             viewport.minDepth = 0.0f;
-  //             viewport.maxDepth = 1.0f;
-  //             vkCmdSetViewport(commandBuffer, 0, 1, &viewport);
-
-  //             VkRect2D scissor{};
-  //             scissor.offset = {0, 0};
-  //             scissor.extent = swapChainExtent;
-  //             vkCmdSetScissor(commandBuffer, 0, 1, &scissor);
-
-  //             vkCmdDraw(commandBuffer, 3, 1, 0, 0);
-
-  //         vkCmdEndRenderPass(commandBuffer);
-
-  //         if (vkEndCommandBuffer(commandBuffer) != VK_SUCCESS) {
-  //             throw std::runtime_error("failed to record command buffer!");
-  //         }
-  //fei
+  VulkanLib::GetInstance().ptr_vk_cmd_begin_render_pass(command_buffers_[0], &renderPassInfo,
+                                                        VK_SUBPASS_CONTENTS_INLINE);
 }
 
-void VulkanRendererApi::EndRenderPass() {
-  //feijo
+void VulkanRendererApi::EndRenderPass() { VulkanLib::GetInstance().ptr_vk_cmd_end_render_pass(command_buffers_[0]); }
+
+void VulkanRendererApi::BindToGraphicsPipeline() {
+  VulkanLib::GetInstance().ptr_vk_cmd_bind_pipeline(command_buffers_[0], VK_PIPELINE_BIND_POINT_GRAPHICS,
+                                                    VulkanGraphicsPipeline::GetInstance().GetGraphicsPipeline());
 }
+
+void VulkanRendererApi::SetViewport() {
+  vkb::Swapchain swapchain = VulkanDeviceManager::GetInstance().GetSwapChain();
+  VkViewport viewport{};
+  viewport.x = 0.0f;
+  viewport.y = 0.0f;
+  viewport.width = (float) swapchain.extent.width;
+  viewport.height = (float) swapchain.extent.height;
+  viewport.minDepth = 0.0f;
+  viewport.maxDepth = 1.0f;
+
+  VulkanLib::GetInstance().ptr_vk_cmd_set_viewport(command_buffers_[0], 0, 1, &viewport);
+}
+
+void VulkanRendererApi::SetScissor() {
+  vkb::Swapchain swapchain = VulkanDeviceManager::GetInstance().GetSwapChain();
+  VkRect2D scissor{};
+  scissor.offset = {0, 0};
+  scissor.extent = swapchain.extent;
+
+  VulkanLib::GetInstance().ptr_vk_cmd_set_scissor(command_buffers_[0], 0, 1, &scissor);
+}
+
+void VulkanRendererApi::Draw() { VulkanLib::GetInstance().ptr_vk_cmd_draw(command_buffers_[0], 3, 1, 0, 0); }
 
 void VulkanRendererApi::AddToPipeline(VkShaderModule &shader_module, ShaderType type) {
   VulkanGraphicsPipeline::GetInstance().AddToShaderStages(shader_module, type);

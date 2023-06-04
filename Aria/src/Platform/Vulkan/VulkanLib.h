@@ -50,11 +50,15 @@ class VulkanLib {
   PFN_vkCreatePipelineCache ptr_vk_create_pipeline_cache = nullptr;
   PFN_vkDestroyPipelineCache ptr_vk_destroy_pipeline_cache = nullptr;
 
-  // vkCommandBuffer function pointers
+  // Command Buffer related function pointers
   PFN_vkBeginCommandBuffer ptr_vk_begin_command_buffer = nullptr;
   PFN_vkEndCommandBuffer ptr_vk_end_command_buffer = nullptr;
   PFN_vkCmdBeginRenderPass ptr_vk_cmd_begin_render_pass = nullptr;
   PFN_vkCmdEndRenderPass ptr_vk_cmd_end_render_pass = nullptr;
+  PFN_vkCmdBindPipeline ptr_vk_cmd_bind_pipeline = nullptr;
+  PFN_vkCmdSetViewport ptr_vk_cmd_set_viewport = nullptr;
+  PFN_vkCmdSetScissor ptr_vk_cmd_set_scissor = nullptr;
+  PFN_vkCmdDraw ptr_vk_cmd_draw = nullptr;
 
  private:
   void Init();

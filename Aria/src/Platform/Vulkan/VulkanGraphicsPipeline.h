@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Aria/Renderer/Shader.h"
+#include "Platform/Vulkan/VulkanRenderPass.h"
 #include "VulkanRenderPass.h"
 #include "vulkan/vulkan_core.h"
 
@@ -23,6 +24,7 @@ class VulkanGraphicsPipeline {
   void AddToShaderStages(VkShaderModule &shader_module, ShaderType type);
   VkPipeline GetGraphicsPipeline() const { return vk_graphics_pipeline_; }
   std::vector<VkFramebuffer> GetFrameBuffers() const { return vk_frame_buffers_; }
+  Ref<VulkanRenderPass> GetRenderPass() const { return vk_render_pass_; }
 
  private:
   VulkanGraphicsPipeline();

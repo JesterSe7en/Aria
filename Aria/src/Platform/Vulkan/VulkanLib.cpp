@@ -122,6 +122,13 @@ void VulkanLib::InitDeviceFunctions(VkDevice device) {
       reinterpret_cast<PFN_vkCmdBeginRenderPass>(ptr_vk_get_device_proc_addr(device, "vkCmdBeginRenderPass"));
   ptr_vk_cmd_end_render_pass =
       reinterpret_cast<PFN_vkCmdEndRenderPass>(ptr_vk_get_device_proc_addr(device, "vkCmdEndRenderPass"));
+  ptr_vk_cmd_bind_pipeline =
+      reinterpret_cast<PFN_vkCmdBindPipeline>(ptr_vk_get_device_proc_addr(device, "vkCmdBindPipeline"));
+  ptr_vk_cmd_set_viewport =
+      reinterpret_cast<PFN_vkCmdSetViewport>(ptr_vk_get_device_proc_addr(device, "vkCmdSetViewport"));
+  ptr_vk_cmd_set_scissor =
+      reinterpret_cast<PFN_vkCmdSetScissor>(ptr_vk_get_device_proc_addr(device, "vkCmdSetScissor"));
+  ptr_vk_cmd_draw = reinterpret_cast<PFN_vkCmdDraw>(ptr_vk_get_device_proc_addr(device, "vkCmdDraw"));
 }
 
 void VulkanLib::Cleanup() {

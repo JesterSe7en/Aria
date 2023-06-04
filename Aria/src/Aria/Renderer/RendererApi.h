@@ -24,10 +24,15 @@ class RendererApi {
   static void SetApi(Api api);
   static Api Create();
 
+  // vulkan commands
   virtual void BeginRecording(){};
   virtual void EndRecording(){};
   virtual void BeginRenderPass(){};
   virtual void EndRenderPass(){};
+  virtual void BindToGraphicsPipeline(){};
+  virtual void SetViewport(){};
+  virtual void SetScissor(){};
+  virtual void Draw(){};
 
  private:
   static Api api_;
