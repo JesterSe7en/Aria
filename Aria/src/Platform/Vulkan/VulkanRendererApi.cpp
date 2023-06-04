@@ -215,7 +215,7 @@ void VulkanRendererApi::AddToPipeline(VkShaderModule &shader_module, ShaderType 
 void VulkanRendererApi::CreateCommandPool() {
   VkCommandPoolCreateInfo cmd_pool_info;
   cmd_pool_info.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
-  cmd_pool_info.flags = 0;
+  cmd_pool_info.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
   cmd_pool_info.pNext = nullptr;
 
   auto graphics_queue_index_ret =
