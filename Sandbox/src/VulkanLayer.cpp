@@ -17,6 +17,10 @@ VulkanLayer::~VulkanLayer() {
   //  vkDestroyFence(vk_device, in_flight_fence_, nullptr);
 }
 
+void VulkanLayer::OnAttach() {}
+
+void VulkanLayer::OnDetach() {}
+
 void VulkanLayer::OnUpdate(aria::Timestep delta_time) {
   //  auto vk_device = aria::VulkanDeviceManager::GetInstance().GetLogicalDevice();
 

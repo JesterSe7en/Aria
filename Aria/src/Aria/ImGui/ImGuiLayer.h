@@ -11,7 +11,8 @@ class ARIA_API ImGuiLayer : public Layer {
   void OnAttach() override;
   void OnDetach() override;
   void OnEvent(Event &event) override;
-
+  void OnUpdate(Timestep delta_time) override;
+  void OnImGuiRender() override;
   void Begin() const;
   void End() const;
 

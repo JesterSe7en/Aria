@@ -10,6 +10,8 @@ class VulkanLayer : public aria::Layer {
   VulkanLayer();
   ~VulkanLayer() override;
 
+  void OnAttach() override;
+  void OnDetach() override;
   void OnUpdate(aria::Timestep delta_time) override;
   void OnEvent(aria::Event &event) override;
 

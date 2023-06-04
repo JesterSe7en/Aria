@@ -3,6 +3,6 @@
 
 namespace aria {
 
-Layer::Layer(const std::string &name) : debug_name_(name) {}
+Layer::Layer(const std::string &name) : debug_name(name) {}
 
 }// namespace aria

@@ -58,6 +58,10 @@ ExampleLayer::ExampleLayer() : Layer("Example Layer"), mSquarePosition(0.0f) {
   mOrthoCamera.SetPosition({0.0f, 0.0f, 0.0f});
 }
 
+void ExampleLayer::OnAttach() {}
+
+void ExampleLayer::OnDetach() {}
+
 void ExampleLayer::OnUpdate(aria::Timestep delta_time) {
 #pragma region Camera Control
   auto position = mOrthoCamera.GetPosition();

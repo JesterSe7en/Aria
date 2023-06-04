@@ -1,4 +1,5 @@
 #include "ariapch.h"
+#include "Aria/ImGui/ImGuiLayer.h"
 #include "ImGuiLayer.h"
 
 #include "Aria/Core/Application.h"
@@ -54,6 +55,10 @@ void ImGuiLayer::OnDetach() {
 }
 
 void ImGuiLayer::OnEvent(Event &event) {}
+
+void ImGuiLayer::OnUpdate(Timestep delta_time) {}
+
+void ImGuiLayer::OnImGuiRender() {}
 
 void ImGuiLayer::Begin() const {
   ImGui_ImplOpenGL3_NewFrame();

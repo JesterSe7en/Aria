@@ -11,15 +11,15 @@ class ARIA_API Layer {
   virtual ~Layer() = default;
 
   // TODO: Enable/disable layers
-  virtual void OnAttach() {}
-  virtual void OnDetach() {}
-  virtual void OnUpdate(Timestep delta_time) {}
-  virtual void OnEvent(Event &event) {}
-  virtual void OnImGuiRender() {}
+  virtual void OnAttach() = 0;
+  virtual void OnDetach() = 0;
+  virtual void OnUpdate(Timestep delta_time) = 0;
+  virtual void OnEvent(Event &event) = 0;
+  virtual void OnImGuiRender() = 0;
 
-  inline const std::string &GetName() const { return debug_name_; }
+  inline const std::string &GetName() const { return debug_name; }
 
  protected:
-  std::string debug_name_;
+  std::string debug_name;
 };
 }// namespace aria
