@@ -27,12 +27,14 @@ class RendererApi {
   // vulkan commands
   virtual void BeginRecording(){};
   virtual void EndRecording(){};
-  virtual void BeginRenderPass(){};
-  virtual void EndRenderPass(){};
-  virtual void BindToGraphicsPipeline(){};
-  virtual void SetViewport(){};
-  virtual void SetScissor(){};
-  virtual void Draw(){};
+  virtual void CmdBeginRenderPass(){};
+  virtual void CmdEndRenderPass(){};
+  virtual void CmdBindToGraphicsPipeline(){};
+  virtual void CmdSetViewport(){};
+  virtual void CmdSetScissor(){};
+  virtual void CmdDraw(){};
+  virtual void DrawFrame(){};
+  virtual void CreateCommandModule(){};
 
  private:
   static Api api_;

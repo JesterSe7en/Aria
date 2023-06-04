@@ -114,8 +114,16 @@ void VulkanLib::InitDeviceFunctions(VkDevice device) {
       reinterpret_cast<PFN_vkCreatePipelineCache>(ptr_vk_get_device_proc_addr(device, "vkCreatePipelineCache"));
   ptr_vk_destroy_pipeline_cache =
       reinterpret_cast<PFN_vkDestroyPipelineCache>(ptr_vk_get_device_proc_addr(device, "vkDestroyPipelineCache"));
+  ptr_vk_wait_for_fences =
+      reinterpret_cast<PFN_vkWaitForFences>(ptr_vk_get_device_proc_addr(device, "vkWaitForFences"));
+  ptr_vk_reset_fences = reinterpret_cast<PFN_vkResetFences>(ptr_vk_get_device_proc_addr(device, "vkResetFences"));
+  ptr_vk_acquire_next_image_khr =
+      reinterpret_cast<PFN_vkAcquireNextImageKHR>(ptr_vk_get_device_proc_addr(device, "vkAcquireNextImageKHR"));
+
   ptr_vk_begin_command_buffer =
       reinterpret_cast<PFN_vkBeginCommandBuffer>(ptr_vk_get_device_proc_addr(device, "vkBeginCommandBuffer"));
+  ptr_vk_reset_command_buffer =
+      reinterpret_cast<PFN_vkResetCommandBuffer>(ptr_vk_get_device_proc_addr(device, "vkResetCommandBuffer"));
   ptr_vk_end_command_buffer =
       reinterpret_cast<PFN_vkEndCommandBuffer>(ptr_vk_get_device_proc_addr(device, "vkEndCommandBuffer"));
   ptr_vk_cmd_begin_render_pass =
@@ -129,6 +137,9 @@ void VulkanLib::InitDeviceFunctions(VkDevice device) {
   ptr_vk_cmd_set_scissor =
       reinterpret_cast<PFN_vkCmdSetScissor>(ptr_vk_get_device_proc_addr(device, "vkCmdSetScissor"));
   ptr_vk_cmd_draw = reinterpret_cast<PFN_vkCmdDraw>(ptr_vk_get_device_proc_addr(device, "vkCmdDraw"));
+  ptr_vk_queue_submit = reinterpret_cast<PFN_vkQueueSubmit>(ptr_vk_get_device_proc_addr(device, "vkQueueSubmit"));
+  ptr_vk_queue_present_khr =
+      reinterpret_cast<PFN_vkQueuePresentKHR>(ptr_vk_get_device_proc_addr(device, "vkQueuePresentKHR"));
 }
 
 void VulkanLib::Cleanup() {

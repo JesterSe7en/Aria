@@ -13,6 +13,7 @@
 #include "VulkanError.h"
 #include "VulkanGraphicsPipeline.h"
 #include "VulkanRendererApi.h"
+#include <stdint.h>
 #include <vector>
 
 namespace aria {
@@ -82,6 +83,17 @@ void VulkanRendererApi::SetClearColor(const glm::vec4 color) { ARIA_CORE_ASSERT(
 
 void VulkanRendererApi::DrawIndexed(const Ref<VertexArray> &vertex_array) { ARIA_CORE_ASSERT(false, "Not Implemented") }
 
+void VulkanRendererApi::CreateCommandModule() {
+  BeginRecording();
+  CmdBeginRenderPass();
+  CmdBindToGraphicsPipeline();
+  CmdSetViewport();
+  CmdSetScissor();
+  CmdDraw();
+  CmdEndRenderPass();
+  EndRecording();
+}
+
 void VulkanRendererApi::BeginRecording() {
   ARIA_CORE_INFO("Begin recording");
   VkCommandBufferBeginInfo begin_info{};
@@ -99,32 +111,32 @@ void VulkanRendererApi::EndRecording() {
   }
 }
 
-void VulkanRendererApi::BeginRenderPass() {
+void VulkanRendererApi::CmdBeginRenderPass() {
 
-  VkRenderPassBeginInfo renderPassInfo{};
-  renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-  renderPassInfo.renderPass = VulkanGraphicsPipeline::GetInstance().GetRenderPass()->GetRenderPass();
-  renderPassInfo.framebuffer =
+  VkRenderPassBeginInfo render_pass_info{};
+  render_pass_info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+  render_pass_info.renderPass = VulkanGraphicsPipeline::GetInstance().GetRenderPass()->GetRenderPass();
+  render_pass_info.framebuffer =
       VulkanGraphicsPipeline::GetInstance().GetFrameBuffers()[0];//TODO: Need to grab actual index
-  renderPassInfo.renderArea.offset = {0, 0};
-  renderPassInfo.renderArea.extent = VulkanDeviceManager::GetInstance().GetSwapChain().extent;
+  render_pass_info.renderArea.offset = {0, 0};
+  render_pass_info.renderArea.extent = VulkanDeviceManager::GetInstance().GetSwapChain().extent;
 
-  VkClearValue clearColor = {{{0.0f, 0.0f, 0.0f, 1.0f}}};
-  renderPassInfo.clearValueCount = 1;
-  renderPassInfo.pClearValues = &clearColor;
+  VkClearValue clear_color = {{{0.0f, 0.0f, 0.0f, 1.0f}}};
+  render_pass_info.clearValueCount = 1;
+  render_pass_info.pClearValues = &clear_color;
 
-  VulkanLib::GetInstance().ptr_vk_cmd_begin_render_pass(command_buffers_[0], &renderPassInfo,
+  VulkanLib::GetInstance().ptr_vk_cmd_begin_render_pass(command_buffers_[0], &render_pass_info,
                                                         VK_SUBPASS_CONTENTS_INLINE);
 }
 
-void VulkanRendererApi::EndRenderPass() { VulkanLib::GetInstance().ptr_vk_cmd_end_render_pass(command_buffers_[0]); }
+void VulkanRendererApi::CmdEndRenderPass() { VulkanLib::GetInstance().ptr_vk_cmd_end_render_pass(command_buffers_[0]); }
 
-void VulkanRendererApi::BindToGraphicsPipeline() {
+void VulkanRendererApi::CmdBindToGraphicsPipeline() {
   VulkanLib::GetInstance().ptr_vk_cmd_bind_pipeline(command_buffers_[0], VK_PIPELINE_BIND_POINT_GRAPHICS,
                                                     VulkanGraphicsPipeline::GetInstance().GetGraphicsPipeline());
 }
 
-void VulkanRendererApi::SetViewport() {
+void VulkanRendererApi::CmdSetViewport() {
   vkb::Swapchain swapchain = VulkanDeviceManager::GetInstance().GetSwapChain();
   VkViewport viewport{};
   viewport.x = 0.0f;
@@ -137,7 +149,7 @@ void VulkanRendererApi::SetViewport() {
   VulkanLib::GetInstance().ptr_vk_cmd_set_viewport(command_buffers_[0], 0, 1, &viewport);
 }
 
-void VulkanRendererApi::SetScissor() {
+void VulkanRendererApi::CmdSetScissor() {
   vkb::Swapchain swapchain = VulkanDeviceManager::GetInstance().GetSwapChain();
   VkRect2D scissor{};
   scissor.offset = {0, 0};
@@ -146,7 +158,55 @@ void VulkanRendererApi::SetScissor() {
   VulkanLib::GetInstance().ptr_vk_cmd_set_scissor(command_buffers_[0], 0, 1, &scissor);
 }
 
-void VulkanRendererApi::Draw() { VulkanLib::GetInstance().ptr_vk_cmd_draw(command_buffers_[0], 3, 1, 0, 0); }
+void VulkanRendererApi::CmdDraw() { VulkanLib::GetInstance().ptr_vk_cmd_draw(command_buffers_[0], 3, 1, 0, 0); }
+
+void VulkanRendererApi::DrawFrame() {
+  auto vklib = VulkanLib::GetInstance();
+
+  vklib.ptr_vk_wait_for_fences(VulkanDeviceManager::GetInstance().GetLogicalDevice(), 1, &in_flight_fences_[0], true,
+                               UINT64_MAX);
+  vklib.ptr_vk_reset_fences(VulkanDeviceManager::GetInstance().GetLogicalDevice(), 1, &in_flight_fences_[0]);
+
+  uint32_t image_index;
+  vklib.ptr_vk_acquire_next_image_khr(VulkanDeviceManager::GetInstance().GetLogicalDevice(),
+                                      VulkanDeviceManager::GetInstance().GetSwapChain(), UINT64_MAX,
+                                      available_semaphores_[0], VK_NULL_HANDLE, &image_index);
+
+  vklib.ptr_vk_reset_command_buffer(command_buffers_[0], 0);
+  CreateCommandModule();
+
+  VkSubmitInfo submit_info{};
+  submit_info.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+
+  VkSemaphore wait_semaphores[] = {available_semaphores_[0]};
+  VkPipelineStageFlags wait_stages[] = {VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT};
+  submit_info.waitSemaphoreCount = 1;
+  submit_info.pWaitSemaphores = wait_semaphores;
+  submit_info.pWaitDstStageMask = wait_stages;
+
+  submit_info.commandBufferCount = 1;
+  submit_info.pCommandBuffers = &command_buffers_[0];
+
+  VkSemaphore signal_semaphores[] = {finished_semaphore_[0]};
+  submit_info.signalSemaphoreCount = 1;
+  submit_info.pSignalSemaphores = signal_semaphores;
+
+  VkResult result = vklib.ptr_vk_queue_submit(graphics_queue_, 1, &submit_info, in_flight_fences_[0]);
+  ARIA_VK_CHECK_RESULT_AND_ASSERT(result, "Failed to submit command buffer")
+
+  VkPresentInfoKHR present_info{};
+  present_info.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
+  present_info.waitSemaphoreCount = 1;
+  present_info.pWaitSemaphores = signal_semaphores;
+
+  VkSwapchainKHR swapchains[] = {VulkanDeviceManager::GetInstance().GetSwapChain().swapchain};
+  present_info.swapchainCount = 1;
+  present_info.pSwapchains = swapchains;
+
+  present_info.pImageIndices = &image_index;
+
+  vklib.ptr_vk_queue_present_khr(present_queue_, &present_info);
+}
 
 void VulkanRendererApi::AddToPipeline(VkShaderModule &shader_module, ShaderType type) {
   VulkanGraphicsPipeline::GetInstance().AddToShaderStages(shader_module, type);

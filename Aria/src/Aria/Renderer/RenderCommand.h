@@ -15,14 +15,16 @@ class RenderCommand {
   inline static void DrawIndexed(const Ref<VertexArray> &vertex_array) { p_renderer_api_->DrawIndexed(vertex_array); }
 
   // Vulkan commands
+  static void CreateCommandModule() { p_renderer_api_->CreateCommandModule(); }
   static void BeginRecording() { p_renderer_api_->BeginRecording(); }
   static void EndRecording() { p_renderer_api_->EndRecording(); }
-  static void BeginRenderPass() { p_renderer_api_->BeginRenderPass(); }
-  static void EndRenderPass() { p_renderer_api_->EndRenderPass(); }
-  static void BindToGraphicsPipeline() { p_renderer_api_->BindToGraphicsPipeline(); }
-  static void SetViewport() { p_renderer_api_->SetViewport(); }
-  static void SetScissor() { p_renderer_api_->SetScissor(); }
-  static void Draw() { p_renderer_api_->Draw(); }
+  static void CmdBeginRenderPass() { p_renderer_api_->CmdBeginRenderPass(); }
+  static void CmdEndRenderPass() { p_renderer_api_->CmdEndRenderPass(); }
+  static void CmdBindToGraphicsPipeline() { p_renderer_api_->CmdBindToGraphicsPipeline(); }
+  static void CmdSetViewport() { p_renderer_api_->CmdSetViewport(); }
+  static void CmdSetScissor() { p_renderer_api_->CmdSetScissor(); }
+  static void CmdDraw() { p_renderer_api_->CmdDraw(); }
+  static void DrawFrame() { p_renderer_api_->DrawFrame(); }
 
  private:
   static std::unique_ptr<RendererApi> p_renderer_api_;

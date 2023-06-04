@@ -24,14 +24,16 @@ class VulkanRendererApi : public RendererApi {
   void SetClearColor(const glm::vec4 color) override;
   void DrawIndexed(const Ref<VertexArray> &vertex_array) override;
 
+  void CreateCommandModule() override;//FIXME: hack to encapsulate the entire command buffer recording
   void BeginRecording() override;
   void EndRecording() override;
-  void BeginRenderPass() override;
-  void EndRenderPass() override;
-  void BindToGraphicsPipeline() override;
-  void SetViewport() override;
-  void SetScissor() override;
-  void Draw() override;
+  void CmdBeginRenderPass() override;
+  void CmdEndRenderPass() override;
+  void CmdBindToGraphicsPipeline() override;
+  void CmdSetViewport() override;
+  void CmdSetScissor() override;
+  void CmdDraw() override;
+  void DrawFrame() override;
 
   VulkanRendererApi(const VulkanRendererApi &) = delete;           // copy constructor
   VulkanRendererApi &operator=(const VulkanRendererApi &) = delete;// copy assignment

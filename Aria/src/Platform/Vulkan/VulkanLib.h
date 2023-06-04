@@ -49,9 +49,15 @@ class VulkanLib {
   PFN_vkDestroyFence ptr_vk_destroy_fence = nullptr;
   PFN_vkCreatePipelineCache ptr_vk_create_pipeline_cache = nullptr;
   PFN_vkDestroyPipelineCache ptr_vk_destroy_pipeline_cache = nullptr;
+  PFN_vkWaitForFences ptr_vk_wait_for_fences = nullptr;
+  PFN_vkResetFences ptr_vk_reset_fences = nullptr;
+  PFN_vkAcquireNextImageKHR ptr_vk_acquire_next_image_khr = nullptr;
+  
 
-  // Command Buffer related function pointers
+
+  // Command Buffer / Rendering related function pointers
   PFN_vkBeginCommandBuffer ptr_vk_begin_command_buffer = nullptr;
+  PFN_vkResetCommandBuffer ptr_vk_reset_command_buffer = nullptr;
   PFN_vkEndCommandBuffer ptr_vk_end_command_buffer = nullptr;
   PFN_vkCmdBeginRenderPass ptr_vk_cmd_begin_render_pass = nullptr;
   PFN_vkCmdEndRenderPass ptr_vk_cmd_end_render_pass = nullptr;
@@ -59,6 +65,8 @@ class VulkanLib {
   PFN_vkCmdSetViewport ptr_vk_cmd_set_viewport = nullptr;
   PFN_vkCmdSetScissor ptr_vk_cmd_set_scissor = nullptr;
   PFN_vkCmdDraw ptr_vk_cmd_draw = nullptr;
+    PFN_vkQueueSubmit ptr_vk_queue_submit = nullptr;
+  PFN_vkQueuePresentKHR ptr_vk_queue_present_khr = nullptr;
 
  private:
   void Init();
