@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Aria/Core/Layer.h"
-#include "ImGuiLayerOpenGL.h"
 
 namespace aria {
 
