@@ -119,6 +119,8 @@ void VulkanLib::InitDeviceFunctions(VkDevice device) {
   ptr_vk_reset_fences = reinterpret_cast<PFN_vkResetFences>(ptr_vk_get_device_proc_addr(device, "vkResetFences"));
   ptr_vk_acquire_next_image_khr =
       reinterpret_cast<PFN_vkAcquireNextImageKHR>(ptr_vk_get_device_proc_addr(device, "vkAcquireNextImageKHR"));
+  ptr_vk_device_wait_idle =
+      reinterpret_cast<PFN_vkDeviceWaitIdle>(ptr_vk_get_device_proc_addr(device, "vkDeviceWaitIdle"));
 
   ptr_vk_begin_command_buffer =
       reinterpret_cast<PFN_vkBeginCommandBuffer>(ptr_vk_get_device_proc_addr(device, "vkBeginCommandBuffer"));

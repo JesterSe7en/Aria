@@ -52,6 +52,7 @@ class VulkanLib {
   PFN_vkWaitForFences ptr_vk_wait_for_fences = nullptr;
   PFN_vkResetFences ptr_vk_reset_fences = nullptr;
   PFN_vkAcquireNextImageKHR ptr_vk_acquire_next_image_khr = nullptr;
+  PFN_vkDeviceWaitIdle ptr_vk_device_wait_idle = nullptr;
   
 
 

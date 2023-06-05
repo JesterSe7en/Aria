@@ -1,4 +1,5 @@
 #include "ariapch.h"
+#include "Platform/Vulkan/VulkanDeviceManager.h"
 #include "VulkanDeviceManager.h"
 #include "Aria/Core/Log.h"
 #include "VkBootstrap.h"
@@ -136,6 +137,10 @@ unsigned int VulkanDeviceManager::GetQueueFamilyIndex() {
   auto res = logical_device_.get_queue_index(vkb::QueueType::graphics);
   ARIA_VKB_CHECK_RESULT_AND_ASSERT(res, "Failed to get queue family index")
   return res.has_value() ? res.value() : 0;
+}
+
+void VulkanDeviceManager::RegenerateSwapchain() {
+  
 }
 
 }// namespace aria

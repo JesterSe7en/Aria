@@ -84,18 +84,60 @@ void VulkanRendererApi::SetClearColor(const glm::vec4 color) { ARIA_CORE_ASSERT(
 void VulkanRendererApi::DrawIndexed(const Ref<VertexArray> &vertex_array) { ARIA_CORE_ASSERT(false, "Not Implemented") }
 
 void VulkanRendererApi::CreateCommandModule() {
-  BeginRecording();
-  CmdBeginRenderPass();
-  CmdBindToGraphicsPipeline();
-  CmdSetViewport();
-  CmdSetScissor();
-  CmdDraw();
-  CmdEndRenderPass();
-  EndRecording();
+
+  for (size_t i = 0; i < command_buffers_.size(); i++) {
+    VkCommandBufferBeginInfo begin_info{};
+    begin_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+    begin_info.pInheritanceInfo = nullptr;
+    VkResult result = VulkanLib::GetInstance().ptr_vk_begin_command_buffer(command_buffers_[i], &begin_info);
+    ARIA_VK_CHECK_RESULT_AND_ERROR(result, "Failed to begin recording command buffer")
+
+    VkRenderPassBeginInfo render_pass_info{};
+    render_pass_info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+    render_pass_info.renderPass = VulkanGraphicsPipeline::GetInstance().GetRenderPass()->GetRenderPass();
+    render_pass_info.framebuffer =
+        VulkanGraphicsPipeline::GetInstance().GetFrameBuffers()[i];//TODO: Need to grab actual index
+    render_pass_info.renderArea.offset = {0, 0};
+    render_pass_info.renderArea.extent = VulkanDeviceManager::GetInstance().GetSwapChain().extent;
+
+    VkClearValue clear_color = {{{0.0f, 0.0f, 0.0f, 1.0f}}};
+    render_pass_info.clearValueCount = 1;
+    render_pass_info.pClearValues = &clear_color;
+
+    VulkanLib::GetInstance().ptr_vk_cmd_begin_render_pass(command_buffers_[i], &render_pass_info,
+                                                          VK_SUBPASS_CONTENTS_INLINE);
+    VulkanLib::GetInstance().ptr_vk_cmd_bind_pipeline(command_buffers_[i], VK_PIPELINE_BIND_POINT_GRAPHICS,
+                                                      VulkanGraphicsPipeline::GetInstance().GetGraphicsPipeline());
+
+    vkb::Swapchain swapchain = VulkanDeviceManager::GetInstance().GetSwapChain();
+    VkViewport viewport{};
+    viewport.x = 0.0f;
+    viewport.y = 0.0f;
+    viewport.width = (float) swapchain.extent.width;
+    viewport.height = (float) swapchain.extent.height;
+    viewport.minDepth = 0.0f;
+    viewport.maxDepth = 1.0f;
+
+    VulkanLib::GetInstance().ptr_vk_cmd_set_viewport(command_buffers_[i], 0, 1, &viewport);
+
+    VkRect2D scissor{};
+    scissor.offset = {0, 0};
+    scissor.extent = swapchain.extent;
+
+    VulkanLib::GetInstance().ptr_vk_cmd_set_scissor(command_buffers_[i], 0, 1, &scissor);
+
+    VulkanLib::GetInstance().ptr_vk_cmd_draw(command_buffers_[i], 3, 1, 0, 0);
+
+    VulkanLib::GetInstance().ptr_vk_cmd_end_render_pass(command_buffers_[i]);
+
+    if (command_buffers_[i] != nullptr) {
+      VkResult result = VulkanLib::GetInstance().ptr_vk_end_command_buffer(command_buffers_[i]);
+      ARIA_VK_CHECK_RESULT_AND_ERROR(result, "Failed to end recording command buffer")
+    }
+  }
 }
 
 void VulkanRendererApi::BeginRecording() {
-  ARIA_CORE_INFO("Begin recording");
   VkCommandBufferBeginInfo begin_info{};
   begin_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
   begin_info.pInheritanceInfo = nullptr;
@@ -104,7 +146,6 @@ void VulkanRendererApi::BeginRecording() {
 }
 
 void VulkanRendererApi::EndRecording() {
-  ARIA_CORE_INFO("End recording");
   if (command_buffers_[0] != nullptr) {
     VkResult result = VulkanLib::GetInstance().ptr_vk_end_command_buffer(command_buffers_[0]);
     ARIA_VK_CHECK_RESULT_AND_ERROR(result, "Failed to end recording command buffer")
@@ -162,37 +203,57 @@ void VulkanRendererApi::CmdDraw() { VulkanLib::GetInstance().ptr_vk_cmd_draw(com
 
 void VulkanRendererApi::DrawFrame() {
   auto vklib = VulkanLib::GetInstance();
+  vklib.ptr_vk_wait_for_fences(VulkanDeviceManager::GetInstance().GetLogicalDevice(), 1,
+                               &in_flight_fences_[current_frame_idx], true, UINT64_MAX);
 
-  vklib.ptr_vk_wait_for_fences(VulkanDeviceManager::GetInstance().GetLogicalDevice(), 1, &in_flight_fences_[0], true,
-                               UINT64_MAX);
-  vklib.ptr_vk_reset_fences(VulkanDeviceManager::GetInstance().GetLogicalDevice(), 1, &in_flight_fences_[0]);
+  uint32_t image_index = 0;
+  {
+    VkResult result = vklib.ptr_vk_acquire_next_image_khr(VulkanDeviceManager::GetInstance().GetLogicalDevice(),
+                                                          VulkanDeviceManager::GetInstance().GetSwapChain(), UINT64_MAX,
+                                                          available_semaphores_[0], VK_NULL_HANDLE, &image_index);
 
-  uint32_t image_index;
-  vklib.ptr_vk_acquire_next_image_khr(VulkanDeviceManager::GetInstance().GetLogicalDevice(),
-                                      VulkanDeviceManager::GetInstance().GetSwapChain(), UINT64_MAX,
-                                      available_semaphores_[0], VK_NULL_HANDLE, &image_index);
+    if (result == VK_ERROR_OUT_OF_DATE_KHR) {
+      VulkanDeviceManager::GetInstance().RegenerateSwapchain();
+      return;
+    }
 
-  vklib.ptr_vk_reset_command_buffer(command_buffers_[0], 0);
-  CreateCommandModule();
+    if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR) {
+      ARIA_CORE_ERROR("Failed to acquire swap chain image!");
+      return;
+    }
+  }
+
+  if (image_in_flight_[image_index] != VK_NULL_HANDLE) {
+    vklib.ptr_vk_wait_for_fences(VulkanDeviceManager::GetInstance().GetLogicalDevice(), 1,
+                                 &image_in_flight_[image_index], true, UINT64_MAX);
+  }
+  image_in_flight_[image_index] = in_flight_fences_[current_frame_idx];
+
+  // CreateCommandModule();
 
   VkSubmitInfo submit_info{};
   submit_info.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
 
-  VkSemaphore wait_semaphores[] = {available_semaphores_[0]};
+  VkSemaphore wait_semaphores[] = {available_semaphores_[current_frame_idx]};
   VkPipelineStageFlags wait_stages[] = {VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT};
   submit_info.waitSemaphoreCount = 1;
   submit_info.pWaitSemaphores = wait_semaphores;
   submit_info.pWaitDstStageMask = wait_stages;
 
   submit_info.commandBufferCount = 1;
-  submit_info.pCommandBuffers = &command_buffers_[0];
+  submit_info.pCommandBuffers = &command_buffers_[image_index];
 
-  VkSemaphore signal_semaphores[] = {finished_semaphore_[0]};
+  VkSemaphore signal_semaphores[] = {finished_semaphore_[current_frame_idx]};
   submit_info.signalSemaphoreCount = 1;
   submit_info.pSignalSemaphores = signal_semaphores;
 
-  VkResult result = vklib.ptr_vk_queue_submit(graphics_queue_, 1, &submit_info, in_flight_fences_[0]);
-  ARIA_VK_CHECK_RESULT_AND_ASSERT(result, "Failed to submit command buffer")
+  vklib.ptr_vk_reset_fences(VulkanDeviceManager::GetInstance().GetLogicalDevice(), 1,
+                            &in_flight_fences_[current_frame_idx]);
+
+  {
+    VkResult result = vklib.ptr_vk_queue_submit(graphics_queue_, 1, &submit_info, in_flight_fences_[current_frame_idx]);
+    ARIA_VK_CHECK_RESULT_AND_ASSERT(result, "Failed to submit command buffer")
+  }
 
   VkPresentInfoKHR present_info{};
   present_info.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
@@ -205,7 +266,19 @@ void VulkanRendererApi::DrawFrame() {
 
   present_info.pImageIndices = &image_index;
 
-  vklib.ptr_vk_queue_present_khr(present_queue_, &present_info);
+  {
+    VkResult result = vklib.ptr_vk_queue_present_khr(present_queue_, &present_info);
+
+    if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR) {
+      VulkanDeviceManager::GetInstance().RegenerateSwapchain();
+      return;
+    } else if (result != VK_SUCCESS) {
+      ARIA_CORE_ERROR("Failed to present swap chain image!");
+      return;
+    }
+  }
+
+  current_frame_idx = (current_frame_idx + 1) % max_frames_in_flight_;
 }
 
 void VulkanRendererApi::AddToPipeline(VkShaderModule &shader_module, ShaderType type) {

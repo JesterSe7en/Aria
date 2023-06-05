@@ -26,6 +26,12 @@ set(CMAKE_CONFIGURATION_TYPES
     CACHE STRING "" FORCE
 )
 
+## GLFW CMake options
+set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
+set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+
+
 ################################################################################
 # Global compiler options
 ################################################################################
@@ -69,8 +75,8 @@ endif()
 ################################################################################
 function(use_package TARGET PACKAGE VERSION)
     message(WARNING "No implementation of use_package. Create yours. "
-                    "Package \"${PACKAGE}\" with version \"${VERSION}\" "
-                    "for target \"${TARGET}\" is ignored!")
+        "Package \"${PACKAGE}\" with version \"${VERSION}\" "
+        "for target \"${TARGET}\" is ignored!")
 endfunction()
 
 ################################################################################
@@ -96,4 +102,3 @@ add_subdirectory(Aria/vendor/Glad)
 add_subdirectory(Aria/vendor/GLFW)
 add_subdirectory(Aria/vendor/imgui)
 add_subdirectory(Sandbox)
-

@@ -63,6 +63,8 @@ class VulkanRendererApi : public RendererApi {
   VkQueue present_queue_;
   VkQueue graphics_queue_;
 
+  uint32_t current_frame_idx = 0;
+
   // sync objects
   std::vector<VkSemaphore> available_semaphores_;
   std::vector<VkSemaphore> finished_semaphore_;
