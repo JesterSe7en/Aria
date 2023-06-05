@@ -16,19 +16,26 @@
 #error Aria only supports Windows!
 #endif// ARIA_PLATFORM_WINDOWS
 
+#ifdef _MSC_VER
+#include <intrin.h>
+#define DEBUG_BREAK __debugbreak()
+#else
+#define DEBUG_BREAK raise(SIGTRAP)
+#endif
+
 #ifdef ARIA_ENABLE_ASSERTS
 #define ARIA_ASSERT(x, ...)                                                                                            \
   {                                                                                                                    \
     if (!(x)) {                                                                                                        \
       ARIA_ERROR("Assertion Failed: {0}", __VA_ARGS__);                                                                \
-      __debugbreak();                                                                                                  \
+      DEBUG_BREAK;                                                                                                     \
     }                                                                                                                  \
   }
 #define ARIA_CORE_ASSERT(x, ...)                                                                                       \
   {                                                                                                                    \
     if (!(x)) {                                                                                                        \
       ARIA_CORE_ERROR("Assertion Failed: {0}", __VA_ARGS__);                                                           \
-      __debugbreak();                                                                                                  \
+      DEBUG_BREAK;                                                                                                     \
     }                                                                                                                  \
   }
 #else
