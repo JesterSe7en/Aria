@@ -17,6 +17,6 @@
 //#include <Windows.h>
 //#endif
 
-#ifdef WIN32
+#ifdef _WIN32
 #include <Windows.h>
 #endif

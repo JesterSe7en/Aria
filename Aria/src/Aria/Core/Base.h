@@ -20,6 +20,7 @@
 #include <intrin.h>
 #define DEBUG_BREAK __debugbreak()
 #else
+#include <csignal>
 #define DEBUG_BREAK raise(SIGTRAP)
 #endif
 
