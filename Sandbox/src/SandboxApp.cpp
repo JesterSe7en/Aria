@@ -14,7 +14,7 @@ class Sandbox : public aria::Application {
     auto vulkan_layer = new VulkanLayer();
     PushLayer(vulkan_layer);
   };
-  ~Sandbox(){};
+  ~Sandbox() override = default;
 };
 
 aria::Application *aria::CreateApplication() {
