@@ -13,6 +13,10 @@
 #include <utility>
 #include <vector>
 
-#ifdef ARIA_PLATFORM_WINDOWS
+//#ifdef ARIA_PLATFORM_WINDOWS
+//#include <Windows.h>
+//#endif
+
+#ifdef WIN32
 #include <Windows.h>
 #endif
