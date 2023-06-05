@@ -1,0 +1,4 @@
+#! /bin/bash
+cd build
+ninja -f build-Debug.ninja
+cd ..
