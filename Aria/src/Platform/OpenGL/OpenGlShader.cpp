@@ -2,7 +2,7 @@
 #include "OpenGlShader.h"
 #include "Aria/Core/Base.h"
 #include "Aria/Core/Log.h"
-#include <glad/gl.h>
+#include <glad/glad.h>
 #include <filesystem>
 #include <string_view>
 

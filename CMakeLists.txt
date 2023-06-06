@@ -2,6 +2,24 @@ cmake_minimum_required(VERSION 3.16.0 FATAL_ERROR)
 
 set(CMAKE_SYSTEM_VERSION 10.0 CACHE STRING "" FORCE)
 
+set(CMAKE_TOOLCHAIN_FILE vendor/vcpkg/scripts/buildsystems/vcpkg.cmake)
+
+execute_process(
+    COMMAND python ${CMAKE_CURRENT_SOURCE_DIR}/Aria/vendor/setupImgui.py
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    RESULT_VARIABLE result
+    OUTPUT_VARIABLE output
+    ERROR_VARIABLE error_output
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+    ERROR_STRIP_TRAILING_WHITESPACE
+)
+
+if(result EQUAL 0)
+    message(STATUS "Python script executed successfully.")
+else()
+    message(FATAL_ERROR "Python script execution failed: ${error_output}")
+endif()
+
 project(Aria C CXX)
 
 ################################################################################
@@ -98,7 +116,4 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 # Sub-projects
 ################################################################################
 add_subdirectory(Aria)
-add_subdirectory(Aria/vendor/Glad)
-add_subdirectory(Aria/vendor/GLFW)
-add_subdirectory(Aria/vendor/imgui)
 add_subdirectory(Sandbox)

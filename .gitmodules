@@ -1,15 +1,6 @@
-[submodule "Aria/vendor/spdlog"]
-	path = Aria/vendor/spdlog
-	url = https://github.com/gabime/spdlog
-[submodule "Aria/vendor/GLFW"]
-	path = Aria/vendor/GLFW
-	url = https://github.com/JesterSe7en/glfw
+[submodule "vendor/vcpkg"]
+	path = vendor/vcpkg
+	url = https://github.com/Microsoft/vcpkg.git
 [submodule "Aria/vendor/imgui"]
 	path = Aria/vendor/imgui
-	url = https://github.com/JesterSe7en/imgui
-[submodule "Aria/vendor/glm"]
-	path = Aria/vendor/glm
-	url = https://github.com/g-truc/glm
-[submodule "Aria/vendor/vkBootstrap"]
-	path = Aria/vendor/vkBootstrap
-	url = https://github.com/charles-lunarg/vk-bootstrap.git
+	url = https://github.com/ocornut/imgui.git

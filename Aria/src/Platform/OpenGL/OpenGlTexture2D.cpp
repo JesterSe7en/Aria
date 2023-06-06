@@ -2,7 +2,7 @@
 #include "OpenGlTexture2D.h"
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
-#include <glad/gl.h>
+#include <glad/glad.h>
 #include <filesystem>
 
 namespace aria {

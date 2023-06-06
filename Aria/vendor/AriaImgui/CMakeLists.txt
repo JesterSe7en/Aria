@@ -1,33 +1,19 @@
-set(PROJECT_NAME Sandbox)
+set(PROJECT_NAME AriaImgui)
 
-################################################################################
-# Source groups
-################################################################################
-set(Headers
-    "src/ExampleLayer.h"
-    "src/VulkanLayer.h"
-    )
-source_group("Headers" FILES ${Headers})
-
-set(Sources
-    "src/ExampleLayer.cpp"
-    "src/SandboxApp.cpp"
-    "src/VulkanLayer.cpp"
-    )
-source_group("Sources" FILES ${Sources})
+# python script manages the file list, cmake will just take files in this directory
+file(GLOB Files "*.*")
 
 set(ALL_FILES
-    ${Headers}
-    ${Sources}
-    )
+    ${Files}
+)
 
 ################################################################################
 # Target
 ################################################################################
-add_executable(${PROJECT_NAME} ${ALL_FILES})
+add_library(${PROJECT_NAME} STATIC ${ALL_FILES})
 
 use_props(${PROJECT_NAME} "${CMAKE_CONFIGURATION_TYPES}" "${DEFAULT_CXX_PROPS}")
-set(ROOT_NAMESPACE Sandbox)
+set(ROOT_NAMESPACE Aria)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
     VS_GLOBAL_KEYWORD "Win32Proj"
@@ -36,17 +22,17 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 # Target name
 ################################################################################
 set_target_properties(${PROJECT_NAME} PROPERTIES
-    TARGET_NAME_DEBUG "Sandbox"
-    TARGET_NAME_DIST "Sandbox"
-    TARGET_NAME_RELEASE "Sandbox"
+    TARGET_NAME_DEBUG "imgui"
+    TARGET_NAME_DIST "imgui"
+    TARGET_NAME_RELEASE "imgui"
     )
 ################################################################################
 # Output directory
 ################################################################################
 set_target_properties(${PROJECT_NAME} PROPERTIES
-    OUTPUT_DIRECTORY_DEBUG "${CMAKE_CURRENT_SOURCE_DIR}/../bin/Debug-windows-x86_64/Sandbox/"
-    OUTPUT_DIRECTORY_DIST "${CMAKE_CURRENT_SOURCE_DIR}/../bin/Dist-windows-x86_64/Sandbox/"
-    OUTPUT_DIRECTORY_RELEASE "${CMAKE_CURRENT_SOURCE_DIR}/../bin/Release-windows-x86_64/Sandbox/"
+    OUTPUT_DIRECTORY_DEBUG "${CMAKE_CURRENT_SOURCE_DIR}/../../../bin/Debug-windows-x86_64/Aria/"
+    OUTPUT_DIRECTORY_DIST "${CMAKE_CURRENT_SOURCE_DIR}/../../../bin/Dist-windows-x86_64/Aria/"
+    OUTPUT_DIRECTORY_RELEASE "${CMAKE_CURRENT_SOURCE_DIR}/../../../bin/Release-windows-x86_64/Aria/"
     )
 ################################################################################
 # MSVC runtime library
@@ -54,43 +40,55 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 get_property(MSVC_RUNTIME_LIBRARY_DEFAULT TARGET ${PROJECT_NAME} PROPERTY MSVC_RUNTIME_LIBRARY)
 string(CONCAT "MSVC_RUNTIME_LIBRARY_STR"
     $<$<CONFIG:Debug>:
-    MultiThreadedDebugDLL
+    MultiThreadedDebug
     >
     $<$<CONFIG:Dist>:
-    MultiThreadedDLL
+    MultiThreaded
     >
     $<$<CONFIG:Release>:
-    MultiThreadedDLL
+    MultiThreaded
     >
     $<$<NOT:$<OR:$<CONFIG:Debug>,$<CONFIG:Dist>,$<CONFIG:Release>>>:${MSVC_RUNTIME_LIBRARY_DEFAULT}>
     )
 set_target_properties(${PROJECT_NAME} PROPERTIES MSVC_RUNTIME_LIBRARY ${MSVC_RUNTIME_LIBRARY_STR})
-
 ################################################################################
 # Include directories
 ################################################################################
-target_include_directories(${PROJECT_NAME} PUBLIC
-    "${CMAKE_CURRENT_SOURCE_DIR}/../Aria/src;"
-    )
+if (DEFINED ENV{VULKAN_SDK})
+  target_include_directories(${PROJECT_NAME} PUBLIC "$ENV{VULKAN_SDK}/Include")
+else ()
+  target_include_directories(${PROJECT_NAME} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../../../../../ProgramData/scoop/apps/vulkan/current/Include")
+endif ()
 
 ################################################################################
 # Compile definitions
 ################################################################################
-target_compile_definitions(${PROJECT_NAME} PRIVATE
-    "$<$<CONFIG:Debug>:"
-    "ARIA_DEBUG;"
-    "ARIA_ENABLE_ASSERTS"
-    ">"
-    "$<$<CONFIG:Dist>:"
-    "ARIA_DIST"
-    ">"
-    "$<$<CONFIG:Release>:"
-    "ARIA_RELEASE"
-    ">"
-    "ARIA_PLATFORM_WINDOWS;"
-    "UNICODE;"
-    "_UNICODE"
+if("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64")
+    target_compile_definitions(${PROJECT_NAME} PRIVATE
+        "$<$<CONFIG:Debug>:"
+            "_DEBUG"
+        ">"
+        "$<$<CONFIG:Release>:"
+            "NDEBUG"
+        ">"
+        "_CONSOLE;"
+        "UNICODE;"
+        "_UNICODE"
     )
+elseif("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x86")
+    target_compile_definitions(${PROJECT_NAME} PRIVATE
+        "$<$<CONFIG:Debug>:"
+            "_DEBUG"
+        ">"
+        "$<$<CONFIG:Release>:"
+            "NDEBUG"
+        ">"
+        "WIN32;"
+        "_CONSOLE;"
+        "UNICODE;"
+        "_UNICODE"
+    )
+endif()
 
 ################################################################################
 # Compile and link options
@@ -119,27 +117,18 @@ if (MSVC)
       >
       /std:c++17;
       /W4;
-      ${DEFAULT_CXX_EXCEPTION_HANDLING};
-      /Y-
+      ${DEFAULT_CXX_EXCEPTION_HANDLING}
       )
   target_link_options(${PROJECT_NAME} PRIVATE
-      $<$<CONFIG:Debug>:
-      /DEBUG;
-      /INCREMENTAL
-      >
       $<$<CONFIG:Dist>:
-      /DEBUG:FULL;
       /OPT:REF;
-      /OPT:ICF;
-      /INCREMENTAL:NO
+      /OPT:ICF
       >
       $<$<CONFIG:Release>:
-      /DEBUG:FULL;
       /OPT:REF;
-      /OPT:ICF;
-      /INCREMENTAL:NO
+      /OPT:ICF
       >
-      /SUBSYSTEM:CONSOLE
+      /SUBSYSTEM:WINDOWS
       )
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
   target_compile_options(${PROJECT_NAME} PRIVATE
@@ -170,10 +159,17 @@ elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
       )
   target_link_options(${PROJECT_NAME} PRIVATE
       $<$<CONFIG:Release>:
-      -Wl, --gc-sections -Wl, --icf=safe
+      -flto
+      -Wl,--gc-sections
+      -Wl,--icf=safe
+      -Wl,--strip-all
+      -Wl,--plugin-opt=eliminate-unused-dwarf-types
       >
       $<$<CONFIG:Dist>:
-      -Wl, --gc-sections -Wl, --icf=safe
+      -flto
+      -Wl,--gc-sections
+      -Wl,--icf=safe
+      -Wl,--strip-all
       >
       )
 endif ()
@@ -182,12 +178,8 @@ endif ()
 # Dependencies
 ################################################################################
 # Link with other targets.
-target_link_libraries(${PROJECT_NAME} PRIVATE
-    Aria
-    imgui
+target_link_libraries(${PROJECT_NAME} PUBLIC
+    glfw
     )
-target_link_directories(${PROJECT_NAME} PRIVATE
-$<$<CONFIG:Debug>:${CMAKE_CURRENT_SOURCE_DIR}/../bin/Debug-windows-x86_64/Aria>
-$<$<CONFIG:Release>:${CMAKE_CURRENT_SOURCE_DIR}/../bin/Release-windows-x86_64/Aria>
-$<$<CONFIG:Dist>:${CMAKE_CURRENT_SOURCE_DIR}/../bin/Dist-windows-x86_64/Aria>
-)
+
+find_package(glfw3 CONFIG REQUIRED)

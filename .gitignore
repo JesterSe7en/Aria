@@ -49,3 +49,5 @@ build/
 out/
 .idea
 cmake-build-*
+vcpkg_installed
+Aria/vendor/AriaImgui

@@ -1,7 +1,7 @@
 #include "ariapch.h"
 #include "OpenGlVertexArray.h"
 #include "Aria/Core/Log.h"
-#include <glad/gl.h>
+#include <glad/glad.h>
 
 namespace aria {
 

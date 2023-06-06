@@ -10,8 +10,8 @@
 #define GLFW_INCLUDE_VULKAN
 #define IMGUI_IMPL_VULKAN_NO_PROTOTYPES
 #include <GLFW/glfw3.h>
-#include <backends/imgui_impl_glfw.h>
-#include <backends/imgui_impl_vulkan.h>
+#include <imgui_impl_glfw.h>
+#include <imgui_impl_vulkan.h>
 #include <imgui.h>
 
 namespace aria {

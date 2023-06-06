@@ -4,7 +4,7 @@
 
 #include "OpenGlContext.h"
 
-#include <glad/gl.h>
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 namespace aria {
@@ -16,10 +16,11 @@ void OpenGlContext::Init() {
   glfwMakeContextCurrent(p_glfw_window_);
 
   // Load Glad
-  int version = gladLoadGL(glfwGetProcAddress);
+  int version = gladLoadGL();
+//  int version = gladLoadGL(glfwGetProcAddress);
   ARIA_CORE_ASSERT(version, "Failed to initialize Glad");
-  ARIA_CORE_INFO("Loaded Glad {0}.{1}", GLAD_VERSION_MAJOR(version), GLAD_VERSION_MINOR(version));
-
+//  ARIA_CORE_INFO("Loaded Glad {0}.{1}", GLAD_VERSION_MAJOR(version), GLAD_VERSION_MINOR(version));
+  ARIA_CORE_INFO("Loaded Glad {0}", version)
   ARIA_CORE_INFO("OpenGL Info:");
   // from spdlog
   //
