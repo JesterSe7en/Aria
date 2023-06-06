@@ -658,6 +658,7 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE
     "$<$<CONFIG:Release>:"
     "ARIA_RELEASE"
     ">"
+    "GLM_FORCE_SILENT_WARNINGS;"
     "ARIA_PLATFORM_WINDOWS;"
     "ARIA_BUILD_DLL;"
     "UNICODE;"
