@@ -22,5 +22,3 @@ Vcpkg used for the following packages
 - GLFW
 - glm
 - spdlog
-
-Ongoing developement to integrate Vulkan on vulkan branch
