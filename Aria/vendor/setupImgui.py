@@ -14,13 +14,20 @@ files = [
     "imstb_textedit.h",
     "imstb_truetype.h",
 
-    "backends\\imgui_impl_glfw.cpp",
-    "backends\\imgui_impl_glfw.h",
-    "backends\\imgui_impl_opengl3_loader.h",
-    "backends\\imgui_impl_opengl3.cpp",
-    "backends\\imgui_impl_opengl3.h",
-    "backends\\imgui_impl_vulkan.cpp",
-    "backends\\imgui_impl_vulkan.h",
+    os.path.join("backends", "imgui_impl_glfw.h"),
+    os.path.join("backends", "imgui_impl_glfw.cpp"),
+    os.path.join("backends", "imgui_impl_opengl3_loader.h"),
+    os.path.join("backends", "imgui_impl_opengl3.cpp"),
+    os.path.join("backends", "imgui_impl_opengl3.h"),
+    os.path.join("backends", "imgui_impl_vulkan.cpp"),
+    os.path.join("backends", "imgui_impl_vulkan.h"),
+    # "backends\\imgui_impl_glfw.cpp",
+    # "backends\\imgui_impl_glfw.h",
+    # "backends\\imgui_impl_opengl3_loader.h",
+    # "backends\\imgui_impl_opengl3.cpp",
+    # "backends\\imgui_impl_opengl3.h",
+    # "backends\\imgui_impl_vulkan.cpp",
+    # "backends\\imgui_impl_vulkan.h",
 ]
 
 src_dir = "imgui"
