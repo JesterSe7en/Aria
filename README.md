@@ -17,4 +17,10 @@ Utilizes the following third-party libraries
 - spdlog: provides logging
 - stb_image: image processor
 
+Vcpkg used for the following packages
+- Glad
+- GLFW
+- glm
+- spdlog
+
 Ongoing developement to integrate Vulkan on vulkan branch
