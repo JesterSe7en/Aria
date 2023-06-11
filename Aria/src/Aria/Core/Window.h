@@ -35,11 +35,6 @@ class ARIA_API Window {
 
   virtual void CreateAriaWindow() = 0;
 
-  virtual const char **GetRequiredInstanceExtensions(uint32_t &count) {
-    // Vulkan ONLY
-    return nullptr;
-  }
-
   static Window *Create(const WindowProps &props = WindowProps());
 };
 }// namespace aria
