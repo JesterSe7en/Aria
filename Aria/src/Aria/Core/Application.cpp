@@ -73,6 +73,7 @@ void Application::Run() {
     for (Layer *layer : layer_stack_) { layer->OnUpdate(delta_time); }
 
     auto api_used = RendererApi::GetApi();
+    // TODO: add back in after imgui for vulkan is working
     if (api_used == RendererApi::Api::VULKAN) {
       p_window_->OnUpdate();
     } else {
