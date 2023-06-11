@@ -144,7 +144,7 @@ void ExampleLayer::OnUpdate(aria::Timestep delta_time) {
   aria::Renderer::EndScene();
 }
 
-void ExampleLayer::OnEvent(aria::Event &event) {
+void ExampleLayer::OnEvent(aria::Event & /* event */) {
   // ARIA::EventDispatcher dispatcher(event);
   // dispatcher.dispatch<ARIA::KeyPressedEvent>(ARIA_BIND_EVENT_FN(ExampleLayer::on_key_pressed_event));
 }

@@ -8,7 +8,7 @@
 
 extern aria::Application *aria::CreateApplication();
 
-int main(int argc, char **argv) {
+int main(int /* argc */, char ** /* argv */) {
   aria::Log::Init();
 
   ARIA_CORE_WARN("Initialized log!")

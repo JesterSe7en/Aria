@@ -77,9 +77,9 @@ void ImGuiLayerVulkan::OnDetach() {
   ImGui::DestroyContext();
 }
 
-void ImGuiLayerVulkan::OnEvent(Event &event) {}
+void ImGuiLayerVulkan::OnEvent(Event & /* event */) {}
 
-void ImGuiLayerVulkan::OnUpdate(Timestep delta_time) {}
+void ImGuiLayerVulkan::OnUpdate(Timestep /* delta_time */) {}
 
 void ImGuiLayerVulkan::OnImGuiRender() {}
 

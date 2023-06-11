@@ -17,6 +17,6 @@ class ImGuiLayerVulkan : public ImGuiLayer {
   void End() const override;
 
  private:
-  const char *glsl_version_ = "#version 430 core";
+  // const char *glsl_version_ = "#version 430 core";
 };
 }// namespace aria

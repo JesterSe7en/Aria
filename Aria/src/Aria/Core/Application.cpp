@@ -123,7 +123,7 @@ void Application::PopOverlay(Layer *overlay) {
   overlay->OnDetach();
 }
 
-bool Application::OnWindowClose(WindowCloseEvent &e) {
+bool Application::OnWindowClose(WindowCloseEvent &/* e */) {
   running_ = false;
   return true;
 }
