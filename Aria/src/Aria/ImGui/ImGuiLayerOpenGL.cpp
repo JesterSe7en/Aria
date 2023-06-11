@@ -53,9 +53,9 @@ void ImGuiLayerOpenGL::OnDetach() {
   ImGui::DestroyContext();
 }
 
-void ImGuiLayerOpenGL::OnEvent(Event &event) {}
+void ImGuiLayerOpenGL::OnEvent(Event& /* event */) {}
 
-void ImGuiLayerOpenGL::OnUpdate(Timestep delta_time) {}
+void ImGuiLayerOpenGL::OnUpdate(Timestep /* delta_time */) {}
 
 void ImGuiLayerOpenGL::OnImGuiRender() {}
 
