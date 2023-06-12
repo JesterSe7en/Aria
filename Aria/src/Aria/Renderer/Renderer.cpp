@@ -8,8 +8,12 @@
 namespace aria {
 
 Renderer::SceneData *Renderer::p_scene_data_ = new Renderer::SceneData;
+Scope<RendererApi> Renderer::p_renderer_api_ = nullptr;
 
-void Renderer::Init() { RenderCommand::Init(RendererApi::GetApi()); }
+Scope<RendererApi> Renderer::Init() {
+  p_renderer_api_ = RenderCommand::Init(RendererApi::GetApi());
+  return std::move(p_renderer_api_);
+}
 
 void Renderer::BeginScene(const OrthographicCamera &camera) { p_scene_data_->vp_matrix = camera.GetVpMatrix(); }
 void Renderer::EndScene() {}

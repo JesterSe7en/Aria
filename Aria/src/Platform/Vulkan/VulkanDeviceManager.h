@@ -11,6 +11,7 @@ class VulkanDeviceManager {
 
  public:
   ~VulkanDeviceManager();
+  
   VulkanDeviceManager(const VulkanDeviceManager &) = delete;
   VulkanDeviceManager &operator=(const VulkanDeviceManager &) = delete;
 

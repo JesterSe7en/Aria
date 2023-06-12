@@ -45,11 +45,11 @@ void Application::InitVulkanApp() {
   p_window_->SetVSync(false);
   p_window_->SetEventCallback(ARIA_BIND_EVENT_FN(Application::OnEvent));
 
-  Renderer::Init();
+  p_renderer_api_ = Renderer::Init();
 
   // TODO: still need to fix imgui for vulkan.  More involved
-  //  p_im_gui_layer_ = ImGuiLayer::Create();
-  //  PushOverlay(p_im_gui_layer_.get());
+  p_im_gui_layer_ = ImGuiLayer::Create();
+  PushOverlay(p_im_gui_layer_.get());
 }
 
 void Application::InitOpenGlApp() {
@@ -57,7 +57,7 @@ void Application::InitOpenGlApp() {
   p_window_->SetVSync(false);
   p_window_->SetEventCallback(ARIA_BIND_EVENT_FN(Application::OnEvent));
 
-  Renderer::Init();
+  p_renderer_api_ = Renderer::Init();
 
   p_im_gui_layer_ = ImGuiLayer::Create();
   PushOverlay(p_im_gui_layer_.get());
@@ -72,17 +72,23 @@ void Application::Run() {
 
     for (Layer *layer : layer_stack_) { layer->OnUpdate(delta_time); }
 
-    auto api_used = RendererApi::GetApi();
-    // TODO: add back in after imgui for vulkan is working
-    if (api_used == RendererApi::Api::VULKAN) {
-      p_window_->OnUpdate();
-    } else {
-      p_im_gui_layer_->Begin();
-      for (Layer *layer : layer_stack_) { layer->OnImGuiRender(); }
-      p_im_gui_layer_->End();
+    // auto api_used = RendererApi::GetApi();
+    // // TODO: add back in after imgui for vulkan is working
+    // if (api_used == RendererApi::Api::VULKAN) {
+    //   p_window_->OnUpdate();
+    // } else {
+    //   p_im_gui_layer_->Begin();
+    //   for (Layer *layer : layer_stack_) { layer->OnImGuiRender(); }
+    //   p_im_gui_layer_->End();
 
-      p_window_->OnUpdate();
-    }
+    //   p_window_->OnUpdate();
+    // }
+
+    p_im_gui_layer_->Begin();
+    for (Layer *layer : layer_stack_) { layer->OnImGuiRender(); }
+    p_im_gui_layer_->End();
+
+    p_window_->OnUpdate();
   }
 }
 
@@ -123,7 +129,7 @@ void Application::PopOverlay(Layer *overlay) {
   overlay->OnDetach();
 }
 
-bool Application::OnWindowClose(WindowCloseEvent &/* e */) {
+bool Application::OnWindowClose(WindowCloseEvent & /* e */) {
   running_ = false;
   return true;
 }

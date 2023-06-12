@@ -8,7 +8,7 @@
 namespace aria {
 class RenderCommand {
  public:
-  static void Init(RendererApi::Api api);
+  static Scope<RendererApi> Init(RendererApi::Api api);
 
   inline static void SetClearColor(glm::vec4 color) { p_renderer_api_->SetClearColor(color); }
   inline static void Clear() { p_renderer_api_->Clear(); }
@@ -27,6 +27,6 @@ class RenderCommand {
   static void DrawFrame() { p_renderer_api_->DrawFrame(); }
 
  private:
-  static std::unique_ptr<RendererApi> p_renderer_api_;
+  static Scope<RendererApi> p_renderer_api_;
 };
 }// namespace aria

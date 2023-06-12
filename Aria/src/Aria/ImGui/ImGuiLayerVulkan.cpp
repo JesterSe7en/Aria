@@ -8,11 +8,10 @@
 
 #define GLFW_INCLUDE_NONE
 #define GLFW_INCLUDE_VULKAN
-#define IMGUI_IMPL_VULKAN_NO_PROTOTYPES
 #include <GLFW/glfw3.h>
+#include <imgui.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_vulkan.h>
-#include <imgui.h>
 
 namespace aria {
 
@@ -51,9 +50,10 @@ void ImGuiLayerVulkan::OnAttach() {
   auto *window = static_cast<GLFWwindow *>(app.GetWindow().GetNativeWindow());
 
   // Setup Platform/Renderer bindings
-  // ImGui_ImplGlfw_InitForVulkan(window, true);
+  ImGui_ImplGlfw_InitForVulkan(window, true);
 
-  // ImGui_ImplVulkan_InitInfo init_info = {};
+  ImGui_ImplVulkan_InitInfo init_info = {};
+  // auto isthistheapi = Renderer::GetApiInstance();
   // init_info.Instance = VulkanRendererApi::GetInstance().GetVkInstance()->GetVKBInstance().instance;
   // init_info.PhysicalDevice = VulkanDeviceManager::GetInstance().GetPhysicalDevice();
   // init_info.Device = VulkanDeviceManager::GetInstance().GetLogicalDevice();
@@ -67,7 +67,7 @@ void ImGuiLayerVulkan::OnAttach() {
   // init_info.CheckVkResultFn = [](VkResult result) {
   //   if (result != VK_SUCCESS) { ARIA_CORE_ERROR("Vulkan Error: {0}", result); }
   // };
-  //
+
   // ImGui_ImplVulkan_Init(&init_info, VulkanGraphicsPipeline::GetInstance().GetRenderPass()->GetRenderPass());
 }
 

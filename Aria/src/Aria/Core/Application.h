@@ -45,7 +45,7 @@ class ARIA_API Application {
   void InitVulkanApp();
   void InitOpenGlApp();
 
-  std::unique_ptr<Window> p_window_;
+  Scope<Window> p_window_;
   bool running_ = true;
   LayerStack layer_stack_;
 
@@ -55,6 +55,7 @@ class ARIA_API Application {
  private:
   static Application *p_application_;
   Scope<ImGuiLayer> p_im_gui_layer_;
+  Scope<RendererApi> p_renderer_api_;
 };
 
 // To be defined in CLIENT

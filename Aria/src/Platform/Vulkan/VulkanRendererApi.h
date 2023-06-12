@@ -16,7 +16,7 @@ namespace aria {
 
 class VulkanRendererApi : public RendererApi {
  public:
-  VulkanRendererApi();
+  VulkanRendererApi() = default;
   ~VulkanRendererApi();
 
   void Init() override;

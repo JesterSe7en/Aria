@@ -53,8 +53,6 @@ class VulkanLib {
   PFN_vkResetFences ptr_vk_reset_fences = nullptr;
   PFN_vkAcquireNextImageKHR ptr_vk_acquire_next_image_khr = nullptr;
   PFN_vkDeviceWaitIdle ptr_vk_device_wait_idle = nullptr;
-  
-
 
   // Command Buffer / Rendering related function pointers
   PFN_vkBeginCommandBuffer ptr_vk_begin_command_buffer = nullptr;
@@ -66,7 +64,7 @@ class VulkanLib {
   PFN_vkCmdSetViewport ptr_vk_cmd_set_viewport = nullptr;
   PFN_vkCmdSetScissor ptr_vk_cmd_set_scissor = nullptr;
   PFN_vkCmdDraw ptr_vk_cmd_draw = nullptr;
-    PFN_vkQueueSubmit ptr_vk_queue_submit = nullptr;
+  PFN_vkQueueSubmit ptr_vk_queue_submit = nullptr;
   PFN_vkQueuePresentKHR ptr_vk_queue_present_khr = nullptr;
 
  private:

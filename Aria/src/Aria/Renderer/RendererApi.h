@@ -22,6 +22,7 @@ class RendererApi {
 
   static Api GetApi() { return api_; }
   static void SetApi(Api api);
+
   static Api Create();
 
   // vulkan commands

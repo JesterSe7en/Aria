@@ -5,6 +5,10 @@
 
 namespace aria {
 class OpenGlRendererApi : public RendererApi {
+ public:
+  OpenGlRendererApi() = default;
+  ~OpenGlRendererApi() = default;
+
   void Init() override;
   void Clear() override;
   void SetClearColor(const glm::vec4 color) override;

@@ -18,15 +18,6 @@
 
 namespace aria {
 
-VulkanRendererApi::VulkanRendererApi() {
-  p_vulkan_instance_ = nullptr;
-  p_vk_instance_ = nullptr;
-  surface_ = VK_NULL_HANDLE;
-  command_pool_ = VK_NULL_HANDLE;
-  present_queue_ = VK_NULL_HANDLE;
-  graphics_queue_ = VK_NULL_HANDLE;
-}
-
 VulkanRendererApi::~VulkanRendererApi() {
   auto vklib = VulkanLib::GetInstance();
   vklib.ptr_vk_destroy_command_pool(VulkanDeviceManager::GetInstance().GetLogicalDevice(), command_pool_, nullptr);
