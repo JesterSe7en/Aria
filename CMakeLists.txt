@@ -4,15 +4,28 @@ set(CMAKE_SYSTEM_VERSION 10.0 CACHE STRING "" FORCE)
 
 set(CMAKE_TOOLCHAIN_FILE vendor/vcpkg/scripts/buildsystems/vcpkg.cmake)
 
-execute_process(
-    COMMAND python ${CMAKE_CURRENT_SOURCE_DIR}/Aria/vendor/setupImgui.py
-    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-    RESULT_VARIABLE result
-    OUTPUT_VARIABLE output
-    ERROR_VARIABLE error_output
-    OUTPUT_STRIP_TRAILING_WHITESPACE
-    ERROR_STRIP_TRAILING_WHITESPACE
-)
+
+if (UNIX)
+    execute_process(
+        COMMAND python3 ${CMAKE_CURRENT_SOURCE_DIR}/Aria/vendor/setup_imgui.py
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+        RESULT_VARIABLE result
+        OUTPUT_VARIABLE output
+        ERROR_VARIABLE error_output
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+        ERROR_STRIP_TRAILING_WHITESPACE
+    )
+else()
+    execute_process(
+        COMMAND python ${CMAKE_CURRENT_SOURCE_DIR}/Aria/vendor/setup_imgui.py
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+        RESULT_VARIABLE result
+        OUTPUT_VARIABLE output
+        ERROR_VARIABLE error_output
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+        ERROR_STRIP_TRAILING_WHITESPACE
+    )
+endif()
 
 if(result EQUAL 0)
     message(STATUS "Python script executed successfully.")
