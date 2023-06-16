@@ -28,6 +28,8 @@ void ImGuiLayerVulkan::OnAttach() {
 
   Application &app = Application::Get();
 
+  auto *renderer_api = static_cast<VulkanRendererApi *>(app.GetRendererApi().get());
+
   ImGui::CreateContext();
   ImGuiIO &io = ImGui::GetIO();
   (void) io;                                           // to suppress compiler warnings
@@ -53,8 +55,7 @@ void ImGuiLayerVulkan::OnAttach() {
   ImGui_ImplGlfw_InitForVulkan(window, true);
 
   ImGui_ImplVulkan_InitInfo init_info = {};
-  // auto isthistheapi = Renderer::GetApiInstance();
-  // init_info.Instance = VulkanRendererApi::GetInstance().GetVkInstance()->GetVKBInstance().instance;
+  // init_info.Instance =
   // init_info.PhysicalDevice = VulkanDeviceManager::GetInstance().GetPhysicalDevice();
   // init_info.Device = VulkanDeviceManager::GetInstance().GetLogicalDevice();
   // init_info.QueueFamily = VulkanDeviceManager::GetInstance().GetQueueFamilyIndex();

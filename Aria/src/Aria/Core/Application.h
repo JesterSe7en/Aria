@@ -36,6 +36,7 @@ class ARIA_API Application {
   void PopOverlay(Layer *overlay);
 
   inline Window &GetWindow() { return *p_window_; }
+  inline Scope<RendererApi> &GetRendererApi() { return p_renderer_api_; }
 
   inline static Application &Get() { return *p_application_; }
 
