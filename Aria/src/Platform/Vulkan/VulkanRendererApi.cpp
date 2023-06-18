@@ -20,21 +20,21 @@ namespace aria {
 
 VulkanRendererApi::~VulkanRendererApi() {
   auto vklib = VulkanLib::GetInstance();
-  vklib.ptr_vk_destroy_command_pool(VulkanDeviceManager::GetInstance().GetLogicalDevice(), command_pool_, nullptr);
+  vklib.ptr_vk_destroy_command_pool(p_vulkan_device_manager_->GetLogicalDevice(), command_pool_, nullptr);
 
   for (auto semaphore : available_semaphores_) {
-    vklib.ptr_vk_destroy_semaphore(VulkanDeviceManager::GetInstance().GetLogicalDevice(), semaphore, nullptr);
+    vklib.ptr_vk_destroy_semaphore(p_vulkan_device_manager_->GetLogicalDevice(), semaphore, nullptr);
   }
   for (auto semaphore : finished_semaphore_) {
-    vklib.ptr_vk_destroy_semaphore(VulkanDeviceManager::GetInstance().GetLogicalDevice(), semaphore, nullptr);
+    vklib.ptr_vk_destroy_semaphore(p_vulkan_device_manager_->GetLogicalDevice(), semaphore, nullptr);
   }
 
   for (auto fence : in_flight_fences_) {
-    vklib.ptr_vk_destroy_fence(VulkanDeviceManager::GetInstance().GetLogicalDevice(), fence, nullptr);
+    vklib.ptr_vk_destroy_fence(p_vulkan_device_manager_->GetLogicalDevice(), fence, nullptr);
   }
 
   for (auto fence : image_in_flight_) {
-    vklib.ptr_vk_destroy_fence(VulkanDeviceManager::GetInstance().GetLogicalDevice(), fence, nullptr);
+    vklib.ptr_vk_destroy_fence(p_vulkan_device_manager_->GetLogicalDevice(), fence, nullptr);
   }
 }
 
@@ -89,7 +89,7 @@ void VulkanRendererApi::CreateCommandModule() {
     render_pass_info.framebuffer =
         VulkanGraphicsPipeline::GetInstance().GetFrameBuffers()[i];//TODO: Need to grab actual index
     render_pass_info.renderArea.offset = {0, 0};
-    render_pass_info.renderArea.extent = VulkanDeviceManager::GetInstance().GetSwapChain().extent;
+    render_pass_info.renderArea.extent = p_vulkan_device_manager_->GetSwapChain().extent;
 
     VkClearValue clear_color = {{{0.0f, 0.0f, 0.0f, 1.0f}}};
     render_pass_info.clearValueCount = 1;
@@ -100,7 +100,7 @@ void VulkanRendererApi::CreateCommandModule() {
     VulkanLib::GetInstance().ptr_vk_cmd_bind_pipeline(command_buffers_[i], VK_PIPELINE_BIND_POINT_GRAPHICS,
                                                       VulkanGraphicsPipeline::GetInstance().GetGraphicsPipeline());
 
-    vkb::Swapchain swapchain = VulkanDeviceManager::GetInstance().GetSwapChain();
+    vkb::Swapchain swapchain = p_vulkan_device_manager_->GetSwapChain();
     VkViewport viewport{};
     viewport.x = 0.0f;
     viewport.y = 0.0f;
@@ -151,7 +151,7 @@ void VulkanRendererApi::CmdBeginRenderPass() {
   render_pass_info.framebuffer =
       VulkanGraphicsPipeline::GetInstance().GetFrameBuffers()[0];//TODO: Need to grab actual index
   render_pass_info.renderArea.offset = {0, 0};
-  render_pass_info.renderArea.extent = VulkanDeviceManager::GetInstance().GetSwapChain().extent;
+  render_pass_info.renderArea.extent = p_vulkan_device_manager_->GetSwapChain().extent;
 
   VkClearValue clear_color = {{{0.0f, 0.0f, 0.0f, 1.0f}}};
   render_pass_info.clearValueCount = 1;
@@ -169,7 +169,7 @@ void VulkanRendererApi::CmdBindToGraphicsPipeline() {
 }
 
 void VulkanRendererApi::CmdSetViewport() {
-  vkb::Swapchain swapchain = VulkanDeviceManager::GetInstance().GetSwapChain();
+  vkb::Swapchain swapchain = p_vulkan_device_manager_->GetSwapChain();
   VkViewport viewport{};
   viewport.x = 0.0f;
   viewport.y = 0.0f;
@@ -182,7 +182,7 @@ void VulkanRendererApi::CmdSetViewport() {
 }
 
 void VulkanRendererApi::CmdSetScissor() {
-  vkb::Swapchain swapchain = VulkanDeviceManager::GetInstance().GetSwapChain();
+  vkb::Swapchain swapchain = p_vulkan_device_manager_->GetSwapChain();
   VkRect2D scissor{};
   scissor.offset = {0, 0};
   scissor.extent = swapchain.extent;
@@ -194,17 +194,17 @@ void VulkanRendererApi::CmdDraw() { VulkanLib::GetInstance().ptr_vk_cmd_draw(com
 
 void VulkanRendererApi::DrawFrame() {
   auto vklib = VulkanLib::GetInstance();
-  vklib.ptr_vk_wait_for_fences(VulkanDeviceManager::GetInstance().GetLogicalDevice(), 1,
-                               &in_flight_fences_[current_frame_idx], true, UINT64_MAX);
+  vklib.ptr_vk_wait_for_fences(p_vulkan_device_manager_->GetLogicalDevice(), 1, &in_flight_fences_[current_frame_idx],
+                               true, UINT64_MAX);
 
   uint32_t image_index = 0;
   {
-    VkResult result = vklib.ptr_vk_acquire_next_image_khr(VulkanDeviceManager::GetInstance().GetLogicalDevice(),
-                                                          VulkanDeviceManager::GetInstance().GetSwapChain(), UINT64_MAX,
+    VkResult result = vklib.ptr_vk_acquire_next_image_khr(p_vulkan_device_manager_->GetLogicalDevice(),
+                                                          p_vulkan_device_manager_->GetSwapChain(), UINT64_MAX,
                                                           available_semaphores_[0], VK_NULL_HANDLE, &image_index);
 
     if (result == VK_ERROR_OUT_OF_DATE_KHR) {
-      VulkanDeviceManager::GetInstance().RegenerateSwapchain();
+      p_vulkan_device_manager_->RegenerateSwapchain();
       return;
     }
 
@@ -215,8 +215,8 @@ void VulkanRendererApi::DrawFrame() {
   }
 
   if (image_in_flight_[image_index] != VK_NULL_HANDLE) {
-    vklib.ptr_vk_wait_for_fences(VulkanDeviceManager::GetInstance().GetLogicalDevice(), 1,
-                                 &image_in_flight_[image_index], true, UINT64_MAX);
+    vklib.ptr_vk_wait_for_fences(p_vulkan_device_manager_->GetLogicalDevice(), 1, &image_in_flight_[image_index], true,
+                                 UINT64_MAX);
   }
   image_in_flight_[image_index] = in_flight_fences_[current_frame_idx];
 
@@ -238,8 +238,7 @@ void VulkanRendererApi::DrawFrame() {
   submit_info.signalSemaphoreCount = 1;
   submit_info.pSignalSemaphores = signal_semaphores;
 
-  vklib.ptr_vk_reset_fences(VulkanDeviceManager::GetInstance().GetLogicalDevice(), 1,
-                            &in_flight_fences_[current_frame_idx]);
+  vklib.ptr_vk_reset_fences(p_vulkan_device_manager_->GetLogicalDevice(), 1, &in_flight_fences_[current_frame_idx]);
 
   {
     VkResult result = vklib.ptr_vk_queue_submit(graphics_queue_, 1, &submit_info, in_flight_fences_[current_frame_idx]);
@@ -251,7 +250,7 @@ void VulkanRendererApi::DrawFrame() {
   present_info.waitSemaphoreCount = 1;
   present_info.pWaitSemaphores = signal_semaphores;
 
-  VkSwapchainKHR swapchains[] = {VulkanDeviceManager::GetInstance().GetSwapChain().swapchain};
+  VkSwapchainKHR swapchains[] = {p_vulkan_device_manager_->GetSwapChain().swapchain};
   present_info.swapchainCount = 1;
   present_info.pSwapchains = swapchains;
 
@@ -261,7 +260,7 @@ void VulkanRendererApi::DrawFrame() {
     VkResult result = vklib.ptr_vk_queue_present_khr(present_queue_, &present_info);
 
     if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR) {
-      VulkanDeviceManager::GetInstance().RegenerateSwapchain();
+      p_vulkan_device_manager_->RegenerateSwapchain();
       return;
     } else if (result != VK_SUCCESS) {
       ARIA_CORE_ERROR("Failed to present swap chain image!");
@@ -283,13 +282,13 @@ void VulkanRendererApi::CreateCommandPool() {
   cmd_pool_info.pNext = nullptr;
 
   auto graphics_queue_index_ret =
-      VulkanDeviceManager::GetInstance().GetLogicalDevice().get_queue_index(vkb::QueueType::graphics);
+      p_vulkan_device_manager_->GetLogicalDevice().get_queue_index(vkb::QueueType::graphics);
   ARIA_VKB_CHECK_RESULT_AND_ASSERT(graphics_queue_index_ret, "Failed to get graphics queue index")
 
   cmd_pool_info.queueFamilyIndex = graphics_queue_index_ret.value();
 
-  VkResult result = VulkanLib::GetInstance().ptr_vk_create_command_pool(
-      VulkanDeviceManager::GetInstance().GetLogicalDevice(), &cmd_pool_info, nullptr, &command_pool_);
+  VkResult result = VulkanLib::GetInstance().ptr_vk_create_command_pool(p_vulkan_device_manager_->GetLogicalDevice(),
+                                                                        &cmd_pool_info, nullptr, &command_pool_);
   ARIA_VK_CHECK_RESULT_AND_ERROR(result, "Failed to create command pool")
 }
 
@@ -304,7 +303,7 @@ void VulkanRendererApi::CreateCommandBuffer() {
   buffer_alloc_info.commandBufferCount = (uint32_t) command_buffers_.size();
 
   VkResult result = VulkanLib::GetInstance().ptr_vk_allocate_command_buffers(
-      VulkanDeviceManager::GetInstance().GetLogicalDevice(), &buffer_alloc_info, command_buffers_.data());
+      p_vulkan_device_manager_->GetLogicalDevice(), &buffer_alloc_info, command_buffers_.data());
   ARIA_VK_CHECK_RESULT_AND_ERROR(result, "Failed to allocate command buffers")
 }
 
@@ -312,7 +311,7 @@ void VulkanRendererApi::CreateSyncObjects() {
   available_semaphores_.resize(max_frames_in_flight_);
   finished_semaphore_.resize(max_frames_in_flight_);
   in_flight_fences_.resize(max_frames_in_flight_);
-  image_in_flight_.resize(VulkanDeviceManager::GetInstance().GetSwapChain().image_count);
+  image_in_flight_.resize(p_vulkan_device_manager_->GetSwapChain().image_count);
 
   VkSemaphoreCreateInfo semaphore_info;
   semaphore_info.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
@@ -326,21 +325,21 @@ void VulkanRendererApi::CreateSyncObjects() {
 
   for (int i = 0; i < max_frames_in_flight_; ++i) {
     VkResult result = VulkanLib::GetInstance().ptr_vk_create_semaphore(
-        VulkanDeviceManager::GetInstance().GetLogicalDevice(), &semaphore_info, nullptr, &available_semaphores_[i]);
+        p_vulkan_device_manager_->GetLogicalDevice(), &semaphore_info, nullptr, &available_semaphores_[i]);
     ARIA_VK_CHECK_RESULT_AND_ERROR(result, "Failed to create semaphore")
-    result = VulkanLib::GetInstance().ptr_vk_create_semaphore(VulkanDeviceManager::GetInstance().GetLogicalDevice(),
+    result = VulkanLib::GetInstance().ptr_vk_create_semaphore(p_vulkan_device_manager_->GetLogicalDevice(),
                                                               &semaphore_info, nullptr, &finished_semaphore_[i]);
     ARIA_VK_CHECK_RESULT_AND_ERROR(result, "Failed to create semaphore")
 
-    result = VulkanLib::GetInstance().ptr_vk_create_fence(VulkanDeviceManager::GetInstance().GetLogicalDevice(),
-                                                          &fence_info, nullptr, &in_flight_fences_[i]);
+    result = VulkanLib::GetInstance().ptr_vk_create_fence(p_vulkan_device_manager_->GetLogicalDevice(), &fence_info,
+                                                          nullptr, &in_flight_fences_[i]);
     ARIA_VK_CHECK_RESULT_AND_ERROR(result, "Failed to create fence")
   }
 }
 
 void VulkanRendererApi::GetQueues() {
   // Get Queues
-  auto vk_device = VulkanDeviceManager::GetInstance().GetLogicalDevice();
+  auto vk_device = p_vulkan_device_manager_->GetLogicalDevice();
 
   auto graphics_queue_ret = vk_device.get_queue(vkb::QueueType::graphics);
   ARIA_VKB_CHECK_RESULT_AND_ERROR(graphics_queue_ret, "Failed to get graphics queue");
