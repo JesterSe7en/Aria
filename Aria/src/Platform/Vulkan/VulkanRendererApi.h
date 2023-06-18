@@ -46,6 +46,7 @@ class VulkanRendererApi : public RendererApi {
   }
 
   Ref<VulkanInstance> GetVkInstance() { return p_vulkan_instance_; }
+
   VkQueue &GetPresentQueue() { return present_queue_; }
   VkQueue &GetGraphicsQueue() { return graphics_queue_; }
   std::vector<VkCommandBuffer> &GetCommandBuffers() { return command_buffers_; }
@@ -53,6 +54,7 @@ class VulkanRendererApi : public RendererApi {
 
  private:
   Ref<VulkanInstance> p_vulkan_instance_;
+  Ref<VulkanDeviceManager> p_vulkan_device_manager_;
 
   VkInstance p_vk_instance_;
   VkSurfaceKHR surface_;

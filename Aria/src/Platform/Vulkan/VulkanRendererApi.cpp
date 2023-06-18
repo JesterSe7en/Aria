@@ -57,7 +57,7 @@ void VulkanRendererApi::Init() {
   p_vulkan_instance_ = VulkanInstance::Create(create_info);
   p_vk_instance_ = p_vulkan_instance_->GetVKBInstance().instance;
 
-  VulkanDeviceManager::GetInstance().Init(p_vulkan_instance_);
+  p_vulkan_device_manager_ = VulkanDeviceManager::Create(p_vulkan_instance_);
 
   GetQueues();
 

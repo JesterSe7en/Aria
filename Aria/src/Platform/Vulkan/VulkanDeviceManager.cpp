@@ -1,23 +1,26 @@
 #include "ariapch.h"
 #include "Platform/Vulkan/VulkanDeviceManager.h"
-#include "VulkanDeviceManager.h"
 #include "Aria/Core/Log.h"
 #include "VkBootstrap.h"
+#include "VulkanDeviceManager.h"
 #include "VulkanError.h"
 #include "VulkanLib.h"
 
 namespace aria {
+
+VulkanDeviceManager::VulkanDeviceManager(Ref<VulkanInstance> vulkan_instance) : vulkan_instance_(vulkan_instance) {
+  SelectSuitablePhysicalDevice();
+  CreateLogicalDevice();
+  CreateSwapchain();
+}
 
 VulkanDeviceManager::~VulkanDeviceManager() {
   vkb::destroy_swapchain(swapchain_);
   vkb::destroy_device(logical_device_);
 }
 
-void VulkanDeviceManager::Init(Ref<VulkanInstance> &vulkan_instance) {
-  vulkan_instance_ = vulkan_instance;
-  SelectSuitablePhysicalDevice();
-  CreateLogicalDevice();
-  CreateSwapchain();
+Ref<VulkanDeviceManager> VulkanDeviceManager::Create(Ref<VulkanInstance> vulkan_instance) {
+  return std::make_shared<VulkanDeviceManager>(new VulkanDeviceManager(vulkan_instance));
 }
 
 void VulkanDeviceManager::SelectSuitablePhysicalDevice() {
@@ -116,7 +119,7 @@ void VulkanDeviceManager::CreateLogicalDevice() {
   ARIA_VKB_CHECK_RESULT_AND_ERROR(device_ret, "Failed to create logical device")
   if (device_ret.has_value()) {
     logical_device_ = device_ret.value();
-    VulkanLib::GetInstance().InitDeviceFunctions(VulkanDeviceManager::GetInstance().GetLogicalDevice());
+    VulkanLib::GetInstance().InitDeviceFunctions(logical_device_);
   }
 }
 
@@ -133,14 +136,12 @@ void VulkanDeviceManager::CreateSwapchain() {
   if (swapchain_ret.has_value()) { swapchain_ = swapchain_ret.value(); }
 }
 
-unsigned int VulkanDeviceManager::GetQueueFamilyIndex() {
+unsigned int VulkanDeviceManager::GetQueueFamilyIndex() const {
   auto res = logical_device_.get_queue_index(vkb::QueueType::graphics);
   ARIA_VKB_CHECK_RESULT_AND_ASSERT(res, "Failed to get queue family index")
   return res.has_value() ? res.value() : 0;
 }
 
-void VulkanDeviceManager::RegenerateSwapchain() {
-  
-}
+void VulkanDeviceManager::RegenerateSwapchain() {}
 
 }// namespace aria

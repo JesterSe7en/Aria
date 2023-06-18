@@ -55,7 +55,9 @@ void ImGuiLayerVulkan::OnAttach() {
   ImGui_ImplGlfw_InitForVulkan(window, true);
 
   ImGui_ImplVulkan_InitInfo init_info = {};
-  // init_info.Instance =
+  Ref<VulkanInstance> vulkan_instance = renderer_api->GetVkInstance();
+  init_info.Instance = renderer_api->GetVkInstance()->GetVKBInstance().instance;
+  init_info.PhysicalDevice =
   // init_info.PhysicalDevice = VulkanDeviceManager::GetInstance().GetPhysicalDevice();
   // init_info.Device = VulkanDeviceManager::GetInstance().GetLogicalDevice();
   // init_info.QueueFamily = VulkanDeviceManager::GetInstance().GetQueueFamilyIndex();

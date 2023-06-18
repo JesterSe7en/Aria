@@ -11,24 +11,20 @@ class VulkanDeviceManager {
 
  public:
   ~VulkanDeviceManager();
-  
+
   VulkanDeviceManager(const VulkanDeviceManager &) = delete;
   VulkanDeviceManager &operator=(const VulkanDeviceManager &) = delete;
 
-  static VulkanDeviceManager &GetInstance() {
-    static VulkanDeviceManager instance_;
-    return instance_;
-  }
-  void Init(Ref<VulkanInstance> &vulkan_instance);
+  static Ref<VulkanDeviceManager> Create(Ref<VulkanInstance> vulkan_instance);
 
   vkb::Device &GetLogicalDevice() { return logical_device_; }
   vkb::PhysicalDevice &GetPhysicalDevice() { return physical_device_; }
   vkb::Swapchain &GetSwapChain() { return swapchain_; }
-  unsigned int GetQueueFamilyIndex();
+  unsigned int GetQueueFamilyIndex() const;
   void RegenerateSwapchain();
 
  private:
-  VulkanDeviceManager() = default;
+  VulkanDeviceManager(Ref<VulkanInstance> vulkan_Instance);
 
   Ref<VulkanInstance> vulkan_instance_;
   vkb::PhysicalDevice physical_device_;
