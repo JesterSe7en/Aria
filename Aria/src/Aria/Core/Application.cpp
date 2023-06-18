@@ -42,7 +42,7 @@ Application::Application(ApplicationProps &props) {
 
 void Application::InitVulkanApp() {
   p_window_ = std::unique_ptr<Window>(Window::Create());
-  p_window_->SetVSync(false);
+  // p_window_->SetVSync(false);
   p_window_->SetEventCallback(ARIA_BIND_EVENT_FN(Application::OnEvent));
 
   p_renderer_api_ = Renderer::Init();
