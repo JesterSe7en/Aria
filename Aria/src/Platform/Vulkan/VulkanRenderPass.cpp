@@ -1,18 +1,21 @@
 #include "VulkanRenderPass.h"
 #include "VulkanDeviceManager.h"
+#include "VulkanRendererApi.h"
 #include "VulkanError.h"
 
 namespace aria {
 
 VulkanRenderPass::~VulkanRenderPass() {
-  vklib_.ptr_vk_destroy_render_pass(VulkanDeviceManager::GetInstance().GetLogicalDevice(), vk_render_pass_, nullptr);
+  Ref<VulkanDeviceManager> device_manager = VulkanRendererApi::GetInstance().GetVkDeviceManager();
+  vklib_.ptr_vk_destroy_render_pass(device_manager->GetLogicalDevice(), vk_render_pass_, nullptr);
 }
 
 VulkanRenderPass::VulkanRenderPass() {
   vklib_ = VulkanLib::GetInstance();
 
   VkResult result;
-  vkb::Swapchain swapchain = VulkanDeviceManager::GetInstance().GetSwapChain();
+  Ref<VulkanDeviceManager> device_manager = VulkanRendererApi::GetInstance().GetVkDeviceManager();
+  vkb::Swapchain swapchain = device_manager->GetSwapChain();
 
   VkAttachmentDescription color_attachment = {};
   color_attachment.format = swapchain.image_format;
@@ -50,8 +53,8 @@ VulkanRenderPass::VulkanRenderPass() {
   render_pass_info.dependencyCount = 1;
   render_pass_info.pDependencies = &dependency;
 
-  result = vklib_.ptr_vk_create_render_pass(VulkanDeviceManager::GetInstance().GetLogicalDevice(), &render_pass_info,
-                                            nullptr, &vk_render_pass_);
+  result = vklib_.ptr_vk_create_render_pass(device_manager->GetLogicalDevice(), &render_pass_info, nullptr,
+                                            &vk_render_pass_);
   ARIA_VK_CHECK_RESULT_AND_ERROR(result, "Failed to create render pass")
 }
 

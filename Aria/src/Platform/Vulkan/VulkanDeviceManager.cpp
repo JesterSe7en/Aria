@@ -8,7 +8,8 @@
 
 namespace aria {
 
-VulkanDeviceManager::VulkanDeviceManager(Ref<VulkanInstance> vulkan_instance) : vulkan_instance_(vulkan_instance) {
+VulkanDeviceManager::VulkanDeviceManager(Ref<VulkanInstance> vulkan_instance) {
+  vulkan_instance_ = vulkan_instance;
   SelectSuitablePhysicalDevice();
   CreateLogicalDevice();
   CreateSwapchain();
@@ -20,7 +21,7 @@ VulkanDeviceManager::~VulkanDeviceManager() {
 }
 
 Ref<VulkanDeviceManager> VulkanDeviceManager::Create(Ref<VulkanInstance> vulkan_instance) {
-  return std::make_shared<VulkanDeviceManager>(new VulkanDeviceManager(vulkan_instance));
+  return std::make_shared<VulkanDeviceManager>(vulkan_instance);
 }
 
 void VulkanDeviceManager::SelectSuitablePhysicalDevice() {

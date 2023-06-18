@@ -16,7 +16,7 @@ class VulkanRenderPass {
   VulkanRenderPass &operator=(VulkanRenderPass &&) = delete;
 
   static Ref<VulkanRenderPass> Create();
-  VkRenderPass GetRenderPass() { return vk_render_pass_; }
+  VkRenderPass GetVkRenderPass() { return vk_render_pass_; }
 
  private:
   VulkanLib vklib_;

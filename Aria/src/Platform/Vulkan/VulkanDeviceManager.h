@@ -10,10 +10,8 @@ namespace aria {
 class VulkanDeviceManager {
 
  public:
+  explicit VulkanDeviceManager(Ref<VulkanInstance> vulkan_Instance);
   ~VulkanDeviceManager();
-
-  VulkanDeviceManager(const VulkanDeviceManager &) = delete;
-  VulkanDeviceManager &operator=(const VulkanDeviceManager &) = delete;
 
   static Ref<VulkanDeviceManager> Create(Ref<VulkanInstance> vulkan_instance);
 
@@ -24,8 +22,6 @@ class VulkanDeviceManager {
   void RegenerateSwapchain();
 
  private:
-  VulkanDeviceManager(Ref<VulkanInstance> vulkan_Instance);
-
   Ref<VulkanInstance> vulkan_instance_;
   vkb::PhysicalDevice physical_device_;
   vkb::Device logical_device_;

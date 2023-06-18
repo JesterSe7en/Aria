@@ -9,30 +9,24 @@ namespace aria {
 
 class VulkanGraphicsPipeline {
  public:
-  static VulkanGraphicsPipeline &GetInstance() {
-    static VulkanGraphicsPipeline instance_;
-    return instance_;
-  }
-
+  VulkanGraphicsPipeline();
   ~VulkanGraphicsPipeline();
-  VulkanGraphicsPipeline(const VulkanGraphicsPipeline &) = delete;
-  VulkanGraphicsPipeline &operator=(const VulkanGraphicsPipeline &) = delete;
 
-  void Init();
-  void CreateGraphicsPipeline();
-  void CreateFrameBuffers();
+  static Ref<VulkanGraphicsPipeline> Create();
+
   void AddToShaderStages(VkShaderModule &shader_module, ShaderType type);
   VkPipeline GetGraphicsPipeline() const { return vk_graphics_pipeline_; }
   std::vector<VkFramebuffer> GetFrameBuffers() const { return vk_frame_buffers_; }
-  Ref<VulkanRenderPass> GetRenderPass() const { return vk_render_pass_; }
+  Ref<VulkanRenderPass> GetVulkanRenderPass() const { return vk_render_pass_; }
 
  private:
-  VulkanGraphicsPipeline();
-
   constexpr static const std::array<VkDynamicState, 2> kDynamicStates = {VK_DYNAMIC_STATE_VIEWPORT,
                                                                          VK_DYNAMIC_STATE_SCISSOR};
   //  void InitPipelineCache();
   //  void UpdatePipeline();
+  void Init();
+  void CreateGraphicsPipeline();
+  void CreateFrameBuffers();
   void DestroyPipeline();
   static bool IsAllModulesSet();
 

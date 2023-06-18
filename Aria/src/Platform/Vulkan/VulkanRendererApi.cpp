@@ -1,18 +1,13 @@
 #include "ariapch.h"
-#include "Platform/Vulkan/VulkanRendererApi.h"
+#include "VulkanRendererApi.h"
 #include "Aria/Core/Base.h"
 #include "Aria/Core/Log.h"
 #include "Aria/Renderer/VertexArray.h"
 #include "GLFW/glfw3.h"
-#include "Platform/Vulkan/VulkanDeviceManager.h"
 #include "Platform/Vulkan/VulkanError.h"
-#include "Platform/Vulkan/VulkanGraphicsPipeline.h"
 #include "Platform/Vulkan/VulkanLib.h"
 #include "VkBootstrap.h"
-#include "VulkanDebugMessenger.h"
 #include "VulkanError.h"
-#include "VulkanGraphicsPipeline.h"
-#include "VulkanRendererApi.h"
 #include <stdint.h>
 #include <vector>
 
@@ -55,13 +50,11 @@ void VulkanRendererApi::Init() {
   create_info.pp_extension_names = extensions;
 
   p_vulkan_instance_ = VulkanInstance::Create(create_info);
-  p_vk_instance_ = p_vulkan_instance_->GetVKBInstance().instance;
-
   p_vulkan_device_manager_ = VulkanDeviceManager::Create(p_vulkan_instance_);
 
   GetQueues();
 
-  VulkanGraphicsPipeline::GetInstance().Init();
+  p_vulkan_graphics_pipeline_ = VulkanGraphicsPipeline::Create();
 
   CreateCommandPool();
   CreateCommandBuffer();
@@ -85,9 +78,8 @@ void VulkanRendererApi::CreateCommandModule() {
 
     VkRenderPassBeginInfo render_pass_info{};
     render_pass_info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-    render_pass_info.renderPass = VulkanGraphicsPipeline::GetInstance().GetRenderPass()->GetRenderPass();
-    render_pass_info.framebuffer =
-        VulkanGraphicsPipeline::GetInstance().GetFrameBuffers()[i];//TODO: Need to grab actual index
+    render_pass_info.renderPass = p_vulkan_graphics_pipeline_->GetVulkanRenderPass()->GetVkRenderPass();
+    render_pass_info.framebuffer = p_vulkan_graphics_pipeline_->GetFrameBuffers()[i];//TODO: Need to grab actual index
     render_pass_info.renderArea.offset = {0, 0};
     render_pass_info.renderArea.extent = p_vulkan_device_manager_->GetSwapChain().extent;
 
@@ -98,7 +90,7 @@ void VulkanRendererApi::CreateCommandModule() {
     VulkanLib::GetInstance().ptr_vk_cmd_begin_render_pass(command_buffers_[i], &render_pass_info,
                                                           VK_SUBPASS_CONTENTS_INLINE);
     VulkanLib::GetInstance().ptr_vk_cmd_bind_pipeline(command_buffers_[i], VK_PIPELINE_BIND_POINT_GRAPHICS,
-                                                      VulkanGraphicsPipeline::GetInstance().GetGraphicsPipeline());
+                                                      p_vulkan_graphics_pipeline_->GetGraphicsPipeline());
 
     vkb::Swapchain swapchain = p_vulkan_device_manager_->GetSwapChain();
     VkViewport viewport{};
@@ -147,9 +139,8 @@ void VulkanRendererApi::CmdBeginRenderPass() {
 
   VkRenderPassBeginInfo render_pass_info{};
   render_pass_info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-  render_pass_info.renderPass = VulkanGraphicsPipeline::GetInstance().GetRenderPass()->GetRenderPass();
-  render_pass_info.framebuffer =
-      VulkanGraphicsPipeline::GetInstance().GetFrameBuffers()[0];//TODO: Need to grab actual index
+  render_pass_info.renderPass = p_vulkan_graphics_pipeline_->GetVulkanRenderPass()->GetVkRenderPass();
+  render_pass_info.framebuffer = p_vulkan_graphics_pipeline_->GetFrameBuffers()[0];//TODO: Need to grab actual index
   render_pass_info.renderArea.offset = {0, 0};
   render_pass_info.renderArea.extent = p_vulkan_device_manager_->GetSwapChain().extent;
 
@@ -165,7 +156,7 @@ void VulkanRendererApi::CmdEndRenderPass() { VulkanLib::GetInstance().ptr_vk_cmd
 
 void VulkanRendererApi::CmdBindToGraphicsPipeline() {
   VulkanLib::GetInstance().ptr_vk_cmd_bind_pipeline(command_buffers_[0], VK_PIPELINE_BIND_POINT_GRAPHICS,
-                                                    VulkanGraphicsPipeline::GetInstance().GetGraphicsPipeline());
+                                                    p_vulkan_graphics_pipeline_->GetGraphicsPipeline());
 }
 
 void VulkanRendererApi::CmdSetViewport() {
@@ -272,7 +263,7 @@ void VulkanRendererApi::DrawFrame() {
 }
 
 void VulkanRendererApi::AddToPipeline(VkShaderModule &shader_module, ShaderType type) {
-  VulkanGraphicsPipeline::GetInstance().AddToShaderStages(shader_module, type);
+  p_vulkan_graphics_pipeline_->AddToShaderStages(shader_module, type);
 }
 
 void VulkanRendererApi::CreateCommandPool() {
@@ -293,7 +284,7 @@ void VulkanRendererApi::CreateCommandPool() {
 }
 
 void VulkanRendererApi::CreateCommandBuffer() {
-  command_buffers_ = std::vector<VkCommandBuffer>(VulkanGraphicsPipeline::GetInstance().GetFrameBuffers().size());
+  command_buffers_ = std::vector<VkCommandBuffer>(p_vulkan_graphics_pipeline_->GetFrameBuffers().size());
 
   VkCommandBufferAllocateInfo buffer_alloc_info;
   buffer_alloc_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;

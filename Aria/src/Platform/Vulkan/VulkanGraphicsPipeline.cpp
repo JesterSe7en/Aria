@@ -2,6 +2,7 @@
 #include "VulkanGraphicsPipeline.h"
 #include "Aria/Core/Log.h"
 #include "VulkanDeviceManager.h"
+#include "VulkanRendererApi.h"
 #include "VulkanError.h"
 #include "VulkanLib.h"
 #include "vulkan/vk_enum_string_helper.h"
@@ -10,18 +11,29 @@ namespace aria {
 
 std::vector<VkPipelineShaderStageCreateInfo> VulkanGraphicsPipeline::shader_stages_ = {};
 
+VulkanGraphicsPipeline::VulkanGraphicsPipeline() {
+  vk_graphics_pipeline_ = nullptr;
+  //  vk_pipeline_cache_ = nullptr;
+  vk_pipeline_layout_ = nullptr;
+  vk_render_pass_ = nullptr;
+  vk_frame_buffers_ = {};
+  Init();
+}
+
 VulkanGraphicsPipeline::~VulkanGraphicsPipeline() {
   auto vklib = VulkanLib::GetInstance();
+  Ref<VulkanDeviceManager> device_manager = VulkanRendererApi::GetInstance().GetVkDeviceManager();
   for (auto buffer : vk_frame_buffers_) {
-    vklib.ptr_vk_destroy_framebuffer(VulkanDeviceManager::GetInstance().GetLogicalDevice(), buffer, nullptr);
+    vklib.ptr_vk_destroy_framebuffer(device_manager->GetLogicalDevice(), buffer, nullptr);
   }
 
   //  vklib.ptr_vk_destroy_pipeline_cache(VulkanDeviceManager::GetInstance().GetLogicalDevice(), vk_pipeline_cache_,
   //                                      nullptr);
-  vklib.ptr_vk_destroy_pipeline(VulkanDeviceManager::GetInstance().GetLogicalDevice(), vk_graphics_pipeline_, nullptr);
-  vklib.ptr_vk_destroy_pipeline_layout(VulkanDeviceManager::GetInstance().GetLogicalDevice(), vk_pipeline_layout_,
-                                       nullptr);
+  vklib.ptr_vk_destroy_pipeline(device_manager->GetLogicalDevice(), vk_graphics_pipeline_, nullptr);
+  vklib.ptr_vk_destroy_pipeline_layout(device_manager->GetLogicalDevice(), vk_pipeline_layout_, nullptr);
 }
+
+Ref<VulkanGraphicsPipeline> VulkanGraphicsPipeline::Create() { return std::make_shared<VulkanGraphicsPipeline>(); }
 
 void VulkanGraphicsPipeline::Init() {
   vk_render_pass_ = VulkanRenderPass::Create();
@@ -32,8 +44,8 @@ void VulkanGraphicsPipeline::Init() {
 }
 
 void VulkanGraphicsPipeline::CreateGraphicsPipeline() {
-
-  vkb::Swapchain swapchain = VulkanDeviceManager::GetInstance().GetSwapChain();
+  Ref<VulkanDeviceManager> device_manager = VulkanRendererApi::GetInstance().GetVkDeviceManager();
+  vkb::Swapchain swapchain = device_manager->GetSwapChain();
 
   // ======================== Dynamic Create Info ========================
 
@@ -144,7 +156,7 @@ void VulkanGraphicsPipeline::CreateGraphicsPipeline() {
   pipeline_layout_info.pPushConstantRanges = nullptr;
 
   VkResult result = VulkanLib::GetInstance().ptr_vk_create_pipeline_layout(
-      VulkanDeviceManager::GetInstance().GetLogicalDevice(), &pipeline_layout_info, nullptr, &vk_pipeline_layout_);
+      device_manager->GetLogicalDevice(), &pipeline_layout_info, nullptr, &vk_pipeline_layout_);
   ARIA_VK_CHECK_RESULT_AND_ERROR(result, "Failed to create pipeline layout")
 
   VkGraphicsPipelineCreateInfo pipeline_info{};
@@ -162,20 +174,20 @@ void VulkanGraphicsPipeline::CreateGraphicsPipeline() {
   pipeline_info.pDynamicState = &dynamic_state;
 
   pipeline_info.layout = vk_pipeline_layout_;
-  pipeline_info.renderPass = vk_render_pass_->GetRenderPass();
+  pipeline_info.renderPass = vk_render_pass_->GetVkRenderPass();
   pipeline_info.subpass = 0;
 
   pipeline_info.basePipelineHandle = VK_NULL_HANDLE;
   pipeline_info.basePipelineIndex = -1;
 
   result = VulkanLib::GetInstance().ptr_vk_create_graphics_pipelines(
-      VulkanDeviceManager::GetInstance().GetLogicalDevice(), VK_NULL_HANDLE, 1, &pipeline_info, nullptr,
-      &vk_graphics_pipeline_);
+      device_manager->GetLogicalDevice(), VK_NULL_HANDLE, 1, &pipeline_info, nullptr, &vk_graphics_pipeline_);
   ARIA_VK_CHECK_RESULT_AND_ERROR(result, "Failed to create graphics pipeline")
 }
 
 void VulkanGraphicsPipeline::CreateFrameBuffers() {
-  auto swapchain = VulkanDeviceManager::GetInstance().GetSwapChain();
+  Ref<VulkanDeviceManager> device_manager = VulkanRendererApi::GetInstance().GetVkDeviceManager();
+  auto swapchain = device_manager->GetSwapChain();
 
   auto image_views_ret = swapchain.get_image_views();
   ARIA_VKB_CHECK_RESULT_AND_ASSERT(image_views_ret, "Failed to get image views");
@@ -188,7 +200,7 @@ void VulkanGraphicsPipeline::CreateFrameBuffers() {
     frame_buffer_info.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
     frame_buffer_info.flags = 0;
     frame_buffer_info.pNext = nullptr;
-    frame_buffer_info.renderPass = vk_render_pass_->GetRenderPass();
+    frame_buffer_info.renderPass = vk_render_pass_->GetVkRenderPass();
     frame_buffer_info.attachmentCount = attachments.size();
     frame_buffer_info.pAttachments = attachments.data();
     frame_buffer_info.width = swapchain.extent.width;
@@ -196,7 +208,7 @@ void VulkanGraphicsPipeline::CreateFrameBuffers() {
     frame_buffer_info.layers = 1;
 
     VkResult result = VulkanLib::GetInstance().ptr_vk_create_framebuffer(
-        VulkanDeviceManager::GetInstance().GetLogicalDevice(), &frame_buffer_info, nullptr, &vk_frame_buffers_[i]);
+        device_manager->GetLogicalDevice(), &frame_buffer_info, nullptr, &vk_frame_buffers_[i]);
     ARIA_VK_CHECK_RESULT_AND_ERROR(result, "Failed to create frame buffer")
   }
 }
@@ -235,14 +247,6 @@ void VulkanGraphicsPipeline::AddToShaderStages(VkShaderModule &shader_module, Sh
   }
 }
 
-VulkanGraphicsPipeline::VulkanGraphicsPipeline() {
-  vk_graphics_pipeline_ = nullptr;
-  //  vk_pipeline_cache_ = nullptr;
-  vk_pipeline_layout_ = nullptr;
-  vk_render_pass_ = nullptr;
-  vk_frame_buffers_ = {};
-}
-
 //void VulkanGraphicsPipeline::InitPipelineCache() {
 //  VkPipelineCacheCreateInfo pipeline_cache_info = {};
 //  pipeline_cache_info.sType = VK_STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO;
@@ -253,8 +257,9 @@ VulkanGraphicsPipeline::VulkanGraphicsPipeline() {
 //}
 
 void VulkanGraphicsPipeline::DestroyPipeline() {
-  VulkanLib::GetInstance().ptr_vk_destroy_pipeline(VulkanDeviceManager::GetInstance().GetLogicalDevice(),
-                                                   vk_graphics_pipeline_, nullptr);
+  Ref<VulkanDeviceManager> device_manager = VulkanRendererApi::GetInstance().GetVkDeviceManager();
+
+  VulkanLib::GetInstance().ptr_vk_destroy_pipeline(device_manager->GetLogicalDevice(), vk_graphics_pipeline_, nullptr);
 }
 
 //void VulkanGraphicsPipeline::UpdatePipeline() {

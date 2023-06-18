@@ -5,6 +5,7 @@
 #include "Aria/Renderer/Shader.h"
 #include "VulkanDebugMessenger.h"
 #include "VulkanDeviceManager.h"
+#include "VulkanGraphicsPipeline.h"
 #include "VulkanInstance.h"
 #include "vulkan/vulkan.h"
 #include <cstdint>
@@ -56,8 +57,8 @@ class VulkanRendererApi : public RendererApi {
  private:
   Ref<VulkanInstance> p_vulkan_instance_;
   Ref<VulkanDeviceManager> p_vulkan_device_manager_;
+  Ref<VulkanGraphicsPipeline> p_vulkan_graphics_pipeline_;
 
-  VkInstance p_vk_instance_;
   VkSurfaceKHR surface_;
   VkCommandPool command_pool_;
   std::vector<VkCommandBuffer> command_buffers_;
