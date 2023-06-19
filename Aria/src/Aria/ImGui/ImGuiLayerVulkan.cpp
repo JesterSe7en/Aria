@@ -3,6 +3,7 @@
 #include "Aria/Core/Application.h"
 #include "Aria/Core/Log.h"
 #include "ImGuiLayerVulkan.h"
+#include "Platform/Vulkan/VulkanLib.h"
 #include "Platform/Vulkan/VulkanGraphicsPipeline.h"
 #include "Platform/Vulkan/VulkanRendererApi.h"
 
@@ -72,8 +73,25 @@ void ImGuiLayerVulkan::OnAttach() {
     // if (result != VK_SUCCESS) { ARIA_CORE_ERROR("Vulkan Error: {0}", result); }
   };
 
-  // ImGui_ImplVulkan_Init(&init_info,
-  //                       renderer_api->GetVulkanGraphicsPipeline()->GetVulkanRenderPass()->GetVkRenderPass());
+  // From DearImgui documentation in imgui_impl_vulkan.h...
+  // [Configuration] in order to use a custom Vulkan function loader:
+  // (1) You'll need to disable default Vulkan function prototypes.
+  //     - As a compilation flag in your build system - DONE
+  // (2) Call ImGui_ImplVulkan_LoadFunctions() before ImGui_ImplVulkan_Init() with your custom function.
+
+  // You can use the default Vulkan loader using:
+  //      ImGui_ImplVulkan_LoadFunctions([](const char* function_name, void*) { return vkGetInstanceProcAddr(your_vk_isntance, function_name); });
+
+  ImGui_ImplVulkan_LoadFunctions([](const char* func_name, void*) {
+    auto vk_lib = VulkanLib::GetInstance();
+    Application &app = Application::Get();
+
+    auto *renderer_api = dynamic_cast<VulkanRendererApi *>(app.GetRendererApi().get());
+    return vk_lib.ptr_vk_get_instance_proc_addr(renderer_api->GetVulkanInstance()->GetVKBInstance().instance, func_name);
+  });
+
+  ImGui_ImplVulkan_Init(&init_info,
+                        renderer_api->GetVulkanGraphicsPipeline()->GetVulkanRenderPass()->GetVkRenderPass());
 
   // init_info.PhysicalDevice = VulkanDeviceManager::GetInstance().GetPhysicalDevice();
   // init_info.Device = VulkanDeviceManager::GetInstance().GetLogicalDevice();
