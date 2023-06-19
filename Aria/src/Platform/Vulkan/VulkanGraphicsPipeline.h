@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Aria/Renderer/Shader.h"
-#include "Platform/Vulkan/VulkanRenderPass.h"
+#include "VulkanDeviceManager.h"
 #include "VulkanRenderPass.h"
 #include "vulkan/vulkan_core.h"
 
@@ -9,15 +9,15 @@ namespace aria {
 
 class VulkanGraphicsPipeline {
  public:
-  VulkanGraphicsPipeline();
+  explicit VulkanGraphicsPipeline(Ref<VulkanDeviceManager> device_manager);
   ~VulkanGraphicsPipeline();
 
-  static Ref<VulkanGraphicsPipeline> Create();
+  static Ref<VulkanGraphicsPipeline> Create(Ref<VulkanDeviceManager> device_manager);
 
   void AddToShaderStages(VkShaderModule &shader_module, ShaderType type);
   VkPipeline GetGraphicsPipeline() const { return vk_graphics_pipeline_; }
   std::vector<VkFramebuffer> GetFrameBuffers() const { return vk_frame_buffers_; }
-  Ref<VulkanRenderPass> GetVulkanRenderPass() const { return vk_render_pass_; }
+  Ref<VulkanRenderPass> GetVulkanRenderPass() const { return p_vk_render_pass_; }
 
  private:
   constexpr static const std::array<VkDynamicState, 2> kDynamicStates = {VK_DYNAMIC_STATE_VIEWPORT,
@@ -30,7 +30,8 @@ class VulkanGraphicsPipeline {
   void DestroyPipeline();
   static bool IsAllModulesSet();
 
-  Ref<VulkanRenderPass> vk_render_pass_;
+  Ref<VulkanRenderPass> p_vk_render_pass_;
+  Ref<VulkanDeviceManager> p_vulkan_device_manager_;
   std::vector<VkFramebuffer> vk_frame_buffers_;
   VkPipelineLayout vk_pipeline_layout_;
   VkPipeline vk_graphics_pipeline_;

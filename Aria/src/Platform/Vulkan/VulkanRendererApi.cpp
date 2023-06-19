@@ -54,7 +54,7 @@ void VulkanRendererApi::Init() {
 
   GetQueues();
 
-  p_vulkan_graphics_pipeline_ = VulkanGraphicsPipeline::Create();
+  p_vulkan_graphics_pipeline_ = VulkanGraphicsPipeline::Create(p_vulkan_device_manager_);
 
   CreateCommandPool();
   CreateCommandBuffer();
