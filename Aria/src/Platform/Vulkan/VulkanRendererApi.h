@@ -46,8 +46,9 @@ class VulkanRendererApi : public RendererApi {
     return instance_;
   }
 
-  Ref<VulkanInstance> GetVkInstance() { return p_vulkan_instance_; }
-  Ref<VulkanDeviceManager> GetVkDeviceManager() { return p_vulkan_device_manager_; }
+  Ref<VulkanInstance> GetVulkanInstance() { return p_vulkan_instance_; }
+  Ref<VulkanDeviceManager> GetVulkanDeviceManager() { return p_vulkan_device_manager_; }
+  Ref<VulkanGraphicsPipeline> GetVulkanGraphicsPipeline() { return p_vulkan_graphics_pipeline_; }
 
   VkQueue &GetPresentQueue() { return present_queue_; }
   VkQueue &GetGraphicsQueue() { return graphics_queue_; }

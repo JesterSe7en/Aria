@@ -2,10 +2,11 @@
 #include "VulkanShader.h"
 #include "Aria/Core/Log.h"
 #include "Aria/Renderer/Shader.h"
-#include "VulkanRendererApi.h"
 #include "VulkanError.h"
 #include "VulkanLib.h"
+#include "VulkanRendererApi.h"
 #include <filesystem>
+
 
 namespace aria {
 
@@ -33,7 +34,7 @@ VulkanShader::VulkanShader(const std::string &file_path, ShaderType type) : shad
 
 VulkanShader::~VulkanShader() {
   auto vklib = VulkanLib::GetInstance();
-  Ref<VulkanDeviceManager> device_manager = VulkanRendererApi::GetInstance().GetVkDeviceManager();
+  Ref<VulkanDeviceManager> device_manager = VulkanRendererApi::GetInstance().GetVulkanDeviceManager();
   vklib.ptr_vk_destroy_shader_module(device_manager->GetLogicalDevice(), vk_shader_module_, nullptr);
 }
 
@@ -70,7 +71,7 @@ void VulkanShader::CreateShaderModule(const std::vector<char> &code) {
   create_info.codeSize = code.size();
   create_info.pCode = reinterpret_cast<const uint32_t *>(code.data());// TODO: use dynamic cast?
 
-  Ref<VulkanDeviceManager> device_manager = VulkanRendererApi::GetInstance().GetVkDeviceManager();
+  Ref<VulkanDeviceManager> device_manager = VulkanRendererApi::GetInstance().GetVulkanDeviceManager();
   VkResult result =
       vklib.ptr_vk_create_shader_module(device_manager->GetLogicalDevice(), &create_info, nullptr, &vk_shader_module_);
   ARIA_VK_CHECK_RESULT_AND_ERROR(result, "Cannot create shader module for {0}", name_)

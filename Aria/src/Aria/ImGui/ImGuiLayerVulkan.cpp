@@ -29,7 +29,7 @@ void ImGuiLayerVulkan::OnAttach() {
   Application &app = Application::Get();
 
   auto *renderer_api = dynamic_cast<VulkanRendererApi *>(app.GetRendererApi().get());
-  Ref<VulkanDeviceManager> device_manager = renderer_api->GetVkDeviceManager();
+  Ref<VulkanDeviceManager> device_manager = renderer_api->GetVulkanDeviceManager();
 
   ImGui::CreateContext();
   ImGuiIO &io = ImGui::GetIO();
@@ -56,8 +56,8 @@ void ImGuiLayerVulkan::OnAttach() {
   ImGui_ImplGlfw_InitForVulkan(window, true);
 
   ImGui_ImplVulkan_InitInfo init_info = {};
-  Ref<VulkanInstance> vulkan_instance = renderer_api->GetVkInstance();
-  init_info.Instance = renderer_api->GetVkInstance()->GetVKBInstance().instance;
+  Ref<VulkanInstance> vulkan_instance = renderer_api->GetVulkanInstance();
+  init_info.Instance = renderer_api->GetVulkanInstance()->GetVKBInstance().instance;
   init_info.PhysicalDevice = device_manager->GetPhysicalDevice();
   init_info.Device = device_manager->GetLogicalDevice();
   init_info.QueueFamily = device_manager->GetQueueFamilyIndex();
@@ -67,6 +67,13 @@ void ImGuiLayerVulkan::OnAttach() {
   init_info.MinImageCount = 2;
   init_info.MSAASamples = VK_SAMPLE_COUNT_1_BIT;
   init_info.Allocator = nullptr;
+  init_info.CheckVkResultFn = [](VkResult result) {
+    // FIXME: This doesn't work fix it
+    // if (result != VK_SUCCESS) { ARIA_CORE_ERROR("Vulkan Error: {0}", result); }
+  };
+
+  // ImGui_ImplVulkan_Init(&init_info,
+  //                       renderer_api->GetVulkanGraphicsPipeline()->GetVulkanRenderPass()->GetVkRenderPass());
 
   // init_info.PhysicalDevice = VulkanDeviceManager::GetInstance().GetPhysicalDevice();
   // init_info.Device = VulkanDeviceManager::GetInstance().GetLogicalDevice();

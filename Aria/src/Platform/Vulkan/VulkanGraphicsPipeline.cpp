@@ -254,7 +254,7 @@ void VulkanGraphicsPipeline::AddToShaderStages(VkShaderModule &shader_module, Sh
 //}
 
 void VulkanGraphicsPipeline::DestroyPipeline() {
-  Ref<VulkanDeviceManager> device_manager = VulkanRendererApi::GetInstance().GetVkDeviceManager();
+  Ref<VulkanDeviceManager> device_manager = VulkanRendererApi::GetInstance().GetVulkanDeviceManager();
 
   VulkanLib::GetInstance().ptr_vk_destroy_pipeline(device_manager->GetLogicalDevice(), vk_graphics_pipeline_, nullptr);
 }
