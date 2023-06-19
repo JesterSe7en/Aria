@@ -18,7 +18,6 @@ Scope<ImGuiLayer> ImGuiLayer::Create() {
       ARIA_CORE_ASSERT(false, "Imgui: RendererAPI::DirectX is currently not supported!");
       return nullptr;
     case RendererApi::Api::VULKAN:
-      ARIA_CORE_INFO("Imgui: RendererAPI::Vulkan is currently not supported!");
       return std::make_unique<ImGuiLayerVulkan>();
     case RendererApi::Api::NONE:
       ARIA_CORE_ASSERT(false, "Imgui: RendererAPI::None is currently not supported!");
