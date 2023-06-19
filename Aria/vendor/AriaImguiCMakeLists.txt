@@ -71,6 +71,7 @@ if("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64")
         "$<$<CONFIG:Release>:"
             "NDEBUG"
         ">"
+        "IMGUI_IMPL_VULKAN_NO_PROTOTYPES;" ## for vulkan imgui impl-- see imgui_impl_vulkan.h
         "_CONSOLE;"
         "UNICODE;"
         "_UNICODE"
@@ -83,6 +84,7 @@ elseif("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x86")
         "$<$<CONFIG:Release>:"
             "NDEBUG"
         ">"
+        "IMGUI_IMPL_VULKAN_NO_PROTOTYPES;" ## for vulkan imgui impl-- see imgui_impl_vulkan.h
         "WIN32;"
         "_CONSOLE;"
         "UNICODE;"
