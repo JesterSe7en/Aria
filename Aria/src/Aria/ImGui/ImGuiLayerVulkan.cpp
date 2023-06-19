@@ -3,8 +3,8 @@
 #include "Aria/Core/Application.h"
 #include "Aria/Core/Log.h"
 #include "ImGuiLayerVulkan.h"
-#include "Platform/Vulkan/VulkanLib.h"
 #include "Platform/Vulkan/VulkanGraphicsPipeline.h"
+#include "Platform/Vulkan/VulkanLib.h"
 #include "Platform/Vulkan/VulkanRendererApi.h"
 
 #define GLFW_INCLUDE_NONE
@@ -82,12 +82,10 @@ void ImGuiLayerVulkan::OnAttach() {
   // You can use the default Vulkan loader using:
   //      ImGui_ImplVulkan_LoadFunctions([](const char* function_name, void*) { return vkGetInstanceProcAddr(your_vk_isntance, function_name); });
 
-  ImGui_ImplVulkan_LoadFunctions([](const char* func_name, void*) {
+  ImGui_ImplVulkan_LoadFunctions([](const char *function_name, void *user_data) {
     auto vk_lib = VulkanLib::GetInstance();
-    Application &app = Application::Get();
-
-    auto *renderer_api = dynamic_cast<VulkanRendererApi *>(app.GetRendererApi().get());
-    return vk_lib.ptr_vk_get_instance_proc_addr(renderer_api->GetVulkanInstance()->GetVKBInstance().instance, func_name);
+    return vk_lib.LoadFunc(function_name, user_data);
+    // this causes vulkanlib to be destroyed thus unloading vulkan-lib.  Casuing loading functions to fail
   });
 
   ImGui_ImplVulkan_Init(&init_info,
