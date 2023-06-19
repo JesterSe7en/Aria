@@ -54,6 +54,6 @@ for file in files:
 
 cmake_filepath = os.path.join(current_dir, CMAKE_FILENAME)
 if not os.path.exists(cmake_filepath):
-    print("Canot find AriaImguiCMakeLists.txt")
+    print("Cannot find AriaImguiCMakeLists.txt")
 else:
     shutil.copyfile(cmake_filepath, os.path.join(dest, "CMakeLists.txt"))
