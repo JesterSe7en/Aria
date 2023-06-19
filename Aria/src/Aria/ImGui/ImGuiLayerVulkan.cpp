@@ -6,6 +6,7 @@
 #include "Platform/Vulkan/VulkanGraphicsPipeline.h"
 #include "Platform/Vulkan/VulkanLib.h"
 #include "Platform/Vulkan/VulkanRendererApi.h"
+#include "vulkan/vk_enum_string_helper.h"
 
 #define GLFW_INCLUDE_NONE
 #define GLFW_INCLUDE_VULKAN
@@ -69,8 +70,7 @@ void ImGuiLayerVulkan::OnAttach() {
   init_info.MSAASamples = VK_SAMPLE_COUNT_1_BIT;
   init_info.Allocator = nullptr;
   init_info.CheckVkResultFn = [](VkResult result) {
-    // FIXME: This doesn't work fix it
-    // if (result != VK_SUCCESS) { ARIA_CORE_ERROR("Vulkan Error: {0}", result); }
+    if (result != VK_SUCCESS) { ARIA_CORE_ERROR("Vulkan Error: {0}", string_VkResult(result)); }
   };
 
   // From DearImgui documentation in imgui_impl_vulkan.h...
