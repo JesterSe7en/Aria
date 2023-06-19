@@ -12,9 +12,6 @@ namespace aria {
 Scope<ImGuiLayer> ImGuiLayer::Create() {
   auto current_api = RendererApi::GetApi();
   switch (current_api) {
-    case RendererApi::Api::NONE:
-      ARIA_CORE_ASSERT(false, "Imgui: RendererAPI::None is currently not supported!");
-      return nullptr;
     case RendererApi::Api::OPEN_GL:
       return std::make_unique<ImGuiLayerOpenGL>();
     case RendererApi::Api::DIRECT_X:
@@ -23,6 +20,12 @@ Scope<ImGuiLayer> ImGuiLayer::Create() {
     case RendererApi::Api::VULKAN:
       ARIA_CORE_INFO("Imgui: RendererAPI::Vulkan is currently not supported!");
       return std::make_unique<ImGuiLayerVulkan>();
+    case RendererApi::Api::NONE:
+      ARIA_CORE_ASSERT(false, "Imgui: RendererAPI::None is currently not supported!");
+      return nullptr;
+    default:
+      ARIA_CORE_ASSERT(false, "Imgui: Unknown RendererAPI!");
+      return nullptr;
   }
 }
 
