@@ -21,6 +21,7 @@ class VulkanLib {
 
   template<typename T>
   void LoadFunc(T &func_dest, const char *func_name);
+  PFN_vkVoidFunction LoadFunc(const char* func_name, void* user_data);
 
   // Non vkInstance function pointers
   PFN_vkGetInstanceProcAddr ptr_vk_get_instance_proc_addr = nullptr;

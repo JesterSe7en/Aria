@@ -60,6 +60,17 @@ void VulkanLib::LoadFunc(T &func_dest, const char *func_name) {
   if (!func_dest) { ARIA_CORE_ASSERT(false, "Failed to load vulkan function - {0}", func_name) }
 }
 
+PFN_vkVoidFunction VulkanLib::LoadFunc(const char *func_name, void *user_data) {
+  PFN_vkVoidFunction func_dest;
+#if defined(__linux__) || defined(__APPLE__)
+  func_dest = reinterpret_cast<PFN_vkVoidFunction>(dlsym(library_, func_name));
+#elif defined(_WIN32)
+  func_dest = reinterpret_cast<PFN_vkVoidFunction>(GetProcAddress(library_, func_name));
+#endif
+  if (!func_dest) { ARIA_CORE_ASSERT(false, "Failed to load vulkan function - {0}", func_name) }
+  return func_dest;
+}
+
 /// Initialize functions that don't require a vkInstance
 void VulkanLib::Init() {
   if (!LoadVulkanLib()) return;
