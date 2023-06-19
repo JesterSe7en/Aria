@@ -13,7 +13,7 @@ class VulkanDebugMessenger {
   static VKAPI_ATTR VkBool32 VKAPI_CALL VulkanLogCallback(VkDebugUtilsMessageSeverityFlagBitsEXT message_severity,
                                                           VkDebugUtilsMessageTypeFlagsEXT message_type,
                                                           const VkDebugUtilsMessengerCallbackDataEXT *p_callback_data,
-                                                          void *p_user_data);
+                                                          [[maybe_unused]] void *p_user_data);
 
   static VkDebugUtilsMessageSeverityFlagBitsEXT GetMessageSeverity();
   static VkDebugUtilsMessageTypeFlagBitsEXT GetMessageType();

@@ -7,7 +7,7 @@ namespace aria {
 
 VKAPI_ATTR VkBool32 VKAPI_CALL VulkanDebugMessenger::VulkanLogCallback(
     VkDebugUtilsMessageSeverityFlagBitsEXT message_severity, VkDebugUtilsMessageTypeFlagsEXT message_type,
-    const VkDebugUtilsMessengerCallbackDataEXT *p_callback_data, void *p_user_data) {
+    const VkDebugUtilsMessengerCallbackDataEXT *p_callback_data, [[maybe_unused]] void *p_user_data) {
   switch (message_severity) {
     case VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT:
       ARIA_CORE_INFO("Vulkan {0} Info: {1}", vkb::to_string_message_type(message_type), p_callback_data->pMessage)
