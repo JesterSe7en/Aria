@@ -28,7 +28,8 @@ void ImGuiLayerVulkan::OnAttach() {
 
   Application &app = Application::Get();
 
-  auto *renderer_api = static_cast<VulkanRendererApi *>(app.GetRendererApi().get());
+  auto *renderer_api = dynamic_cast<VulkanRendererApi *>(app.GetRendererApi().get());
+  Ref<VulkanDeviceManager> device_manager = renderer_api->GetVkDeviceManager();
 
   ImGui::CreateContext();
   ImGuiIO &io = ImGui::GetIO();
@@ -57,7 +58,16 @@ void ImGuiLayerVulkan::OnAttach() {
   ImGui_ImplVulkan_InitInfo init_info = {};
   Ref<VulkanInstance> vulkan_instance = renderer_api->GetVkInstance();
   init_info.Instance = renderer_api->GetVkInstance()->GetVKBInstance().instance;
-  // init_info.PhysicalDevice =
+  init_info.PhysicalDevice = device_manager->GetPhysicalDevice();
+  init_info.Device = device_manager->GetLogicalDevice();
+  init_info.QueueFamily = device_manager->GetQueueFamilyIndex();
+  init_info.Queue = renderer_api->GetGraphicsQueue();
+  init_info.PipelineCache = nullptr;
+  init_info.Subpass = 0;
+  init_info.MinImageCount = 2;
+  init_info.MSAASamples = VK_SAMPLE_COUNT_1_BIT;
+  init_info.Allocator = nullptr;
+
   // init_info.PhysicalDevice = VulkanDeviceManager::GetInstance().GetPhysicalDevice();
   // init_info.Device = VulkanDeviceManager::GetInstance().GetLogicalDevice();
   // init_info.QueueFamily = VulkanDeviceManager::GetInstance().GetQueueFamilyIndex();
